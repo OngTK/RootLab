@@ -3,7 +3,7 @@ package _origin.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import user.api.TourApiClient;
+import _origin.user.api.TourApiClient;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

@@ -5,8 +5,8 @@ import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import user.api.TourApiClient;
-import user.util.CsvUtil;
+import _origin.user.api.TourApiClient;
+import _origin.user.util.CsvUtil;
 
 import java.io.File;
 import java.net.URLEncoder;

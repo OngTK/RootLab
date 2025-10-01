@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import user.service.DetailIntro2Service;
+import _origin.user.service.DetailIntro2Service;
 
 import java.util.List;
 import java.util.Map;

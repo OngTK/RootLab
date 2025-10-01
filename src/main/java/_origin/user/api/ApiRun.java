@@ -8,10 +8,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
-import user.service.AreaService;
-import user.service.LclsSystmCodeService;
-import user.service.LdongCodeService;
-import user.service.LocationApiService;
+import _origin.user.service.AreaService;
+import _origin.user.service.LclsSystmCodeService;
+import _origin.user.service.LdongCodeService;
+import _origin.user.service.LocationApiService;
 
 import java.time.Instant;
 import java.util.Date;
