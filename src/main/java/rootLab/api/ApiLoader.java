@@ -1,4 +1,4 @@
-package rootLab.util;
+package rootLab.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,10 +20,9 @@ import java.util.Map;
  * @author AhnJH
  */
 
-@Component
-@Log4j2     // Log 처리를 위한 어노테이션 추가
+@Component  // 스프링 컨테이너에 빈 등록
+@Log4j2     // 로그 처리를 위한 어노테이션 추가
 public class ApiLoader {
-    // String Api_URL = "https://api.kcisa.kr/openapi/API_TOU_053/request?serviceKey=b9fed429-846a-415e-92b4-573a5fed9b99&numOfRows=10&pageNo=1";
     // todo 해당 클래스의 위치가 모호하여, 일단 util 패키지에 포함시켰습니다. 추후 강사님께 질문드려, 클래스 위치 조정이 필요합니다.
     /**
      * 읽어올 Api의 URL을 받아서, 자동으로 Map으로 매핑하여 List로 반환합니다.
@@ -32,7 +31,7 @@ public class ApiLoader {
      * @param Api_URL 읽어올 Api의 URL을 의미합니다.
      * @return 최종적으로 Map으로 매핑된 데이터의 List를 반환합니다.
      */
-    public List<Map<String, Object>> testLoader(String Api_URL){
+    public List<Map<String, Object>> LoadDataList(String Api_URL){
         try{
             // 1. 매개변수로 받은 URL을 담을 URL 객체 생성
             URL url = new URL(Api_URL);
