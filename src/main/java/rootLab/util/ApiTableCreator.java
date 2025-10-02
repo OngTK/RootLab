@@ -17,15 +17,15 @@ public class ApiTableCreator {
         StringBuilder DDL = new StringBuilder();
         // 2. 같은 이름으로 table이 존재한다면, 생성하지 않는 구문 추가
         DDL.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(\n");
-        // 3. PK로 사용될 id 컬럼을 추가 - PK명 : tableName 맨 첫글자 + No
-        DDL.append(tableName.charAt(0)).append("No int auto_increment primary key,\n");
+        // 3. PK로 사용될 id 컬럼을 추가 - PK명 : tableName 맨 첫글자(소문자) + No
+        DDL.append(tableName.substring(0,1).toLowerCase()).append("No int auto_increment primary key,\n");
         // 4-1. Map을 순회하면서 컬럼 정의 - .ketSet() : Map의 모든 key를 Set으로 반환
         for (String entry : data.keySet()){
             // 4-2. 모든 타입은 varchar(255)로 정의
             DDL.append(entry).append(" ").append("varchar(255),\n");
         } // for end
         // 5. 마지막 컬럼에도 ,가 추가되었으므로 제거
-        DDL.deleteCharAt(DDL.length() - 1);
+        DDL.deleteCharAt(DDL.length() - 2);
         // 6. 최종적으로 DDL 괄호 닫기
         DDL.append(");");
         // 7. 만들어진 DDL 반환
