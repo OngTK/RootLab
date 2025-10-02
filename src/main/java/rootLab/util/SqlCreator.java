@@ -2,10 +2,12 @@ package rootLab.util;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
-public class TableDdlCreator {
+public class SqlCreator {
     /**
      * 테이블명과 컬럼명을 바탕으로, 자동으로 DDL을 생성하는 메소드
      * <p>
@@ -15,7 +17,9 @@ public class TableDdlCreator {
      * @param data Api로부터 받은 데이터 : 생성할 테이블의 컬럼명이 들어있음
      * @return 완성된 DDL SQL
      */
-    public String dynamicCreateTable(String tableName, Map<String, Object> data){
+    public String createDynamicDdl(String tableName, Map<String, Object> data){
+        // 0. data가 비어있으면, 메소드 종료
+        if (data == null || data.isEmpty()) return null;
         // 1. DDL이 생성될 StringBuilder 객체 생성 : String보다 성능에 유리
         StringBuilder DDL = new StringBuilder();
         // 2. 같은 이름으로 table이 존재한다면, 생성하지 않는 구문 추가
@@ -33,5 +37,24 @@ public class TableDdlCreator {
         DDL.append(");");
         // 7. 만들어진 DDL 반환
         return DDL.toString();
+    } // func end
+
+    public String createDynamicInsert(String tableName, Map<String, Object> data){
+        // 0. data가 비어있으면, 메소드 종료
+        if (data == null || data.isEmpty()) return null;
+        // 1. Insert DML이 생성될 StringBuilder 객체 생성
+        StringBuilder DML = new StringBuilder();
+        // 2. data를 기반으로 컬럼 목록 생성
+        List<String> columns = new ArrayList<>(data.keySet());
+        // 3. Insert sql 생성
+        DML.append("INSERT INTO ").append(tableName).append(" (\n");
+        // 4. 컬럼들을 ,로 구분하여 추가
+        DML.append(String.join(", ", columns));
+        DML.append(") VALUES (\n");
+        // 5. 컬럼들을 #{}로 감싸서 추가
+
+        DML.append(");");
+        // 6. 만들어진 DML 반환
+        return DML.toString();
     } // func end
 } // class end
