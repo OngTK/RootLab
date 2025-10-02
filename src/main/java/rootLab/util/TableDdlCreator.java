@@ -1,8 +1,11 @@
 package rootLab.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 
-public class ApiTableCreator {
+@Component
+public class TableDdlCreator {
     /**
      * 테이블명과 컬럼명을 바탕으로, 자동으로 DDL을 생성하는 메소드
      * <p>
