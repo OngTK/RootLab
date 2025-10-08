@@ -15,4 +15,4 @@ public class RoleCriteria extends BaseCriteria {
     private String rtName;       // 역할명(부분검색)
     private Integer rtStatus;    // 활성화 여부, null 여부 판단을 위해 int가 아닌 Integer
     private String bnNo;         // 사업자등록번호 (소속)
-}
+} // class end

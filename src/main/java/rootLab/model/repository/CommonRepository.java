@@ -28,6 +28,7 @@ public interface CommonRepository<T, ID, C extends BaseCriteria> {
 
     /**
      * [2.1] 전체 조회 - 검색X, pageX
+     * @author OngTK
      */
     List<T> readAll();
 
@@ -38,24 +39,25 @@ public interface CommonRepository<T, ID, C extends BaseCriteria> {
      * <p>
      * null이 올 수 있는 값을 감싸는 Wrapper 클래스로,
      * 참조하더라도 NPE(NullPointerException)가 발생하지 않도록 도와줌
+     * @author OngTK
      * */
     Optional<T> read(ID id);
 
     /**
      * [3] 수정
+     * @author OngTK
      */
     boolean update(T entity);
 
     /**
      * [4] 삭제
+     * @author OngTK
      */
     boolean delete(ID id);
 
 
     // [2.3] 전체조회 결과 개수
     int countAll();
-
-
 
     // Search ================================================================
     // [5] 검색 조회
@@ -70,17 +72,19 @@ public interface CommonRepository<T, ID, C extends BaseCriteria> {
         int total = countAll();
         List<T> content = findAllPaged(pageRequest);
         return new Page<>(content, total, pageRequest.getPage(), pageRequest.getSize());
-    }
+    } // func end
+
     // [8] 페이지네이션 래퍼 
     default Page<T> searchPage(C criteria, PageRequest pageRequest) {
         int total = countForSearch(criteria);
         List<T> content = searchPaged(criteria, pageRequest);
         return new Page<>(content, total, pageRequest.getPage(), pageRequest.getSize());
-    }
+    } // func end
 
     // [9] 페이지 정보 생성
     List<T> findAllPaged(PageRequest pageRequest);
     
     // [10] 페이지 정보 검색
     List<T> searchPaged(C criteria, PageRequest pageRequest);
-}
+
+} // interFace end

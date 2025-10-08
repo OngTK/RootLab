@@ -19,6 +19,7 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
      * option annotation
      * useGeneratedKeys = true : 자동 생성된 키를 반환 받을 것인가 / keyProperty = PK를 삽입할 dto의 멤버변수
      * 결론 : PK 값은 매개변수로 들어온 roleDto 의 rtNo에 삽입됨
+     * @author OngTK
      * */
     @Override
     @Insert("""
@@ -30,6 +31,7 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
 
     /**
      * [2.1] 전체 조회 - 검색X, pageX
+     * @author OngTK
      * */
     @Override
     @Select("SELECT * FROM roletemplate")
@@ -37,6 +39,7 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
 
     /**
      * [2.2] 개별 조회
+     * @author OngTK
      * */
     @Override
     @Select("SELECT * FROM roletemplate WHERE rtNo = #{id}")
@@ -44,6 +47,7 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
 
     /**
      * [3] 수정
+     * @author OngTK
      * */
     @Override
     @Update("""
@@ -55,6 +59,7 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
 
     /**
      * [4] 삭제
+     * @author OngTK
      */
     @Override
     @Delete("DELETE FROM roletemplate WHERE rtNo = #{id}")
@@ -65,13 +70,6 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
     @Override
     @Select("SELECT COUNT(*) FROM roletemplate")
     int countAll();
-
-
-
-
-
-
-
 
     // --- 검색 / 페이징 ---
     @SelectProvider(type = RoleSqlProvider.class, method = "findAllPaged")
@@ -87,4 +85,4 @@ public interface RoleMapper extends CommonRepository<RoleDto, Integer, RoleCrite
     List<RoleDto> searchPaged(@Param("criteria") RoleCriteria criteria,
                               @Param("page") PageRequest page);
 
-} // class end
+} // interface end

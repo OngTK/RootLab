@@ -22,7 +22,6 @@ public class RoleController {
 
     /**
      * [1] 생성
-     *
      * @param dto talbe에 삽입하려는 dto
      * @author OngTk
      */
@@ -89,11 +88,12 @@ public class RoleController {
             // 예외 발생시 560 반환
             return ResponseEntity.status(560).body(null);
         }
-    }
+    } // func end
 
     /**
      * [3] 수정
      * @param dto 수정하려는 내용
+     * @author OngTK
      */
     @PutMapping
     public ResponseEntity<Boolean> update(@RequestBody RoleDto dto) {
@@ -105,11 +105,12 @@ public class RoleController {
                 ? ResponseEntity.ok(result)
                 // 실패 시 460과  false 반환
                 : ResponseEntity.status(460).body(result);
-    }
+    } // func end
 
     /**
      * [4] 삭제
      * @param rtNo 삭제 대상 PK
+     * @author OngTK
      */
     @DeleteMapping("/{rtNo}")
     public ResponseEntity<Boolean> delete(@PathVariable int rtNo) {
@@ -121,7 +122,7 @@ public class RoleController {
                 ? ResponseEntity.ok(result)
                 // 실패 시 460과  false 반환
                 : ResponseEntity.status(460).body(result);
-    }
+    } // func end
 
     // 목록: 조건부 검색 + 페이지네이션
     @GetMapping("/search")
@@ -150,13 +151,5 @@ public class RoleController {
         return hasFilter
                 ? roleService.searchPage(criteria, pr)
                 : roleService.findPage(pr);
-    }
-
-
-
-
-
-
-
-
-}
+    } // func end
+} // class end

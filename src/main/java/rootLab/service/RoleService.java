@@ -15,6 +15,6 @@ public class RoleService extends AbstractService<RoleDto, Integer, RoleCriteria>
 
     protected CommonRepository<RoleDto, Integer, RoleCriteria> repo() {
         return roleMapper;
-    }
+    }  // func end
 
 } // class end

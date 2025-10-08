@@ -41,13 +41,14 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
     public int create(T entity) {
         repo().create(entity);
         return getGeneratedKey(entity);
-    }
+    } // func end
 
     /**
      * [1.1] insert 후 PK 값을 추출하는 메소드
      * INSERT 이후 MyBatis가 DTO의 PK 필드(rtNo 등)에 채워 넣은 값을 꺼내 int로 반환
      * @param entity INSERT가 끝난 도메인 객체. MyBatis가 keyProperty에 지정한 필드에 PK가 삽입되어 있음
      * @return 생성된 PK(숫자). 찾지 못하면 0을 반환
+     * @author OngTK
      */
     private int getGeneratedKey(T entity) {
         // List에 도메인별 PK 멤버변수 명을 작성
@@ -69,50 +70,54 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
         }
         // 모든 후보 필드에서 숫자 값을 찾지 못한 경우 기본값 0을 반환합니다.
         return 0;
-    }
+    } // func end
 
     /**
      * [2.1] 전체조회
+     * @author OngTK
      * */
     @Override
     @Transactional(readOnly = true)
     public List<T> readAll() {
         return repo().readAll();
-    }
+    } // func end
     
     /**
      * [2.2] 개별조회
+     * @author OngTK
      */
     @Override
     @Transactional(readOnly = true)
     public Optional<T> read(ID id) {
         return repo().read(id);
-    }
+    } // func end
 
     /**
      * [3] 수정
+     * @author OngTK
      */
     @Override
     @Transactional
     public boolean update(T entity) {
         return repo().update(entity);
-    }
+    } // func end
 
     /**
      * [4] 삭제
+     * @author OngTK
      */
     @Override
     @Transactional
     public boolean delete(ID id) {
         return repo().delete(id);
-    }
+    } // func end
 
 
     @Override
     @Transactional(readOnly = true)
     public int countAll() {
         return repo().countAll();
-    }
+    } // func end
 
     // Search ========================================================
 
@@ -120,19 +125,19 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
     @Transactional(readOnly = true)
     public List<T> search(C criteria) {
         return repo().search(criteria);
-    }
+    } // func end
 
     @Override
     @Transactional(readOnly = true)
     public int countForSearch(C criteria) {
         return repo().countForSearch(criteria);
-    }
+    } // func end
 
     @Override
     @Transactional(readOnly = true)
     public List<T> findAllPaged(PageRequest pageRequest) {
         return repo().findAllPaged(pageRequest);
-    }
+    } // func end
 
     // Page ========================================================
 
@@ -140,17 +145,17 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
     @Transactional(readOnly = true)
     public List<T> searchPaged(C criteria, PageRequest pageRequest) {
         return repo().searchPaged(criteria, pageRequest);
-    }
+    } // func end
 
     @Override
     @Transactional(readOnly = true)
     public Page<T> findPage(PageRequest pageRequest) {
         return repo().findPage(pageRequest);
-    }
+    } // func end
 
     @Override
     @Transactional(readOnly = true)
     public Page<T> searchPage(C criteria, PageRequest pageRequest) {
         return repo().searchPage(criteria, pageRequest);
-    }
-}
+    } // func end
+} // class end

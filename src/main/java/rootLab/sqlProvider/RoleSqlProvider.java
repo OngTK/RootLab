@@ -18,7 +18,7 @@ public class RoleSqlProvider {
         }
         String dir = (sort.getDirection() == Sort.Direction.DESC) ? "DESC" : "ASC";
         return " ORDER BY " + sort.getOrderBy() + " " + dir + " ";
-    }
+    } // func end
 
     private static String whereClause(RoleCriteria c) {
         StringBuilder sb = new StringBuilder(" WHERE 1=1 ");
@@ -30,7 +30,7 @@ public class RoleSqlProvider {
         if (c.getBnNo() != null && !c.getBnNo().isBlank())
             sb.append(" AND bnNo = #{criteria.bnNo} ");
         return sb.toString();
-    }
+    } // func end
 
     // ✅ Mapper @Param("page")와 이름 일치
     public static String findAllPaged(@Param("page") PageRequest page) {
@@ -40,7 +40,7 @@ public class RoleSqlProvider {
                 .append(orderByClause(page.getSort()))
                 .append(" LIMIT #{page.limit} OFFSET #{page.offset} ")
                 .toString();
-    }
+    } // func end
 
     public static String search(@Param("criteria") RoleCriteria criteria) {
         return new StringBuilder()
@@ -49,11 +49,11 @@ public class RoleSqlProvider {
                 .append(whereClause(criteria))
                 .append(" ORDER BY rtNo DESC ")
                 .toString();
-    }
+    } // func end
 
     public static String countForSearch(@Param("criteria") RoleCriteria criteria) {
         return "SELECT COUNT(*) FROM roletemplate " + whereClause(criteria);
-    }
+    } // func end
 
     public static String searchPaged(@Param("criteria") RoleCriteria criteria,
                                      @Param("page") PageRequest page) {
@@ -64,5 +64,5 @@ public class RoleSqlProvider {
                 .append(orderByClause(page.getSort()))
                 .append(" LIMIT #{page.limit} OFFSET #{page.offset} ")
                 .toString();
-    }
-}
+    } // func end
+} // class end
