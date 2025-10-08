@@ -28,12 +28,12 @@ public class PageRequest {
     }
 
     // [3.1] 메소드 - SQL OFFSET 계산
-    public int offset() {
+    public int getOffset() {
         return (page - 1) * size;
     } // func end
 
     // [3.2] 메소드 - SQL LIMIT 값
-    public int limit() {
+    public int getLimit() {
         return size;
     } // func end
 
