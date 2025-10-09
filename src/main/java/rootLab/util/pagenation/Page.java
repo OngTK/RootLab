@@ -1,10 +1,12 @@
 package rootLab.util.pagenation;
 
 import java.util.List;
+
 import lombok.*;
 
 /**
- * [Page 페이지네이션 결과]
+ * [ Page - 페이지 처리 결과 ]
+ *
  * @author OngTK
  * @since 2025.10.08
  */

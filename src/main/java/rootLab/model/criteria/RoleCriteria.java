@@ -4,10 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rootLab.util.search.BaseCriteria;
 
-
 /**
- * 역할(Role) 검색 조건
+ * [ 역할(Role) 검색 조건 ]
  * - null 또는 빈 문자열은 검색 조건에서 제외
+ *  @author OngTK
+ *  @since 2025.10.08
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

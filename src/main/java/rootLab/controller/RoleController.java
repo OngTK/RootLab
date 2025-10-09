@@ -22,6 +22,7 @@ public class RoleController {
 
     /**
      * [1] 생성
+     *
      * @param dto talbe에 삽입하려는 dto
      * @author OngTk
      */
@@ -49,6 +50,7 @@ public class RoleController {
 
     /**
      * [2.1] 전체 조회 - 검색X, pageX
+     *
      * @author OngTk
      */
     @GetMapping
@@ -67,9 +69,10 @@ public class RoleController {
 
     /**
      * [2.2] 개별 조회
+     *
      * @param rtNo : 조회하려는 pk
-     *              "@OOOMapping(/{ })" : 일반적으로 사용하는 queryString 방식이 아닌 "/api/roles/2000001"와 같이 바로 URL에 매개변수를 작성하는 방법
-     *              "@PathVariable" : URL의 마지막 값을 매개변수 값으로 가져옴
+     *             "@OOOMapping(/{ })" : 일반적으로 사용하는 queryString 방식이 아닌 "/api/roles/2000001"와 같이 바로 URL에 매개변수를 작성하는 방법
+     *             "@PathVariable" : URL의 마지막 값을 매개변수 값으로 가져옴
      * @author OngTk
      */
     @GetMapping("/{rtNo}")
@@ -84,7 +87,7 @@ public class RoleController {
                     .map(ResponseEntity::ok)
                     // result 가 존재하지 않으면 460을 반환
                     .orElse(ResponseEntity.status(460).build());
-        } catch (Exception e){
+        } catch (Exception e) {
             // 예외 발생시 560 반환
             return ResponseEntity.status(560).body(null);
         }
@@ -92,6 +95,7 @@ public class RoleController {
 
     /**
      * [3] 수정
+     *
      * @param dto 수정하려는 내용
      * @author OngTK
      */
@@ -109,6 +113,7 @@ public class RoleController {
 
     /**
      * [4] 삭제
+     *
      * @param rtNo 삭제 대상 PK
      * @author OngTK
      */
@@ -124,7 +129,20 @@ public class RoleController {
                 : ResponseEntity.status(460).body(result);
     } // func end
 
-    // 목록: 조건부 검색 + 페이지네이션
+    // Page · Search ================================================================
+
+    /**
+     * [5] 검색 + 페이지네이션
+     *
+     * @param page      조회할 현재 페이지
+     * @param size      한 페이지 당 게시물 수
+     * @param orderBy   정렬 기준_column
+     * @param direction 정렬 방향, ASC / DESC
+     * @param rtName    검색할 rtName
+     * @param rtStatus  검색할 상태값
+     * @param bnNo      검색할 비즈니스 번호
+     * @author OngTK
+     */
     @GetMapping("/search")
     public Page<RoleDto> list(
             @RequestParam(defaultValue = "1") int page,
@@ -135,21 +153,41 @@ public class RoleController {
             @RequestParam(required = false) Integer rtStatus,
             @RequestParam(required = false) String bnNo
     ) {
-        PageRequest pr = new PageRequest(page, size,
-                (orderBy != null && direction != null) ? new Sort(orderBy, direction) : null);
+        System.out.println("page = " + page + ", size = " + size + ", orderBy = " + orderBy + ", direction = " + direction + ", rtName = " + rtName + ", rtStatus = " + rtStatus + ", bnNo = " + bnNo);
 
+        // 페이지 처리를 위한 객체 PageRequest pr 생성
+        // PageRequest(page, size, sort)
+        PageRequest pr = new PageRequest(page, size,
+                // Sort 객체 생성
+                // orderBy와 direction이 null이 아니면
+                (orderBy != null && direction != null)
+                        // Sort 객체 생성
+                        ? new Sort(orderBy, direction)
+                        // Sort를 null로 처리
+                        : null);
+
+        // 매개변수 중 검색조건을 이용한 "역할 검색 객체" RoleCriteria 를 생성
         RoleCriteria criteria = new RoleCriteria();
+        // 역할검색객체에 검색 조건 rtName, rtStatus, bnNo 삽입
         criteria.setRtName(rtName);
         criteria.setRtStatus(rtStatus);
         criteria.setBnNo(bnNo);
 
+        // 검색 조건에 공란 여부에 따라 boolean 판단
+        // T : 검색 조건 3개 중 하나라도 공란이 아니다.
+        // F : 검색 조건 3개 모두 공란이다.
         boolean hasFilter =
                 (rtName != null && !rtName.isBlank()) ||
                         (rtStatus != null) ||
                         (bnNo != null && !bnNo.isBlank());
 
+        // 검색조건 공란 여부에 따른, 결과를 반환
         return hasFilter
+                // true 이면 searchPage 실행 = 검색 O + 페이지 처리 O
+                // 매개변수 = 역할 검색 객체, 페이지 요청 객체
                 ? roleService.searchPage(criteria, pr)
+                // false 이면 findPage 실행
+                // 매개변수 = 페이지 요청 객체 = 검색 X + 페이지 처리 O
                 : roleService.findPage(pr);
     } // func end
 } // class end

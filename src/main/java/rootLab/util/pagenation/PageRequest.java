@@ -3,7 +3,7 @@ package rootLab.util.pagenation;
 import lombok.*;
 
 /**
- * [ PageRequest ]
+ * [ PageRequest - 페이지 처리 요청 ]
  * <p>
  * 페이지네이션을 위한 요청 class
  *
@@ -28,11 +28,15 @@ public class PageRequest {
     }
 
     // [3.1] 메소드 - SQL OFFSET 계산
+    // 앞에서부터 몇 개의 행을 건너뛸지
+    // MyBatis는 필드가 없어도 getter 메소드가 있으면 이를 'property'로 인식
+    // method getOffset() -> property offset
     public int getOffset() {
         return (page - 1) * size;
     } // func end
 
     // [3.2] 메소드 - SQL LIMIT 값
+    // 한 번에 가져올 행(Row)의 수
     public int getLimit() {
         return size;
     } // func end

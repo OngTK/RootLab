@@ -17,8 +17,8 @@ import lombok.*;
 @AllArgsConstructor
 public class Sort {
     // [1] 멤버변수
-    private String orderBy;         // 정렬기준 // 예: "id", "created_at"
-    private Direction direction;    // 정렬 방법
+    private String orderBy;             // 정렬기준 // 예: "id", "created_at"
+    private Direction direction;        // 정렬 방법
 
-    public enum Direction {ASC, DESC} // 정렬 방법을 ASC/DESC 으로 한정함.
+    public enum Direction {ASC, DESC}   // 정렬 방법을 ASC/DESC 으로 한정함.
 } // class end

@@ -34,7 +34,9 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
 
     /**
      * [1.1] 생성
+     *
      * @param entity Dto
+     * @author OngTK
      */
     @Override
     @Transactional
@@ -46,6 +48,7 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
     /**
      * [1.1] insert 후 PK 값을 추출하는 메소드
      * INSERT 이후 MyBatis가 DTO의 PK 필드(rtNo 등)에 채워 넣은 값을 꺼내 int로 반환
+     *
      * @param entity INSERT가 끝난 도메인 객체. MyBatis가 keyProperty에 지정한 필드에 PK가 삽입되어 있음
      * @return 생성된 PK(숫자). 찾지 못하면 0을 반환
      * @author OngTK
@@ -74,16 +77,18 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
 
     /**
      * [2.1] 전체조회
+     *
      * @author OngTK
-     * */
+     */
     @Override
     @Transactional(readOnly = true)
     public List<T> readAll() {
         return repo().readAll();
     } // func end
-    
+
     /**
      * [2.2] 개별조회
+     *
      * @author OngTK
      */
     @Override
@@ -94,6 +99,7 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
 
     /**
      * [3] 수정
+     *
      * @author OngTK
      */
     @Override
@@ -104,6 +110,7 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
 
     /**
      * [4] 삭제
+     *
      * @author OngTK
      */
     @Override
@@ -112,50 +119,91 @@ public abstract class AbstractService<T, ID, C extends BaseCriteria>
         return repo().delete(id);
     } // func end
 
+    // Page · Search ================================================================
 
-    @Override
-    @Transactional(readOnly = true)
-    public int countAll() {
-        return repo().countAll();
-    } // func end
-
-    // Search ========================================================
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> search(C criteria) {
-        return repo().search(criteria);
-    } // func end
-
-    @Override
-    @Transactional(readOnly = true)
-    public int countForSearch(C criteria) {
-        return repo().countForSearch(criteria);
-    } // func end
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> findAllPaged(PageRequest pageRequest) {
-        return repo().findAllPaged(pageRequest);
-    } // func end
-
-    // Page ========================================================
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> searchPaged(C criteria, PageRequest pageRequest) {
-        return repo().searchPaged(criteria, pageRequest);
-    } // func end
-
+    /**
+     * [5] 전체 조회 + 페이지 처리 (검색X)
+     *
+     * @param pageRequest 페이지 처리 요청 객체
+     * @author OngTK
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<T> findPage(PageRequest pageRequest) {
         return repo().findPage(pageRequest);
     } // func end
 
+    /**
+     * [5.1] 전체조회 레코드 수
+     *
+     * @author OngTK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public int countAll() {
+        return repo().countAll();
+    } // func end
+
+    /**
+     * [5.2] 페이지 처리 요청 후 해당 레코드만 List로 반환
+     *
+     * @author OngTK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> findAllPaged(PageRequest pageRequest) {
+        return repo().findAllPaged(pageRequest);
+    } // func end
+
+    /**
+     * [6] 검색 + 페이지 처리
+     *
+     * @param criteria    검색 조건 객체
+     * @param pageRequest 페이지 처리 요청 객체
+     * @author OngTK
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<T> searchPage(C criteria, PageRequest pageRequest) {
         return repo().searchPage(criteria, pageRequest);
     } // func end
+
+
+    /**
+     * [6.1] 검색 결과 수
+     *
+     * @param criteria 검색 조건 객체
+     * @author OngTK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public int countForSearch(C criteria) {
+        return repo().countForSearch(criteria);
+    } // func end
+
+    /**
+     * [6.2] 페이지 정보 검색
+     *
+     * @param pageRequest 페이지처리 요청 객체
+     * @param criteria    검색 조건 객체
+     * @author OngTK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> searchPaged(C criteria, PageRequest pageRequest) {
+        return repo().searchPaged(criteria, pageRequest);
+    } // func end
+
+    /**
+     * [7] 검색 O + 페이지 처리 X
+     *
+     * @param criteria 검색 조건 객체
+     * @author OngTK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> search(C criteria) {
+        return repo().search(criteria);
+    } // func end
+
 } // class end
