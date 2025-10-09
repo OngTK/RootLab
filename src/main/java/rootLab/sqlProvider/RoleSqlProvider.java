@@ -20,7 +20,7 @@ import java.util.Set;
 public class RoleSqlProvider {
 
     /**
-     * [1] 검색 조건에 해당하는 column 정의
+     * [1] 정렬을 허용할 column을 화이트리스트로 선언
      *
      * @author OngTK
      */

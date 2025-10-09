@@ -91,3 +91,7 @@ http://localhost:8080/api/roles/search?page=1&bnNo=100-00-00001
 rtName에 "의" 가 있는 경우에 대한 검색
 
 http://localhost:8080/api/roles/search?page=1&rtName=의
+
+rtName에 "의" 가 있을 때, creatdeDate 기준으로 오름차순 정렬
+
+http://localhost:8080/api/roles/search?page=1&orderBy=createDate&direction=ASC&rtName=의
