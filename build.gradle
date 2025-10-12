@@ -55,6 +55,7 @@ dependencies {
 
     // 셀레니움 브라우저 매니저 (크롬)
     implementation 'io.github.bonigarcia:webdrivermanager:6.3.1'
+
 }
 
 tasks.named('test') {
