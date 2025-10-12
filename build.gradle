@@ -2,11 +2,15 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'war'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot'
+bootWar {
+    // Spring Boot 웹 애플리케이션을 WAR 파일로 패키징, 최종 WAR 파일의 이름과 버전을 지정
+    archiveBaseName = "Root.Lab"    // 기본 아카이브(사이트명) 이름
+    archiveFileName = "ROOT.war"    // 최종 생성되는 파일 이름 (ROOT.war) 파일명 고정할 것
+    archiveVersion  = "0.0.0"       // 버전 정보 (여기서는 0.0.0 고정)
+}
 
 java {
     toolchain {
@@ -45,6 +49,9 @@ dependencies {
 
     // AOP
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
