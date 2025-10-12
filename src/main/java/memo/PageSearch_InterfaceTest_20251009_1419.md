@@ -11,7 +11,7 @@ server.port = 8080
   
 ## [2] JDBC 연동 설정  
 # [2.1] DB 서버 주소  
-spring.datasource.url=jdbc:mysql://localhost:3306/testproject  
+spring.datasource.url=jdbc:mysql://localhost:3306/testProject  
 # [2.2] DB 서버 계정명  
 spring.datasource.username=root  
 # [2.3] DB 서버 비밀번호  
