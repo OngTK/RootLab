@@ -44,6 +44,7 @@ public class ApiTableScheduler {
             // 3. DDL 실행하기
             apiDataRepository.executeDdl(DDL);
             // 4. 해당 데이터를 생성된 테이블에 삽입하기
+            // todo insertAll로 변경 요망
             dataList.forEach( (data) -> {
                 if (apiMapper.dynamicInsert(tableName, data) == 1){
                     log.info("데이터 삽입이 성공적으로 진행중입니다.");

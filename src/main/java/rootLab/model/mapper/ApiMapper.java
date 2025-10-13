@@ -24,7 +24,6 @@ public interface ApiMapper {
     @Insert("<script> " +
             "insert into ${tableName} " +
             "<foreach collection='data.keys' item='key' separator=', ' open='(' close=')'>" +
-
             "${key}" +
             "</foreach>" +
             " values " +
@@ -32,5 +31,6 @@ public interface ApiMapper {
             "#{data[${key}]}" +
             "</foreach>" +
             "</script>")
+    // todo XML로 매핑 변경 필요
     int dynamicInsert(String tableName, Map<String, Object> data);
 } // interface end
