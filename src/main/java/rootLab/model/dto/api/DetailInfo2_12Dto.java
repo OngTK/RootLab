@@ -14,4 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailInfo2_12Dto {
+    // 기본적인 정보
+    private int contentid;      // 콘텐츠ID
+    private int contenttypeid;  // 관광타입ID
+    private int serialnum;      // 반복일련번호
+    private String infoname;    // 제목
+    private String infoTEXT;    // 내용
+    private int fldgubun;       // 일련번호
 } // class end

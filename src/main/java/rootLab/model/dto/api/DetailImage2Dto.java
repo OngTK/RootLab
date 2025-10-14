@@ -14,4 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailImage2Dto {
+    // 기본적인 정보
+    private int contentid;          // 콘텐츠ID
+    private String originimgurl;    // 원본이미지
+    private String imgname;         // 이미지명
+    private String smallimageurl;   // 썸네일이미지
+    private String cpyrhtDivCd;     // 저작권유형
+    private String serialnum;       // 이미지 일련번호
 } // class end
