@@ -20,14 +20,14 @@ CREATE TABLE Members (
     
 INSERT INTO Members 
     (mNo, mId, mPwd, mNick, mGender, mPhone, mEmail, mAdd1, mAdd2,
-     mCreatedAt, mUpdatedAt, mDeletedAt, mTermsAgreed, mLocationAgreed, mPushAgreed, mAuth)
+     mCreatedAt, mTermsAgreed, mLocationAgreed, mPushAgreed, mAuth)
 VALUES
 -- 1. 시스템 관리자
 	(UUID_TO_BIN('01889895-c9e8-466d-a19e-e5e347895e54', 1), 'admin', 'admin', '시스템 관리자', '여', '032-111-2222', 'root.kjs82@gmail.com', 
-    '인천광역시 부평구 경원대로 1366', '', '2025-10-01 10:00:00', NULL, NULL, TRUE, TRUE, TRUE, 1 ),
+    '인천광역시 부평구 경원대로 1366', '', '2025-10-01 10:00:00', TRUE, TRUE, TRUE, 1 ),
 -- 2. 지자체 관리자
 	(UUID_TO_BIN('01889896-1a2b-487e-89f0-123456789abc', 1), 'goseong', 'goseong', '지자체 관리자', '남', '033-680-3114', 'goseong@tjoeun.com',
-    '강원특별자치도 고성군 간성읍 고성중앙길 9', '', '2025-10-01 10:00:00', NULL, NULL, TRUE, TRUE, TRUE, 2);
+    '강원특별자치도 고성군 간성읍 고성중앙길 9', '', '2025-10-01 10:00:00', TRUE, TRUE, TRUE, 2);
     
 ---------------------------------------------------------------------------
 
@@ -59,11 +59,11 @@ CREATE TABLE SiteInfo (
 
 INSERT INTO SiteInfo
     (siNo, mNo, siName, siDomain, siIntro, siLogo, siFavicon, siMarker, siTel, siPrivacyOfficer, siEmail, siKeywords, siIsPublic, siCreatedAt, 
-    siUpdatedAt, siMemo)
+    siMemo)
 VALUES
-	(UUID_TO_BIN('01889896-1a2b-487e-89f0-123456789abc', 1), '고성군 늘려라길', 'goseong.rootlab.kr',
-    'DMZ와 맞닿은 침복단의 청정 자연, 에메랄드빛 동해 바다와 금강산의 수려한 산세가 어우러진 평화와 힐링의 땅입니다.', 'goseongLogo.png', 'goseongFavicon.png',
-    'goseongMarker.jpg', '033-680-3114', '이상근', 'goseong@tjoeun.com', '해수욕장, 전망대, 강원도, 동해, 바다, 여행, 명소', 1, '2025-10-01 10:00:00', NULL, NULL);
+	(UUID_TO_BIN('01889896-1a2b-487e-89f0-123456789abc', 1), '고성군 놀러가자!', 'goseong.rootlab.kr',
+    'DMZ와 맞닿은 침복단의 청정 자연, 에메랄드빛 동해 바다와 금강산의 수려한 산세가 어우러진 평화와 힐링의 땅입니다.<이하 생략···>', 'goseongLogo.png', 'goseongFavicon.png',
+    'goseongMarker.jpg', '033-680-3114', '이상근', 'goseong@tjoeun.com', '해수욕장, 전망대, 강원도, 동해, 바다, 여행, 명소', 1, '2025-10-01 10:00:00', '');
 
 -- -------------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ CREATE TABLE contentType (
     contentTypeName VARCHAR(30) NOT NULL,           -- 타입명
     defaultMarker VARCHAR(255) NOT NULL,            -- 기본마커이미지
     typeIdCreated DATETIME DEFAULT NOW(),           -- 등록일
-    typeIdUpdated DATETIME DEFAULT NULL 
+    typeIdUpdated DATETIME DEFAULT NULL
                  ON UPDATE CURRENT_TIMESTAMP,       -- 수정일
     memo TEXT                                       -- 비고
 );
