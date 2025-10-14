@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS k_tour_headquarter;
+CREATE DATABASE k_tour_headquarter;
+USE k_tour_headquarter;
+SET SQL_SAFE_UPDATES = 0;
+
 DROP TABLE IF EXISTS placeInfoRepeat ;
 DROP TABLE IF EXISTS restaurantIntro;
 DROP TABLE IF EXISTS festivalIntro;
