@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS Members;
 CREATE TABLE Members (
-	mNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,  -- 회원번호 (UUID 이진 저장)
+	mNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,  -- 회원번호
     mId VARCHAR(60) NOT NULL UNIQUE,                              -- 아이디
-    mPwd VARCHAR(60) NOT NULL,                                    -- 비밀번호
+    mPwd VARCHAR(60) NOT NULL,                                    -- 패스워드
     mNick VARCHAR(60) NOT NULL UNIQUE,                            -- 닉네임
     mGender ENUM('남', '여') NOT NULL,                             -- 성별
     mPhone VARCHAR(16) NOT NULL UNIQUE,                           -- 전화번호
@@ -36,7 +36,7 @@ CREATE TABLE SiteInfo (
 	siNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,   -- 사이트번호
     mNo BINARY(16) NULL,                            -- 회원번호 (FK)
     siName VARCHAR(50) NOT NULL UNIQUE,             -- 사이트명
-    siDomain VARCHAR(100) NOT NULL UNIQUE,          -- 도메인
+    siDomain VARCHAR(100) NOT NULL UNIQUE,          -- 도메인명
     siIntro VARCHAR(255),                           -- 사이트소개글
     siLogo VARCHAR(255),                            -- 사이트로고이미지
     siFavicon VARCHAR(255),                         -- 파비콘이미지
@@ -80,16 +80,16 @@ CREATE TABLE contentType (
 );
 
 INSERT INTO contentType 
-    (contentType, contentTypeName, defaultMarker, typeIdCreated)
+    (contentType, contentTypeName, defaultMarker, typeIdCreated, memo)
 VALUES
-    ('12', '관광지', 'tourSpot.png', '2025-10-01 10:00:00'),
-    ('14', '문화시설', 'culturalFacilities.png', '2025-10-01 10:00:00'),
-    ('15', '행사/공연/축제', 'festival.png', '2025-10-01 10:00:00'),
-    ('25', '여행코스', 'travelCourse.png', '2025-10-01 10:00:00'),
-    ('28', '레포츠', 'leports.png', '2025-10-01 10:00:00'),
-    ('32', '숙박', 'stay.png', '2025-10-01 10:00:00'),
-    ('38', '쇼핑', 'shopping.png', '2025-10-01 10:00:00'),
-    ('39', '음식점', 'food.png', '2025-10-01 10:00:00');
+    ('12', '관광지', 'tourSpot.png', '2025-10-01 10:00:00' , ''),
+    ('14', '문화시설', 'culturalFacilities.png', '2025-10-01 10:00:00', ''),
+    ('15', '행사/공연/축제', 'festival.png', '2025-10-01 10:00:00', ''),
+    ('25', '여행코스', 'travelCourse.png', '2025-10-01 10:00:00', ''),
+    ('28', '레포츠', 'leports.png', '2025-10-01 10:00:00', ''),
+    ('32', '숙박', 'stay.png', '2025-10-01 10:00:00', ''),
+    ('38', '쇼핑', 'shopping.png', '2025-10-01 10:00:00', ''),
+    ('39', '음식점', 'food.png', '2025-10-01 10:00:00', '');
     
 -- -------------------------------------------------------------------------------
 
