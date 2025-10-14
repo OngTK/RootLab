@@ -1,4 +1,15 @@
-    <!-- aside(lnb) start -->
+/**
+ * [ 좌측메뉴(asideLnb) 레이아웃(HTML) import ]
+ *
+ * @author kimJS
+ * @since 2025.10.13
+ */
+
+function asideLnb(){ 
+    console.log( '[2] 좌측메뉴(asideLnb) 레이아웃(HTML)' );
+    const headerHTML = document.querySelector('header');
+    const asideLnbHTML = `   
+     <!-- aside(lnb) start -->
     <aside class="lnb">
         <!-- <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  width="100" height="100"
             viewBox="0 0 100 100" xml:space="preserve">
@@ -13,11 +24,17 @@
                     c3.3,0,6-2.7,6-6v-9c1.1,0,2.1-0.4,2.8-1.2c0.7-0.7,1.2-1.7,1.2-2.8v-9C82,42.7,79.3,40,76,40z"/>
             </g><g><circle cx="70" cy="29" r="7"/></g></g>
         </svg> -->
-        <h2>회원관리</h2>
+        <h2>관광지도관리</h2>
         <ul>
-            <li class="active"><a href="/admin/member/index.html" class="active">회원현황</a></li>
-            <li><a href="#" onclick="alert('준비중입니다.');">회원그룹/등급설정</a></li>
-            <li><a href="#" onclick="alert('준비중입니다.');">회원권한설정</a></li>
-            <li><a href="#" onclick="alert('준비중입니다.');">관리자설정</a></li>
+            <li class="active"><a href="/html/admin/mapData/index.html" class="active">지도정보현황</a></li>
+            <li><a href="#" onclick="alert('준비중입니다.');">지도설정</a></li>
         </ul>
     </aside>
+    <!-- aside(lnb) end -->
+    <div class="temp"></div>
+    `
+    headerHTML.insertAdjacentHTML('afterend', asideLnbHTML);
+
+ }//func end
+
+ asideLnb(); //js 실행
