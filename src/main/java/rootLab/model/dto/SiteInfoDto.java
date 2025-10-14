@@ -1,0 +1,38 @@
+package rootLab.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * SiteInfoDto
+ * <p>
+ * 구독한 회원의 사이트 정보를 관리
+ * @author OngTK
+ */
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class SiteInfoDto {
+
+    private int siNo;                   // 사이트번호 (PK)
+    private int mgNo;                   // 관리자번호 (FK)
+    private String siName;              // 사이트명
+    private String siDomain;            // 도메인명
+    private String siIntro;             // 사이트소개글
+    private String siLogo;              // 사이트로고이미지
+    private String siFavicon;           // 파비콘이미지
+    private String siMarker;            // 마커이미지
+    private String siTel;               // 대표전화
+    private String siPrivacyOfficer;    // 개인정보처리책임자
+    private String siEmail;             // 대표이메일
+    private String siKeywords;          // 사이트 검색키워드
+    private int  siIsPublic;            // 사이트 공개여부 (0/1)
+    private String siCreatedAt;         // 생성일시
+    private String siUpdatedAt;         // 수정일시
+    private String siMemo;              // 메모
+
+} // class end

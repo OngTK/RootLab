@@ -32,7 +32,7 @@ public class ApiTableScheduler {
      * 그에 해당하는 데이터를 Insert해주는 메소드
      * @author AhnJH
      */
-    @Scheduled(cron = "0 * * * * *")
+    // @Scheduled(cron = "* * 4 * * *")
     public void createTableAndData(){
         try{
             // 1. Api URL로부터 데이터를 Map 형식으로 받아오기
