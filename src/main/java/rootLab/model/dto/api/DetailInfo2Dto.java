@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * <p> Api_Origin DB의 DetailInfo2_12 테이블에 대한 클래스.
- * <p> DetailInfo2_12 테이블에 대한 접근을 지원합니다.
+ * <p> Api_Origin DB의 DetailInfo2 테이블에 대한 클래스.
+ * <p> DetailInfo2_12, DetailInfo2_39 테이블에 대한 접근을 지원합니다.
  * @author AhnJH
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetailInfo2_12Dto {
+public class DetailInfo2Dto {
     // 기본적인 정보
     private int contentid;      // 콘텐츠ID
     private int contenttypeid;  // 관광타입ID
