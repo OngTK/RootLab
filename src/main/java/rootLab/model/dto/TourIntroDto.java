@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * TourIntro 관광지 소개정보
  * <p>
  * CotentTypeID : 12
+ * @author OngTK
  */
 
 @AllArgsConstructor

@@ -22,8 +22,8 @@ public class LDongCodeDto {
     private int lDongSignguCd;      // 시군구코드
     private String lDongSignguNm;   // 시군구명
     private boolean isActivate;     // 활성화여부
-    private double latitude;        // 위도
-    private double longitude;       // 경도
+    private double mapy;            // 위도
+    private double mapx;            // 경도
     private String createdAt;       // 등록일
     private String updatedAt;       // 수정일
 } // class end
