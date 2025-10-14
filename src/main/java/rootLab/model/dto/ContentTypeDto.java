@@ -26,11 +26,11 @@ import lombok.NoArgsConstructor;
 public class ContentTypeDto {
 
     private int ctNo;                   // 콘텐츠타입번호 (PK)
-    private String contentType;         // 콘텐츠타입
+    private String contentTypeID;         // 콘텐츠타입
     private String contentTypeName;     // 타입명
     private String defaultMarker;       // 기본마커이미지
-    private String typeIdCreated;       // 등록일
-    private String typeIdUpdated;       // 수정일
+    private String createAt;       // 등록일
+    private String updateAt;       // 수정일
     private String memo;                // 비고
 
 } // class end
