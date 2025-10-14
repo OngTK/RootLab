@@ -16,9 +16,9 @@ import java.io.File;
 @AllArgsConstructor
 public class MarkersGPSDto {
     // 기본적인 정보
-    private int mkNo;           // 마커 번호
-    private int pNo;            // Place 번호
-    private String mkURL;       // 마커이미지 경로
+    private int mkNo;           // 마커번호
+    private int pNo;            // Place번호
+    private String mkURL;       // 마커이미지경로
     private double mapx;        // GPS X좌표
     private double mapy;        // GPS Y좌표
     private String createdAt;   // 등록일

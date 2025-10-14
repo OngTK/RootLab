@@ -16,9 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class PlaceImageDetailDto {
     // 기본적인 정보
-    private int pidNo;                          // 상세이미지 번호
-    private int pNo;                            // Place 번호
-    private boolean isEditable;                 // 수정가능 여부
+    private int pidNo;                          // 상세이미지번호
+    private int pNo;                            // Place번호
+    private boolean isEditable;                 // 수정가능여부
     private String serialnum;                   // 이미지 일련번호
     private String originimgurl;                // 원본 이미지 경로
     private String smallimageurl;               // 썸네일 이미지 경로
