@@ -23,6 +23,7 @@ public class SqlCreator {
         // 2. 같은 이름으로 table이 존재한다면, 생성하지 않는 구문 추가
         DDL.append("create table if not exists ").append(tableName).append("(\n");
         // 3. PK로 사용될 id 컬럼을 추가 - PK명 : tableName 맨 첫글자(소문자) + No
+        // todo PK명 논의 필요
         DDL.append(tableName.substring(0,1).toLowerCase()).append("No int auto_increment primary key,\n");
         // 4-1. Map을 순회하면서 컬럼 정의 - .ketSet() : Map의 모든 key를 Set으로 반환
         for (String entry : data.keySet()){
