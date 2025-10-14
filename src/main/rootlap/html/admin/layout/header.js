@@ -4,10 +4,11 @@
  * @author kimJS
  * @since 2025.10.13
  */
-
-function header(){ 
+import { map_info } from "./pageTitleMapping.js"; 
+export const header = () => {
     console.log( '[1] 해더 레이아웃(HTML)' );
-    const container = document.querySelector('#container');
+    const { menu1Depth, menu2Depth, pathUrl1, pathUrl2, menu1Active, menu2Active } = map_info();
+    const containerHTML = document.querySelector('#container');
     const headerHTML = `   
     <!-- header start -->
         <header>
@@ -15,7 +16,7 @@ function header(){
                 <span class="menuIcon" aria-label="전체메뉴" >
                     <svg viewBox="0 0 24 24" fill="none" xmlns="//www.w3.org/2000/svg" data-seed-icon="true" data-seed-icon-version="0.0.23" width="24" height="24"><g><g><path d="M2 4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4C22 4.55228 21.5523 5 21 5H3C2.44772 5 2 4.55228 2 4Z" fill="currentColor"></path><path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor"></path><path d="M3 19C2.44772 19 2 19.4477 2 20C2 20.5523 2.44772 21 3 21H21C21.5523 21 22 20.5523 22 20C22 19.4477 21.5523 19 21 19H3Z" fill="currentColor"></path></g></g></svg>
                 </span>
-                <a href="/html/admin/member/index.html" class="logo"><strong>K-Tour </strong><span>테마형 관광지도 플랫폼</span></a>
+                <a href="/html/admin/map/place_info.html" class="logo"><strong>K-Tour </strong><span>테마형 관광지도 플랫폼</span></a>
             </div>
             <div class="gnb">
                 <div class="headerSearch">
@@ -29,10 +30,27 @@ function header(){
                     </form>
                 </div>
                 <nav>
-                    <ul>
-                        <li class="active"><a href="/html/admin/map_info/index.html">관광지도관리</a></li>
-                        <li><a href="/html/admin/member/index.html">회원관리</a></li>
-                        <li><a href="/html/admin/site/index.html">사이트관리</a></li>
+                    <ul class="menu1Depth">
+                        <li ${menu1Depth === '관광지도관리' ? 'class="active"' : ''} >
+                            <a href="/html/admin/map/place_info.html">관광정보관리</a>
+                            <ul class="menu2Depth">
+                                <li><a href="/html/admin/map/place_info.html">Place현황</a></li>
+                            </ul>
+                        </li>
+                        <li ${menu1Depth === '회원관리' ? 'class="active"' : ''} >
+                            <a href="/html/admin/member/manager.html">회원관리</a>
+                            <ul class="menu2Depth">
+                                <li><a href="/html/admin/member/manager.html">관리자현황</a></li>
+                            </ul>
+                        </li>
+                        <li ${menu1Depth === '사이트관리' ? 'class="active"' : ''} >
+                            <a href="/html/admin/site/site_info.html">사이트관리</a>
+                            <ul class="menu2Depth">
+                                <li><a href="/html/admin/site/site_info.html">사이트정보</a></li>
+                                <li><a href="/html/admin/site/app_push.html">푸시알림</a></li>
+                                <li><a href="/html/admin/site/banner.html">배너관리</a></li>    
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
                 <ul class="memberMenu">
@@ -44,7 +62,7 @@ function header(){
         </header>
     <!-- header end -->
     `
-    container.innerHTML = headerHTML;
+    containerHTML.insertAdjacentHTML('afterbegin', headerHTML);
  }//func end
 
  header(); //js 실행
