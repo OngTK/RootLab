@@ -13,7 +13,6 @@ USE tour_api_origin;
 SET SQL_SAFE_UPDATES = 0;
 SET GLOBAL local_infile=TRUE;	# 로컬 파일을 읽을 수 있도록 설정
 
-CREATE TABLE areabasedlist2 (addr1 VARCHAR(255), addr2 VARCHAR(255), areacode VARCHAR(255), cat1 VARCHAR(255), cat2 VARCHAR(255), cat3 VARCHAR(255), contentid VARCHAR(255), contenttypeid VARCHAR(255), createdtime VARCHAR(255), firstimage VARCHAR(255), firstimage2 VARCHAR(255), cpyrhtDivCd VARCHAR(255), mapx VARCHAR(255), mapy VARCHAR(255), mlevel VARCHAR(255), modifiedtime VARCHAR(255), sigungucode VARCHAR(255), tel TEXT, title VARCHAR(255), zipcode VARCHAR(255), lDongRegnCd VARCHAR(255), lDongSignguCd VARCHAR(255), lclsSystm1 VARCHAR(255), lclsSystm2 VARCHAR(255), lclsSystm3 VARCHAR(255));
 CREATE TABLE areaBasedSyncList2(addr1 VARCHAR(255),addr2 VARCHAR(255),areacode VARCHAR(255),cat1 VARCHAR(255),cat2 VARCHAR(255),cat3 VARCHAR(255),contentid VARCHAR(255),contenttypeid VARCHAR(255),createdtime VARCHAR(255),firstimage VARCHAR(255),firstimage2 VARCHAR(255),cpyrhtDivCd VARCHAR(255),mapx VARCHAR(255),mapy VARCHAR(255),mlevel VARCHAR(255),modifiedtime VARCHAR(255),sigungucode VARCHAR(255),tel TEXT,title VARCHAR(255),zipcode VARCHAR(255),showflag VARCHAR(255),lDongRegnCd VARCHAR(255),lDongSignguCd VARCHAR(255),lclsSystm1 VARCHAR(255),lclsSystm2 VARCHAR(255),lclsSystm3 VARCHAR(255));
 CREATE TABLE detailCommon2(contentid VARCHAR(255),contenttypeid VARCHAR(255),title VARCHAR(255),createdtime VARCHAR(255),modifiedtime VARCHAR(255),tel VARCHAR(255),telname VARCHAR(255),homepage TEXT,firstimage VARCHAR(255),firstimage2 VARCHAR(255),cpyrhtDivCd VARCHAR(255),areacode VARCHAR(255),sigungucode VARCHAR(255),lDongRegnCd VARCHAR(255),lDongSignguCd VARCHAR(255),lclsSystm1 VARCHAR(255),lclsSystm2 VARCHAR(255),lclsSystm3 VARCHAR(255),cat1 VARCHAR(255),cat2 VARCHAR(255),cat3 VARCHAR(255),addr1 VARCHAR(255),addr2 VARCHAR(255),zipcode VARCHAR(255),mapx VARCHAR(255),mapy VARCHAR(255),mlevel VARCHAR(255),overview TEXT);
 CREATE TABLE detailImage2(contentid VARCHAR(255), originimgurl VARCHAR(255), imgname VARCHAR(255), smallimageurl VARCHAR(255), cpyrhtDivCd VARCHAR(255), serialnum VARCHAR(255));
@@ -27,11 +26,6 @@ CREATE TABLE ldongCode2(lDongRegnCd VARCHAR(255),lDongRegnNm VARCHAR(255),lDongS
 CREATE TABLE searchFestival2(addr1 VARCHAR(255),addr2 VARCHAR(255),zipcode VARCHAR(255),cat1 VARCHAR(255),cat2 VARCHAR(255),cat3 VARCHAR(255),contentid VARCHAR(255),contenttypeid VARCHAR(255),createdtime VARCHAR(255),eventstartdate VARCHAR(255),eventenddate VARCHAR(255),firstimage VARCHAR(255),firstimage2 VARCHAR(255),cpyrhtDivCd VARCHAR(255),mapx VARCHAR(255),mapy VARCHAR(255),mlevel VARCHAR(255),modifiedtime VARCHAR(255),areacode VARCHAR(255),sigungucode VARCHAR(255),tel TEXT,title VARCHAR(255),lDongRegnCd VARCHAR(255),lDongSignguCd VARCHAR(255),lclsSystm1 VARCHAR(255),lclsSystm2 VARCHAR(255),lclsSystm3 VARCHAR(255),progresstype VARCHAR(255),festivaltype VARCHAR(255));
 CREATE TABLE searchStay2(addr1 VARCHAR(255),addr2 VARCHAR(255),areacode VARCHAR(255),sigungucode VARCHAR(255),cat1 VARCHAR(255),cat2 VARCHAR(255),cat3 VARCHAR(255),contentid VARCHAR(255),contenttypeid VARCHAR(255),createdtime VARCHAR(255),firstimage VARCHAR(255),firstimage2 VARCHAR(255),cpyrhtDivCd VARCHAR(255),mapx VARCHAR(255),mapy VARCHAR(255),mlevel VARCHAR(255),modifiedtime VARCHAR(255),tel VARCHAR(255),title VARCHAR(255),zipcode VARCHAR(255),lDongRegnCd VARCHAR(255),lDongSignguCd VARCHAR(255),lclsSystm1 VARCHAR(255),lclsSystm2 VARCHAR(255),lclsSystm3 VARCHAR(255));
 
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\areabasedlist2.csv"
-INTO TABLE tour_api_origin.areabasedlist2
-FIELDS TERMINATED BY ","
-LINES TERMINATED BY "\n"
-IGNORE 1 ROWS;
 LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\areaBasedSyncList2.csv"
 INTO TABLE tour_api_origin.areaBasedSyncList2
 FIELDS TERMINATED BY ","
