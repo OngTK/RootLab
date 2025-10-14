@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * festivalIntro 축제 소개정보
  * <p>
  * CotentTypeID : 15
+ * @author OngTK
  */
 
 @AllArgsConstructor

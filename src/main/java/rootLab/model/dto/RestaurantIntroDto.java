@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * RestaurantIntro 음식점 소개정보
  * <p>
  * CotentTypeID : 39
+ * @author OngTK
  */
 
 @AllArgsConstructor

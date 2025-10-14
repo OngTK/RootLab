@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * SiteInfoDto
  * <p>
  * 구독한 회원의 사이트 정보를 관리
+ * @author OngTK
  */
 
 @AllArgsConstructor
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class SiteInfoDto {
 
     private int siNo;                   // 사이트번호 (PK)
-    private int mNo;                    // 회원번호 (FK)
+    private int mgNo;                   // 관리자번호 (FK)
     private String siName;              // 사이트명
     private String siDomain;            // 도메인명
     private String siIntro;             // 사이트소개글

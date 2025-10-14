@@ -9,14 +9,23 @@ import lombok.NoArgsConstructor;
  * ContentType
  * <p>
  * ContentTypeID 코드와 그에 해당하는 명칭 / 기본 마커를 관리
+ * <p>
  * 12 : 관광지
+ * <p>
  * 14 : 문화시설
+ * <p>
  * 15 : 행사/공연/축제
+ * <p>
  * 25 : 여행코스
+ * <p>
  * 28 : 레포츠
+ * <p>
  * 32 : 숙박
+ * <p>
  * 38 : 쇼핑
+ * <p>
  * 39 : 음식점
+ * @author OngTK
  */
 
 @AllArgsConstructor

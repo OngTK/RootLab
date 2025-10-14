@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * CRUD, 페이징, 검색 인터페이스를 위한 샘플 DTO
+ * @author OngTK
+ *
+ * */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

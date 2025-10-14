@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * <p>
  * CotentTypeID : 12, 14, 15, 28, 38, 39
  * 25,32의 경우 이 DTO를 사용하지 않음
+ * @author OngTK
  */
 
 @AllArgsConstructor

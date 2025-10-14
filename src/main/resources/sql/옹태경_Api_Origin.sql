@@ -27,67 +27,67 @@ CREATE TABLE ldongCode2(lDongRegnCd varchar(255),lDongRegnNm varchar(255),lDongS
 CREATE TABLE searchFestival2(addr1 varchar(255),addr2 varchar(255),zipcode varchar(255),cat1 varchar(255),cat2 varchar(255),cat3 varchar(255),contentid varchar(255),contenttypeid varchar(255),createdtime varchar(255),eventstartdate varchar(255),eventenddate varchar(255),firstimage varchar(255),firstimage2 varchar(255),cpyrhtDivCd varchar(255),mapx varchar(255),mapy varchar(255),mlevel varchar(255),modifiedtime varchar(255),areacode varchar(255),sigungucode varchar(255),tel text,title varchar(255),lDongRegnCd varchar(255),lDongSignguCd varchar(255),lclsSystm1 varchar(255),lclsSystm2 varchar(255),lclsSystm3 varchar(255),progresstype varchar(255),festivaltype varchar(255));
 CREATE TABLE searchStay2(addr1 varchar(255),addr2 varchar(255),areacode varchar(255),sigungucode varchar(255),cat1 varchar(255),cat2 varchar(255),cat3 varchar(255),contentid varchar(255),contenttypeid varchar(255),createdtime varchar(255),firstimage varchar(255),firstimage2 varchar(255),cpyrhtDivCd varchar(255),mapx varchar(255),mapy varchar(255),mlevel varchar(255),modifiedtime varchar(255),tel varchar(255),title varchar(255),zipcode varchar(255),lDongRegnCd varchar(255),lDongSignguCd varchar(255),lclsSystm1 varchar(255),lclsSystm2 varchar(255),lclsSystm3 varchar(255));
 
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\areabasedlist2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\areaBasedList2.csv"
 INTO TABLE tour_api_origin.areabasedlist2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\areaBasedSyncList2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\areaBasedSyncList2.csv"
 INTO TABLE tour_api_origin.areaBasedSyncList2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailCommon2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailCommon2.csv"
 INTO TABLE tour_api_origin.detailCommon2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailImage2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailImage2.csv"
 INTO TABLE tour_api_origin.detailImage2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailInfo2_12.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailInfo2_12.csv"
 INTO TABLE tour_api_origin.detailInfo2_12
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailInfo2_39.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailInfo2_39.csv"
 INTO TABLE tour_api_origin.detailInfo2_39
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailIntro2_12.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailIntro2_12.csv"
 INTO TABLE tour_api_origin.detailIntro2_12
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailIntro2_39.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailIntro2_39.csv"
 INTO TABLE tour_api_origin.detailIntro2_39
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\detailPetTour2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\detailPetTour2.csv"
 INTO TABLE tour_api_origin.detailPetTour2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\lclsSystmCode2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\lclsSystmCode2.csv"
 INTO TABLE tour_api_origin.lclsSystmCode2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\ldongCode2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\ldongCode2.csv"
 INTO TABLE tour_api_origin.ldongCode2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\searchFestival2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\searchFestival2.csv"
 INTO TABLE tour_api_origin.searchFestival2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
 IGNORE 1 ROWS;
-LOAD DATA LOCAL INFILE "C:\\Users\\tj-bu-702-06\\Desktop\\RootLab\\src\\main\\resources\\csv\\251012\\searchStay2.csv"
+LOAD DATA LOCAL INFILE "C:\\Users\\Public\\Downloads\\251012\\searchStay2.csv"
 INTO TABLE tour_api_origin.searchStay2
 FIELDS TERMINATED BY ","
 LINES TERMINATED BY "\n"
