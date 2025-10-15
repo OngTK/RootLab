@@ -140,7 +140,7 @@ main section{ padding: 20px; }
 .formWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
 .formWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
 
-.formWrap h2{ padding: 0 0 10px;}
+.formWrap h2{ padding: 0 0 10px; font-size:14px; letter-spacing:-0.7px; opacity:.8 }
 .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
 .formWrap label { display: inline-block; margin: 2px 0; vertical-align: top; }
 .formWrap label b{ display: inline-block; min-width: 70px; vertical-align: top; padding: 2px 3px 0; opacity: .6; }

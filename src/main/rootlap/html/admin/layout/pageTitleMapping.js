@@ -12,7 +12,7 @@ export const map_info = () => {
     const MENU_MAP = {
         "/html/admin/map/place_info.html": {
             menu1Depth: "관광지도관리",
-            menu2Depth: "플레이스현황",
+            menu2Depth: "플레이스 현황",
             menu1Active: "class='active'",
             menu2Active: "class='active'",
             pathUrl1: "/html/admin/map/place_info.html",
