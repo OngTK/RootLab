@@ -65,8 +65,28 @@ main{  margin:0 0 0 180px;  }
 
 /* 2.2.2. 페이지 본문 */
 /*  main(우측본문) > 양쪽 영역 */
-.bothWrap{ display: flex; align-items: stretch;  background: rgba(255,255,255,1); height: calc(100vh - 90px);   }
 main section{ padding: 20px; }
+.bothWrap{ display: flex; align-items: stretch;  background: rgba(255,255,255,1); height: calc(100vh - 90px); overflow-y: hidden; }
+.bothWrap{
+    scrollbar-face-color:#ddd;/*스크롤*/
+    scrollbar-highlight-color:#ddd;/*하이라이트*/
+    scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
+    scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
+    scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
+    scrollbar-arrow-color:#ddd;/*화살*/
+    scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
+    /* overflow-x: auto; */
+}
+.bothWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
+.bothWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
+.bothWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
+.bothWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
+.bothWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
+.bothWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
+
+
+
 .bothWrap section{  border-bottom: solid 1px rgba(0,0,0,.1); overflow: auto; flex: 0 0 50%; }
 .bothWrap section:last-child{ border-left: solid 1px rgba(0,0,0,.1); }
 .bothWrap section.listWrap
@@ -119,6 +139,7 @@ main section{ padding: 20px; }
 .formWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
 .formWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
 .formWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
 .formWrap h2{ padding: 0 0 10px;}
 .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
 .formWrap label { display: inline-block; margin: 2px 0; vertical-align: top; }
