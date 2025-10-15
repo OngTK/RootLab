@@ -32,17 +32,6 @@
                     <!-- 상세 검색창 시작 -->
                     <div class="detailSearch">
                         <form action="#" method="get">
-                            <label><b>장소번호</b>
-                                <input type="text">
-                            </label>
-                            <br>
-                            <label><b>이름</b>
-                                <input type="text">
-                            </label>
-                            <br>
-                            <label><b>주소</b>
-                                <input type="text">
-                            </label>
                             <br>
                             <label for="subsStatusInput"><b>콘텐츠타입</b>
                                 <select class="subsStatusInput">
@@ -86,19 +75,21 @@
                                     <option value="AC030200">한옥스테이</option>
                                 </select>
                             </label>
+                            <label><b>플레이스번호</b>
+                                <input type="text">
+                            </label>
                             <br>
-                            <label for="subsStatusInput"><b>콘텐츠타입</b>
-                                <select class="subsStatusInput">
-                                    <option value="" selected>전체</option>
-                                    <option value="1">관광지</option>
-                                    <option value="2">문화시설</option>
-                                    <option value="3">행사/공연/축제</option>
-                                    <option value="4">여행코스</option>
-                                    <option value="5">레포츠</option>
-                                    <option value="6">숙박</option>
-                                    <option value="7">쇼핑</option>
-                                    <option value="8">음식점</option>
-                                </select>
+                            <label><b>플레이스명</b>
+                                <input type="text">
+                            </label>
+                            <br>
+                            <label><b>주소</b>
+                                <input type="text">
+                            </label>
+
+
+                            <label><b>연락처</b>
+                                <input type="text">
                             </label>
                         </form>
                     </div>
@@ -121,29 +112,32 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>장소명</th>
-                                    <th>주소</th>
+                                    <th>플레이스번호</th>
                                     <th>콘텐츠타입</th>
                                     <th>소분류 카테고리</th>
+                                    <th>플레이스명</th>
+                                    <th>주소</th>
                                     <th>대표연락처</th>
                                     <th>등록일</th>
                                     <th>수정일</th>
+                                    <th>노출여부</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="active">
                                     <td>1</td>
-                                    <td><a href="#">새해 맞이 불꽃쇼 & 소원 풍선 날리기 축제</a></td>
-                                    <td>강원특별자치도 고성군 삼포해변길 9 오션투유콘도</td>
+                                    <td>10001</td>
                                     <td>행사/공연/축제</td>
                                     <td>문화관광축제</td>
+                                    <td><a href="#">새해 맞이 불꽃쇼 & 소원 풍선 날리기 축제</a></td>
+                                    <td>강원특별자치도 고성군 삼포해변길 9 오션투유콘도</td>
                                     <td>1666-1243</td>
                                     <td>2025-00-00</td>
                                     <td>2025-00-00</td>
+                                    <td>비노출</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div>@@ 페이지네이션 버튼 추가 필요</div>
                     </div>
                     <!-- 목록 테이블 끝 -->
 
@@ -173,6 +167,7 @@
                                     <h2>기본정보</h2>
                                     <br>
                                     <button>저장</button>
+                                    <button>삭제</button>
                                     <br>
                                     <label><b>장소명 *</b>
                                         <input type="text">
@@ -254,7 +249,10 @@
                                             placeholder="이슈/메모"></textarea></label>
                                     <br>
                                     <label> <b>대표이미지</b><input type="file"> <span>*이미지 규격은 어쩌구 저쩌구</span></label>
+                                    <br>
                                     <label> <b>섬네일</b><input type="file"><span>*이미지 규격은 어쩌구 저쩌구</span></label>
+                                    <br>
+                                    <label> <b>노출여부</b><input type="radio"> 노출 <input type="radio"> 비노출 </label>
 
                                 </form>
                                 <br>
@@ -339,12 +337,8 @@
                             <label><b>내용</b>
                                 <input type="text">
                             </label>
-                            <label><b>등록일</b>
-                                <input type="text" disabled value="2025-00-00 00:00:00">
-                            </label>
-                            <label><b>수정일</b>
-                                <input type="text" disabled value="2025-00-00 00:00:00">
-                            </label>
+                            <br>
+                            <div>등록일 : 2025-00-00 00:00:00 / 최종 수정일 : 2025-00-00 00:00:00 </div>
                         </form>
                     </div>
                     <!-- CUD.입/출력단 시작 -->
