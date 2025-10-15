@@ -5,8 +5,11 @@
  * @since 2025.10.13
  */
 
-function asideLnb(){ 
+import { map_info } from "./pageTitleMapping.js";  
+
+export const asideLnb = () => {
     console.log( '[2] 좌측메뉴(asideLnb) 레이아웃(HTML)' );
+    const { menu1Depth, menu2Depth, pathUrl1, pathUrl2, menu1Active, menu2Active } = map_info();
     const headerHTML = document.querySelector('header');
     const asideLnbHTML = `   
      <!-- aside(lnb) start -->
@@ -24,10 +27,10 @@ function asideLnb(){
                     c3.3,0,6-2.7,6-6v-9c1.1,0,2.1-0.4,2.8-1.2c0.7-0.7,1.2-1.7,1.2-2.8v-9C82,42.7,79.3,40,76,40z"/>
             </g><g><circle cx="70" cy="29" r="7"/></g></g>
         </svg> -->
-        <h2>관광지도관리</h2>
+        <h2>${menu1Depth}</h2>
         <ul>
-            <li class="active"><a href="/html/admin/mapData/index.html" class="active">지도정보현황</a></li>
-            <li><a href="#" onclick="alert('준비중입니다.');">지도설정</a></li>
+            <li ${menu2Active}}><a href="${pathUrl2}">${menu2Depth}</a></li>
+            
         </ul>
     </aside>
     <!-- aside(lnb) end -->
