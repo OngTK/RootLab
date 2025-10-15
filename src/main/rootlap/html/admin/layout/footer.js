@@ -7,10 +7,8 @@
 
  function footer(){ 
     console.log( '[4] footer 레이아웃(HTML)' );
-    const contentWrapHTML = document.querySelector('.contentWrap');
+    const contentsWrapHTML = document.querySelector('.contentsWrap');
     const footerHTML = `   
-       
-        <!-- main end -->
         <!-- footer start -->
         <footer>
             <small>&copy; 2025 Root.Lab</small>
@@ -21,7 +19,7 @@
     </body>
     </html>
     `
-    contentWrapHTML.insertAdjacentHTML('afterend', footerHTML);
+    contentsWrapHTML.insertAdjacentHTML('afterend', footerHTML);
 
  }//func end
 
