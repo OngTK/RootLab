@@ -15,33 +15,11 @@ DROP TABLE IF EXISTS categoryCode;
 DROP TABLE IF EXISTS IdongCode;
 DROP TABLE IF EXISTS push;
 DROP TABLE IF EXISTS contentType;
-DROP TABLE IF EXISTS siteInfo;
 DROP TABLE IF EXISTS manager;
-
--- ------------------------------------ 회원정보 -------------------------------------------
-CREATE TABLE manager (
-	mgNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY, 	-- 관리자No
-    mId VARCHAR(60) NOT NULL UNIQUE,                              	-- 아이디
-    mPwd VARCHAR(60) NOT NULL,                                    	-- 패스워드
-    mNick VARCHAR(60) NOT NULL UNIQUE,                            	-- 닉네임
-    mGender ENUM('남', '여'),                             		  	-- 성별
-    mPhone VARCHAR(16) NOT NULL UNIQUE,                           	-- 전화번호
-    mEmail VARCHAR(255) NOT NULL UNIQUE,                          	-- 이메일
-    mAdd1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
-    mAdd2 VARCHAR(255),                                           	-- 상세 주소
-    createdAt DATETIME DEFAULT NOW(),                             	-- 가입일
-    updatedAt DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,	-- 수정일
-    deletedAt DATETIME DEFAULT NULL,                             	-- 탈퇴일
-    mTermsAgreed BOOLEAN NOT NULL,                                	-- 이용약관 동의
-    mLocationAgreed BOOLEAN NOT NULL,                             	-- 위치정보 동의
-    mPushAgreed BOOLEAN NOT NULL,                                 	-- 푸시알림 동의
-    mAuth TINYINT NOT NULL DEFAULT 2                              	-- 권한 (1=시스템관리자, 2=지자체관리자)      						
-);
-    
+DROP TABLE IF EXISTS siteInfo;
 -- ------------------------------------ 사이트정보 -------------------------------------------
 CREATE TABLE siteInfo (
 	siNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,   -- 사이트번호
-    mgNo BINARY(16),                            	-- 관리자No (FK)
     siName VARCHAR(50) NOT NULL UNIQUE,             -- 사이트명
     siDomain VARCHAR(100) NOT NULL UNIQUE,          -- 도메인명
     siIntro VARCHAR(255),                           -- 사이트소개글
@@ -56,9 +34,32 @@ CREATE TABLE siteInfo (
     createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP, 	-- 생성일시
     updatedAt  DATETIME DEFAULT NULL 				-- 수정일시
                 ON UPDATE CURRENT_TIMESTAMP,        
-    siMemo LONGTEXT,                                -- 메모
-    CONSTRAINT fk_siteinfo_manager
-      FOREIGN KEY (mgNo) REFERENCES manager(mgNo)
+    siMemo LONGTEXT                                 -- 메모
+);
+
+-- ------------------------------------ 회원정보 -------------------------------------------
+CREATE TABLE manager (
+	mgNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY, 	-- 관리자No
+    siNo INT UNSIGNED,												-- 사이트번호(FK)
+    mId VARCHAR(60) NOT NULL UNIQUE,                              	-- 아이디
+    mPwd VARCHAR(60) NOT NULL,                                    	-- 패스워드
+    mNick VARCHAR(60) NOT NULL UNIQUE,                            	-- 닉네임
+    mGender ENUM('남', '여'),                             		  	-- 성별
+    mPhone VARCHAR(16) NOT NULL UNIQUE,                           	-- 전화번호
+    mEmail VARCHAR(255) NOT NULL UNIQUE,                          	-- 이메일
+    mAdd1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
+    mAdd2 VARCHAR(255),                                           	-- 상세 주소
+    createdAt DATETIME DEFAULT NOW(),                             	-- 가입일
+    updatedAt DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,	-- 수정일
+    deletedAt DATETIME DEFAULT NULL,                             	-- 탈퇴일
+    mTermsAgreed BOOLEAN NOT NULL,                                	-- 이용약관 동의
+    mLocationAgreed BOOLEAN NOT NULL,                             	-- 위치정보 동의
+    mPushAgreed BOOLEAN NOT NULL,                                 	-- 푸시알림 동의
+    memo TEXT,                                       				-- 비고
+    mAuth TINYINT NOT NULL DEFAULT 2,                              	-- 권한 (1=시스템관리자, 2=지자체관리자)
+    
+	CONSTRAINT fk_manager_siteInfo
+      FOREIGN KEY (siNo) REFERENCES siteInfo(siNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
 );
@@ -147,17 +148,17 @@ CREATE TABLE placeInfo (
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
                  
-	CONSTRAINT 
+	CONSTRAINT fk_placeInfo_contentType
       FOREIGN KEY (ctNo) REFERENCES contentType(ctNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL,
       
-	CONSTRAINT 
+	CONSTRAINT fk_placeInfo_IdongCode
       FOREIGN KEY (gpsNo) REFERENCES IdongCode(IdNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL,
       
-	CONSTRAINT 
+	CONSTRAINT fk_placeInfo_categoryCode
       FOREIGN KEY (cd3No) REFERENCES categoryCode(ccNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
@@ -217,7 +218,7 @@ CREATE TABLE detailPetTour (
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
                  
-	CONSTRAINT 
+	CONSTRAINT fk_detailPetTour_placeInfo
       FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
@@ -246,7 +247,7 @@ CREATE TABLE tourIntro (
     updatedAt DATETIME DEFAULT NULL						-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
                  
-    CONSTRAINT 
+    CONSTRAINT fk_tourIntro_placeInfo
       FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
@@ -280,7 +281,7 @@ CREATE TABLE festivalIntro (
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
 	
-	CONSTRAINT 
+	CONSTRAINT fk_festivalIntro_placeInfo
       FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
@@ -310,7 +311,7 @@ CREATE TABLE restaurantIntro (
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
                  
-	CONSTRAINT 
+	CONSTRAINT fk_restaurantIntro_placeInfo
       FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
@@ -328,7 +329,7 @@ CREATE TABLE placeInfoRepeat (
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
                  
-	CONSTRAINT 
+	CONSTRAINT fk_placeInfoRepeat_placeInfo
       FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL

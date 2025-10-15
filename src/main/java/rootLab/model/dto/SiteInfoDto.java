@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 public class SiteInfoDto {
 
     private int siNo;                   // 사이트번호 (PK)
-    private int mgNo;                   // 관리자번호 (FK)
     private String siName;              // 사이트명
     private String siDomain;            // 도메인명
     private String siIntro;             // 사이트소개글

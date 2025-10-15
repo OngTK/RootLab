@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ManagerDto {
     private int mNo;                    // 관리자번호
+    private int siNo;                   // 사이트번호(FK)
     private String mId;                 // 아이디
     private String mPwd;                // 비밀번호
     private String mNick;               // 닉네임
@@ -29,5 +30,6 @@ public class ManagerDto {
     private boolean mTermsAgreed;       // 이용약관 동의
     private boolean mLocationAgreed;    // 위치정보 동의
     private boolean mPushAgreed;        // 푸시알림 동의
+    private String memo;                // 메모
     private int mAuth;                  // 권한 (1:시스템관리자, 2:지자체관리자)
 } // class end
