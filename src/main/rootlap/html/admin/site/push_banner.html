@@ -31,26 +31,24 @@
             <!-- 상세 검색창 시작 -->
             <div class="detailSearch">
                 <form action="#" method="get">
-                    <label for="memberTypeInput"><b>회원유형</b>
+                    <label for="memberTypeInput"><b>구분</b>
                         <select class="memberTypeInput">
                             <option value="" selected>전체</option>
-                            <option value="1">일반회원</option>
-                            <option value="2">사업자</option>
-                            <option value="3">단체/모임</option>
+                            <option value="1">공지</option>
+                            <option value="2">이벤트</option>
                         </select>
                     </label>
-                    <label for="subsStatusInput"><b>구독상태</b>
+                    <label for="subsStatusInput"><b>상태</b>
                         <select class="subsStatusInput">
                             <option value="" selected>전체</option>
-                            <option value="1">무료체험</option>
-                            <option value="2">구독중</option>
-                            <option value="3">구독취소</option>
+                            <option value="1">활성화</option>
+                            <option value="2">비활성화</option>
                         </select>
                     </label>
                     <label for="periodInput"><b>검색기간</b>
                             <select class="baseDateInput">
-                            <option value="1" selected>가입일기준</option>
-                            <option value="2">최종로그인</option>
+                            <option value="1" selected>작성일</option>
+                            <option value="2">수정일</option>
                         </select>
                         <input class="startDay" type="date" placeholder="시작일" /> ~ <input class="endDay" type="date" placeholder="종료일" />
                         <select class="baseDateInput">
@@ -58,10 +56,9 @@
                             <option value="2">최근1달</option>
                             <option value="">전체</option>
                         </select>
-                    </label>
-                    <label for="nameInput"><b>회원명</b><input class="nameInput" type="text" placeholder="회원명" /></label>
-                    <label for="loginIdInput"><b>로그인ID</b><input class="loginIdInput" type="text" placeholder="로그인ID" /></label>
-                    <label for="phoneInput"><b>휴대전화</b><input class="phoneInput" type="number" placeholder="휴대폰번호" /></label>
+                    </label><br/>
+                    <label for="nameInput"><b>제목</b><input class="nameInput" type="text" placeholder="제목" /></label>
+                    <label for="loginIdInput"><b>내용</b><input class="loginIdInput" type="text" placeholder="내용" /></label>
                     <button type="submit" class="searchMembers">검색</button>
                 </form>
             </div>
@@ -83,45 +80,45 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>회원유형</th>
-                            <th>회원명</th>
-                            <th>로그인ID</th>
-                            <th>구독상태</th>
-                            <th>휴대전화</th>
-                            <th>가입일</th>
-                            <th>최종로그인</th>
+                            <th>관리자No</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>구분</th>
+                            <th>노출시작일</th>
+                            <th>노출종료일</th>
+                            <th>푸시알림시간</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="active">
-                            <td>10</td>
-                            <td>회원유형</td>
-                            <td><a href="#">홍길동</a></td>
-                            <td>로그인ID</td>
-                            <td>구독상태</td>
-                            <td>휴대전화</td>
-                            <td>가입일</td>
-                            <td>최종로그인</td>
+                            <td>1</td>
+                            <td><a href="#">관리자ID</a></td>
+                            <td>송지호 해수욕장 페스티벌</td>
+                            <td>"9월 6일(토) 송지호 해수욕장에서 페스티벌이 열립니다! 초대 가수 : 세븐틴, 우즈"</td>
+                            <td>이벤트</td>
+                            <td>2025-08-25</td>
+                            <td>2025-09-05</td>
+                            <td>12:00:00</td>
                         </tr>
                         <tr>
-                            <td>9</td>
-                            <td>회원유형</td>
-                            <td><a href="#">유관순</a></td>
-                            <td>로그인ID</td>
-                            <td>구독상태</td>
-                            <td>휴대전화</td>
-                            <td>가입일</td>
-                            <td>최종로그인</td>
+                            <td>2</td>
+                            <td><a href="#">관리자ID</a></td>
+                            <td>공방 스테이 박보검 사인회</td>
+                            <td>"9월 21일(일) 공방 스테이에서 박보검 사인회가 열립니다! 선착순 100명!"</td>
+                            <td>이벤트</td>
+                            <td>2025-09-08</td>
+                            <td>2025-09-21</td>
+                            <td>16:00:00</td>
                         </tr>
                         <tr>
-                            <td>8</td>
-                            <td>회원유형</td>
-                            <td><a href="#">이순신</a></td>
-                            <td>로그인ID</td>
-                            <td>구독상태</td>
-                            <td>휴대전화</td>
-                            <td>가입일</td>
-                            <td>최종로그인</td>
+                            <td>3</td>
+                            <td><a href="#">관리자ID</a></td>
+                            <td>화암사 주자창 공사</td>
+                            <td>"9월 26일(금) ~ 10월 13일(월) 화암사 주차장 공사로 인해 사용이 불가하므로 이용에 참고바랍니다."</td>
+                            <td>공지</td>
+                            <td>2025-09-25</td>
+                            <td>2025-10-13</td>
+                            <td>12:00:00</td>
                         </tr>
                     </tbody>
                 </table>
@@ -139,8 +136,6 @@
                     <li>단체/모임</li>
                 </ul>
                 <span class="btnBox">
-                    <button type="button" class="btn line" onclick="">비밀번호초기화</button>
-                    <button type="button" class="btn full" onclick="usersAdd()">신규회원등록</button>
                     <button type="submit" onclick="usersEdit()">저장</button>
                 </span>
             </div>
@@ -149,47 +144,30 @@
             <div class="formWrap">
                 <form action="#" method="post" id="userForm">
                     <fieldset>
-                        <label for="memberTypeInput"><b>회원유형</b>
+                        <label for="nameInput"><b>No</b><input class="nameInput" type="text" placeholder="No" /></label>
+                        <label for="nameInput"><b>플레이스No</b><input class="nameInput" type="text" placeholder="플레이스No" /></label>
+                        <label for="nameInput"><b>관리자ID</b><input class="nameInput" type="text" placeholder="관리자ID" /></label><br/>
+                        <label for="nameInput"><b>제목</b><input class="nameInput" type="text" placeholder="제목" /></label>
+                        <label for="memberTypeInput"><b>구분</b>
                             <select class="memberTypeInput">
-                                <option value="1">일반회원</option>
-                                <option value="2" selected>사업자</option>
-                                <option value="3">단체/모임</option>
-                            </select>
-                        </label>
-                        <label class="subsStatusInput"><b>구독상태</b>
-                            <select class="subsStatusInput">
-                                <option value="1">무료체험</option>
-                                <option value="2" selected>구독중</option>
-                                <option value="3">구독취소</option>
+                                <option value="1">공지</option>
+                                <option value="2" selected>이벤트</option>
                             </select>
                         </label><br/>
-                        <label for="nameInput"><b>회원명</b><input class="nameInput" type="text" required placeholder="회원명" disabled/></label>
-                        <label for="loginIdInput"><b>로그인ID</b><input class="loginIdInput" type="text" disabled placeholder="로그인ID" /></label><br/>
-                        <label for="phoneInput"><b>휴대전화</b><input class="phoneInput" type="number" required placeholder="휴대폰번호" /></label>
-                        <label for="emailInput"><b>이메일</b><input type="text" class="emailInput" name="emailInput" required placeholder="이메일" /></label>
-                        <label for="birthInput"><b>생년월일</b><input type="number" class="birthInput" name="birthInput" placeholder="생년월일 8자리" /></label>
+                        <label for="nameInput"><b>제목</b><input class="nameInput" type="text" placeholder="제목" /></label>
+                        <label for="loginIdInput"><b>내용</b><input class="loginIdInput" type="text" placeholder="내용" /></label><br/>
+                        <img src="원래 이미지 주소.jpg" onerror="this.src='https://placehold.co/600x400/EEE/31343C';"/><br/>
+                        <label for="phoneInput"><b>이미지</b><input class="phoneInput" type="file"/></label><br/>
+                        <label for="emailInput"><b>노출시작일</b><input type="date" class="emailInput" name="emailInput" required placeholder="이메일" /></label>
+                        <label for="birthInput"><b>노출종료일</b><input type="date" class="birthInput" name="birthInput" placeholder="생년월일 8자리" /></label>
                         <span>
-                        <label for="genderMaleInput"><b>성별/구분</b>
-                            <select class="genderInput">
-                                <option value="1">남성</option>
-                                <option value="2">여성</option>
-                            </select>
-                            <select id="genderMaleInput">
-                                <option value="1" selected>내국인</option>
-                                <option value="3">외국인</option>
-                            </select>
+                        <label for="genderMaleInput"><b>푸쉬알람시간</b>
+                            <input class="genderInput" type="time">
                         </label>
                         </span>
-                        <label for="zipCodeBtn"><b>기본주소</b>
-                            <button type="button" id="zipCodeBtn">우편번호</button>
-                            <input type="text" id="zipCodeInput" name="zipCodeInput" placeholder="우편번호" />
-                            <input type="text" id="addrInput" name="addrInput" placeholder="주소" /><br/><b></b>
-                            <input type="text" id="addrDetailInput" name="addrDetailInput" placeholder="상세주소" />
-                        </label>
-                        <label for="memoInput"><b>이슈/메모</b><textarea class="memoInput" placeholder="이슈/메모" ></textarea></label>
                     </fieldset>
                 </form>
-                <p><b>최종로그인  </b>2025-07-30(12:50) / <b>가입일  </b>2025-07-10(09:50)</p>
+                <p><b>작성일  </b>2025-07-30(12:50) / <b>수정일  </b></p>
             </div>
             <!-- CUD.입/출력단 시작 -->
         </section>
