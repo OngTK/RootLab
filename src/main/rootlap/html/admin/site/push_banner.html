@@ -7,6 +7,7 @@
     <meta name="Description" content="루트랩은 비즈니스에 꼭 필요한 기능만 간편하게 제공합니다." />
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/reset.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/common.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/layout.css'>
     <link rel="shortcut icon" href="../../resources/admin/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="../resources/admin/img/apple-touch-icon.png">
@@ -34,7 +35,7 @@
                         <!-- 상세 검색창 시작 -->
                         <div class="detailSearch">
                             <form action="#" method="get">
-                                <label for="memberTypeInput"><b>구분</b>
+                                <label for="memberTypeInput"><b>구분유형</b>
                                     <select class="memberTypeInput">
                                         <option value="" selected>전체</option>
                                         <option value="1">공지</option>
@@ -50,12 +51,9 @@
 
                                     </select>
                                 </label>
-                                <br />
                                 <label for="nameInput"><b>제목</b><input class="nameInput" type="text"
                                         placeholder="제목" /></label>
-                                <label for="loginIdInput"><b>내용</b><input class="loginIdInput" type="text"
-                                        placeholder="내용" /></label>
-                                <button type="submit" class="searchMembers">검색</button>
+                                <button type="button"  class="searchBtn">검색</button>
                             </form>
                         </div>
                         <!-- 상세 검색창 끝 -->
@@ -76,41 +74,41 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>구분</th>
-                                        <th>작성자</th>
+                                        <th>구분유형</th>
                                         <th>제목</th>
                                         <th>노출시작일</th>
                                         <th>노출종료일</th>
                                         <th>푸시알림시간</th>
+                                        <th>작성자</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="active">
                                         <td>1</td>
                                         <td>이벤트</td>
-                                        <td><a href="#">작성자</a></td>
-                                        <td>송지호 해수욕장 페스티벌</td>
+                                        <td><b>송지호 해수욕장 페스티벌</b></td>
                                         <td>2025-08-25</td>
                                         <td>2025-09-05</td>
                                         <td>12:00</td>
+                                        <td>작성자</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
                                         <td>이벤트</td>
-                                        <td><a href="#">작성자</a></td>
-                                        <td>공방 스테이 박보검 사인회</td>
+                                        <td><b>공방 스테이 박보검 사인회</b></td>
                                         <td>2025-09-08</td>
                                         <td>2025-09-21</td>
                                         <td>16:00</td>
+                                        <td>작성자</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
                                         <td>공지</td>
-                                        <td><a href="#">작성자</a></td>
-                                        <td>화암사 주자창 공사</td>
+                                        <td><b>화암사 주자창 공사</b></td>
                                         <td>2025-09-25</td>
                                         <td>2025-10-13</td>
                                         <td>12:00</td>
+                                        <td>작성자</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -166,13 +164,13 @@
                                     <label for="birthInput"><b>노출종료일</b><input type="date" class="birthInput"
                                             name="birthInput" placeholder="생년월일 8자리" /></label>
                                     <span>
-                                        <label for="genderMaleInput"><b>푸쉬알람시간</b>
+                                        <label for="genderMaleInput"><b>푸시알림시간</b>
                                             <input class="genderInput" type="time">
                                         </label>
                                     </span>
                                 </fieldset>
                             </form>
-                            <p><b>작성일 </b>2025-07-30(12:50) / <b>수정일 </b></p>
+                             <div class="info_date"><b>등록일:</b>2025-00-00 (00:00:00)<b>수정일:</b>2025-00-00 (00:00:00)</div>
                         </div>
                         <!-- CUD.입/출력단 시작 -->
                     </section>

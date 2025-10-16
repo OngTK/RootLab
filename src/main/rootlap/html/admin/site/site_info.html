@@ -7,6 +7,7 @@
     <meta name="Description" content="루트랩은 비즈니스에 꼭 필요한 기능만 간편하게 제공합니다." />
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/reset.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/common.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/layout.css'>
     <link rel="shortcut icon" href="../../resources/admin/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="../resources/admin/img/apple-touch-icon.png">
@@ -32,7 +33,7 @@
                     <!-- 상세 검색창 시작 -->
                     <div class="detailSearch">
                         <form action="#" method="get">
-                            <label for="sitePrivateInput"><b>사이트공개여부</b>
+                            <label for="sitePrivateInput"><b>공개여부</b>
                                 <select class="sitePrivateInput">
                                     <option value="" selected>전체</option>
                                     <option value="1">공개</option>
@@ -51,15 +52,17 @@
                             <option value="">전체</option>
                         </select>
                     </label> -->
-                            <label for="siteNameInput"><b>사이트명</b><input class="siteNameInput" type="text"
-                                    placeholder="사이트명" /></label>
-                            <label for="domainNameInput"><b>도메인명</b><input class="domainNameInput" type="text"
+                            
+                            <label for="domainNameInput"><b>도메인(URL)</b><input class="domainNameInput" type="text"
                                     placeholder="도메인명" /></label>
-                            <label for="phoneInput"><b>대표전화</b><input class="phoneInput" type="number"
+                            <label for="phoneInput"><b>대표전화</b><input type="text"
                                     placeholder="대표전화" /></label>
                             <label for="emailInput"><b>대표이메일</b><input class="emailInput" type="text"
                                     placeholder="대표이메일" /></label>
-                            <button type="submit" class="searchMembers">검색</button>
+                            <label for="siteNameInput"><b>사이트명</b><input class="siteNameInput" type="text"
+                            placeholder="사이트명" /></label>
+                            <button type="button"  class="searchBtn">
+                                검색</button>
                         </form>
                     </div>
                     <!-- 상세 검색창 끝 -->
@@ -121,14 +124,11 @@
                     <!-- CUD.타이틀/버튼 시작 -->
                     <div class="titleBox">
                         <ul class="tabtitle">
-                            <li class="active">일반회원</li>
-                            <li>사업자</li>
-                            <li>단체/모임</li>
+                            <li class="active">기본정보</li>
                         </ul>
                         <span class="btnBox">
-                            <button type="button" class="btn line" onclick="">비밀번호초기화</button>
-                            <button type="button" class="btn full" onclick="siteAdd()">신규사이트등록</button>
-                            <button type="submit" onclick="siteEdit()">저장</button>
+                            <button type="button" class="btn full" onclick="siteEdit()">저장</button>
+                            <button type="button" class="btn line" onclick="">삭제</button>
                         </span>
                     </div>
                     <!-- CUD.타이틀/버튼 끝 -->
@@ -142,24 +142,6 @@
                                 <br />
                                 <label for="siteNameInput"><b>사이트명</b><input class="siteNameInput" type="text" required
                                         placeholder="사이트명" /></label>
-                                <label for="nameInput"><b>개인정보처리책임자</b><input class="nameInput" type="text" required
-                                        placeholder="개인정보처리책임자" /></label>
-                                <label for="nameInput">
-                                    <b>관리자</b>
-                                    <select>
-                                        <option value="">이름(아이디)</option>
-                                    </select>
-                                    </label>
-                                <label for="phoneInput"><b>대표전화</b><input class="phoneInput" type="number" required
-                                        placeholder="대표전화" /></label>
-                                <label for="emailInput"><b>대표이메일</b><input type="text" class="emailInput"
-                                        name="emailInput" required placeholder="이메일" /></label>
-                                <br />
-                                <label for="siteInfoInput"><b>사이트소개글</b><textarea class="siteInfoInput"
-                                        placeholder="사이트소개글"></textarea></label>
-                                <br />
-                                <label for="siteSearchKeywordInput"><b>사이트검색키워드</b><input type="text"
-                                        class="siteSearchKeywordInput" name="siteSearchKeywordInput" /></label>
                                 <span>
                                     <label for="sitePrivateInput"><b>사이트공개여부</b>
                                         <select class="sitePrivateInput">
@@ -168,20 +150,48 @@
                                         </select>
                                     </label>
                                 </span>
+                                <br />
+                                <label for="phoneInput"><b>대표전화</b><input class="phoneInput" type="text" required
+                                        placeholder="대표전화" /></label>
+                                <label for="emailInput"><b>대표이메일</b><input type="text" class="emailInput"
+                                        name="emailInput" required placeholder="이메일" /></label>
+                                <br />
+                                <label for="nameInput"><b>개인정보책임자</b><input class="nameInput" type="text" required
+                                        placeholder="개인정보처리책임자" />
+                                </label>
+                                <label for="nameInput">
+                                    <b>관리자명(ID)</b>
+                                    <select disabled>
+                                        <option value="">이름(아이디)</option>
+                                    </select>
+                                </label>
+                                <br />
+                                <label for="siteInfoInput"><b>사이트소개</b><textarea class="siteInfoInput"
+                                        placeholder="사이트소개글"></textarea></label>
+                                <br />
+                                <label for="siteSearchKeywordInput"><b>검색키워드</b><textarea class="siteInfoInput"
+                                        placeholder="사이트소개글"></textarea></label>
+                                
+                                <br />
                                 <label for="memoInput"><b>이슈/메모</b><textarea class="memoInput"
                                         placeholder="이슈/메모"></textarea></label>
                                 <br />
-                                <label for="siteLogoInput"><b>사이트로고이미지</b><input type="file" class="siteLogoInput"
-                                        name="siteLogoInput" required placeholder="사이트로고이미지" /></label>
+                                
+                                <label for="siteLogoInput"><b>로고이미지</b><input type="file" class="siteLogoInput"
+                                        name="siteLogoInput" required placeholder="사이트로고이미지" />
+                                        <span class="info_date"> *이미지 사이즈: 120px(가로) * 50px(세로) 권장</span></label>
                                 <br>
                                 <label for="faviconInput"><b>파비콘이미지</b><input type="file" class="faviconInput"
-                                        name="faviconInput" required placeholder="파비콘이미지" /></label>
+                                        name="faviconInput" required placeholder="파비콘이미지" />
+                                        <span class="info_date"> *이미지 사이즈: 80px(가로) * 80px(세로) 권장</span>
+                                    </label>
                                 <br>
                                 <label for="markerInput"><b>마커이미지</b><input type="file" class="markerInput"
                                         name="markerInput" required placeholder="마커이미지" /></label>
+                                        <span class="info_date"> *이미지 사이즈: 500px(가로) * 500px(세로) 권장</span>
                             </fieldset>
                         </form>
-                        <p><b>최종수정일시 </b>2025-07-30(12:50) / <b>생성일시 </b>2025-07-10(09:50)</p>
+                         <div class="info_date"><b>등록일:</b>2025-00-00 (00:00:00)<b>수정일:</b>2025-00-00 (00:00:00)</div>
                     </div>
                     <!-- CUD.입/출력단 시작 -->
                 </section>

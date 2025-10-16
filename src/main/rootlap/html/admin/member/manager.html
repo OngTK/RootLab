@@ -6,6 +6,7 @@
     <meta name="Description" content="루트랩은 비즈니스에 꼭 필요한 기능만 간편하게 제공합니다."/>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/reset.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/common.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../resources/admin/css/layout.css'>
     <link rel="shortcut icon" href="../../resources/admin/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="../resources/admin/img/apple-touch-icon.png">
@@ -49,10 +50,10 @@
                             <option value="">전체</option>
                         </select>
                     </label> -->
-                    <label for="nameInput"><b>회원명</b><input class="nameInput" type="text" placeholder="회원명" /></label>
-                    <label for="loginIdInput"><b>로그인ID</b><input class="loginIdInput" type="text" placeholder="로그인ID" /></label>
-                    <label for="phoneInput"><b>휴대전화</b><input class="phoneInput" type="number" placeholder="휴대폰번호" /></label>
-                    <button type="submit" class="searchMembers">검색</button>
+                    <label for="nameInput"><b>회원명</b><input type="text" placeholder="회원명" /></label>
+                    <label for="loginIdInput"><b>로그인ID</b><input  type="text" placeholder="로그인ID" /></label>
+                    <label for="phoneInput"><b>휴대전화</b><input  type="text" placeholder="휴대폰번호" /></label>
+                    <button type="button"  class="searchBtn">검색</button>
                 </form>
             </div>
             <!-- 상세 검색창 끝 -->
@@ -123,12 +124,12 @@
             <!-- CUD.타이틀/버튼 시작 -->
             <div class="titleBox">
                 <ul class="tabtitle">
-                    <li class="active">기본정보</li>
+                    <li class="active">관리자 기본정보</li>
                 </ul>
                 <span class="btnBox">
-                    <button type="button" class="btn line" onclick="">비밀번호초기화</button>
-                    <button type="button" class="btn full" onclick="managerAdd()">신규관리자등록</button>
                     <button type="submit" onclick="managerEdit()">저장</button>
+                    <button type="button" class="btn line" onclick="">비밀번호초기화</button>
+                    <button type="button" class="btn line" onclick="managerAdd()">신규등록</button>
                 </span>
             </div>
             <!-- CUD.타이틀/버튼 끝 -->
@@ -144,9 +145,10 @@
                         </label><br/>
                         <label for="loginIdInput"><b>사이트명</b><input class="loginIdInput" type="text" disabled placeholder="K-Tour" /></label>
                         <label for="loginIdInput"><b>도메인주소</b><input class="loginIdInput" type="text" disabled placeholder="rootlab.kr" /><button type="button" id="zipCodeBtn">바로가기</button></label>
-                        
+                        <br/>
                         <label for="nameInput"><b>관리자명</b><input class="nameInput" type="text" required placeholder="김진숙" disabled/></label>
                         <label for="loginIdInput"><b>닉네임</b><input class="loginIdInput" type="text" disabled placeholder="시스템관리자" /></label>
+                        <br/>
                         <label for="loginIdInput"><b>로그인ID</b><input class="loginIdInput" type="text" disabled placeholder="admin" /></label>
                         <span>
                         <label for="genderMaleInput"><b>성별</b>
@@ -161,13 +163,14 @@
                         <button type="button" id="zipCodeBtn">비밀번호수정</button></label><br/>
                         <label for="phoneInput"><b>휴대전화</b><input class="phoneInput" type="number" required placeholder="010-0000-0000" /></label>
                         <label for="emailInput"><b>이메일</b><input type="text" class="emailInput" name="emailInput" required placeholder="root.kjs82@gmail.com" /></label>
-                        
+                        <br/>
                         <label for="zipCodeBtn"><b>기본주소</b>
                             <button type="button" id="zipCodeBtn">우편번호</button>
                             <input type="text" id="zipCodeInput" name="zipCodeInput" placeholder="우편번호" />
                             <input type="text" id="addrInput" name="addrInput" placeholder="주소" /><br/><b></b>
                             <input type="text" id="addrDetailInput" name="addrDetailInput" placeholder="상세주소" />
                         </label>
+                        <br/>
                         <label for="memoInput"><b>이슈/메모</b><textarea class="memoInput" placeholder="이슈/메모" ></textarea></label><br/>
                         <label for="genderMaleInput"><b>이용약관</b>
                             <select class="memberTypeInput">
@@ -189,8 +192,8 @@
                         </label>
                         <br/>
                     </fieldset>
+                     <div class="info_date"><b>등록일:</b>2025-00-00 (00:00:00)<b>수정일:</b>2025-00-00 (00:00:00)</div>
                 </form>
-                <p><b>수정일  </b>2025-10-15(13:30) <br/> <b>가입일  </b>2025-07-10(09:50)  <br/> <b>최종로그인  </b>2025-07-30(12:50) </p>
             </div>
             <!-- CUD.입/출력단 시작 -->
         </section>
