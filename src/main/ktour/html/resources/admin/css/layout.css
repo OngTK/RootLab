@@ -143,7 +143,7 @@ main section{ padding: 20px; }
 .formWrap h2{ padding: 0 0 10px; font-size:14px; letter-spacing:-0.7px; opacity:.8 }
 .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
 .formWrap label { display: inline-block; margin: 2px 0; vertical-align: top; }
-.formWrap label b{ display: inline-block; min-width: 70px; vertical-align: top; padding: 2px 3px 0; opacity: .6; }
+.formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 2px 3px 0; opacity: .6; }
 .formWrap p{ padding: 10px 0; }
  
 /*  main(우측본문) > 하단 영역 */

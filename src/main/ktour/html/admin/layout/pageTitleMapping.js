@@ -34,13 +34,13 @@ export const map_info = () => {
             pathUrl1: "/html/admin/site/site_info.html",
             pathUrl2: "/html/admin/site/site_info.html"
         },
-        "/html/admin/site/push_banner.html": {
+        "/html/admin/site/push_popup.html": {
             menu1Depth: "사이트관리",
-            menu2Depth: "푸시/배너관리",
+            menu2Depth: "푸시/팝업관리",
             menu1Active: "class='active'",
             menu2Active: "class='active'",
-            pathUrl1: "/html/admin/site/push_banner.html",
-            pathUrl2: "/html/admin/site/push_banner.html"
+            pathUrl1: "/html/admin/site/push_popup.html",
+            pathUrl2: "/html/admin/site/push_popup.html"
         }
     }; 
 

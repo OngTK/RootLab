@@ -47,7 +47,7 @@ export const header = () => {
                             <a href="/html/admin/site/site_info.html">사이트관리</a>
                             <ul class="menu2Depth">
                                 <li><a href="/html/admin/site/site_info.html">사이트정보</a></li>
-                                <li><a href="/html/admin/site/push_banner.html">푸시/배너관리</a></li>
+                                <li><a href="/html/admin/site/push_popup.html">푸시/팝업관리</a></li>
                             </ul>
                         </li>
                     </ul>
