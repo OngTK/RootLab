@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS placeImageDetail;
 DROP TABLE IF EXISTS markersGPS;
 DROP TABLE IF EXISTS placeInfo;
 DROP TABLE IF EXISTS categoryCode;
-DROP TABLE IF EXISTS IdongCode;
+DROP TABLE IF EXISTS ldongCode;
 DROP TABLE IF EXISTS push;
 DROP TABLE IF EXISTS contentType;
 DROP TABLE IF EXISTS manager;
@@ -94,8 +94,8 @@ CREATE TABLE push (
 );
 
 -- ------------------------------------ 법정동코드 -------------------------------------------
-CREATE TABLE IdongCode (
-	IdNo SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 법정동코드번호
+CREATE TABLE ldongCode (
+	ldNo SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 법정동코드번호
     rnum SMALLINT UNSIGNED NOT NULL,						-- 일련번호
     lDongRegnCd CHAR(5) NOT NULL, 							-- 시도코드
     lDongRegnNm VARCHAR(20) NOT NULL, 						-- 시도명
@@ -113,12 +113,12 @@ CREATE TABLE IdongCode (
 CREATE TABLE categoryCode (
 	ccNo SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 분류체계번호
     rnum SMALLINT NOT NULL,										-- 일련번호
-    lclsSystm1Cd CHAR(2) NOT NULL, 								-- 대분류코드
+    lclsSystm1Cd CHAR(3) NOT NULL, 								-- 대분류코드
     lclsSystm1Nm VARCHAR(15) NOT NULL, 							-- 대분류명
-    lclsSystm2Cd CHAR(4) NOT NULL,								-- 중분류코드
-    lclsSystm2Nm VARCHAR(15) NOT NULL, 							-- 중분류명
-    lclsSystm3Cd CHAR(8) NOT NULL,								-- 소분류코드
-    lclsSystm3Nm VARCHAR(15) NOT NULL,							-- 소분류명
+    lclsSystm2Cd CHAR(5) NOT NULL,								-- 중분류코드
+    lclsSystm2Nm VARCHAR(30) NOT NULL, 							-- 중분류명
+    lclsSystm3Cd CHAR(9) NOT NULL,								-- 소분류코드
+    lclsSystm3Nm VARCHAR(30) NOT NULL,							-- 소분류명
     isActivate BOOLEAN DEFAULT TRUE, 							-- 활성화여부
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,				-- 등록일
     updatedAt DATETIME DEFAULT NULL								-- 수정일
@@ -154,7 +154,7 @@ CREATE TABLE placeInfo (
       ON DELETE SET NULL,
       
 	CONSTRAINT fk_placeInfo_IdongCode
-      FOREIGN KEY (gpsNo) REFERENCES IdongCode(IdNo)
+      FOREIGN KEY (gpsNo) REFERENCES ldongCode(ldNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL,
       
