@@ -1,7 +1,7 @@
 -- --------------------------------- 회원  ------------------------------------------
-INSERT INTO Members 
-    (mNo, mId, mPwd, mNick, mGender, mPhone, mEmail, mAdd1, mAdd2,
-     mCreatedAt, mTermsAgreed, mLocationAgreed, mPushAgreed, mAuth)
+INSERT INTO manager 
+    (mgNo, mId, mPwd, mNick, mGender, mPhone, mEmail, mAdd1, mAdd2,
+     CreatedAt, mTermsAgreed, mLocationAgreed, mPushAgreed, mAuth)
 VALUES
 -- 1. 시스템 관리자
 	(UUID_TO_BIN('01889895-c9e8-466d-a19e-e5e347895e54', 1), 'admin', 'admin', '시스템 관리자', '여', '032-111-2222', 'root.kjs82@gmail.com', 
@@ -13,7 +13,7 @@ VALUES
     
 -- --------------------------------- 사이트정보 ------------------------------------------
 INSERT INTO SiteInfo
-    (siNo, mNo, siName, siDomain, siIntro, siLogo, siFavicon, siMarker, siTel, siPrivacyOfficer, siEmail, siKeywords, siIsPublic, siCreatedAt, 
+    (siNo, mgNo, siName, siDomain, siIntro, siLogo, siFavicon, siMarker, siTel, siPrivacyOfficer, siEmail, siKeywords, siIsPublic, siCreatedAt, 
     siMemo)
 VALUES
 	(UUID_TO_BIN('01889896-1a2b-487e-89f0-123456789abc', 1), '고성군 놀러가자!', 'goseong.rootlab.kr',
@@ -23,16 +23,16 @@ VALUES
 
 -- -------------------------------------- 콘텐츠타입 -----------------------------------------
 INSERT INTO contentType 
-    (contentType, contentTypeName, defaultMarker, typeIdCreated, memo)
+    (contenttypeid, contentTypeName, defaultMarker, createdAt, updatedAt, memo)
 VALUES
-    ('12', '관광지', 'tourSpot.png', '2025-10-01 10:00:00' , ''),
-    ('14', '문화시설', 'culturalFacilities.png', '2025-10-01 10:00:00', ''),
-    ('15', '행사/공연/축제', 'festival.png', '2025-10-01 10:00:00', ''),
-    ('25', '여행코스', 'travelCourse.png', '2025-10-01 10:00:00', ''),
-    ('28', '레포츠', 'leports.png', '2025-10-01 10:00:00', ''),
-    ('32', '숙박', 'stay.png', '2025-10-01 10:00:00', ''),
-    ('38', '쇼핑', 'shopping.png', '2025-10-01 10:00:00', ''),
-    ('39', '음식점', 'food.png', '2025-10-01 10:00:00', '');
+    ('12', '관광지', 'tourSpot.png', '2025-10-01 10:00:00' , '2025-10-01 10:00:00' ,''),
+    ('14', '문화시설', 'culturalFacilities.png', '2025-10-01 10:00:00','2025-10-01 10:00:00' , ''),
+    ('15', '행사/공연/축제', 'festival.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,''),
+    ('25', '여행코스', 'travelCourse.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,''),
+    ('28', '레포츠', 'leports.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,''),
+    ('32', '숙박', 'stay.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,''),
+    ('38', '쇼핑', 'shopping.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,''),
+    ('39', '음식점', 'food.png', '2025-10-01 10:00:00', '2025-10-01 10:00:00' ,'');
     
 -- ------------------------------------ 푸시 알람 (+배너) -------------------------------------------
 INSERT INTO push
