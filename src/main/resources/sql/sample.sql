@@ -37,7 +37,7 @@ CREATE TABLE siteInfo (
     siMemo LONGTEXT                                 -- 메모
 );
 
--- ------------------------------------ 회원정보 -------------------------------------------
+-- ------------------------------------ 관리자정보 -------------------------------------------
 CREATE TABLE manager (
 	mgNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY, 	-- 관리자No
     siNo INT UNSIGNED,												-- 사이트번호(FK)
@@ -58,7 +58,7 @@ CREATE TABLE manager (
     memo TEXT,                                       				-- 비고
     mAuth TINYINT NOT NULL DEFAULT 2,                              	-- 권한 (1=시스템관리자, 2=지자체관리자)
     
-	CONSTRAINT fk_manager_siteInfo
+	CONSTRAINT
       FOREIGN KEY (siNo) REFERENCES siteInfo(siNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
