@@ -141,7 +141,7 @@ CREATE TABLE placeInfo (
     addr2 VARCHAR(100),										-- 상세주소
     zipcode VARCHAR(10),									-- 우편번호
     homepage TEXT,											-- 홈페이지링크
-    tel VARCHAR(10),										-- 전화
+    tel VARCHAR(255),										-- 전화
     telname VARCHAR(30),									-- 전화번호명
     overview TEXT NOT NULL,									-- 개요
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,			-- 등록일

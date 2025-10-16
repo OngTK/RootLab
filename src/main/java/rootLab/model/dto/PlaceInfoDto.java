@@ -27,7 +27,7 @@ public class PlaceInfoDto {
     private String firstimage2;     // 썸네일(대표)
     private String addr1;           // 기본주소
     private String addr2;           // 상세주소
-    private int zipcode;            // 우편번호
+    private String zipcode;            // 우편번호
     private String homepage;        // 홈페이지링크
     private String tel;             // 전화
     private String telname;         // 전화번호명
