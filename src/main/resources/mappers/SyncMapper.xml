@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+  정규화 DTO만 사용하고, 원본DTO는 생성하지 않습니다.
+  SELECT 시 원본 컬럼을 정규화 DTO의 필드명으로 AS 별칭을 맞춰 반환합니다.
+  @author OngTK
+-->
+<mapper namespace="rootLab.model.mapper.SyncMapper">
+
+    <!-- [1] 카테고리 코드 동기화========================================================= -->
+    <!-- [1.1] 카테고리 결과를 반환할 Map 정의 -->
+    <resultMap id="CategoryCodeMap" type="rootLab.model.dto.CategoryCodeDto">
+        <id property="ccNo" column="ccNo"/>
+        <result property="rnum" column="rnum"/>
+        <result property="lclsSystm1Cd" column="lclsSystm1Cd"/>
+        <result property="lclsSystm1Nm" column="lclsSystm1Nm"/>
+        <result property="lclsSystm2Cd" column="lclsSystm2Cd"/>
+        <result property="lclsSystm2Nm" column="lclsSystm2Nm"/>
+        <result property="lclsSystm3Cd" column="lclsSystm3Cd"/>
+        <result property="lclsSystm3Nm" column="lclsSystm3Nm"/>
+        <result property="isActivate" column="isActivate"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+    </resultMap>
+
+    <!-- [1.2] API 원본 DB를 정규화 DTO 형식에 맞추어 조회 -->
+    <select id="selectCategoryCodesFromOrigin" resultMap="CategoryCodeMap">
+        SELECT
+        NULL AS ccNo,
+        CAST(rnum AS UNSIGNED) AS rnum,
+        lclsSystm1Cd AS lclsSystm1Cd,
+        lclsSystm1Nm AS lclsSystm1Nm,
+        lclsSystm2Cd AS lclsSystm2Cd,
+        lclsSystm2Nm AS lclsSystm2Nm,
+        lclsSystm3Cd AS lclsSystm3Cd,
+        lclsSystm3Nm AS lclsSystm3Nm,
+        TRUE AS isActivate,
+        NULL AS createdAt,
+        NULL AS updatedAt
+        FROM tour_api_origin.lclsSystmCode2;
+    </select>
+
+    <!-- [1.3] 정규화 DB에 INSERT -->
+    <insert id="insertCategoryCodeBatch">
+        INSERT INTO k_tour_headquarter.categoryCode
+        (rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm,
+        lclsSystm3Cd, lclsSystm3Nm, isActivate)
+        VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.rnum}, #{it.lclsSystm1Cd}, #{it.lclsSystm1Nm},
+            #{it.lclsSystm2Cd}, #{it.lclsSystm2Nm},
+            #{it.lclsSystm3Cd}, #{it.lclsSystm3Nm}, #{it.isActivate})
+        </foreach>
+    </insert>
+
+    <!-- [2] 법정동 코드 동기화========================================================= -->
+    <!-- [2.1] 카테고리 결과를 반환할 Map 정의 -->
+    <resultMap id="LDongCodeMap" type="rootLab.model.dto.LDongCodeDto">
+        <id property="IdNo" column="ldNo"/>
+        <result property="rnum" column="rnum"/>
+        <result property="lDongRegnCd" column="lDongRegnCd"/>
+        <result property="lDongRegnNm" column="lDongRegnNm"/>
+        <result property="lDongSignguCd" column="lDongSignguCd"/>
+        <result property="lDongSignguNm" column="lDongSignguNm"/>
+        <result property="isActivate" column="isActivate"/>
+        <result property="mapy" column="mapy"/>
+        <result property="mapx" column="mapx"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+    </resultMap>
+
+    <!-- [2.2] 원본 API DB에서 정규화 테이블 DTO에 맞추어 조회 -->
+    <!--
+      주의: 원본 ldongCode2 에는 mapy/mapx 가 없음
+      아래 쿼리는 임시로 0.0 세팅 (추후 교체 예정)
+    -->
+    <select id="selectLDongCodesFromOrigin" resultMap="LDongCodeMap">
+        SELECT
+        NULL AS ldNo, -- AI
+        CAST(rnum AS UNSIGNED) AS rnum,
+        lDongRegnCd AS lDongRegnCd,
+        lDongRegnNm AS lDongRegnNm,
+        lDongSignguCd AS lDongSignguCd,
+        lDongSignguNm AS lDongSignguNm,
+        TRUE AS isActivate,
+        CAST(0.0 AS DECIMAL(13,10)) AS mapy, -- TODO: 좌표 공급 필요
+        CAST(0.0 AS DECIMAL(13,10)) AS mapx, -- TODO: 좌표 공급 필요
+        NULL AS createdAt,
+        NULL AS updatedAt
+        FROM tour_api_origin.ldongCode2
+    </select>
+
+    <!-- [2.3] 정규화 테이블에 삽입 -->
+    <insert id="insertLDongCodeBatch">
+        INSERT INTO k_tour_headquarter.ldongCode
+        (rnum, lDongRegnCd, lDongRegnNm, lDongSignguCd, lDongSignguNm,
+        isActivate, mapy, mapx)
+        VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.rnum}, #{it.lDongRegnCd}, #{it.lDongRegnNm}, #{it.lDongSignguCd}, #{it.lDongSignguNm},
+            #{it.isActivate}, #{it.mapy}, #{it.mapx})
+        </foreach>
+    </insert>
+
+    <!-- [3] 관광정보 동기화 목록 동기화 ========================================================= -->
+    <!-- [3.1] 관광정보 결과를 반환할 Map 정의 -->
+    <resultMap id="PlaceInfoMap" type="rootLab.model.dto.PlaceInfoDto">
+        <id     property="pNo"        column="pNo"/>
+        <result property="ctNo"       column="ctNo"/>     <!-- FK: contentType.ctNo -->
+        <result property="gpsNo"      column="gpsNo"/>    <!-- FK: ldongCode.idNo -->
+        <result property="cd3No"      column="cd3No"/>    <!-- FK: categoryCode.ccNo -->
+        <result property="isEditable" column="isEditable"/>
+        <result property="contentid"  column="contentid"/>
+        <result property="title"      column="title"/>
+        <result property="showflag"   column="showflag"/>
+        <result property="createdAt"  column="createdAt"/>
+        <result property="updatedAt"  column="updatedAt"/>
+    </resultMap>
+
+    <!-- [3.2] 원본 API DB에서 정규화 테이블 DTO에 맞추어 조회 / 원본 detailCommon2 → 정규화 PlaceInfoDto 로 조회 -->
+    <select id="selectPlaceInfoFromOrigin" resultMap="PlaceInfoMap">
+        SELECT
+        NULL AS pNo,
+
+        /* [1] ctNo: contentType.contenttypeID(= 코드값) → ctNo */
+        (
+        SELECT ct.ctNo
+        FROM k_tour_headquarter.contentType ct
+        WHERE ct.contenttypeID = TRIM(dc.contenttypeid)
+        LIMIT 1
+        ) AS ctNo,
+
+        /* [2] gpsNo: (현재 값이 lDongSignguCd) → ldongCode.idNo */
+        (
+        SELECT ld.idNo
+        FROM k_tour_headquarter.ldongCode ld
+        /* 원본에 lDongSignguCd 컬럼이 이미 있다면 아래 라인 쓰세요 */
+        WHERE ld.lDongSignguCd = TRIM(dc.lDongSignguCd)
+        /* 만약 원본에 lDongSignguCd가 없고 areacode/sigungucode만 있다면 이 라인으로 교체
+        WHERE ld.lDongSignguCd = CONCAT(LPAD(TRIM(dc.areacode), 2, '0'),
+        LPAD(TRIM(dc.sigungucode), 3, '0'))
+        */
+        LIMIT 1
+        ) AS gpsNo,
+
+        /* [3] cd3No: categoryCode.lclsSystm3Cd → ccNo */
+        (
+        SELECT cc.ccNo
+        FROM k_tour_headquarter.categoryCode cc
+        WHERE cc.lclsSystm3Cd = TRIM(dc.cat3)
+        LIMIT 1
+        ) AS cd3No,
+
+        TRUE                           AS isEditable,
+        CAST(dc.contentid AS UNSIGNED) AS contentid,
+        LEFT(TRIM(dc.title), 50)       AS title,
+        0                              AS showflag,
+        NULL AS createdAt,
+        NULL AS updatedAt
+        FROM tour_api_origin.detailCommon2 dc
+    </select>
+
+    <!-- [3.3] 정규화 테이블에 삽입 -->
+    <insert id="insertPlaceInfoBatch">
+        INSERT INTO k_tour_headquarter.placeInfo
+        (ctNo, gpsNo, cd3No, isEditable, contentid, title, showflag)
+        VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.ctNo}, #{it.gpsNo}, #{it.cd3No}, #{it.isEditable},
+            #{it.contentid}, #{it.title}, #{it.showflag})
+        </foreach>
+    </insert>
+
+
+</mapper>
