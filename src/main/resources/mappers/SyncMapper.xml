@@ -154,6 +154,15 @@
             LEFT JOIN tour_api_origin.detailcommon2 dc
             ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
     </insert>
-
-
+    <!-- [4] 지도마커GPS 동기화 ========================================================= -->
+    <insert id="insertMarkersGPSCodeFromOrigin">
+        INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
+            SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy
+                      FROM tour_api_origin.areabasedsynclist2 tabsl
+                      JOIN tour_api_origin.detailcommon2 tdc
+                      USING (contentid)) joinA
+                USING (contentid);
+    </insert>
 </mapper>

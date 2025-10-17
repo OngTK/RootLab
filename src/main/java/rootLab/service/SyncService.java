@@ -59,6 +59,15 @@ public class SyncService {
         return syncMapper.insertPlaceInfoCodeFromOrigin();
     } // func end
 
+    /**
+     * [4] 지도마커GPS 동기화 (areaBasedSyncList2 + detailCommon2 > markersGPS)
+     * @author AhnJH
+     * @return 삽입된 레코드 수
+     */
+    public int syncMarkersGPS(){
+        return syncMapper.insertMarkersGPSCodeFromOrigin();
+    } // func end
+
     /** 베이스 */
     @Transactional
     public int syncBaseAndPlace() {

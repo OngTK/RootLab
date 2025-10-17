@@ -12,7 +12,7 @@ INSERT INTO k_tour_headquarter.categorycode ( rnum, lclsSystm1Cd, lclsSystm1Nm, 
 	SELECT rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm 
     FROM tour_api_origin.lclssystmcode2;
 
--- ----------------------------------------placeInfo------------------------------------------    
+-- ----------------------------------------placeInfo------------------------------------------
 SELECT * FROM k_tour_headquarter.placeinfo;
 INSERT INTO k_tour_headquarter.placeinfo ( ctNo, ldNo, ccNo, isEditable, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt )
 	SELECT
@@ -60,3 +60,10 @@ INSERT INTO k_tour_headquarter.placeinfo ( ctNo, ldNo, ccNo, isEditable, content
 			FROM tour_api_origin.areabasedsynclist2 al
 			LEFT JOIN tour_api_origin.detailcommon2 dc
 			ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
+            
+-- ----------------------------------------markersGPS------------------------------------------
+SELECT * FROM k_tour_headquarter.markersgps;
+SELECT * FROM tour_api_origin.detailcommon2;
+SELECT * FROM tour_api_origin.areabasedsynclist2;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT tabsl.contentid, tdc.mapx, tdc.mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid);

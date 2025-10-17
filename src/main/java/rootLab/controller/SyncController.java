@@ -47,7 +47,13 @@ public class SyncController {
     public ResponseEntity<Integer> syncPlace() {
         int inserted = syncService.syncPlaceInfo();
         return ResponseEntity.ok(inserted);
-    }
+    } // func end
+
+    @PostMapping("/markers")
+    public ResponseEntity<Integer> syncMarkersGPS(){
+        int inserted = syncService.syncMarkersGPS();
+        return ResponseEntity.ok(inserted);
+    } // func end
 
     /** 기본 마스터 일괄 */
     @PostMapping("/base")
@@ -55,4 +61,4 @@ public class SyncController {
         int inserted = syncService.syncBaseAndPlace();
         return ResponseEntity.ok(inserted);
     }
-}
+} // class end

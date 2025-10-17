@@ -22,4 +22,7 @@ public interface SyncMapper {
     // [3] Place정보·관광정보 동기화
     int insertPlaceInfoCodeFromOrigin();
 
+    // [4] 지도마커GPS 동기화
+    int insertMarkersGPSCodeFromOrigin();
+
 } // interface end
