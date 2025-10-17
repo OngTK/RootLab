@@ -20,7 +20,6 @@ public interface SyncMapper {
     int insertLDongCodeBatch(@Param("list") List<LDongCodeDto> list);
 
     // [3] Place정보·관광정보 동기화
-    List<PlaceInfoDto> selectPlaceInfoFromOrigin();
-    int insertPlaceInfoBatch(@Param("list") List<PlaceInfoDto> list);
+    int insertPlaceInfoCodeFromOrigin();
 
 } // interface end

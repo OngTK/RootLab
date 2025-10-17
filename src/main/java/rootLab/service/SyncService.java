@@ -51,15 +51,13 @@ public class SyncService {
     }
 
     /**
-     * [3] Place정보 · 관광정보 동기화 ( areaBasedSyncList2 > placeInfo)
+     * [3] Place정보 · 관광정보 동기화 (areaBasedSyncList2 > placeInfo)
      * @author OngTK
      * */
     @Transactional
     public int syncPlaceInfo() {
-        List<PlaceInfoDto> items = syncMapper.selectPlaceInfoFromOrigin();
-        if (items == null || items.isEmpty()) return 0;
-        return syncMapper.insertPlaceInfoBatch(items);
-    }
+        return syncMapper.insertPlaceInfoCodeFromOrigin();
+    } // func end
 
     /** 베이스 */
     @Transactional
