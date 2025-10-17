@@ -17,8 +17,8 @@ public class PlaceInfoDto {
     // 기본적인 정보
     private int pNo;                // Place번호
     private int ctNo;               // 콘텐츠 타입번호
-    private int gpsNo;              // 법정동 코드번호
-    private int cd3No;              // 분류체계번호
+    private int ldNo;              // 법정동 코드번호
+    private int ccNo;              // 분류체계번호
     private boolean isEditable;     // 수정가능여부
     private int contentid;          // 콘텐츠 ID
     private String title;           // 콘텐츠명(제목)
