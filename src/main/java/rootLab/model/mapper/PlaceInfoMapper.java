@@ -1,6 +1,7 @@
 package rootLab.model.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import rootLab.model.criteria.PlaceInfoCriteria;
@@ -12,6 +13,7 @@ import rootLab.util.pagenation.PageRequest;
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer, PlaceInfoCriteria> {
 
     /**
