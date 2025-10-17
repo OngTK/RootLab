@@ -33,5 +33,5 @@ public class PlaceInfoDto {
     private String telname;         // 전화번호명
     private String overview;        // 개요
     private String createdAt;       // 수정일
-    private String updatedAtl;      // 등록일
+    private String updatedAt;      // 등록일
 } // class end
