@@ -16,13 +16,13 @@ import java.io.File;
 @AllArgsConstructor
 public class MarkersGPSDto {
     // 기본적인 정보
-    private int mkNo;           // 마커번호
-    private int pNo;            // Place번호
+    private int mkNo;           // 마커번호[PK]
+    private int pNo;            // Place번호[FK]
     private String mkURL;       // 마커이미지경로
-    private double mapx;        // GPS X좌표
-    private double mapy;        // GPS Y좌표
-    private String createdAt;   // 등록일
-    private String updatedAt;   // 수정일
+    private double mapx;        // GPS X좌표(#TourAPI 연동컬럼)
+    private double mapy;        // GPS Y좌표(#TourAPI 연동컬럼)
+    private String createdAt;   // 등록일(최초 DB복사일)
+    private String updatedAt;   // 수정일(DB업데이트일/해당 레코드 수정일)
     // 부가적인 정보
     private File uploadedMk;    // 업로드된 마커 파일
 } // class end

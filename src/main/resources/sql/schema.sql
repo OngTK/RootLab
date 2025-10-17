@@ -301,7 +301,7 @@ CREATE TABLE manager (
     mPwd VARCHAR(60) NOT NULL,                                    	-- 패스워드
     mName VARCHAR(60) NOT NULL,                              		-- 이름
     mNick VARCHAR(60) NOT NULL UNIQUE,                            	-- 닉네임
-    mGender ENUM('남', '여') NOT NULL,                       		  	-- 성별
+    mGender ENUM('남', '여') NOT NULL,                      		  	-- 성별
     mPhone VARCHAR(16) NOT NULL UNIQUE,                           	-- 전화번호
     mEmail VARCHAR(255) NOT NULL UNIQUE,                          	-- 이메일
     mAdd1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
@@ -336,7 +336,7 @@ CREATE TABLE pushPopup (
 			  ON UPDATE CURRENT_TIMESTAMP,
 	ppStart DATETIME NOT NULL,							-- 노출시작일
     ppEnd DATETIME NOT NULL,							-- 노출종료일
-    ppIterated TIME NOT NULL,							-- 푸시알림 시간(*09~20시 사이 분단위)
+    ppIterated TIME,									-- 푸시알림 시간(*09~20시 사이 분단위)
     
 	CONSTRAINT fk_pushPopup_placeInfo
 		FOREIGN KEY (pNo) REFERENCES placeInfo(pNo)
