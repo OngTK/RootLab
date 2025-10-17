@@ -49,9 +49,25 @@ public class SyncController {
         return ResponseEntity.ok(inserted);
     } // func end
 
-    @PostMapping("/markers")
+    /**
+     * [4] 지도마커GPS 동기화 (placeInfo + areaBasedSyncList2 + detailCommon2 > markersGPS)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/markersgps")
     public ResponseEntity<Integer> syncMarkersGPS(){
         int inserted = syncService.syncMarkersGPS();
+        return ResponseEntity.ok(inserted);
+    } // func end
+
+    /**
+     * [5] Place상세이미지 동기화 (placeInfo + detailImage2 > placeimagedetail)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/placeimagedetail")
+    public ResponseEntity<Integer> syncPlaceImageDetail(){
+        int inserted = syncService.syncPlaceImageDetail();
         return ResponseEntity.ok(inserted);
     } // func end
 

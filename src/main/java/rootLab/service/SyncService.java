@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rootLab.model.dto.CategoryCodeDto;
 import rootLab.model.dto.LDongCodeDto;
-import rootLab.model.dto.PlaceInfoDto;
 import rootLab.model.mapper.SyncMapper;
 
 import java.util.List;
@@ -14,10 +13,11 @@ import java.util.List;
  * [SyncServcie · 동기화 Service]
  * <p>
  * API 원본 DB 테이블 에서 본사의 정규화 DB 테이블로 정보를 동기화하는 기능을 정의
- * @author OngTK
+ * @author OngTK, AhnJH
  * */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SyncService {
 
     private final SyncMapper syncMapper;
@@ -28,7 +28,6 @@ public class SyncService {
      * - 원본 DTO 없이, 정규화 DTO로 즉시 매핑
      * @author OngTK
      */
-    @Transactional
     public int syncCategoryCodes() {
         List<CategoryCodeDto> items = syncMapper.selectCategoryCodesFromOrigin();
         if (items == null || items.isEmpty()) return 0;
@@ -43,7 +42,6 @@ public class SyncService {
      * - 추후 좌표 공급 전략 확정 시 교체 필요
      * @author OngTK
      */
-    @Transactional
     public int syncLDongCodes() {
         List<LDongCodeDto> items = syncMapper.selectLDongCodesFromOrigin();
         if (items == null || items.isEmpty()) return 0;
@@ -54,18 +52,26 @@ public class SyncService {
      * [3] Place정보 · 관광정보 동기화 (areaBasedSyncList2 > placeInfo)
      * @author OngTK
      * */
-    @Transactional
     public int syncPlaceInfo() {
-        return syncMapper.insertPlaceInfoCodeFromOrigin();
+        return syncMapper.insertPlaceInfoFromOrigin();
     } // func end
 
     /**
-     * [4] 지도마커GPS 동기화 (areaBasedSyncList2 + detailCommon2 > markersGPS)
-     * @author AhnJH
+     * [4] 지도마커GPS 동기화 (placeInfo + areaBasedSyncList2 + detailCommon2 > markersGPS)
      * @return 삽입된 레코드 수
+     * @author AhnJH
      */
     public int syncMarkersGPS(){
-        return syncMapper.insertMarkersGPSCodeFromOrigin();
+        return syncMapper.insertMarkersGPSFromOrigin();
+    } // func end
+
+    /**
+     * [5] Place상세이미지 동기화 (placeInfo + detailImage2 > placeimagedetail)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncPlaceImageDetail(){
+        return syncMapper.insertPlaceImageDetailFromOrigin();
     } // func end
 
     /** 베이스 */

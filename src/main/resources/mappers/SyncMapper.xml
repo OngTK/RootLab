@@ -106,7 +106,7 @@
     </insert>
 
     <!-- [3] 관광정보 동기화 목록 동기화 ========================================================= -->
-    <insert id="insertPlaceInfoCodeFromOrigin">
+    <insert id="insertPlaceInfoFromOrigin">
         INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, isEditable, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt)
             SELECT
                 /* FK: contentType.ctNo */
@@ -154,8 +154,9 @@
             LEFT JOIN tour_api_origin.detailcommon2 dc
             ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
     </insert>
+
     <!-- [4] 지도마커GPS 동기화 ========================================================= -->
-    <insert id="insertMarkersGPSCodeFromOrigin">
+    <insert id="insertMarkersGPSFromOrigin">
         INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
             SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
                 FROM k_tour_headquarter.placeinfo kpi
@@ -163,6 +164,15 @@
                       FROM tour_api_origin.areabasedsynclist2 tabsl
                       JOIN tour_api_origin.detailcommon2 tdc
                       USING (contentid)) joinA
+                USING (contentid);
+    </insert>
+
+    <!-- [5] Place상세이미지 동기화 ========================================================= -->
+    <insert id="insertPlaceImageDetailFromOrigin">
+        INSERT INTO k_tour_headquarter.placeimagedetail (pNo, serialnum, originimgurl, smallimageurl, imgname)
+            SELECT kpi.pNo pNo, tdi.serialnum serialnum, tdi.originimgurl originimgurl, tdi.smallimageurl smallimageurl, tdi.imgname imgname
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN tour_api_origin.detailimage2 tdi
                 USING (contentid);
     </insert>
 </mapper>

@@ -1,19 +1,24 @@
--- ----------------------------------------ldongcode------------------------------------------
+-- ----------------------------------------ldongcode_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.ldongcode;
 SELECT * FROM tour_api_origin.ldongcode2;
+-- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.ldongcode ( rnum, lDongRegnCd, lDongRegnNm, lDongSignguCd, lDongSignguNm, mapy, mapx )
 	SELECT rnum, lDongRegnCd, lDongRegnNm, lDongSignguCd, lDongSignguNm, 37.57305, 126.979189 
     FROM tour_api_origin.ldongcode2;
 
--- ----------------------------------------categorycode------------------------------------------
+
+-- ----------------------------------------categorycode_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.categorycode;
 SELECT * FROM tour_api_origin.lclssystmcode2;
+-- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.categorycode ( rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm )
 	SELECT rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm 
     FROM tour_api_origin.lclssystmcode2;
 
--- ----------------------------------------placeInfo------------------------------------------
+
+-- ----------------------------------------placeInfo_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.placeinfo;
+-- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.placeinfo ( ctNo, ldNo, ccNo, isEditable, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt )
 	SELECT
 			/* FK: contentType.ctNo */
@@ -60,8 +65,9 @@ INSERT INTO k_tour_headquarter.placeinfo ( ctNo, ldNo, ccNo, isEditable, content
 			FROM tour_api_origin.areabasedsynclist2 al
 			LEFT JOIN tour_api_origin.detailcommon2 dc
 			ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
-            
--- ----------------------------------------markersGPS------------------------------------------
+
+
+-- ----------------------------------------markersGPS_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM tour_api_origin.detailcommon2;
 SELECT * FROM tour_api_origin.areabasedsynclist2;
@@ -71,6 +77,7 @@ SELECT kpi.pNo, joinA.mapx, joinA.mapy
 	FROM k_tour_headquarter.placeinfo kpi 
     JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid)) joinA
     USING (contentid);
+-- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
 	SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
 		FROM k_tour_headquarter.placeinfo kpi 
@@ -78,4 +85,20 @@ INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
 				FROM tour_api_origin.areabasedsynclist2 tabsl 
                 JOIN tour_api_origin.detailcommon2 tdc 
                 USING (contentid)) joinA
+		USING (contentid);
+
+
+-- ----------------------------------------placeImageDetail_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.placeimagedetail;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailimage2;
+SELECT kpi.pNo, tdi.serialnum, tdi.originimgurl, tdi.smallimageurl, tdi.imgname
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailimage2 tdi
+    USING (contentid);
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.placeimagedetail (pNo, serialnum, originimgurl, smallimageurl, imgname)
+	SELECT kpi.pNo pNo, tdi.serialnum serialnum, tdi.originimgurl originimgurl, tdi.smallimageurl smallimageurl, tdi.imgname imgname
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailimage2 tdi
 		USING (contentid);
