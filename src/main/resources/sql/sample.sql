@@ -143,7 +143,7 @@ CREATE TABLE placeInfo (
     homepage TEXT,											-- 홈페이지링크
     tel VARCHAR(255),										-- 전화
     telname VARCHAR(30),									-- 전화번호명
-    overview TEXT NOT NULL,									-- 개요
+    overview TEXT,									-- 개요
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,			-- 등록일
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
