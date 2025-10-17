@@ -1,10 +1,16 @@
+/**
+ * 사용자단(비회원) > 공통레이아웃 > 헤더 컴포넌트
+ *
+ * @author kimJS
+ * @since 2025.10.17
+ */
 import { Link } from "react-router-dom";
 
 export default function Header( props ){
     return<>
-        <h3> 관리자 해더 </h3>
+        <h3> 해더 </h3>
         <ul>
-            <li> <Link to="/admin/member/login"></Link></li>
+            <li> <Link to="/">HOME</Link></li>
         </ul>
     </>
 }

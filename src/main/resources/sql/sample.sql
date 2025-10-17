@@ -129,8 +129,8 @@ CREATE TABLE categoryCode (
 CREATE TABLE placeInfo (
 	pNo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,			-- place번호
     ctNo TINYINT UNSIGNED,									-- 콘텐츠타입번호 (FK)
-    gpsNo SMALLINT UNSIGNED,								-- 법정동코드번호 (FK)
-    cd3No SMALLINT UNSIGNED,								-- 분류체계번호 (FK)
+    ldNo SMALLINT UNSIGNED,								-- 법정동코드번호 (FK)
+    ccNo SMALLINT UNSIGNED,								-- 분류체계번호 (FK)
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
     contentid INT UNIQUE DEFAULT NULL,						-- 콘텐츠ID
     title VARCHAR(50) NOT NULL,								-- 콘텐츠명(제목)
@@ -154,12 +154,12 @@ CREATE TABLE placeInfo (
       ON DELETE SET NULL,
       
 	CONSTRAINT fk_placeInfo_IdongCode
-      FOREIGN KEY (gpsNo) REFERENCES ldongCode(ldNo)
+      FOREIGN KEY (ldNo) REFERENCES ldongCode(ldNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL,
       
 	CONSTRAINT fk_placeInfo_categoryCode
-      FOREIGN KEY (cd3No) REFERENCES categoryCode(ccNo)
+      FOREIGN KEY (ccNo) REFERENCES categoryCode(ccNo)
       ON UPDATE CASCADE
       ON DELETE SET NULL
 );
