@@ -66,4 +66,16 @@ SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM tour_api_origin.detailcommon2;
 SELECT * FROM tour_api_origin.areabasedsynclist2;
 SELECT * FROM k_tour_headquarter.placeinfo;
-SELECT tabsl.contentid, tdc.mapx, tdc.mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid);
+SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid);
+SELECT kpi.pNo, joinA.mapx, joinA.mapy
+	FROM k_tour_headquarter.placeinfo kpi 
+    JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid)) joinA
+    USING (contentid);
+INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
+	SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
+		FROM k_tour_headquarter.placeinfo kpi 
+		JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy 
+				FROM tour_api_origin.areabasedsynclist2 tabsl 
+                JOIN tour_api_origin.detailcommon2 tdc 
+                USING (contentid)) joinA
+		USING (contentid);
