@@ -186,10 +186,10 @@ CREATE TABLE placeImageDetail (
 	pidNo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,			-- 상세이미지번호
     pNo INT UNSIGNED,										-- place번호 (FK)
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
-    serialnum  VARCHAR(10),									-- 이미지일련번호
+    serialnum  VARCHAR(11),									-- 이미지일련번호
     originimgurl  VARCHAR(255),								-- 원본이미지
     smallimageurl  VARCHAR(255),							-- 썸네일이미지
-    imgname  VARCHAR(30),									-- 이미지명
+    imgname  VARCHAR(100),									-- 이미지명
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,			-- 등록일
     updatedAt DATETIME DEFAULT NULL							-- 수정일
                  ON UPDATE CURRENT_TIMESTAMP,
