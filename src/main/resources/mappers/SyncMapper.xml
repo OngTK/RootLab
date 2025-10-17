@@ -108,25 +108,25 @@
     <!-- [3] 관광정보 동기화 목록 동기화 ========================================================= -->
     <!-- [3.1] 관광정보 결과를 반환할 Map 정의 -->
     <resultMap id="PlaceInfoMap" type="rootLab.model.dto.PlaceInfoDto">
-        <id     property="pNo"         column="pNo"/>
-        <result property="ctNo"        column="ctNo"/>      <!-- FK: contentType.ctNo -->
-        <result property="gpsNo"       column="gpsNo"/>     <!-- FK: ldongCode.ldNo -->
-        <result property="cd3No"       column="cd3No"/>     <!-- FK: categoryCode.ccNo -->
-        <result property="isEditable"  column="isEditable"/>
-        <result property="contentid"   column="contentid"/>
-        <result property="title"       column="title"/>
-        <result property="showflag"    column="showflag"/>
-        <result property="firstimage"  column="firstimage"/>
+        <id property="pNo" column="pNo"/>
+        <result property="ctNo" column="ctNo"/>      <!-- FK: contentType.ctNo -->
+        <result property="ldNo" column="ldNo"/>     <!-- FK: ldongCode.ldNo -->
+        <result property="ccNo" column="ccNo"/>     <!-- FK: categoryCode.ccNo -->
+        <result property="isEditable" column="isEditable"/>
+        <result property="contentid" column="contentid"/>
+        <result property="title" column="title"/>
+        <result property="showflag" column="showflag"/>
+        <result property="firstimage" column="firstimage"/>
         <result property="firstimage2" column="firstimage2"/>
-        <result property="addr1"       column="addr1"/>
-        <result property="addr2"       column="addr2"/>
-        <result property="zipcode"     column="zipcode"/>
-        <result property="homepage"    column="homepage"/>
-        <result property="tel"         column="tel"/>
-        <result property="telname"     column="telname"/>
-        <result property="overview"    column="overview"/>
-        <result property="createdAt"   column="createdAt"/>
-        <result property="updatedAt"   column="updatedAt"/>
+        <result property="addr1" column="addr1"/>
+        <result property="addr2" column="addr2"/>
+        <result property="zipcode" column="zipcode"/>
+        <result property="homepage" column="homepage"/>
+        <result property="tel" column="tel"/>
+        <result property="telname" column="telname"/>
+        <result property="overview" column="overview"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
     </resultMap>
 
     <!-- [3.2] 원본 API DB에서 정규화 테이블 DTO에 맞추어 조회
@@ -139,14 +139,14 @@
         ( SELECT ct.ctNo
         FROM k_tour_headquarter.contentType ct
         WHERE ct.contenttypeID = TRIM(al.contenttypeid)
-        LIMIT 1 )                                               AS ctNo,
+        LIMIT 1 ) AS ctNo,
 
         /* FK: ldongCode.ldNo (법정동: lDongRegnCd + lDongSignguCd) */
         ( SELECT ld.ldNo
         FROM k_tour_headquarter.ldongCode ld
-        WHERE ld.lDongRegnCd  = TRIM(al.lDongRegnCd)
+        WHERE ld.lDongRegnCd = TRIM(al.lDongRegnCd)
         AND ld.lDongSignguCd= TRIM(al.lDongSignguCd)
-        LIMIT 1 )                                               AS gpsNo,
+        LIMIT 1 ) AS ldNo,
 
         /* FK: categoryCode.ccNo (al.lclsSystm3 기준 매칭) */
         ( SELECT cc.ccNo
@@ -154,23 +154,23 @@
         WHERE cc.lclsSystm3Cd =
         UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(
         al.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')))
-        LIMIT 1 )                                               AS cd3No,
+        LIMIT 1 ) AS ccNo,
 
-        TRUE                                                      AS isEditable,
-        CAST(al.contentid AS UNSIGNED)                            AS contentid,
-        LEFT(TRIM(al.title), 50)                                  AS title,
-        al.showflag                                               AS showflag,
-        NULLIF(TRIM(al.firstimage),  '')                          AS firstimage,
-        NULLIF(TRIM(al.firstimage2), '')                          AS firstimage2,
-        COALESCE(NULLIF(TRIM(al.addr1), ''), '-')                 AS addr1,
-        NULLIF(TRIM(al.addr2), '')                                AS addr2,
-        NULLIF(TRIM(al.zipcode), '')                              AS zipcode,
+        TRUE AS isEditable,
+        CAST(al.contentid AS UNSIGNED) AS contentid,
+        LEFT(TRIM(al.title), 50) AS title,
+        al.showflag AS showflag,
+        NULLIF(TRIM(al.firstimage), '') AS firstimage,
+        NULLIF(TRIM(al.firstimage2), '') AS firstimage2,
+        COALESCE(NULLIF(TRIM(al.addr1), ''), '-') AS addr1,
+        NULLIF(TRIM(al.addr2), '') AS addr2,
+        NULLIF(TRIM(al.zipcode), '') AS zipcode,
 
         /* 부가정보: dc가 있으면 채움, 없으면 NULL */
-        NULLIF(TRIM(dc.homepage), '')                             AS homepage,
-        LEFT(NULLIF(TRIM(al.tel), ''), 10)                        AS tel,
-        NULLIF(TRIM(dc.telname), '')                              AS telname,
-        NULLIF(dc.overview, '')                                   AS overview,
+        NULLIF(TRIM(dc.homepage), '') AS homepage,
+        LEFT(NULLIF(TRIM(al.tel), ''), 10) AS tel,
+        NULLIF(TRIM(dc.telname), '') AS telname,
+        NULLIF(dc.overview, '') AS overview,
 
         /* [] createdAt, updatedAt을 DATETIME 형식으로 변환 */
         STR_TO_DATE(al.createdtime, '%Y%m%d%H%i%s') AS createdAt,
@@ -178,21 +178,37 @@
 
         FROM tour_api_origin.areabasedsynclist2 al
         LEFT JOIN tour_api_origin.detailcommon2 dc
-        ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
-<!--        WHERE al.showflag = 1;-->
+        ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED)
+        <!--        WHERE al.showflag = 1;-->
     </select>
 
     <!-- [3.3] 정규화 테이블에 삽입 -->
     <insert id="insertPlaceInfoBatch">
         INSERT INTO k_tour_headquarter.placeInfo
-        (ctNo, gpsNo, cd3No, isEditable, contentid, title, showflag,
-        firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt , updatedAt)
+        (ctNo, ldNo, ccNo, isEditable, contentid, title, showflag,
+        firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt)
         VALUES
         <foreach collection="list" item="it" separator=",">
-            (#{it.ctNo}, #{it.gpsNo}, #{it.cd3No}, #{it.isEditable},
-            #{it.contentid}, #{it.title}, #{it.showflag},
-            #{it.firstimage}, #{it.firstimage2}, #{it.addr1}, #{it.addr2},
-            #{it.zipcode}, #{it.homepage}, #{it.tel}, #{it.telname}, #{it.overview},#{it.createdAt},#{it.updatedAt})
+            (
+            #{it.ctNo},
+            #{it.ldNo},
+            #{it.ccNo},
+            #{it.isEditable},
+            #{it.contentid},
+            #{it.title},
+            #{it.showflag},
+            #{it.firstimage},
+            #{it.firstimage2},
+            #{it.addr1},
+            #{it.addr2},
+            #{it.zipcode},
+            #{it.homepage},
+            #{it.tel},
+            #{it.telname},
+            #{it.overview},
+            #{it.createdAt},
+            #{it.updatedAt}
+            )
         </foreach>
     </insert>
 

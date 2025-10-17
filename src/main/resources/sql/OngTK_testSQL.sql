@@ -27,8 +27,8 @@ use k_tour_headquarter;
 select * from categorycode;
 select * from contenttype;
 select * from ldongcode;
-select * from placeinfo;
 
+select * from placeinfo;
 select * from detailpettour;
 select * from festivalintro;
 select * from manager;
