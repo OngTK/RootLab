@@ -29,9 +29,7 @@ public class SyncService {
      * @author OngTK
      */
     public int syncCategoryCodes() {
-        List<CategoryCodeDto> items = syncMapper.selectCategoryCodesFromOrigin();
-        if (items == null || items.isEmpty()) return 0;
-        return syncMapper.insertCategoryCodeBatch(items);
+        return syncMapper.insertCategoryCodeFromOrigin();
     }
 
     /**
@@ -43,9 +41,7 @@ public class SyncService {
      * @author OngTK
      */
     public int syncLDongCodes() {
-        List<LDongCodeDto> items = syncMapper.selectLDongCodesFromOrigin();
-        if (items == null || items.isEmpty()) return 0;
-        return syncMapper.insertLDongCodeBatch(items);
+        return syncMapper.insertLDongCodeFromOrigin();
     }
 
     /**
