@@ -1,4 +1,4 @@
-package rootLab.util;
+package rootLab.util.sql;
 
 import org.springframework.stereotype.Component;
 
