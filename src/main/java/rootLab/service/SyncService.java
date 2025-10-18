@@ -106,6 +106,16 @@ public class SyncService {
         return syncMapper.insertRestaurantIntroFromOrigin();
     } // func end
 
+    /**
+     * [10] 음식점 상세정보 동기화 (placeInfo + detailinfo2_12 + detailinfo2_39 > placeInfoRepeat)
+     * <p>
+     * 추후 detailinfo2_15 추가 필요
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncPlaceInfoRepeat(){
+        return syncMapper.insertPlaceInfoRepeatFromOrigin();
+    } // func end
 
     /** 베이스 */
     @Transactional

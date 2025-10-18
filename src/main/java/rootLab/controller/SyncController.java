@@ -109,12 +109,24 @@ public class SyncController {
      * @return 삽입된 레코드 수
      * @author AhnJH
      */
-    @PostMapping("/restaurantIntro")
+    @PostMapping("/restaurantintro")
     public ResponseEntity<Integer> syncRestaurantIntro(){
         int inserted = syncService.syncRestaurantIntro();
         return ResponseEntity.ok(inserted);
     } // func end
 
+    /**
+     * [10] 음식점 상세정보 동기화 (placeInfo + detailinfo2_12 + detailinfo2_39 > placeInfoRepeat)
+     * <p>
+     * 추후 detailinfo2_15 추가 필요
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/placeinforepeat")
+    public ResponseEntity<Integer> syncPlaceInfoRepeat(){
+        int inserted = syncService.syncPlaceInfoRepeat();
+        return ResponseEntity.ok(inserted);
+    } // func end
 
     /** 기본 마스터 일괄 */
     @PostMapping("/base")

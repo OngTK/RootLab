@@ -134,4 +134,18 @@
                 USING (contentid);
     </insert>
 
+    <!-- [10] Place 반복정보 동기화 ========================================================= -->
+    <insert id="insertPlaceInfoRepeatFromOrigin">
+        INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext, serialnum)
+            SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN tour_api_origin.detailinfo2_12 tdi12
+                USING (contentid)
+        UNION ALL
+            SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN tour_api_origin.detailinfo2_39 tdi39
+                USING (contentid);
+    </insert>
+
 </mapper>

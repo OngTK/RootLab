@@ -156,3 +156,54 @@ INSERT INTO k_tour_headquarter.restaurantintro(pNo, chkcreditcardfood, discounti
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailintro2_39 tdi39
 		USING (contentid);
+        -- ----------------------------------------restaurantIntro_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.restaurantIntro;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailintro2_39;
+SELECT kpi.pNo, tdi39.chkcreditcardfood, tdi39.discountinfofood, tdi39.firstmenu, tdi39.infocenterfood, tdi39.kidsfacility, tdi39.lcnsno, tdi39.opendatefood,
+	tdi39.opentimefood, tdi39.packing, tdi39.parkingfood, tdi39.reservationfood, tdi39.restdatefood, tdi39.scalefood, tdi39.seat, tdi39.smoking, tdi39.treatmenu
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailintro2_39 tdi39
+    USING (contentid);
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.restaurantintro(pNo, chkcreditcardfood, discountinfofood, firstmenu, infocenterfood, kidsfacility, lcnsno, opendatefood, opentimefood, packing, parkingfood, reservationfood, restdatefood, scalefood, seat, smoking, treatmenu)
+	SELECT kpi.pNo, tdi39.chkcreditcardfood, tdi39.discountinfofood, tdi39.firstmenu, tdi39.infocenterfood, tdi39.kidsfacility, tdi39.lcnsno, tdi39.opendatefood,
+		tdi39.opentimefood, tdi39.packing, tdi39.parkingfood, tdi39.reservationfood, tdi39.restdatefood, tdi39.scalefood, tdi39.seat, tdi39.smoking, tdi39.treatmenu
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailintro2_39 tdi39
+		USING (contentid);
+
+-- ----------------------------------------placeInfoRepeat_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.placeinforepeat;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailinfo2_12;
+SELECT * FROM tour_api_origin.detailinfo2_39;
+SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailinfo2_12 tdi12
+    USING (contentid);
+SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailinfo2_39 tdi39
+    USING (contentid);
+SELECT kpi.pNo, fldgubun, infoname, infotext, serialnum
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailinfo2_12 tdi12
+    USING (contentid)
+UNION ALL
+SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailinfo2_39 tdi39
+    USING (contentid);
+
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext, serialnum)
+	SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_12 tdi12
+		USING (contentid)
+	UNION ALL
+	SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_39 tdi39
+		USING (contentid);
