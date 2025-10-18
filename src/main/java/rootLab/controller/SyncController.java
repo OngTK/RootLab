@@ -71,10 +71,23 @@ public class SyncController {
         return ResponseEntity.ok(inserted);
     } // func end
 
+    /**
+     * [6] 반려동물 동반여행정보 동기화 (placeInfo + detailPetTour2 > detailpettour)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/detailpettour")
+    public ResponseEntity<Integer> syncDetailPetTour(){
+        int inserted = syncService.syncDetailPetTour();
+        return ResponseEntity.ok(inserted);
+    } // func end
+
+
+
     /** 기본 마스터 일괄 */
     @PostMapping("/base")
     public ResponseEntity<Integer> syncBase() {
         int inserted = syncService.syncBaseAndPlace();
         return ResponseEntity.ok(inserted);
-    }
+    } // func end
 } // class end

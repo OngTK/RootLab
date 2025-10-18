@@ -70,6 +70,18 @@ public class SyncService {
         return syncMapper.insertPlaceImageDetailFromOrigin();
     } // func end
 
+    /**
+     * [6] 반려동물 동반여행정보 동기화 (placeInfo + detailPetTour2 > detailpettour)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncDetailPetTour(){
+        return syncMapper.insertDetailPetTourFromOrigin();
+    } // func end
+
+
+
+
     /** 베이스 */
     @Transactional
     public int syncBaseAndPlace() {
@@ -78,6 +90,5 @@ public class SyncService {
         total += syncLDongCodes();
         total += syncPlaceInfo();
         return total;
-    }
-
+    } // func end
 } // class end

@@ -94,4 +94,15 @@
                 JOIN tour_api_origin.detailimage2 tdi
                 USING (contentid);
     </insert>
+
+    <!-- [6] 반려동물 동반여행정보 동기화 ========================================================= -->
+    <insert id="insertDetailPetTourFromOrigin">
+        INSERT INTO k_tour_headquarter.detailpettour (pNo, relaAcdntRiskMtr, acmpyTypeCd, relaPosesFclty, relaFrnshPrdlst, etcAcmpyInfo, relaPurcPrdlst, acmpyPsblCpam, relaRntlPrdlst, acmpyNeedMtr)
+            SELECT kpi.pNo, tdpt.relaAcdntRiskMtr, tdpt.acmpyTypeCd, tdpt.relaPosesFclty, tdpt.relaFrnshPrdlst,
+                   tdpt.etcAcmpyInfo, tdpt.relaPurcPrdlst, tdpt.acmpyPsblCpam, tdpt.relaRntlPrdlst, tdpt.acmpyNeedMtr
+                   FROM k_tour_headquarter.placeinfo kpi
+                   JOIN tour_api_origin.detailpettour2 tdpt
+                   USING (contentid);
+    </insert>
+
 </mapper>
