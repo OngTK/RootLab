@@ -77,7 +77,7 @@
     <!-- [4] 지도마커GPS 동기화 ========================================================= -->
     <insert id="insertMarkersGPSFromOrigin">
         INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
-            SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
+            SELECT kpi.pNo, joinA.mapx, joinA.mapy
                 FROM k_tour_headquarter.placeinfo kpi
                 JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy
                       FROM tour_api_origin.areabasedsynclist2 tabsl
@@ -89,7 +89,7 @@
     <!-- [5] Place상세이미지 동기화 ========================================================= -->
     <insert id="insertPlaceImageDetailFromOrigin">
         INSERT INTO k_tour_headquarter.placeimagedetail (pNo, serialnum, originimgurl, smallimageurl, imgname)
-            SELECT kpi.pNo pNo, tdi.serialnum serialnum, tdi.originimgurl originimgurl, tdi.smallimageurl smallimageurl, tdi.imgname imgname
+            SELECT kpi.pNo, tdi.serialnum, tdi.originimgurl, tdi.smallimageurl, tdi.imgname
                 FROM k_tour_headquarter.placeinfo kpi
                 JOIN tour_api_origin.detailimage2 tdi
                 USING (contentid);

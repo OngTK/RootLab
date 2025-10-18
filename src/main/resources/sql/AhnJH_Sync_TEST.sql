@@ -76,7 +76,7 @@ SELECT kpi.pNo, joinA.mapx, joinA.mapy
     USING (contentid);
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
-	SELECT kpi.pNo pNo, joinA.mapx mapx, joinA.mapy mapy
+	SELECT kpi.pNo, joinA.mapx, joinA.mapy
 		FROM k_tour_headquarter.placeinfo kpi 
 		JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy 
 				FROM tour_api_origin.areabasedsynclist2 tabsl 
@@ -95,7 +95,25 @@ SELECT kpi.pNo, tdi.serialnum, tdi.originimgurl, tdi.smallimageurl, tdi.imgname
     USING (contentid);
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.placeimagedetail (pNo, serialnum, originimgurl, smallimageurl, imgname)
-	SELECT kpi.pNo pNo, tdi.serialnum serialnum, tdi.originimgurl originimgurl, tdi.smallimageurl smallimageurl, tdi.imgname imgname
+	SELECT kpi.pNo, tdi.serialnum, tdi.originimgurl, tdi.smallimageurl, tdi.imgname
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailimage2 tdi
+		USING (contentid);
+
+-- ----------------------------------------detailPetTour_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.detailpettour;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailpettour2;
+SELECT kpi.pNo, tdpt.relaAcdntRiskMtr, tdpt.acmpyTypeCd, tdpt.relaPosesFclty, tdpt.relaFrnshPrdlst,
+	tdpt.etcAcmpyInfo, tdpt.relaPurcPrdlst, tdpt.acmpyPsblCpam, tdpt.relaRntlPrdlst, tdpt.acmpyNeedMtr
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailpettour2 tdpt
+    USING (contentid);
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.detailpettour
+	(pNo, relaAcdntRiskMtr, acmpyTypeCd, relaPosesFclty, relaFrnshPrdlst, etcAcmpyInfo, relaPurcPrdlst, acmpyPsblCpam, relaRntlPrdlst, acmpyNeedMtr)
+    SELECT kpi.pNo, tdpt.relaAcdntRiskMtr, tdpt.acmpyTypeCd, tdpt.relaPosesFclty, tdpt.relaFrnshPrdlst,
+		tdpt.etcAcmpyInfo, tdpt.relaPurcPrdlst, tdpt.acmpyPsblCpam, tdpt.relaRntlPrdlst, tdpt.acmpyNeedMtr
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailpettour2 tdpt
 		USING (contentid);

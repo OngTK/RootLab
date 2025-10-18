@@ -1,6 +1,7 @@
 -- --------------------------------------
 -- ldong x y 업데이트 용
 -- --------------------------------------
+USE k_tour_headquarter;
 update ldongcode set mapx = 126.9791666667 , mapy = 37.5733611111 where ldno=1;
 update ldongcode set mapx = 126.9975000000 , mapy = 37.5635833333 where ldno=2;
 update ldongcode set mapx = 126.9904166667 , mapy = 37.5324722222 where ldno=3;
