@@ -30,4 +30,7 @@ public interface SyncMapper {
     // todo detailIntro2_15가 없기에 메소드만 생성 후 추후 쿼리 추가
     int insertFestivalIntroFromOrigin();
 
+    // [9] 축제행사공연 상세정보 동기화
+    int insertRestaurantIntroFromOrigin();
+
 } // interface end

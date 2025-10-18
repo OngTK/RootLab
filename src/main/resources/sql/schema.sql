@@ -235,7 +235,7 @@ CREATE TABLE restaurantIntro (
     firstmenu VARCHAR(100),									-- 대표메뉴(#TourAPI 연동컬럼)
     infocenterfood VARCHAR(255),							-- 문의및안내(#TourAPI 연동컬럼)
     kidsfacility TINYINT UNSIGNED DEFAULT 0,				-- 어린이놀이방여부(#TourAPI 연동컬럼)
-    lcnsno DECIMAL(11),										-- 인허가번호(#TourAPI 연동컬럼)
+    lcnsno VARCHAR(12),										-- 인허가번호(#TourAPI 연동컬럼)
     opendatefood VARCHAR(100),								-- 개업일(#TourAPI 연동컬럼)
     opentimefood VARCHAR(255),								-- 영업시간(#TourAPI 연동컬럼)
     packing VARCHAR(100),									-- 포장가능(#TourAPI 연동컬럼)

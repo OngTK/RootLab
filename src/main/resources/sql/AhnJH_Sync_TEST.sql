@@ -126,7 +126,6 @@ SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, td
 	FROM k_tour_headquarter.placeinfo kpi
     JOIN tour_api_origin.detailintro2_12 tdi12
     USING (contentid);
-
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide, heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
 	SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,
@@ -139,5 +138,21 @@ INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkc
 SELECT * FROM k_tour_headquarter.festivalIntro;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM tour_api_origin.searchfestival2;
-
 -- ----------------------------------------INSERT------------------------------------------
+
+-- ----------------------------------------restaurantIntro_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.restaurantIntro;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailintro2_39;
+SELECT kpi.pNo, tdi39.chkcreditcardfood, tdi39.discountinfofood, tdi39.firstmenu, tdi39.infocenterfood, tdi39.kidsfacility, tdi39.lcnsno, tdi39.opendatefood,
+	tdi39.opentimefood, tdi39.packing, tdi39.parkingfood, tdi39.reservationfood, tdi39.restdatefood, tdi39.scalefood, tdi39.seat, tdi39.smoking, tdi39.treatmenu
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailintro2_39 tdi39
+    USING (contentid);
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.restaurantintro(pNo, chkcreditcardfood, discountinfofood, firstmenu, infocenterfood, kidsfacility, lcnsno, opendatefood, opentimefood, packing, parkingfood, reservationfood, restdatefood, scalefood, seat, smoking, treatmenu)
+	SELECT kpi.pNo, tdi39.chkcreditcardfood, tdi39.discountinfofood, tdi39.firstmenu, tdi39.infocenterfood, tdi39.kidsfacility, tdi39.lcnsno, tdi39.opendatefood,
+		tdi39.opentimefood, tdi39.packing, tdi39.parkingfood, tdi39.reservationfood, tdi39.restdatefood, tdi39.scalefood, tdi39.seat, tdi39.smoking, tdi39.treatmenu
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailintro2_39 tdi39
+		USING (contentid);

@@ -107,11 +107,30 @@
 
     <!-- [7] 관광지 상세정보 동기화 ========================================================= -->
     <insert id="insertTourIntroFromOrigin">
-        INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide, heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
+        INSERT INTO k_tour_headquarter.tourintro
+                (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide,
+                 heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
             SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,
                    tdi12.heritage1, tdi12.heritage2, tdi12.heritage3, tdi12.infocenter, tdi12.opendate, tdi12.parking, tdi12.restdate, tdi12.useseason, tdi12.usetime
                 FROM k_tour_headquarter.placeinfo kpi
                 JOIN tour_api_origin.detailintro2_12 tdi12
+                USING (contentid);
+    </insert>
+
+    <!-- [8] 축제행사공여 상세정보 동기화 ========================================================= -->
+    <insert id="insertFestivalIntroFromOrigin">
+
+    </insert>
+
+    <!-- [9] 음식점 상세정보 동기화 ========================================================= -->
+    <insert id="insertRestaurantIntroFromOrigin">
+        INSERT INTO k_tour_headquarter.restaurantintro
+                (pNo, chkcreditcardfood, discountinfofood, firstmenu, infocenterfood, kidsfacility, lcnsno, opendatefood,
+                 opentimefood, packing, parkingfood, reservationfood, restdatefood, scalefood, seat, smoking, treatmenu)
+            SELECT kpi.pNo, tdi39.chkcreditcardfood, tdi39.discountinfofood, tdi39.firstmenu, tdi39.infocenterfood, tdi39.kidsfacility, tdi39.lcnsno, tdi39.opendatefood,
+                   tdi39.opentimefood, tdi39.packing, tdi39.parkingfood, tdi39.reservationfood, tdi39.restdatefood, tdi39.scalefood, tdi39.seat, tdi39.smoking, tdi39.treatmenu
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN tour_api_origin.detailintro2_39 tdi39
                 USING (contentid);
     </insert>
 

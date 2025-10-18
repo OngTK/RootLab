@@ -97,6 +97,15 @@ public class SyncService {
         return syncMapper.insertFestivalIntroFromOrigin();
     } // func end
 
+    /**
+     * [9] 음식점 상세정보 동기화 (placeInfo + detailintro2_39 > restaurantIntro)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncRestaurantIntro(){
+        return syncMapper.insertRestaurantIntroFromOrigin();
+    } // func end
+
 
     /** 베이스 */
     @Transactional
