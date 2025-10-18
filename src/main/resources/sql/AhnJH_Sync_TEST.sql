@@ -116,3 +116,21 @@ INSERT INTO k_tour_headquarter.detailpettour (pNo, relaAcdntRiskMtr, acmpyTypeCd
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailpettour2 tdpt
 		USING (contentid);
+
+-- ----------------------------------------tourIntro_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.tourintro;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.detailintro2_12;
+SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,
+	tdi12.heritage1, tdi12.heritage2, tdi12.heritage3, tdi12.infocenter, tdi12.opendate, tdi12.parking, tdi12.restdate, tdi12.useseason, tdi12.usetime
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN tour_api_origin.detailintro2_12 tdi12
+    USING (contentid);
+
+-- ----------------------------------------INSERT------------------------------------------
+INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide, heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
+	SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,
+		tdi12.heritage1, tdi12.heritage2, tdi12.heritage3, tdi12.infocenter, tdi12.opendate, tdi12.parking, tdi12.restdate, tdi12.useseason, tdi12.usetime
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailintro2_12 tdi12
+		USING (contentid);

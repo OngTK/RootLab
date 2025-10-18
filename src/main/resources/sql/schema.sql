@@ -181,7 +181,7 @@ CREATE TABLE tourIntro (
     parking VARCHAR(255),								-- 주차시설(#TourAPI 연동컬럼)
     restdate VARCHAR(255),								-- 쉬는날(#TourAPI 연동컬럼)
     useseason VARCHAR(255),								-- 이용시기(#TourAPI 연동컬럼)
-    usetime VARCHAR(30),								-- 이용시간(#TourAPI 연동컬럼)
+    usetime VARCHAR(255),								-- 이용시간(#TourAPI 연동컬럼)
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,		-- 등록일(최초 DB복사일)
     updatedAt DATETIME DEFAULT NULL						-- 수정일(DB업데이트일/해당 레코드 수정일)
               ON UPDATE CURRENT_TIMESTAMP,

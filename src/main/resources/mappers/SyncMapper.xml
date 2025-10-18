@@ -98,11 +98,21 @@
     <!-- [6] 반려동물 동반여행정보 동기화 ========================================================= -->
     <insert id="insertDetailPetTourFromOrigin">
         INSERT INTO k_tour_headquarter.detailpettour (pNo, relaAcdntRiskMtr, acmpyTypeCd, relaPosesFclty, relaFrnshPrdlst, etcAcmpyInfo, relaPurcPrdlst, acmpyPsblCpam, relaRntlPrdlst, acmpyNeedMtr)
-            SELECT kpi.pNo, tdpt.relaAcdntRiskMtr, tdpt.acmpyTypeCd, tdpt.relaPosesFclty, tdpt.relaFrnshPrdlst,
-                   tdpt.etcAcmpyInfo, tdpt.relaPurcPrdlst, tdpt.acmpyPsblCpam, tdpt.relaRntlPrdlst, tdpt.acmpyNeedMtr
-                   FROM k_tour_headquarter.placeinfo kpi
-                   JOIN tour_api_origin.detailpettour2 tdpt
-                   USING (contentid);
+        SELECT kpi.pNo, tdpt.relaAcdntRiskMtr, tdpt.acmpyTypeCd, tdpt.relaPosesFclty, tdpt.relaFrnshPrdlst,
+            tdpt.etcAcmpyInfo, tdpt.relaPurcPrdlst, tdpt.acmpyPsblCpam, tdpt.relaRntlPrdlst, tdpt.acmpyNeedMtr
+            FROM k_tour_headquarter.placeinfo kpi
+            JOIN tour_api_origin.detailpettour2 tdpt
+            USING (contentid);
+    </insert>
+
+    <!-- [6] 관광지 상세정보 동기화 ========================================================= -->
+    <insert id="insertTourIntroFromOrigin">
+        INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide, heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
+            SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,
+                   tdi12.heritage1, tdi12.heritage2, tdi12.heritage3, tdi12.infocenter, tdi12.opendate, tdi12.parking, tdi12.restdate, tdi12.useseason, tdi12.usetime
+                FROM k_tour_headquarter.placeinfo kpi
+                JOIN tour_api_origin.detailintro2_12 tdi12
+                USING (contentid);
     </insert>
 
 </mapper>

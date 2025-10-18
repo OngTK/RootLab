@@ -23,4 +23,7 @@ public interface SyncMapper {
     // [6] 반려동물 동반여행정보 동기화
     int insertDetailPetTourFromOrigin();
 
+    // [7] 관광지 상세정보 동기화
+    int insertTourIntroFromOrigin();
+
 } // interface end

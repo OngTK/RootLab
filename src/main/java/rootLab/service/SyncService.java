@@ -79,6 +79,15 @@ public class SyncService {
         return syncMapper.insertDetailPetTourFromOrigin();
     } // func end
 
+    /**
+     * [7] 관광지 상세정보 동기화 (placeInfo + detailintro2_12 > tourintro)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncTourIntro(){
+        return syncMapper.insertTourIntroFromOrigin();
+    } // func end
+
 
 
 

@@ -82,6 +82,18 @@ public class SyncController {
         return ResponseEntity.ok(inserted);
     } // func end
 
+    /**
+     * [7] 관광지 상세정보 동기화 (placeInfo + detailintro2_12 > tourintro)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/tourintro")
+    public ResponseEntity<Integer> syncTourIntro(){
+        int inserted = syncService.syncTourIntro();
+        return ResponseEntity.ok(inserted);
+    } // func end
+
+
 
 
     /** 기본 마스터 일괄 */
