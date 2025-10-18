@@ -101,6 +101,7 @@ CREATE TABLE placeInfo (
 		ON UPDATE CASCADE
 		ON DELETE SET NULL
 );
+CREATE INDEX idx_contentid ON placeInfo(contentid);
 
 -- ------------------------------------ 지도마커GPS( #TourAPI 연동테이블 ) -------------------------------------------
 CREATE TABLE markersGPS (
