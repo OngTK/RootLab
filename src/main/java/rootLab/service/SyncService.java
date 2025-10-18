@@ -88,7 +88,14 @@ public class SyncService {
         return syncMapper.insertTourIntroFromOrigin();
     } // func end
 
-
+    /**
+     * [8] 축제행사공연 상세정보 동기화 (placeInfo + areaBasedSyncList2 + detailintro2_15 > festivalintro)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    public int syncFestivalIntro(){
+        return syncMapper.insertFestivalIntroFromOrigin();
+    } // func end
 
 
     /** 베이스 */

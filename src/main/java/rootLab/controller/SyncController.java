@@ -93,7 +93,16 @@ public class SyncController {
         return ResponseEntity.ok(inserted);
     } // func end
 
-
+    /**
+     * [8] 축제행사공연 상세정보 동기화 (placeInfo + areaBasedSyncList2 + detailintro2_15 > festivalintro)
+     * @return 삽입된 레코드 수
+     * @author AhnJH
+     */
+    @PostMapping("/festivalintro")
+    public ResponseEntity<Integer> syncFestivalIntro(){
+        int inserted = syncService.syncFestivalIntro();
+        return ResponseEntity.ok(inserted);
+    } // func end
 
 
     /** 기본 마스터 일괄 */

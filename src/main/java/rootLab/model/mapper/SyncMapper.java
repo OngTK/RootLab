@@ -26,4 +26,8 @@ public interface SyncMapper {
     // [7] 관광지 상세정보 동기화
     int insertTourIntroFromOrigin();
 
+    // [8] 축제행사공연 상세정보 동기화
+    // todo detailIntro2_15가 없기에 메소드만 생성 후 추후 쿼리 추가
+    int insertFestivalIntroFromOrigin();
+
 } // interface end

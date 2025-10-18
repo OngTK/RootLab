@@ -105,7 +105,7 @@
             USING (contentid);
     </insert>
 
-    <!-- [6] 관광지 상세정보 동기화 ========================================================= -->
+    <!-- [7] 관광지 상세정보 동기화 ========================================================= -->
     <insert id="insertTourIntroFromOrigin">
         INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkcreditcard, chkpet, expagerange, expguide, heritage1, heritage2, heritage3, infocenter, opendate, parking, restdate, useseason, usetime)
             SELECT kpi.pNo, tdi12.accomcount, tdi12.chkbabycarriage, tdi12.chkcreditcard, tdi12.chkpet, tdi12.expagerange, tdi12.expguide,

@@ -134,3 +134,10 @@ INSERT INTO k_tour_headquarter.tourintro (pNo, accomcount, chkbabycarriage, chkc
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailintro2_12 tdi12
 		USING (contentid);
+
+-- ----------------------------------------festivalIntro_test SQL------------------------------------------
+SELECT * FROM k_tour_headquarter.festivalIntro;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM tour_api_origin.searchfestival2;
+
+-- ----------------------------------------INSERT------------------------------------------
