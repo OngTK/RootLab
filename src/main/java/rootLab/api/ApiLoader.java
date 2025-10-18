@@ -23,7 +23,6 @@ import java.util.Map;
 @Component  // 스프링 컨테이너에 빈 등록
 @Log4j2     // 로그 처리를 위한 어노테이션 추가
 public class ApiLoader {
-    // todo 해당 클래스의 위치가 모호하여, 일단 util 패키지에 포함시켰습니다. 추후 강사님께 질문드려, 클래스 위치 조정이 필요합니다.
     /**
      * 읽어올 Api의 URL을 받아서, 자동으로 Map으로 매핑하여 List로 반환합니다.
      *
