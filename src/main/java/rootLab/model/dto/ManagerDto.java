@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ManagerDto {
+    // 기본적인 정보
     private String mgNo;                // 관리자번호[PK] || UUID로 되어있기에 안전하게 String으로 반환
     private int siNo;                   // 사이트번호[FK]
     private String mId;                 // 아이디
@@ -33,4 +34,8 @@ public class ManagerDto {
     private boolean mPushAgreed;        // 푸시알림 동의
     private String memo;                // 메모
     private int mgAuth;                 // 권한 (1:시스템관리자, 2:지자체관리자)
+
+    // 부가적인 정보
+    private String siName;              // 사이트명
+    private String siDomain;            // 도메인URL
 } // class end
