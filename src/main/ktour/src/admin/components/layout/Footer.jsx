@@ -3,10 +3,16 @@
  *
  * @author kimJS
  * @since 2025.10.16
- * @version 0.1.0
+ * @version 0.1.1
  */
+import "@assets/admin/css/footer.css"; // footer.css
+
 export default function Footer( props ){
     return<>
-        <h3> 푸터 </h3>
+        {/* <!-- footer start --> */}
+        <footer>
+            <small>&copy; 2025 Root.Lab</small>
+        </footer>
+        {/* <!-- footer end --> */}
     </>
 }// Footer.jsx end

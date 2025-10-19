@@ -3,11 +3,11 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.0
+ * @version 0.1.1
  */
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import UserRouter from "./user/UserRouter";
-import AdminRouter from "./admin/AdminRouter";
+import UserRouter from "@user/UserRouter";     // 사용자단 라우터
+import AdminRouter from "@admin/AdminRouter";  // 관리자단 라우터
 
 export default function App( props ){
     return<>
