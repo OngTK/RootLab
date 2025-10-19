@@ -29,4 +29,7 @@ public class PlaceInfoRepeatDto {
     private String createdAt;   // 등록일(최초 DB복사일)
     private String updatedAt;   // 수정일(DB업데이트일/해당 레코드 수정일)
 
+    // [추가]
+    private int pirStatus;      // front에서 전달 시, 변경없음(0) C(1) U(2) D(3) 상태 정보를 담기 위해서
+
 } // class end
