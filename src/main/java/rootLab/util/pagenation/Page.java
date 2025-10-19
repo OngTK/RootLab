@@ -20,7 +20,7 @@ public class Page<T> {
     private int totalElements;      // DTO 총 개수
     private int page;               // 현재 페이지 번호
     private int size;               // 한 페이지 당 게시물 수
-
+    // todo 페이지당 버튼 개수를 정해서 시작 번호와 끝 번호 정해야함.
     // [3] 메소드 - 총 페이지 수
     public long getTotalPages() {
         // totalElements + size - 1 : size로 나눌 때, 올림의 효과를 얻기 위해

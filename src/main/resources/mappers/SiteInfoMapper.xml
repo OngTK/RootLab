@@ -4,5 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="rootLab.model.mapper.SiteInfoMapper">
-
+    <select id="searchSites" parameterType="rootLab.model.criteria.SiteInfoCriteria">
+        SELECT * FROM siteinfo s JOIN manager m USING (siNo)
+            <where>
+                <if test="siIsPublic != null">
+                    AND siIsPublic = #{siIsPublic}
+                </if>
+                <if test="siDomain != null">
+                    AND siDomain LIKE CONCAT('%', #{siDomain}, '%')
+                </if>
+                <if test="siName != null">
+                    AND siName LIKE CONCAT('%', #{siName}, '%')
+                </if>
+            </where>
+            LIMIT #{startRow}, #{pageSize}
+    </select>
 </mapper>

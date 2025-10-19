@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class SiteInfoDto {
-
+    // 기본적인 정보
     private int siNo;                   // 사이트번호[PK]
     private String siName;              // 사이트명
     private String siDomain;            // 도메인URL
@@ -34,4 +34,7 @@ public class SiteInfoDto {
     private String siUpdatedAt;         // 수정일시
     private String siMemo;              // 메모
 
+    // 부가적인 정보
+    private String mId;                 // 관리자 아이디
+    private String mName;               // 관리자 이름
 } // class end
