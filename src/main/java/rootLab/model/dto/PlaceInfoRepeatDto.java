@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * PlaceInfoRepeat Place 반복정보
  * <p>
  * CotentTypeID : 12, 14, 15, 28, 38, 39
+ * <p>
  * 25,32의 경우 이 DTO를 사용하지 않음
  * @author OngTK
  */
