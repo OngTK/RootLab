@@ -5,7 +5,7 @@
 
 <mapper namespace="rootLab.model.mapper.SiteInfoMapper">
     <select id="searchSites" parameterType="rootLab.model.criteria.SiteInfoCriteria">
-        SELECT * FROM siteinfo s JOIN manager m USING (siNo)
+        SELECT * FROM siteinfo JOIN manager USING (siNo)
             <where>
                 <if test="siIsPublic != null">
                     AND siIsPublic = #{siIsPublic}
