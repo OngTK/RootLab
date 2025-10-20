@@ -94,7 +94,7 @@ public class SyncController {
     } // func end
 
     /**
-     * [8] 축제행사공연 상세정보 동기화 (placeInfo + areaBasedSyncList2 + detailintro2_15 > festivalintro)
+     * [8] 축제행사공연 상세정보 동기화 (placeInfo + detailintro2_15 > festivalintro)
      * @return 삽입된 레코드 수
      * @author AhnJH
      */
