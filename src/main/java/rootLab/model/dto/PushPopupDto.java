@@ -19,7 +19,7 @@ public class PushPopupDto {
 
     private int ppNo;           // 푸시팝업 NO[PK]
     private int pNo;            // place 번호[FK]
-    private int mgNo;           // 작성자-관리자no[FK]
+    private String mgNo;        // 작성자-관리자no[FK]
     private String ppTitle;     // 제목
     private String ppContent;   // 내용
     private String ppImg;       // 이미지
