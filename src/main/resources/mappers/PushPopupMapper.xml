@@ -5,6 +5,8 @@
 
 <mapper namespace="rootLab.model.mapper.PushPopupMapper">
 
+
+
     <!-- 1. 검색 -->
     <select id="serachPush" resultType="rootLab.model.dto.PushPopupDto">
         SELECT
