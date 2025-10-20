@@ -48,7 +48,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     @Select("""
-            select * from placeInfo where #{pno};
+            select * from placeInfo where pno=#{pno};
             """)
     Optional<PlaceInfoDto> read(Integer pno);
 
