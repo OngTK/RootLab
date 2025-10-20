@@ -1,9 +1,9 @@
 /* button */
-.admin-scope .btn{ display: inline-block; border: solid 1px rgba(0,0,0,.2); border-radius: 3px; padding: 1px 8px; color: rgba(0,0,0,7); background:rgba(0,0,0,.05); font-size: 12px; }
-.admin-scope .btn.line{ border-color: rgba(0, 191, 99, .6); color:  rgba(0, 191, 99, 1); background: rgb(255, 255, 255); font-weight: 600; }
+.admin-scope .btn{ display: inline-block; border: solid 1px rgba(0,0,0,.2); border-radius: 3px; margin:0 2px; padding: 1px 8px; color: rgba(0,0,0,7); background:rgba(0,0,0,.05); font-size: 12px; font-weight: 500;}
+.admin-scope .btn.line{ border-color: rgba(0, 191, 99, .6); color:  rgba(0, 191, 99, 1); background: rgb(255, 255, 255);  }
 .admin-scope .btn.full{ background: rgba(0, 191, 99, 1); color: rgba(255,255,255,.99);  border: solid 1px rgba(0,0,0,.1); }
 
-.admin-scope button[type="submit"]{ background: rgba(0,0,0,.1); font-size: 13px; font-weight:500; background: rgba(0, 191, 99, 1); color:  rgba(255,255,255,.99); border:0; border-radius: 3px; padding: 1px 15px; border: solid 1px rgba(0,0,0,.1); }
+.admin-scope button[type="submit"]{ background: rgba(0,0,0,.1); font-size: 12px; font-weight:500; background: rgba(0, 191, 99, 1); color:  rgba(255,255,255,.99); border:0; border-radius: 3px; padding: 1px 15px; border: solid 1px rgba(0,0,0,.1); }
 
 
 /* color */
@@ -12,6 +12,6 @@
 .admin-scope .commingSoon{ display:flex; height: 100px; align-items: center;
     justify-content:center; font-size:  30px; color: rgba(0,0,0,.3); ;}
 
-.admin-scope button.searchBtn{ background:  rgba(0, 191, 99, 1); color: #fff; border: 0; padding: 2px 15px; font-size: 12px; font-weight: 400;  }
+.admin-scope button.searchBtn{ background:  rgba(0, 191, 99, 1); color: #fff; border: 0; padding: 1px 15px; font-size: 12px; font-weight: 400;  }
 .admin-scope .info_date{  font-size: 11px;  opacity: .5; }
 .admin-scope .info_date b{ display: inline-block; min-width: 40px; padding: 2px 5px; }
