@@ -9,14 +9,14 @@ VALUES
 
 -- ------------------------------------ 관리자정보(자체 테이블) -------------------------------------------
 INSERT INTO manager 
-    (mgNo, siNo, mId, mPwd, mName, mNick, mGender, mPhone, mEmail, 
+    (siNo, mId, mPwd, mName, mNick, mGender, mPhone, mEmail, 
      mAdd1, mAdd2, mTermsAgreed, mLocationAgreed, mPushAgreed, memo, mgAuth)
 VALUES
 -- 1. 시스템 관리자
-	(UUID_TO_BIN('01889895-c9e8-466d-a19e-e5e347895e54', 1), 1,'admin','admin', '김진숙', 'admin', '여', '032-111-2222', 'root.kjs82@gmail.com',
+	(1,'admin','admin', '김진숙', 'admin', '여', '032-111-2222', 'root.kjs82@gmail.com',
      '인천광역시 부평구 경원대로 1368', NULL, TRUE, TRUE, TRUE, '본사(시스템관리자)입니다.', 1),
 -- 2. 지자체 관리자
-	(UUID_TO_BIN('01889896-1a2b-487e-89f0-123456789abc', 1), 2, 'goseong', 'goseong', '고길동', 'goseong', '남', '033-880-3114', 'goseong@tjeoun.com',
+	(2, 'goseong', 'goseong', '고길동', 'goseong', '남', '033-880-3114', 'goseong@tjeoun.com',
      '강원도 고성군 간성읍 간성중앙길 7', NULL, TRUE, TRUE, TRUE, '251014 고성관리자 입니다.', 2);
 
 -- ------------------------------------ 콘텐츠타입( #TourAPI 연동테이블 ) -------------------------------------------
@@ -33,7 +33,6 @@ VALUES
     ('39', '음식점', 'food.png');
 
 -- ------------------------------------ 푸시 알람 (+배너) -------------------------------------------
--- mgNo가 UUID로 보안이 되어있어, 정확힌 mgNo를 알 수 없어서 INSERT 불가 -> 직접 로그인 후, Talend || 프론트에서 테스트 필요
 INSERT INTO pushPopup
 	(pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated)
 VALUES

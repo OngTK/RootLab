@@ -296,7 +296,7 @@ CREATE TABLE siteInfo (
 
 -- ------------------------------------ 관리자정보(자체 테이블) -------------------------------------------
 CREATE TABLE manager (
-	mgNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY, 	-- 관리자No[PK]
+	mgNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 					-- 관리자No[PK]
     siNo INT UNSIGNED,												-- 사이트No[FK]
     mId VARCHAR(60) NOT NULL UNIQUE,                              	-- 아이디
     mPwd VARCHAR(60) NOT NULL,                                    	-- 패스워드
@@ -326,7 +326,7 @@ CREATE TABLE manager (
 CREATE TABLE pushPopup (
 	ppNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 푸시팝업No[PK]
     pNo INT UNSIGNED,					        		-- place번호[FK]
-    mgNo BINARY(16),									-- 관리자No[FK]
+    mgNo INT UNSIGNED,									-- 관리자No[FK]
     ppTitle VARCHAR(150) NOT NULL,						-- 제목
     ppContent VARCHAR(255),								-- 내용
     ppImg VARCHAR(255),									-- 이미지
