@@ -13,32 +13,32 @@ import java.util.UUID;
 public class FileUtil {
     // 업로드 기본 경로
     private String baseDir = System.getProperty("user.dir");
-    private String uploadPath = baseDir + "/build/resources/main/img/";
+    private String uploadPath = baseDir + "/src/main/ktour/src/assets/user/";
 
     /**
      * [업로드 파일, 카테고리 타입]을 받아서, 파일을 업로드한다.
      *
      * @param multipartFile 업로드된 파일
      * @param imgCategory   카테고리 타입(마커, 푸시, 파비콘, 로고 등)
+     * @param domain 파일을 업로드한 도메인명 ex) goseong, buyeo 등
      * @return 생성된 파일명
      * @author AhnJH
      */
-    // todo 팀원 간 협의를 통해 파일 경로 수정 필요
-    public String uploadFile(MultipartFile multipartFile, String imgCategory){
+    public String uploadFile(MultipartFile multipartFile, String imgCategory, String domain){
         // 1. 중복 이미지명 제거를 위한 UUID 생성
         String uuid = UUID.randomUUID().toString();
         // 2. UUID를 기반으로 한 파일명 생성
         String fileName = uuid + "_" + multipartFile.getOriginalFilename().replaceAll("_", "-");
         // 3. 업로드할 파일 경로 생성
-        String uploadFilePath = uploadPath + imgCategory + "/";
+        String uploadFolderPath = uploadPath + domain + "/" + imgCategory + "/";
         // 4. 파일경로 File 객체 생성
-        File filepath = new File(uploadFilePath);
+        File filepath = new File(uploadFolderPath);
         // 5. 파일경로 존재여부 확인 | 존재하지 않으면, 폴더 생성
         if (!filepath.exists()){
             filepath.mkdirs();
         } // if end
         // 6. 업로드할 파일의 File 객체 생성
-        File finalFilePath = new File(uploadFilePath + fileName);
+        File finalFilePath = new File(uploadFolderPath + fileName);
         // 7. File 객체를 통한 업로드 진행
         try {
             multipartFile.transferTo(finalFilePath);
@@ -52,14 +52,15 @@ public class FileUtil {
     /**
      * [카테고리 타입, 삭제할 파일명]을 받아서, 해당하는 파일을 삭제한다.
      *
-     * @param imgCategory 카테고리 타입(마커, 푸시, 파비콘, 로고 등)
      * @param fileName 삭제할 파일명
+     * @param imgCategory 카테고리 타입(마커, 푸시, 파비콘, 로고 등)
+     * @param domain 파일을 업로드한 도메인명 ex) goseong, buyeo 등
      * @return 파일삭제 성공여부
      * @author AhnJH
      */
-    public boolean deleteFile(String imgCategory, String fileName){
+    public boolean deleteFile(String fileName, String imgCategory, String domain){
         // 1. 삭제할 파일명과 경로 생성
-        String deleteFilePath = uploadPath + imgCategory + "/" + fileName;
+        String deleteFilePath = uploadPath + domain + "/" + imgCategory + "/" + fileName;
         // 2. 경로에 대한 File 객체 생성
         File deleteFile = new File(deleteFilePath);
         // 3. 삭제 진행
