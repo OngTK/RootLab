@@ -69,21 +69,19 @@ SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM tour_api_origin.detailcommon2;
 SELECT * FROM tour_api_origin.areabasedsynclist2;
 SELECT * FROM k_tour_headquarter.placeinfo;
-SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid);
-SELECT kpi.pNo, joinA.mapx, joinA.mapy
-	FROM k_tour_headquarter.placeinfo kpi 
-    JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy FROM tour_api_origin.areabasedsynclist2 tabsl JOIN tour_api_origin.detailcommon2 tdc USING (contentid)) joinA
+SELECT kpi.pNo, tabsl2.mapx, tabsl2.mapy
+	FROM k_tour_headquarter.placeinfo kpi
+    LEFT OUTER JOIN tour_api_origin.areabasedsynclist2 tabsl2
     USING (contentid);
+SELECT contentid, mapy FROM tour_api_origin.areabasedsynclist2 WHERE ABS(mapy) >= 1000;
+SELECT * FROM tour_api_origin.areabasedsynclist2 WHERE contentid = 136294;			-- mapy 좌표 이상 발견
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
-	SELECT kpi.pNo, joinA.mapx, joinA.mapy
-		FROM k_tour_headquarter.placeinfo kpi 
-		JOIN (SELECT tabsl.contentid contentid, tdc.mapx mapx, tdc.mapy mapy 
-				FROM tour_api_origin.areabasedsynclist2 tabsl 
-                JOIN tour_api_origin.detailcommon2 tdc 
-                USING (contentid)) joinA
-		USING (contentid);
-
+	SELECT kpi.pNo, tabsl2.mapx, tabsl2.mapy
+		FROM k_tour_headquarter.placeinfo kpi
+		LEFT OUTER JOIN tour_api_origin.areabasedsynclist2 tabsl2
+		USING (contentid)
+        WHERE ABS(tabsl2.mapy) < 1000;
 
 -- ----------------------------------------placeImageDetail_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.placeimagedetail;
@@ -244,8 +242,3 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 		USING (contentid);
 
 -- ----------------------------------------marker JOIN TEST------------------------------------------
--- placeinfo가 6만여개면, markesGPS 테이블도 6만여개여야하는거 맞나요??
-SELECT * FROM tour_api_origin.areabasedsynclist2 WHERE contentid = 125683;
-SELECT * FROM tour_api_origin.detailcommon2 WHERE contentid = 125683;
-SELECT * FROM k_tour_headquarter.placeinfo;
-SELECT * FROM k_tour_headquarter.markersgps;
