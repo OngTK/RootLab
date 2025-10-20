@@ -13,6 +13,6 @@ public interface ManagerMapper {
      * @param managerCriteria 관리자정보 검색기준
      * @return 검색기준에 따른 검색결과
      */
-    // todo 제네릭을 통해 하나로 통합할 수 있을 듯?
+    // todo AhnJH 제네릭을 통해 하나로 통합할 방법 고려 필요
     List<ManagerDto> searchManagers(ManagerCriteria managerCriteria);
 } // interface end

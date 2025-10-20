@@ -36,14 +36,14 @@ public class ApiTableScheduler {
         try{
             // 1. Api URL로부터 데이터를 Map 형식으로 받아오기
             List<Map<String, Object>> dataList = apiLoader.LoadDataList("https://api.kcisa.kr/openapi/API_TOU_053/request?serviceKey=b9fed429-846a-415e-92b4-573a5fed9b99&numOfRows=10&pageNo=1");
-            // todo 데이터로부터 자동으로 테이블명을 얻을 방법 생각
+            // todo AhnJH 데이터로부터 자동으로 테이블명을 얻을 방법 생각
             String tableName = "API_TOU_053";
             // 2. 데이터를 통해 DDL 만들기
             String DDL = sqlCreator.createDynamicDdl(tableName, dataList.get(0));
             // 3. DDL 실행하기
             apiDataRepository.executeDdl(DDL);
             // 4. 해당 데이터를 생성된 테이블에 삽입하기
-            // todo insertAll로 변경 요망
+            // todo AhnJH insertAll로 변경 요망
             dataList.forEach( (data) -> {
                 if (apiMapper.dynamicInsert(tableName, data) == 1){
                     log.info("데이터 삽입이 성공적으로 진행중입니다.");

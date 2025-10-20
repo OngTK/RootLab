@@ -31,6 +31,6 @@ public interface ApiMapper {
             "#{data[${key}]}" +
             "</foreach>" +
             "</script>")
-    // todo XML로 매핑 변경 필요
+    // todo AhnJH XML로 매핑 변경 필요
     int dynamicInsert(String tableName, Map<String, Object> data);
 } // interface end
