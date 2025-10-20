@@ -3,6 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.17
+ * @version 0.1.0
  */
 import { Link } from "react-router-dom";
 
@@ -13,4 +14,4 @@ export default function Header( props ){
             <li> <Link to="/">HOME</Link></li>
         </ul>
     </>
-}
+}//Header.jsx end
