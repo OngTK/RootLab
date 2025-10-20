@@ -33,7 +33,5 @@ public interface SyncMapper {
     int insertRestaurantIntroFromOrigin();
 
     // [10] Place 반복정보 상세정보 동기화
-    // todo detailInfo_15가 없기에 추후 쿼리 추가 필요
     int insertPlaceInfoRepeatFromOrigin();
-
 } // interface end

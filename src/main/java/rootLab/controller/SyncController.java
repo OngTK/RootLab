@@ -127,11 +127,4 @@ public class SyncController {
         int inserted = syncService.syncPlaceInfoRepeat();
         return ResponseEntity.ok(inserted);
     } // func end
-
-    /** 기본 마스터 일괄 */
-    @PostMapping("/base")
-    public ResponseEntity<Integer> syncBase() {
-        int inserted = syncService.syncBaseAndPlace();
-        return ResponseEntity.ok(inserted);
-    } // func end
 } // class end

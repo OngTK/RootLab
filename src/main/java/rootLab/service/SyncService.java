@@ -116,14 +116,4 @@ public class SyncService {
     public int syncPlaceInfoRepeat(){
         return syncMapper.insertPlaceInfoRepeatFromOrigin();
     } // func end
-
-    /** 베이스 */
-    @Transactional
-    public int syncBaseAndPlace() {
-        int total = 0;
-        total += syncCategoryCodes();
-        total += syncLDongCodes();
-        total += syncPlaceInfo();
-        return total;
-    } // func end
 } // class end
