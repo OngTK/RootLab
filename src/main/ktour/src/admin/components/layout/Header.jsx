@@ -58,8 +58,8 @@ export default function Header() {
                                     <NavLink to={menu.path}>{menu.title}</NavLink>
                                     <ul className="menu2Depth">
                                         {menu.children.map((submenu) => (
-                                            <li key={submenu.path} className={({ isActive }) => isActive ? "active" : ""}> {/* NavLink 전용 콜백 문법 */}
-                                                <NavLink to={submenu.path} >{submenu.label}</NavLink>
+                                            <li key={submenu.path} > {/* NavLink 전용 콜백 문법 */}
+                                                <NavLink to={submenu.path} className={({ isActive }) => isActive ? "active" : ""}>{submenu.label}</NavLink>
                                             </li>
                                         ))}
                                     </ul>

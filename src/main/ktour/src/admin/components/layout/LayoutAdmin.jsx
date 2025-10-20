@@ -18,7 +18,7 @@ export default function LayoutAdmin({ }) {
         <Header />
         <AsideLnb />
         <PageTitle />
-        <main><Outlet /></main>
+        <main className="contentsWrap"><Outlet /></main>
         <Footer />
       </div>
     </>
