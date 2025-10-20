@@ -242,3 +242,5 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailinfo2_39 tdi39
 		USING (contentid);
+
+-- ----------------------------------------marker JOIN TEST------------------------------------------
