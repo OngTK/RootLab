@@ -1,0 +1,6 @@
+/* 2.2.1. 페이지 타이틀 */
+.admin-scope .pageTitle{ position: fixed; top:49px; width: 100%; margin:0 10px 0 0; display: flex;  align-items: flex-end;  background: rgba(255,255,255,1); border-bottom: solid 1px rgba(0,0,0,.1); padding: 5px 10px; z-index: 1; }
+.admin-scope .pageTitle h1{ padding: 5px 7px; font-size: 18px; line-height: 100%; font-weight: 600; color: rgba(0,0,0,.9); }
+.admin-scope .path{ display: inline-block;  font-size: 12px; margin-bottom: 3px; }
+.admin-scope .path::before{ content: 'Home'; padding: 0 3px;  }
+.admin-scope .path a::before{ content: '> '; color: rgba(0,0,0,.5); }

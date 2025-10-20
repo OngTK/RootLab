@@ -1,0 +1,99 @@
+/* 2.2. main(우측본문) */
+.admin-scope .temp{ height:89px }
+.admin-scope main.contentsWrap{  margin:30px 0 0 180px;  }
+
+
+/* 2.2.1. 페이지 타이틀 */
+.admin-scope .detailSearch{ display: flex; justify-content: space-between; align-items: center; padding: 10px 0; background: rgb(235, 255, 245); padding: 10px; font-size: 12px; line-height: 120%; border-radius: 10px; }
+.admin-scope .detailSearch > form > label{ display:inline-block; padding:  0 5px; font-weight: 600; color: rgba(0,0,0,.7); margin: 2px 3px 2px 0;}
+.admin-scope .detailSearch > form > label > b{ display:inline-block;  min-width: 60px; padding: 0 5px; font-size: 11px; }
+
+/* 2.2.2. 페이지 본문 */
+/*  main(우측본문) > 양쪽 영역 */
+.admin-scope main.contentsWrap section{ padding: 20px; }
+.admin-scope .bothWrap{ display: flex; align-items: stretch;  background: rgba(255,255,255,1); height: calc(100vh - 90px); overflow-y: hidden; }
+.admin-scope .bothWrap{
+    scrollbar-face-color:#ddd;/*스크롤*/
+    scrollbar-highlight-color:#ddd;/*하이라이트*/
+    scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
+    scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
+    scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
+    scrollbar-arrow-color:#ddd;/*화살*/
+    scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
+    /* overflow-x: auto; */
+}
+.admin-scope .bothWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
+.admin-scope .bothWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
+.admin-scope .bothWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
+.admin-scope .bothWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
+.admin-scope .bothWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
+.admin-scope .bothWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
+
+.admin-scope .bothWrap section{  border-bottom: solid 1px rgba(0,0,0,.1); overflow: auto; flex: 0 0 50%; }
+.admin-scope .bothWrap section:last-child{ border-left: solid 1px rgba(0,0,0,.1); }
+.admin-scope .bothWrap section.listWrap
+
+/* 2.2.1. 페이지 타이틀 */
+.admin-scope .detailSearch{ display: flex; justify-content: space-between; align-items: center; padding: 10px 0; background: rgb(235, 255, 245); padding: 10px; font-size: 12px; line-height: 120%; border-radius: 10px; }
+.admin-scope .detailSearch > form > label{ display:inline-block; padding:  0 5px; font-weight: 600; color: rgba(0,0,0,.7); margin: 2px 3px 2px 0;}
+.admin-scope .detailSearch > form > label > b{ display:inline-block;  min-width: 60px; padding: 0 5px; font-size: 11px; }
+
+/* 스티키 테이블 */
+.admin-scope .tableWrap { position: relative; overflow: auto; width:100%; padding: 0; }
+.admin-scope .tableWrap table{  width: 100%; border-collapse: collapse; border-spacing: 0; font-size: 12px; line-height: 120%; color: rgba(0,0,0,.7); }
+.admin-scope .tableWrap table tbody tr:nth-child(odd){ background: rgba(0,0,0,.04); }
+.admin-scope .tableWrap table th, .tableWrap table td{ padding:5px 2px; border: solid 1px rgba(0,0,0,.1); border-width:1px 0; text-align: center; vertical-align: middle; }
+.admin-scope .tableWrap table th{  font-weight: 600; min-width: 70px; font-size: 11px;  }
+.admin-scope .tableWrap table th:first-child{  min-width:30px }
+.admin-scope .tableWrap table th.sticky{ position: sticky; top: 0; z-index: 1; }
+.admin-scope .tableWrap table td.sticky{ position: sticky; left: 0; z-index: 1; background: rgba(255,255,255,1); }       
+.admin-scope .tableWrap table tfoot th{ border: 0; }
+.admin-scope .tableWrap table tbody tr td a{ color:  rgba(0, 191, 99, 1); }
+.admin-scope .tableWrap table tbody tr:hover{ background: rgb(235, 255, 245); }
+.admin-scope .tableWrap table tbody tr.active{ background: hsla(145, 100%, 65%, 0.2); }
+.admin-scope .tableWrap table tbody tr.active td{ color: #000; }
+
+.admin-scope .tableWrap table tbody tr td b{ color: rgba(0, 191, 99, 1);}
+
+.admin-scope .registWrap{  overflow: auto;  }
+.admin-scope .titleBox{ display: flex; justify-content: space-between; align-items:top; font-size: 13px; padding: 10px 0 8px 3px; }
+.admin-scope .tabtitle{ display: flex;  }
+.admin-scope .registWrap .titleBox{ padding:0; }
+.admin-scope .tabtitle li{ padding:5px 10px; border: solid 1px rgba(0,0,0,.3); border-width:1px 1px 0px 1px; background: #ddd; margin-left: -3px; min-width: 80px; text-align: center; }
+.admin-scope .tabtitle li.active{  margin: -3px 0; border-top:solid 2px rgba(0, 191, 99, 1); border-bottom:solid 3px #eee; background:#eee; border-radius: 5px 5px 0 0; font-weight: 500; }
+.admin-scope .tabtitle li:last-child{ border-radius: 0 5px 0 0; }
+
+.admin-scope .formWrap{  background: rgba(0,0,0,.05); font-size: 12px; line-height: 160%; padding: 15px 14px; border: solid 1px rgba(0,0,0,.2); border-radius:0 5px 5px 5px; margin-bottom: 30px; height:  80vh; overflow-y: auto;  }
+
+.admin-scope .formWrap{
+    scrollbar-face-color:#ddd;/*스크롤*/
+    scrollbar-highlight-color:#ddd;/*하이라이트*/
+    scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
+    scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
+    scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
+    scrollbar-arrow-color:#ddd;/*화살*/
+    scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
+    /* overflow-x: auto; */
+}
+.admin-scope .formWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
+.admin-scope .formWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
+.admin-scope .formWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
+.admin-scope .formWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
+.admin-scope .formWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
+.admin-scope .formWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
+.admin-scope .formWrap h2{ padding: 0 0 10px; font-size:14px; letter-spacing:-0.7px; opacity:.8 }
+.admin-scope .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
+.admin-scope .formWrap label { display: inline-block; margin: 2px 0; vertical-align: top; }
+.admin-scope .formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 2px 3px 0; opacity: .6; }
+.admin-scope .formWrap p{ padding: 10px 0; }
+ 
+/*  main(우측본문) > 하단 영역 */
+.admin-scope .detaiViewWrap .titleBox{ padding: 0 0 0 0; }
+.admin-scope .detaiViewWrap .tabtitle li.active{ background:rgba(255,255,255,1); border-bottom-color: #fff; }
+.admin-scope .viewWrap{  background: rgba(255,255,255,1); font-size: 12px; line-height: 100%; padding: 15px; border: solid 1px rgba(0,0,0,.2); border-radius:0 5px 5px 5px; width:100%; min-height: 300px; }
+
+
+
+/* 2. 중앙본문(#contentsWrap) 끝  */

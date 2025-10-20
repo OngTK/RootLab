@@ -1,9 +1,9 @@
 /**
- * 관리자 > 공통레이아웃 > 좌측메뉴(asideLnb) 컴포넌트
+ * 관리자단 > 공통레이아웃 > 좌측메뉴(asideLnb) 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.16
- * @version 0.1.1
+ * @version 0.1.2
  */
 import { NavLink, useLocation } from "react-router-dom";
 import { adminMenus } from "@admin/data/adminMenus";
@@ -17,6 +17,8 @@ export default function AsideLnb( props ){
       group.path === pathname ||
       group.children.some((child) => child.path === pathname)
   );
+  
+/** ========================= 관리자단 > 공통레이아웃 > 좌측메뉴(asideLnb) .jsx영역 ================================== */
 
   return (
     <>
@@ -38,7 +40,7 @@ export default function AsideLnb( props ){
           </ul>
         )}
       </aside>
-      <div className="temp"></div>
+      {/* <div className="temp"></div> */}
     </>
   );
 }
