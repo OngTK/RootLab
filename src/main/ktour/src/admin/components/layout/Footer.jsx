@@ -8,6 +8,8 @@
 import "@assets/admin/css/footer.css"; // footer.css
 
 export default function Footer( props ){
+
+/** ====================== 관리자 > 공통레이아웃 > 푸터 .jsx영역 =========================== */
     return<>
         {/* <!-- footer start --> */}
         <footer>

@@ -16,7 +16,7 @@ import "@assets/admin/css/contents.css";                     // 본문 콘텐츠
 export default function LayoutAdmin({ }) {
 
 
-  /** ========================= 관리자단 > 공통레이아웃(LayoutAdmin) .jsx영역 ================================== */
+/** ========================= 관리자단 > 공통레이아웃(LayoutAdmin) .jsx영역 ================================== */
   return (
     <>
       <div className="admin-scope"> {/* SPA는 한 번 로드된 전역 CSS가 계속 유지돼 로그인 등 다른 화면에도 적용되므로, 스타일 오염을 막기 위해 관리자 전용 CSS 스코프 처리, admin 안의 모든 CSS 마찬가지*/}
