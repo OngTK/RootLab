@@ -39,22 +39,28 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
      */
     public Map<String,Object> getPlace(int pno){
 
+        // return할 Map 구성
+        Map<String, Object> result = new HashMap<>();
+
         // 기본정보 조회
         Optional<PlaceInfoDto> placeInfoDto = placeInfoMapper.read(pno);
         
         // 기본정보에서 컨텐츠 타입 조회
-        placeInfoDto.get().getCtNo();
+        int ctNo = placeInfoDto.get().getCtNo();
+
         // 컨턴츠타입에 맞는 디테일정보 조회
-        
+
+
         // 반복정보 조회
         
         // 상세 이미지 정보 조회
         
         // 마커 정보 조회
         
-        // Map 구성
-        Map<String, Object> result = new HashMap<>();
+
+        result.put("palceInfo",placeInfoDto);
         // 반환
+
 
         return result;
     } // func end
