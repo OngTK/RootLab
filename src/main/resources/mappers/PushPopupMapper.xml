@@ -23,7 +23,7 @@
     </resultMap>
 
     <!-- 1. 검색 -->
-    <select id="serachPush" resultMap="PushPopupMap">
+    <select id="serachPush" resultMap="rootLab.model.dto.PushPopupDto">
         SELECT
         pp.pp_no, pp.p_no, pp.mg_no, pp.pp_title, pp.pp_content, pp.pp_img,
         pp.pp_use, pp.pp_type, pp.created_at, pp.updated_at,
@@ -77,7 +77,7 @@
         WHERE pp_no = #{ppNo}
     </delete>
 
-    <update id="updatePush" parameterType="com.example.push.dto.PushPopupDto">
+    <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
         UPDATE push_popup
         <set>
             <if test="pNo != null">           p_no = #{pNo}, </if>
