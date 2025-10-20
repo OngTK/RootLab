@@ -197,21 +197,45 @@ SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
 	FROM k_tour_headquarter.placeinfo kpi
     JOIN tour_api_origin.detailinfo2_39 tdi39
     USING (contentid);
-SELECT kpi.pNo, fldgubun, infoname, infotext, serialnum
+SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
 	FROM k_tour_headquarter.placeinfo kpi
-    JOIN tour_api_origin.detailinfo2_12 tdi12
-    USING (contentid)
+	JOIN tour_api_origin.detailinfo2_12 tdi12
+	USING (contentid)
+UNION ALL
+SELECT kpi.pNo, tdi15.fldgubun, tdi15.infoname, tdi15.infotext, tdi15.serialnum
+	FROM k_tour_headquarter.placeinfo kpi
+	JOIN tour_api_origin.detailinfo2_15 tdi15
+	USING (contentid)
 UNION ALL
 SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
 	FROM k_tour_headquarter.placeinfo kpi
-    JOIN tour_api_origin.detailinfo2_39 tdi39
-    USING (contentid);
+	JOIN tour_api_origin.detailinfo2_39 tdi39
+	USING (contentid);
+    	SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_12 tdi12
+		USING (contentid)
+	UNION ALL
+	SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_39 tdi39
+		USING (contentid)
+	UNION ALL
+	SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_39 tdi39
+		USING (contentid);
 
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext, serialnum)
 	SELECT kpi.pNo, tdi12.fldgubun, tdi12.infoname, tdi12.infotext, tdi12.serialnum
 		FROM k_tour_headquarter.placeinfo kpi
 		JOIN tour_api_origin.detailinfo2_12 tdi12
+		USING (contentid)
+	UNION ALL
+	SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
+		FROM k_tour_headquarter.placeinfo kpi
+		JOIN tour_api_origin.detailinfo2_39 tdi39
 		USING (contentid)
 	UNION ALL
 	SELECT kpi.pNo, tdi39.fldgubun, tdi39.infoname, tdi39.infotext, tdi39.serialnum
