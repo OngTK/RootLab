@@ -244,3 +244,8 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 		USING (contentid);
 
 -- ----------------------------------------marker JOIN TEST------------------------------------------
+-- placeinfo가 6만여개면, markesGPS 테이블도 6만여개여야하는거 맞나요??
+SELECT * FROM tour_api_origin.areabasedsynclist2 WHERE contentid = 125683;
+SELECT * FROM tour_api_origin.detailcommon2 WHERE contentid = 125683;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.markersgps;
