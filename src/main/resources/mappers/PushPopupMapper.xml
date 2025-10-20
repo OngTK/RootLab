@@ -5,25 +5,9 @@
 
 <mapper namespace="rootLab.model.mapper.PushPopupMapper">
 
-    <!-- DB 컬럼 <-> DTO 매핑 -->
-    <resultMap id="PushPopupMap" type="rootLab.model.dto.PushPopupDto">
-        <id     property="ppNo"       column="pp_no"/>
-        <result property="pNo"        column="p_no"/>
-        <result property="mgNo"       column="mg_no"/>
-        <result property="ppTitle"    column="pp_title"/>
-        <result property="ppContent"  column="pp_content"/>
-        <result property="ppImg"      column="pp_img"/>
-        <result property="ppUse"      column="pp_use"/>
-        <result property="ppType"     column="pp_type"/>
-        <result property="createdAt"  column="created_at"/>
-        <result property="updateAt"   column="updated_at"/>
-        <result property="ppStart"    column="pp_start"/>
-        <result property="ppEnd"      column="pp_end"/>
-        <result property="ppIterated" column="pp_iterated"/>
-    </resultMap>
 
     <!-- 1. 검색 -->
-    <select id="serachPush" resultMap="rootLab.model.dto.PushPopupDto">
+    <select id="serachPush" resultType="rootLab.model.dto.PushPopupDto">
         SELECT
         pp.pp_no, pp.p_no, pp.mg_no, pp.pp_title, pp.pp_content, pp.pp_img,
         pp.pp_use, pp.pp_type, pp.created_at, pp.updated_at,
@@ -50,50 +34,6 @@
         ORDER BY pp.created_at DESC
     </select>
 
-    <!-- 2. 등록 -->
-    <insert id="insertPush"
-            parameterType="rootLab.model.dto.PushPopupDto"
-            useGeneratedKeys="true" keyProperty="ppNo">
-        INSERT INTO push_popup
-        (
-        p_no, mg_no, pp_title, pp_content, pp_img,
-        pp_use, pp_type, pp_start, pp_end, pp_iterated,
-        created_at, updated_at
-        )
-        VALUES
-        (
-        #{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},
-        #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated},
-        NOW(), NULL
-        )
-    </insert>
 
-    <!-- 3. 삭제 -->
-    <!-- 존재하지 않는 PK일 경우 0 row 삭제 -> Service에서 boolean 처리
-    - 물리 삭제. 필요 시 논리 삭제 컬럼(is_deleted 등)로 전환 가능
-    -->
-    <delete id="deletePush">
-        DELETE FROM push_popup
-        WHERE pp_no = #{ppNo}
-    </delete>
-
-    <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
-        UPDATE push_popup
-        <set>
-            <if test="pNo != null">           p_no = #{pNo}, </if>
-            <if test="mgNo != null">          mg_no = #{mgNo}, </if>
-            <if test="ppTitle != null">       pp_title = #{ppTitle}, </if>
-            <if test="ppContent != null">     pp_content = #{ppContent}, </if>
-            <if test="ppImg != null">         pp_img = #{ppImg}, </if>
-            <if test="ppUse != null">         pp_use = #{ppUse}, </if>
-            <if test="ppType != null">        pp_type = #{ppType}, </if>
-            <if test="ppStart != null">       pp_start = #{ppStart}, </if>
-            <if test="ppEnd != null">         pp_end = #{ppEnd}, </if>
-            <if test="ppIterated != null">    pp_iterated = #{ppIterated}, </if>
-            <!-- 마지막 쉼표 방지용으로 항상 맨 끝에 고정 컬럼 한 개 배치 -->
-            updated_at = NOW()
-        </set>
-        WHERE pp_no = #{ppNo}
-    </update>
 
 </mapper>

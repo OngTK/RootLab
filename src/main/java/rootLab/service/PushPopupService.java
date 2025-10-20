@@ -19,9 +19,14 @@ public class PushPopupService {
     }
 
     //2. 등록
-    public boolean addPush(PushPopupDto dto){
-        return pushPopupMapper.insertPush(dto) > 0;
+    public int addPush(PushPopupDto pushPopupDto) {
+        pushPopupMapper.addPush(pushPopupDto);
+        if(pushPopupDto.getPpNo() > 0){
+        return pushPopupDto.getPpNo();
+    }else{
+        return 0;
     }
+}
 
     //3. 삭제
     public boolean deletePush(int ppNo){
