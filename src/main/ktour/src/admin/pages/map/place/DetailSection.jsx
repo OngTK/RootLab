@@ -1,21 +1,21 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 상세뷰(CRUD) 컴포넌트
+ * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 상세정보(CRUD) 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.0
+ * @version 0.1.1
  */
 
-import PlaceCommon from "@admin/pages/map/PlaceCommon";  //* (본문 우측)플레이스 공통(기본정보) 컴포넌트 */
-import PlaceIntro from "@admin/pages/map/PlaceIntro";    //* (본문 우측)플레이스 상세정보(인트로) 컴포넌트 */
-import PlaceRepeat from "@admin/pages/map/PlaceRepeat";  //* (본문 우측)플레이스 반복정보(info2) 컴포넌트 */
+import DetailCommon1 from "@admin/pages/map/place/DetailCommon1";  //* (본문 우측)플레이스 공통정보(1.기본) 컴포넌트 */
+import DetailIntro2 from "@admin/pages/map/place/DetailIntro2";    //* (본문 우측)플레이스 상세정보(2.인트로) 컴포넌트 */
+import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3";  //* (본문 우측)플레이스 반복정보(3.info2) 컴포넌트 */
 
-export default function PlaceView(props) {
+export default function DetailSection(props) {
 
 /** ============================ [본문 우측]플레이스 상세정보(CRUD) ============================== */
     return (
         <>
-            {/* <!-- 상세뷰(CRUD) 시작 --> */}
+            {/* <!-- 상세정보(CRUD) 시작 --> */}
             <section className="registWrap">
                 {/* <!-- 탭/타이틀/버튼 시작 --> */}
                 <div className="titleBox">
@@ -32,17 +32,17 @@ export default function PlaceView(props) {
                 </div>
                 {/* <!--탭/타이틀/버튼 시작  --> */}
 
-                {/* <!-- 상세정보 입/출력 시작 --> */}
+                {/* <!-- 상세정보 1.2.3.입/출력 시작 --> */}
                 <div className="formWrap">
-                    <PlaceCommon />
+                    <DetailCommon1 />
                     <hr />
-                    <PlaceIntro />
+                    <DetailIntro2 />
                     <hr />
-                    <PlaceRepeat />
+                    <DetailRepeat3 />
                 </div>
-                {/* <!-- 상세정보 입/출력 끝 --> */}
+                {/* <!-- 상세정보 1.2.3.입/출력 끝 --> */}
             </section>
-            {/* <!-- 상세뷰(CRUD) 끝 --> */}
+            {/* <!-- 상세정보(CRUD) 끝 --> */}
         </>
     );
-}// PlaceView.jsx end
+}// DetailSection.jsx end

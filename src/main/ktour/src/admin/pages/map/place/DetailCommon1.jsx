@@ -1,14 +1,14 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측] 플레이스 기본정보 컴포넌트
+ * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.0
+ * @version 0.1.1
  */
 
-export default function PlaceCommon(props) {
+export default function DetailCommon1(props) {
 
-/** ====================== [본문 우측] 플레이스 기본정보 컴포넌트 =========================== */
+/** ====================== [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트 =========================== */
     return (
         <>
             <div className="placeCommonWrap">
@@ -133,4 +133,4 @@ export default function PlaceCommon(props) {
             </div>
         </>
     )
-}// PlaceCommon.jsx end
+}// DetailCommon1.jsx end

@@ -11,7 +11,7 @@ export default function SimpleSplitPane({
   initLeftPct = 50,
   minLeftPx = 240,
   minRightPx = 320,
-  barPx = 8, // ★ 분리바 너비 상수
+  barPx = 3, // ★ 분리바 너비 상수
   left,
   right
 }) {
@@ -74,7 +74,7 @@ export default function SimpleSplitPane({
       <style>{`
         .kt-split{
           --leftPct: 50%;
-          --barPx: 8px;
+          --barPx: 5px;
           --minRight: 320px;
           display:flex; height:100%; min-width:0; min-height:0; width:100%;
         }
@@ -84,7 +84,7 @@ export default function SimpleSplitPane({
           /* ★ 우측 최소폭 + 바 폭만큼은 남겨둔다 */
           max-width: calc(100% - (var(--minRight) + var(--barPx)));
           overflow:auto; box-sizing:border-box;
-          border-right:1px solid #e7e7e7; background:#fafafa;
+          border-right:1px solid #e7e7e7; 
         }
         .kt-bar{
           /* ★ 바가 0으로 찌그러지지 않도록 고정 */
@@ -97,9 +97,9 @@ export default function SimpleSplitPane({
         .kt-right{
           flex: 1 1 auto;
           min-width: var(--minRight);
-          overflow:auto; box-sizing:border-box; background:#fff;
+          overflow:auto; border-left:1px solid #e7e7e7; 
         }
-
+        
         @media (max-width: 1100px){
           .kt-split{ flex-direction:column; }
           .kt-left{ flex: 0 0 auto; width:100%; min-width:0; max-width:none; border-right:0; border-bottom:1px solid #e7e7e7; }

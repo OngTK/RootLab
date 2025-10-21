@@ -3,12 +3,12 @@
  *
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.0
+ * @version 0.1.2
  */
 import ResizableTable from "@admin/components/common/ResizableTable";
-import "@assets/admin/css/ResizableTable.css"; // ResizableTable.css
+import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 
-export default function PlaceList(props) {
+export default function ListSection(props) {
 
 const columns = [
   { id: "no", title: "No", width: 70 },

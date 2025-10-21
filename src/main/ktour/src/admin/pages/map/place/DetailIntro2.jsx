@@ -1,14 +1,14 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 Intro(상세정보) 컴포넌트
+ * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 Intro상세정보(2.인트로) 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.0
+ * @version 0.1.1
  */
 
-export default function PlaceIntro(props) {
+export default function DetailIntro2(props) {
 
-/** ========================= [본문 우측] 플레이스 Intro(상세정보) 컴포넌트============================== */
+/** ========================= [본문 우측] 플레이스 Intro상세정보(2.인트로) 컴포넌트============================== */
     return (
         <>
             <div className="placeIntroWrap">
@@ -107,4 +107,4 @@ export default function PlaceIntro(props) {
             </div>
         </>
     )
-}// PlaceIntro.jsx end
+}// DetailIntro2.jsx end

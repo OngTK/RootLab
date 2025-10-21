@@ -1,4 +1,5 @@
 /*
+
 1. MySQL Connections > 설정 > Connection > Advanced > Others에 OPT_LOCAL_INFILE=1 추가
 2. LOAD DATA LOCAL INFILE "절대경로"
 	-> 절대경로는 각자 다른 경로를 갖기에 본인 경로에 맞게 커스텀해야함.
