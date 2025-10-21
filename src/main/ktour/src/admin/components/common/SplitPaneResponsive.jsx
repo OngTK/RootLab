@@ -83,7 +83,7 @@ export default function SimpleSplitPane({
           min-width: ${minLeftPx}px;
           /* ★ 우측 최소폭 + 바 폭만큼은 남겨둔다 */
           max-width: calc(100% - (var(--minRight) + var(--barPx)));
-          overflow:auto; box-sizing:border-box;
+         box-sizing:border-box;
           border-right:1px solid #e7e7e7; 
         }
         .kt-bar{
@@ -92,12 +92,13 @@ export default function SimpleSplitPane({
           width: var(--barPx);
           cursor: col-resize; user-select: none; touch-action: none;
           background: linear-gradient(to bottom, transparent, rgba(0,0,0,.10), transparent);
+          z-index: 200;
         }
         .kt-bar:hover{ background-color: rgba(0,0,0,.14); }
         .kt-right{
           flex: 1 1 auto;
           min-width: var(--minRight);
-          overflow:auto; border-left:1px solid #e7e7e7; 
+          border-left:1px solid #e7e7e7; 
         }
         
         @media (max-width: 1100px){
