@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.2
+ * @version 0.1.3
  */
 import Header from "@admin/components/layout/Header";        // 헤더 컴포넌트
 import AsideLnb from "@admin/components/layout/AsideLnb";    // 사이드 네비게이션 컴포넌트
@@ -22,8 +22,10 @@ export default function LayoutAdmin({ }) {
       <div className="admin-scope"> {/* SPA는 한 번 로드된 전역 CSS가 계속 유지돼 로그인 등 다른 화면에도 적용되므로, 스타일 오염을 막기 위해 관리자 전용 CSS 스코프 처리, admin 안의 모든 CSS 마찬가지*/}
         <Header />
         <AsideLnb />
-        <PageTitle /> 
-        <main className="contentsWrap"><Outlet /></main>
+        <main className="contentsWrap">
+          <PageTitle />
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </>
