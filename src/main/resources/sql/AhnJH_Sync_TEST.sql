@@ -11,7 +11,7 @@ SELECT * FROM k_tour_headquarter.categorycode;
 SELECT * FROM tour_api_origin.lclssystmcode2;
 -- ----------------------------------------INSERT------------------------------------------
 INSERT INTO k_tour_headquarter.categorycode ( rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm )
-	SELECT rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm 
+	SELECT rnum, lclsSystm1Cd, lclsSystm1Nm, lclsSystm2Cd, lclsSystm2Nm, lclsSystm3Cd, lclsSystm3Nm
     FROM tour_api_origin.lclssystmcode2;
 
 -- ----------------------------------------placeInfo_test SQL------------------------------------------
@@ -242,3 +242,13 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 		USING (contentid);
 
 -- ----------------------------------------marker JOIN TEST------------------------------------------
+-- 강사님께 피드백 받은 후, getMarker 로직 구현
+SELECT * FROM k_tour_headquarter.markersgps;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.contenttype;
+SELECT kpi.pNo, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy
+FROM k_tour_headquarter.placeinfo kpi
+         JOIN k_tour_headquarter.contenttype kct
+              USING (ctNo)
+         JOIN k_tour_headquarter.markersgps kmg
+              USING (pNo);

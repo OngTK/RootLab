@@ -8,6 +8,7 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import UserRouter from "@user/UserRouter";     // 사용자단 라우터
 import AdminRouter from "@admin/AdminRouter";  // 관리자단 라우터
+import KakaoMap from "./kakaomap/KakaoMap.jsx";                // 지도 테스트용 경로(추후 삭제 예정)
 
 export default function App( props ){
     return<>
@@ -15,6 +16,7 @@ export default function App( props ){
            <Routes>
                 <Route path="/*" element={<UserRouter />} />        {/* 사용자단(비회원) */}
                 <Route path="/admin/*" element={<AdminRouter />} /> {/* 관리자단(본사) */}
+                <Route path="/kakaomap/*" element={<KakaoMap />} /> {/* 지도 테스트용 경로 */}
             </Routes>
         </BrowserRouter>
     </>
