@@ -8,7 +8,7 @@
 
 /* 2.2.2. 페이지 본문 */
 /*  main(우측본문) > 양쪽 영역 */
-.admin-scope main.contentsWrap section.listWrap, .admin-scope main.contentsWrap section.registWrap{ padding: 20px; }
+.admin-scope main.contentsWrap section.listWrap, .admin-scope main.contentsWrap section.registWrap{ padding: 20px; background: rgba(255,255,255,1); }
 .admin-scope .bothWrap{ display: flex; align-items: stretch;  background: rgba(255,255,255,1); height: calc(100vh - 50px); overflow-y: hidden;  min-width: 0; /* flex overflow 방지 */}
 .admin-scope .bothWrap{
     scrollbar-face-color:#ddd;/*스크롤*/
@@ -133,3 +133,9 @@
 .admin-scope .viewWrap{  background: rgba(255,255,255,1); font-size: 12px; line-height: 100%; padding: 15px; border: solid 1px rgba(0,0,0,.2); border-radius:0 5px 5px 5px; width:100%; min-height: 300px; }
 
 /* 2. 중앙본문(#contentsWrap) 끝  */
+
+
+/* ========== 반응형 =========== */
+ @media (max-width: 1200px){
+.admin-scope main.contentsWrap{  margin:50px 0 0 0;  }
+ }

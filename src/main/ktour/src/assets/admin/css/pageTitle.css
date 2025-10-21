@@ -4,3 +4,9 @@
 .admin-scope .path{ display: inline-block;  font-size: 12px; margin-bottom: 3px; }
 .admin-scope .path::before{ content: 'Home'; padding: 0 2px;  }
 .admin-scope .path a::before{ content: ' > '; color: rgba(0,0,0,.5); }
+
+
+/* ========== 반응형 =========== */
+ @media (max-width: 1200px){
+.admin-scope .pageTitle{  margin:0 10px 0 0px; padding: 8px 13px; }
+ }
