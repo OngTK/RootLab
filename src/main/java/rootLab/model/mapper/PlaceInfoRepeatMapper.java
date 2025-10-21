@@ -25,8 +25,6 @@ import java.util.List;
  */
 @Mapper
 public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatDto, Integer, RoleCriteria> {
-
-    // todo OngTK 시리얼넘버 처리 관련 고려 필요
     
     // [1] 개별 등록
     @Insert("""

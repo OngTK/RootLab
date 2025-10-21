@@ -27,6 +27,15 @@ public class PlaceInfoController {
 
     /**
      * [PI-01] 플레이스 검색
+     * @param page          조회하려는 현재 페이지
+     * @param size          한 페이지 당 노출되는 콘텐츠 수
+     * @param ctNo          콘텐츠번호 FK
+     * @param showflag      노출여부
+     * @param ccName        분류체계 번호 : 3단계 카테고리
+     * @param ldName        법정동 명칭
+     * @param address       주소
+     * @param title         플레이스명
+     * @param pNo           플레이스 번호
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchPlaces(
@@ -45,8 +54,17 @@ public class PlaceInfoController {
         PageRequest pr = new PageRequest(page, size);
 
         // [1.2] 검색조건 Criteria 객체 생성
+        PlaceInfoCriteria placeInfoCriteria = PlaceInfoCriteria
+                .builder()
+                .ctNo(ctNo)
+                .showflag(showflag)
+                .ccName(ccName)
+                .ldName(ldName)
+                .address(address)
+                .title(title).pNo(pNo).build();
 
         // [1.3] service
+
 
         return ResponseEntity.ok(0);
     } // func end
