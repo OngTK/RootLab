@@ -12,6 +12,7 @@ export default function KakaoMap(props){
         east : "0.0"
     }); // useState end
     // =================== 현재 위도경도 구하기 ===================
+    const [initialMap, setInitialMap] = useState(null);
     const [currentLocation, setCurrentLocation] = useState({
         center: {
             lat: 37.489457,
@@ -21,6 +22,20 @@ export default function KakaoMap(props){
         isLoading: true
     }); // useState end
     useEffect( () => {
+        // initialMap이 생성되지 않았다면 실행 X
+        if (!initialMap) return;
+        // initialMap이 생성되었다면, 초기 위치 기준으로 bounds 얻기
+        const bounds = initialMap.getBounds();
+        const southWest = bounds.getSouthWest();
+        const northEast = bounds.getNorthEast();
+        const newBounds = {
+            south : southWest.getLat(),
+            west : southWest.getLng(),
+            north : northEast.getLat(),
+            east : northEast.getLng()
+        };
+        // 얻은 bounds를 통해 bounds 업데이트하기
+        setBounds(newBounds);
         // geolocation을 통해 위도·경도를 얻을 수 있다면
         if (navigator.geolocation){
             navigator.geolocation.getCurrentPosition((location) => {
@@ -48,7 +63,7 @@ export default function KakaoMap(props){
                 isLoading: false
             })) // setCurrentLocation end
         } // if end
-    }, []); // useEffect end
+    }, [initialMap]); // useEffect end
 
 
 
@@ -85,6 +100,7 @@ export default function KakaoMap(props){
                 };
                 setBounds(newBounds);
             }}
+            onCreate={setInitialMap}
         />
         <h3>북쪽 : {bounds.north}</h3>
         <h3>남쪽 : {bounds.south}</h3>
