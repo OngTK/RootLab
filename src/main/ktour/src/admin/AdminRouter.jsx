@@ -12,7 +12,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "@admin/pages/member/Login";          // 관리자 로그인
 import MainPlace from "@user/pages/map/MainPlace";      // 사용자단 메인
 
-// 관리자단 로그인 이 영역: 코드 스플리팅 (지연 로딩, 필요 시점에만 로드)
+// 관리자단 로그인 이후 영역: 코드 스플리팅 (지연 로딩, 필요 시점에만 로드)
 const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin"));
 const PlaceInfo   = lazy(() => import("@admin/pages/map/PlaceInfo"));
 const Manager     = lazy(() => import("@admin/pages/member/Manager"));
@@ -24,7 +24,7 @@ import "@assets/admin/css/reset.css";
 
 export default function AdminRouter() {
   return (
-    <Suspense fallback={<div>관리자 페이지 로딩 중...</div>}>
+    <Suspense fallback={null}> {/* <div>로딩 중 표시할 컴포넌트</div> */}
       <Routes>
         {/* 비관리자 라우트 */}
         <Route path="/" element={<MainPlace />} />

@@ -14,7 +14,8 @@ export default function Header() {
 
     // 경로 일치 또는 하위경로 포함 체크
     const isMatch = (base, path) => base === path || path.startsWith(base + "/");
-
+    
+/** ====================== 관리자단 > 공통레이아웃 > 헤더 .jsx영역 =========================== */
     return (
         <header>
             {/* 1. 좌측 로고 */}

@@ -8,8 +8,8 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { adminMenus } from "@admin/data/adminMenus";
 import '@assets/admin/css/asideLnb.css' // 좌측메뉴 asideLnb.css
-export default function AsideLnb( props ){
-   const { pathname } = useLocation();
+export default function AsideLnb(props) {
+  const { pathname } = useLocation();
 
   // 현재 URL에 해당하는 1차 메뉴 그룹 찾기
   const activeGroup = adminMenus.find(
@@ -17,9 +17,8 @@ export default function AsideLnb( props ){
       group.path === pathname ||
       group.children.some((child) => child.path === pathname)
   );
-  
-/** ========================= 관리자단 > 공통레이아웃 > 좌측메뉴(asideLnb) .jsx영역 ================================== */
 
+  /** ========================= 관리자단 > 공통레이아웃 > 좌측메뉴(asideLnb) .jsx영역 ================================== */
   return (
     <>
       <aside className="lnb">
@@ -30,17 +29,17 @@ export default function AsideLnb( props ){
         {activeGroup && activeGroup.children && (
           <ul>
             {
-            activeGroup.children.map((child) => {
+              activeGroup.children.map((child) => {
                 return <li key={child.path}>
-                <NavLink to={child.path} className={({ isActive }) => (isActive ? "active" : "")} >
-                  {child.label}
-                </NavLink>
-              </li>
-            })}
+                  <NavLink to={child.path} className={({ isActive }) => (isActive ? "active" : "")} >
+                    {child.label}
+                  </NavLink>
+                </li>
+              })
+            }
           </ul>
         )}
       </aside>
-      {/* <div className="temp"></div> */}
     </>
   );
 }
