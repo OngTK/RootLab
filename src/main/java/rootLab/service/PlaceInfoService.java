@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.PlaceInfoDto;
+import rootLab.model.dto.TourIntroDto;
 import rootLab.model.mapper.PlaceInfoMapper;
 import rootLab.model.repository.CommonRepository;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, PlaceInfoCriteria> {
 
     private final PlaceInfoMapper placeInfoMapper;
+    private final TourIntroService tourIntroService;
 
     /**
      * [0] AbstreactServie 추상메소드 구현
@@ -44,23 +46,29 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
 
         // 기본정보 조회
         Optional<PlaceInfoDto> placeInfoDto = placeInfoMapper.read(pno);
-        
+        result.put("palceInfo",placeInfoDto);
+
         // 기본정보에서 컨텐츠 타입 조회
         int ctNo = placeInfoDto.get().getCtNo();
 
         // 컨턴츠타입에 맞는 디테일정보 조회
+        if(ctNo == 1){              // 관광지 ctNo 1 / contentTypeID 12
+            Optional<TourIntroDto> tourIntroDto = tourIntroService.read(pno);
+            result.put("TourIntroDto",tourIntroDto);
+        } else if (ctNo == 3){      // 행사/공연/축제 ctNo 3 / contentTypeID
 
+            
+        } else if (ctNo == 8 ){     //음식점 ctNo  / contentTypeID
+            
+        }
 
         // 반복정보 조회
         
         // 상세 이미지 정보 조회
         
         // 마커 정보 조회
-        
 
-        result.put("palceInfo",placeInfoDto);
         // 반환
-
 
         return result;
     } // func end

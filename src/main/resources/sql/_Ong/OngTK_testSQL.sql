@@ -107,3 +107,8 @@ INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, isEditable, contenti
             FROM tour_api_origin.areabasedsynclist2 al
             LEFT JOIN tour_api_origin.detailcommon2 dc
             ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
+            
+-- ---------------------------------------------------------
+-- TourIntro : 관광지(contentTypeID 12 . ctNo1) 정보
+-- 관광, 플레이스 관련 기본 공통 정보
+-- ---------------------------------------------------------

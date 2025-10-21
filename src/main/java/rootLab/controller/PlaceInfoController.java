@@ -62,7 +62,6 @@ public class PlaceInfoController {
     public ResponseEntity<?> getPlace(@RequestParam int pno) {
 
         Map<String, Object> result = placeInfoService.getPlace(pno);
-
         return ResponseEntity.ok(result);
     }
 
