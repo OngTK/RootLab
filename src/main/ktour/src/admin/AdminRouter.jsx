@@ -17,7 +17,7 @@ const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin"));
 const PlaceInfo   = lazy(() => import("@admin/pages/map/place/PlaceInfo"));
 const Manager     = lazy(() => import("@admin/pages/member/Manager"));
 const SiteInfo    = lazy(() => import("@admin/pages/site/SiteInfo"));
-const PushPopup   = lazy(() => import("@admin/pages/site/PushPopup"));
+const PushPopup   = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));
 const NotFound    = lazy(() => import("@admin/pages/NotFound404"));
 
 import "@assets/admin/css/reset.css"; 

@@ -5,10 +5,9 @@
  * @since 2025.10.19
  * @version 0.1.3
  */
-
-import ListSection from "@admin/pages/map/place/ListSection.jsx";   // 좌측: 목록
-import DetailSection from "@admin/pages/map/place/DetailSection.jsx";   // 우측: 상세/CRUD(Create Read Update Delete)
 import SplitPaneResponsive from "@admin/components/common/SplitPaneResponsive"; // 반응형 스플리터
+import ListSection from "@admin/pages/map/place/ListSection.jsx";               // 좌측: 목록
+import DetailSection from "@admin/pages/map/place/DetailSection.jsx";           // 우측: 상세(CRUD)
 
 export default function PlaceInfo() {
 
