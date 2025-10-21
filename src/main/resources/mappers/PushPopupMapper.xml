@@ -8,77 +8,34 @@
 
 
     <!-- 1. 검색 -->
-    <select id="serachPush" resultType="rootLab.model.dto.PushPopupDto">
-        SELECT
-        pp.pp_no, pp.p_no, pp.mg_no, pp.pp_title, pp.pp_content, pp.pp_img,
-        pp.pp_use, pp.pp_type, pp.created_at, pp.updated_at,
-        pp.pp_start, pp.pp_end, pp.pp_iterated
-        <!-- 조인으로 가져오고 싶은 컬럼이 있다면 아래 주석 해제 후 alias 추가
-             , pi.title   AS place_title
-             , m.mNick    AS manager_nick
-        -->
-        FROM push_popup pp
-        <!-- 필요 시 조인 -->
-        <!-- LEFT JOIN placeInfo pi ON pi.pNo = pp.p_no -->
-        <!-- LEFT JOIN manager   m  ON m.mgNo = pp.mg_no -->
-        <where>
-            <if test="pNo != null">
-                AND pp.p_no = #{pNo}
-            </if>
-            <if test="ppType != null and ppType != ''">
-                AND pp.pp_type = #{ppType}
-            </if>
-            <if test="ppTitleLike != null and ppTitleLike != ''">
-                AND pp.pp_title LIKE CONCAT('%', #{ppTitleLike}, '%')
-            </if>
-        </where>
-        ORDER BY pp.created_at DESC
+    <select id="searchPush" resultType="rootLab.model.dto.PushPopupDto">
+        SELECT * FROM pushPopup WHERE pNo = #{pNo} , ppType = #{ppType} and ppTitle LIKE CONCAT('%', #{ppTitle}, '%') ORDER BY createdAt DESC
     </select>
 
-    <!-- 2. 등록 -->
-    <insert id="insertPush"
-            parameterType="rootLab.model.dto.PushPopupDto"
-            useGeneratedKeys="true" keyProperty="ppNo">
-        INSERT INTO push_popup
-        (
-        p_no, mg_no, pp_title, pp_content, pp_img,
-        pp_use, pp_type, pp_start, pp_end, pp_iterated,
-        created_at, updated_at
-        )
-        VALUES
-        (
-        #{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},
-        #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated},
-        NOW(), NULL
-        )
-    </insert>
+<!--    &lt;!&ndash; 2. 등록 &ndash;&gt;-->
+<!--    <insert id="insertPush"-->
+<!--            parameterType="rootLab.model.dto.PushPopupDto"-->
+<!--            useGeneratedKeys="true" keyProperty="ppNo">-->
+<!--        INSERT INTO push_popup-->
+<!--        (-->
+<!--        pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated -->
+<!--        )-->
+<!--        VALUES-->
+<!--        (-->
+<!--        #{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},-->
+<!--        #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated},-->
+<!--        NOW(), NULL-->
+<!--        )-->
+<!--    </insert>-->
 
     <!-- 3. 삭제 -->
-    <!-- 존재하지 않는 PK일 경우 0 row 삭제 -> Service에서 boolean 처리
-    - 물리 삭제. 필요 시 논리 삭제 컬럼(is_deleted 등)로 전환 가능
-    -->
-    <delete id="deletePush">
-        DELETE FROM push_popup
-        WHERE pp_no = #{ppNo}
+    <delete id="deletePush" parameterType="int">
+        DELETE FROM pushPopup WHERE ppNo = #{ppNo};
     </delete>
 
+    <!-- 4. 수정 -->
     <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
-        UPDATE push_popup
-        <set>
-            <if test="pNo != null">           p_no = #{pNo}, </if>
-            <if test="mgNo != null">          mg_no = #{mgNo}, </if>
-            <if test="ppTitle != null">       pp_title = #{ppTitle}, </if>
-            <if test="ppContent != null">     pp_content = #{ppContent}, </if>
-            <if test="ppImg != null">         pp_img = #{ppImg}, </if>
-            <if test="ppUse != null">         pp_use = #{ppUse}, </if>
-            <if test="ppType != null">        pp_type = #{ppType}, </if>
-            <if test="ppStart != null">       pp_start = #{ppStart}, </if>
-            <if test="ppEnd != null">         pp_end = #{ppEnd}, </if>
-            <if test="ppIterated != null">    pp_iterated = #{ppIterated}, </if>
-            <!-- 마지막 쉼표 방지용으로 항상 맨 끝에 고정 컬럼 한 개 배치 -->
-            updated_at = NOW()
-        </set>
-        WHERE pp_no = #{ppNo}
+        UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppImg = #{ppImg} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
     </update>
 
 </mapper>

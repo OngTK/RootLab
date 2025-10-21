@@ -14,7 +14,7 @@ public class PushPopupService {
     private final PushPopupMapper pushPopupMapper;
 
     //1. 검색
-    public List<PushPopupDto> searchPush(Integer pNo, String ppType, String ppTitle){
+    public List<PushPopupDto> searchPush(int pNo, String ppType, String ppTitle){
         return pushPopupMapper.searchPush(pNo, ppType, ppTitle);
     }
 
