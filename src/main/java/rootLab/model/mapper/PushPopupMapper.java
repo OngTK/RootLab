@@ -16,9 +16,9 @@ public interface PushPopupMapper {
      * @author juju95
      */
     List<PushPopupDto> searchPush(
-            @Param("pNo") Integer pNo,
+            @Param("pNo") int pNo,
             @Param("ppType") String ppType,
-            @Param("ppTitle") String ppTitleLike
+            @Param("ppTitle") String ppTitle
     );
 
     /**
@@ -29,7 +29,7 @@ public interface PushPopupMapper {
     INSERT INTO pushPopup
     (pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated)
     VALUES
-    (#{pNo}, UUID_TO_BIN(#{mgNo}, 1), #{ppTitle}, #{ppContent}, #{ppImg},
+    (#{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},
     #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated})
     """)
     @Options(useGeneratedKeys = true, keyProperty = "ppNo") // AUTO_INCREMENT ppNo 주입
@@ -39,7 +39,7 @@ public interface PushPopupMapper {
      * 3. 삭제
      * @author juju95
      */
-    int deletePush(@Param("ppNo") int ppNo);
+    int deletePush (int ppNo);
 
     /**
      * 4. 수정

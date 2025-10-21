@@ -26,10 +26,11 @@ public class PushPopupController {
      */
     @PostMapping("/search")
     public ResponseEntity<List<PushPopupDto>> searchPush(
-            @RequestParam(required = false) Integer pNo,
-            @RequestParam(required = false) String ppType,
-            @RequestParam(required = false , name = "ppTitle") String ppTitle
+            @RequestParam int pNo,
+            @RequestParam String ppType,
+            @RequestParam String ppTitle
     ){
+        System.out.println("pNo = " + pNo + ", ppType = " + ppType + ", ppTitle = " + ppTitle);
         return ResponseEntity.ok(pushPopupService.searchPush(pNo, ppType, ppTitle));
     }
 
@@ -40,6 +41,7 @@ public class PushPopupController {
      */
     @PostMapping("/add")
     public ResponseEntity<?> addPush(@RequestBody PushPopupDto pushPopupDto){
+        System.out.println("pushPopupDto = " + pushPopupDto);
         int result = pushPopupService.addPush(pushPopupDto);
         return ResponseEntity.ok(result);
     }
@@ -62,6 +64,7 @@ public class PushPopupController {
      */
     @PutMapping("/update")
     public ResponseEntity<Boolean> updatePush(@RequestBody PushPopupDto dto){
+        System.out.println("dto = " + dto);
         boolean result = pushPopupService.updatePush(dto);
         return ResponseEntity.ok(result);
     }
