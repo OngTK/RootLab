@@ -34,13 +34,6 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
     }
 
     /**
-     *
-     */
-    public List<PlaceInfoDto> searchPlaces(){
-        return null;
-    } // func end
-
-    /**
      * [PI-02] 플레이스 개별조회
      * @param pno
      * @return Map<String, Object> :
@@ -94,7 +87,6 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         return result;
         
     } // func end
-
 
 
 } // class end

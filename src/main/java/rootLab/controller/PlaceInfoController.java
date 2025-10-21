@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rootLab.model.criteria.PlaceInfoCriteria;
+import rootLab.model.dto.PlaceInfoDto;
 import rootLab.service.PlaceInfoService;
+import rootLab.util.pagenation.Page;
 import rootLab.util.pagenation.PageRequest;
-import rootLab.util.pagenation.Sort;
 
 import java.util.Map;
 
@@ -49,9 +50,11 @@ public class PlaceInfoController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) int pNo
     ) {
+        System.out.println("page = " + page + ", size = " + size + ", ctNo = " + ctNo + ", showflag = " + showflag + ", ccName = " + ccName + ", ldName = " + ldName + ", address = " + address + ", title = " + title + ", pNo = " + pNo);
+
         // [1.1] 페이지 처리 요청을 위한 PageRequest 개체 생성
         // 참고 정렬을 위한 sort 개체 생성 과정 생략
-        PageRequest pr = new PageRequest(page, size);
+        PageRequest pageRequest = new PageRequest(page, size);
 
         // [1.2] 검색조건 Criteria 객체 생성
         PlaceInfoCriteria placeInfoCriteria = PlaceInfoCriteria
@@ -63,10 +66,22 @@ public class PlaceInfoController {
                 .address(address)
                 .title(title).pNo(pNo).build();
 
+        // 검색조건으 모두 null이면 false / 하나라도 존재하면 true
+        boolean filter = (!showflag) &&
+                (ccName == null || ccName.isEmpty()) &&
+                (ldName == null || ldName.isEmpty()) &&
+                (address == null || address.isEmpty()) &&
+                (title == null || title.isEmpty()) ? false : true;
+
         // [1.3] service
+        Page<PlaceInfoDto> result;
+        if(filter){
+            result = placeInfoService.searchPage(placeInfoCriteria, pageRequest);
+        } else {
+            result = placeInfoService.findPage(pageRequest);
+        }
 
-
-        return ResponseEntity.ok(0);
+        return ResponseEntity.ok(result);
     } // func end
 
     /**

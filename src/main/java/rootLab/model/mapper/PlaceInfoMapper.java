@@ -1,9 +1,6 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.PlaceInfoDto;
 import rootLab.model.repository.CommonRepository;
@@ -51,5 +48,38 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             select * from placeInfo where pno=#{pno};
             """)
     Optional<PlaceInfoDto> read(Integer pno);
+
+
+    // Page · Search ================================================================
+
+    /**
+     * [3.1] 전체조회 레코드 수
+     * @author OngTK
+     */
+    @Override
+    @Select("""
+            select count(*) from placeinfo;
+            """)
+    int countAll();
+
+    /**
+     * [3.2] 페이지 처리 요청
+     */
+    @Override
+    List<PlaceInfoDto> findAllPaged(PageRequest pageRequest);
+    
+    /**
+     * [3.3] 검색결과 레코드를 반환
+     */
+    @Override
+    int countForSearch(PlaceInfoCriteria criteria);
+
+    /**
+     * [3.4] 페이지에 해당하는 레코드를 List로 반환
+     */
+    @Override
+    List<PlaceInfoDto> searchPaged(@Param("criteria") PlaceInfoCriteria criteria,
+                                   @Param("page") PageRequest pageRequest);;
+
 
 } // class end
