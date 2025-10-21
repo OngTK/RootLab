@@ -37,11 +37,11 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
      * [PI-02] 플레이스 개별조회
      * @param pno
      * @return Map<String, Object> :
-     * {"placeinfo" : {dto} },
-     * {"detailInfo":{dto} },
-     * {"placeInfoRepeat":{dto} },
-     * {"markerGPS":{dto} },
-     * {"placeImg":{dto} }
+     * <p>{"placeinfo" : {dto} },
+     * <p>{"detailInfo":{dto} - 컨탠츠별로 서로 다른 DTO를 반환},
+     * <p>{"placeInfoRepeat":{dto} },
+     * <p>{"markerGPS":{dto} },
+     * <p>{"placeImg":{dto} }
      * @author OngTK
      */
     public Map<String,Object> getPlace(int pno){
@@ -84,8 +84,8 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         result.put("MarkersGPSDto",markersGPSDto);
 
         // 반환
-
         return result;
+        
     } // func end
 
 
