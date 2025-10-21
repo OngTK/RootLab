@@ -126,3 +126,10 @@ select * from festivalintro where pno=23405;
 -- RestaurantIntro 
 -- 음식점 (contentTypeID 39 . ctNo 8) 정보
 -- ---------------------------------------------------------
+select * from RestaurantIntro where pno = 51385;
+
+
+-- ---------------------------------------------------------
+-- placeimagedetail
+-- 플레이스 사진 정보
+-- ---------------------------------------------------------

@@ -3,17 +3,12 @@ package rootLab.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.criteria.PlaceInfoCriteria;
-import rootLab.model.dto.FestivalIntroDto;
-import rootLab.model.dto.PlaceInfoDto;
-import rootLab.model.dto.RestaurantIntroDto;
-import rootLab.model.dto.TourIntroDto;
-import rootLab.model.mapper.FestivalIntroMapper;
-import rootLab.model.mapper.PlaceInfoMapper;
-import rootLab.model.mapper.RestaurantIntroMapper;
-import rootLab.model.mapper.TourIntroMapper;
+import rootLab.model.dto.*;
+import rootLab.model.mapper.*;
 import rootLab.model.repository.CommonRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +20,7 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
     private final TourIntroMapper tourIntroMapper;
     private final FestivalIntroMapper festivalIntroMapper;
     private final RestaurantIntroMapper restaurantIntroMapper;
+    private final PlaceInfoRepeatMapper placeInfoRepeatMapper;
 
     /**
      * [0] AbstreactServie 추상메소드 구현
@@ -74,8 +70,11 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         } // if end
 
         // 반복정보 조회
-        
+        List<PlaceInfoRepeatDto> placeInfoDtoList = placeInfoRepeatMapper.readAllToPno(pno);
+        result.put("PlaceInfoDtoList",placeInfoDtoList);
         // 상세 이미지 정보 조회
+
+
         
         // 마커 정보 조회
 
