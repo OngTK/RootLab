@@ -109,6 +109,20 @@ INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, isEditable, contenti
             ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
             
 -- ---------------------------------------------------------
--- TourIntro : 관광지(contentTypeID 12 . ctNo1) 정보
--- 관광, 플레이스 관련 기본 공통 정보
+-- TourIntro
+-- 관광지(contentTypeID 12 . ctNo1) 정보
+-- ---------------------------------------------------------
+select * from tourIntro where pno = 6881;
+
+
+-- ---------------------------------------------------------
+-- festivalintro 
+-- 행사/축제 (contentTypeID 15 . ctNo3) 정보
+-- ---------------------------------------------------------
+select * from festivalintro where pno=23405;
+
+
+-- ---------------------------------------------------------
+-- RestaurantIntro 
+-- 음식점 (contentTypeID 39 . ctNo 8) 정보
 -- ---------------------------------------------------------

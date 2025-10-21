@@ -3,9 +3,14 @@ package rootLab.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.criteria.PlaceInfoCriteria;
+import rootLab.model.dto.FestivalIntroDto;
 import rootLab.model.dto.PlaceInfoDto;
+import rootLab.model.dto.RestaurantIntroDto;
 import rootLab.model.dto.TourIntroDto;
+import rootLab.model.mapper.FestivalIntroMapper;
 import rootLab.model.mapper.PlaceInfoMapper;
+import rootLab.model.mapper.RestaurantIntroMapper;
+import rootLab.model.mapper.TourIntroMapper;
 import rootLab.model.repository.CommonRepository;
 
 import java.util.HashMap;
@@ -17,7 +22,9 @@ import java.util.Optional;
 public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, PlaceInfoCriteria> {
 
     private final PlaceInfoMapper placeInfoMapper;
-    private final TourIntroService tourIntroService;
+    private final TourIntroMapper tourIntroMapper;
+    private final FestivalIntroMapper festivalIntroMapper;
+    private final RestaurantIntroMapper restaurantIntroMapper;
 
     /**
      * [0] AbstreactServie 추상메소드 구현
@@ -52,15 +59,19 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         int ctNo = placeInfoDto.get().getCtNo();
 
         // 컨턴츠타입에 맞는 디테일정보 조회
-        if(ctNo == 1){              // 관광지 ctNo 1 / contentTypeID 12
-            Optional<TourIntroDto> tourIntroDto = tourIntroService.read(pno);
-            result.put("TourIntroDto",tourIntroDto);
-        } else if (ctNo == 3){      // 행사/공연/축제 ctNo 3 / contentTypeID
-
-            
-        } else if (ctNo == 8 ){     //음식점 ctNo  / contentTypeID
-            
-        }
+        if(ctNo == 1){
+            // 관광지 ctNo 1 / contentTypeID 12  // testPno 6881
+            Optional<TourIntroDto> tourIntroDto = tourIntroMapper.read(pno);
+            result.put("TourIntro",tourIntroDto);
+        } else if (ctNo == 3){
+            // 행사/공연/축제 ctNo 3 / contentTypeID 15 //testPno 23405
+            Optional<FestivalIntroDto> festivalIntroDto = festivalIntroMapper.read(pno);
+            result.put("FestivalIntro",festivalIntroDto);
+        } else if (ctNo == 8 ){
+            //음식점 ctNo 8 / contentTypeID 39 // testPno 51385
+            Optional<RestaurantIntroDto> restaurantIntroDto = restaurantIntroMapper.read(pno);
+            result.put("RestaurantIntro",restaurantIntroDto);
+        } // if end
 
         // 반복정보 조회
         

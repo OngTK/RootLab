@@ -3,7 +3,6 @@ package rootLab.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.criteria.PlaceInfoCriteria;
-import rootLab.model.dto.PlaceInfoDto;
 import rootLab.model.dto.TourIntroDto;
 import rootLab.model.mapper.TourIntroMapper;
 import rootLab.model.repository.CommonRepository;
@@ -24,6 +23,5 @@ public class TourIntroService extends AbstractService<TourIntroDto, Integer, Pla
     protected CommonRepository<TourIntroDto, Integer, PlaceInfoCriteria> repo() {
         return tourIntroMapper;
     }
-
 
 } // class end
