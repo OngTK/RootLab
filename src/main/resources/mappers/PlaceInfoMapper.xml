@@ -1,11 +1,103 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="rootLab.model.mapper.PlaceInfoMapper">
-    <update id="udpate" parameterType="rootLab.model.dto.PlaceInfoDto">
 
-    </update>
+    <!-- ========================================================= -->
+    <!-- [공통 WHERE절] PlaceInfoCriteria 기반 동적 검색 조건        -->
+    <!-- ========================================================= -->
+    <sql id="PlaceInfoCriteriaWhere">
+        <where>
+            <if test="criteria != null">
+
+                <!-- 제목 검색 -->
+                <bind name="titleVal" value="criteria.title != null ? criteria.title.trim() : null"/>
+                <if test="titleVal != null and titleVal != ''">
+                    AND title LIKE CONCAT('%', #{titleVal}, '%')
+                </if>
+
+                <!-- 주소 검색 -->
+                <bind name="addressVal" value="criteria.address != null ? criteria.address.trim() : null"/>
+                <if test="addressVal != null and addressVal != ''">
+                    AND address LIKE CONCAT('%', #{addressVal}, '%')
+                </if>
+
+                <!-- 분류명 검색 -->
+                <bind name="ccNameVal" value="criteria.ccName != null ? criteria.ccName.trim() : null"/>
+                <if test="ccNameVal != null and ccNameVal != ''">
+                    AND ccName LIKE CONCAT('%', #{ccNameVal}, '%')
+                </if>
+
+                <!-- 법정동명 검색 -->
+                <bind name="ldNameVal" value="criteria.ldName != null ? criteria.ldName.trim() : null"/>
+                <if test="ldNameVal != null and ldNameVal != ''">
+                    AND ldName LIKE CONCAT('%', #{ldNameVal}, '%')
+                </if>
+
+                <!-- 표출 여부 -->
+                <if test="criteria.showflag != null">
+                    AND showflag = #{criteria.showflag}
+                </if>
+
+                <!-- Place 번호 -->
+                <if test="criteria.pNo != null">
+                    AND pNo = #{criteria.pNo}
+                </if>
+
+            </if>
+        </where>
+    </sql>
+
+    <!-- ========================================================= -->
+    <!-- [공통 ORDER BY절] PageRequest.sort 기준 동적 정렬 처리     -->
+    <!-- ========================================================= -->
+    <sql id="PlaceInfoOrderBy">
+        <choose>
+            <when test="page != null and page.sort != null and page.sort.orderBy != null">
+                <choose>
+                    <!-- 화이트리스트 허용 컬럼 -->
+                    <when test="page.sort.orderBy == 'rtNo'">ORDER BY rtNo</when>
+                    <when test="page.sort.orderBy == 'pNo'">ORDER BY pNo</when>
+                    <when test="page.sort.orderBy == 'title'">ORDER BY title</when>
+                    <when test="page.sort.orderBy == 'ccName'">ORDER BY ccName</when>
+                    <when test="page.sort.orderBy == 'ldName'">ORDER BY ldName</when>
+                    <when test="page.sort.orderBy == 'showflag'">ORDER BY showflag</when>
+                    <when test="page.sort.orderBy == 'address'">ORDER BY address</when>
+                    <otherwise>ORDER BY rtNo DESC</otherwise>
+                </choose>
+                <choose>
+                    <when test="page.sort.direction == 'DESC'">DESC</when>
+                    <otherwise>ASC</otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                ORDER BY rtNo DESC
+            </otherwise>
+        </choose>
+    </sql>
+
+    <!-- ========================================================= -->
+    <!-- [1] countForSearch : 검색 조건에 맞는 전체 레코드 수 조회 -->
+    <!-- ========================================================= -->
+    <select id="countForSearch" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM placeinfo
+        <include refid="PlaceInfoCriteriaWhere"/>
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- [2] searchPaged : 검색 + 페이지네이션 + 정렬 조회          -->
+    <!-- ========================================================= -->
+    <select id="searchPaged" resultType="rootLab.model.dto.PlaceInfoDto" parameterType="map">
+        SELECT
+        *
+        FROM placeinfo
+        <include refid="PlaceInfoCriteriaWhere"/>
+        <include refid="PlaceInfoOrderBy"/>
+        LIMIT #{page.limit}
+        OFFSET #{page.offset}
+    </select>
 
 </mapper>
