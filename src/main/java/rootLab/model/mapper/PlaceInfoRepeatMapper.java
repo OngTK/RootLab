@@ -1,9 +1,6 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.RoleCriteria;
 import rootLab.model.dto.PlaceInfoRepeatDto;
 import rootLab.model.repository.CommonRepository;
@@ -26,9 +23,8 @@ import java.util.List;
  * RoleCriteria : 본 도메인에서는 검색 기능을 지원하지 않음으로 임의의 검색 객체를 삽입
  * @author OngTK
  */
+@Mapper
 public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatDto, Integer, RoleCriteria> {
-
-    // todo OngTK 시리얼넘버 처리 관련 고려 필요
     
     // [1] 개별 등록
     @Insert("""

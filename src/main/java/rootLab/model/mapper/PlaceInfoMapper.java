@@ -52,34 +52,4 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             """)
     Optional<PlaceInfoDto> read(Integer pno);
 
-    @Override
-    boolean update(PlaceInfoDto placeInfoDto);
-
-    @Override
-    boolean delete(Integer pno);
-
-    @Override
-    default Page<PlaceInfoDto> findPage(PageRequest pageRequest) {
-        return CommonRepository.super.findPage(pageRequest);
-    }
-
-    @Override
-    int countAll();
-
-    @Override
-    List<PlaceInfoDto> findAllPaged(PageRequest pageRequest);
-
-    @Override
-    default Page<PlaceInfoDto> searchPage(PlaceInfoCriteria criteria, PageRequest pageRequest) {
-        return CommonRepository.super.searchPage(criteria, pageRequest);
-    }
-
-    @Override
-    int countForSearch(PlaceInfoCriteria criteria);
-
-    @Override
-    List<PlaceInfoDto> searchPaged(PlaceInfoCriteria criteria, PageRequest pageRequest);
-
-    @Override
-    List<PlaceInfoDto> search(PlaceInfoCriteria criteria);
 } // class end

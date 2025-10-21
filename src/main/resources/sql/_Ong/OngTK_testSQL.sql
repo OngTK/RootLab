@@ -107,3 +107,36 @@ INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, isEditable, contenti
             FROM tour_api_origin.areabasedsynclist2 al
             LEFT JOIN tour_api_origin.detailcommon2 dc
             ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
+            
+-- ---------------------------------------------------------
+-- TourIntro
+-- 관광지(contentTypeID 12 . ctNo1) 정보
+-- ---------------------------------------------------------
+select * from tourIntro where pno = 6881;
+
+
+-- ---------------------------------------------------------
+-- festivalintro 
+-- 행사/축제 (contentTypeID 15 . ctNo3) 정보
+-- ---------------------------------------------------------
+select * from festivalintro where pno=23405;
+
+
+-- ---------------------------------------------------------
+-- RestaurantIntro 
+-- 음식점 (contentTypeID 39 . ctNo 8) 정보
+-- ---------------------------------------------------------
+select * from RestaurantIntro where pno = 51385;
+
+
+-- ---------------------------------------------------------
+-- placeimagedetail
+-- 플레이스 사진 정보
+-- ---------------------------------------------------------
+select * from placeimagedetail where pno = 6881;
+
+
+-- ---------------------------------------------------------
+-- MarkerGPS
+-- 마커 이미지 관리 table
+-- ---------------------------------------------------------
