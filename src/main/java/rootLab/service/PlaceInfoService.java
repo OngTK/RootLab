@@ -21,6 +21,8 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
     private final FestivalIntroMapper festivalIntroMapper;
     private final RestaurantIntroMapper restaurantIntroMapper;
     private final PlaceInfoRepeatMapper placeInfoRepeatMapper;
+    private final PlaceImageDetailMapper placeImageDetailMapper;
+    private final MarkersGPSMapper markersGPSMapper;
 
     /**
      * [0] AbstreactServie 추상메소드 구현
@@ -72,11 +74,14 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         // 반복정보 조회
         List<PlaceInfoRepeatDto> placeInfoDtoList = placeInfoRepeatMapper.readAllToPno(pno);
         result.put("PlaceInfoDtoList",placeInfoDtoList);
+
         // 상세 이미지 정보 조회
+        List<PlaceImageDetailDto> placeImageDetailDtoList = placeImageDetailMapper.readAllToPno(pno);
+        result.put("PlaceImageDetail",placeImageDetailDtoList);
 
-
-        
         // 마커 정보 조회
+        Optional<MarkersGPSDto> markersGPSDto = markersGPSMapper.read(pno);
+        result.put("MarkersGPSDto",markersGPSDto);
 
         // 반환
 
