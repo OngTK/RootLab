@@ -42,13 +42,14 @@ public class PlaceInfoController {
     public ResponseEntity<?> searchPlaces(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) int ctNo,
-            @RequestParam(required = false) boolean showflag,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String address,
             @RequestParam(required = false) String ccName,
             @RequestParam(required = false) String ldName,
-            @RequestParam(required = false) String address,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) int pNo
+
+            @RequestParam(required = false) Integer ctNo,     // int -> Integer
+            @RequestParam(required = false) Boolean showflag, // boolean -> Boolean
+            @RequestParam(required = false) Integer pNo       // int -> Integer
     ) {
         System.out.println("page = " + page + ", size = " + size + ", ctNo = " + ctNo + ", showflag = " + showflag + ", ccName = " + ccName + ", ldName = " + ldName + ", address = " + address + ", title = " + title + ", pNo = " + pNo);
 
