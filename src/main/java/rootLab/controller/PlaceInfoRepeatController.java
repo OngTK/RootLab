@@ -32,6 +32,8 @@ public class PlaceInfoRepeatController {
      */
     @PostMapping
     public ResponseEntity<?> savePlaceRepeatInfo(@RequestBody List<PlaceInfoRepeatDto> list) {
+        System.out.println("PlaceInfoRepeatController.savePlaceRepeatInfo");
+        System.out.println("list = " + list);
         // 들어온 정보가 없다면
         if (list == null) {
             return ResponseEntity.status(460).body("정보 없음");
