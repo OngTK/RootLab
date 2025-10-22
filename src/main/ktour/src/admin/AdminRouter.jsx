@@ -3,10 +3,10 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.1
+ * @version 0.1.2
  */
-import React, { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react"; // 코드 스플리팅을 위한 lazy, Suspense
+import { Routes, Route } from "react-router-dom"; // 라우터(URL 경로) 관련 컴포넌트
 
 // 로그인/사용자 메인
 import Login from "@admin/pages/member/Login";          // 관리자 로그인
@@ -24,7 +24,7 @@ import "@assets/admin/css/reset.css";
 
 export default function AdminRouter() {
   return (
-    <Suspense fallback={null}> {/* <div>로딩 중 표시할 컴포넌트</div> */}
+    <Suspense fallback={null}> {/* 추후 <div>로딩 중 표시할 컴포넌트</div> */}
       <Routes>
         {/* 비관리자 라우트 */}
         <Route path="/" element={<MainPlace />} />
