@@ -26,12 +26,14 @@ public class PlaceInfoRepeatController {
     private final PlaceInfoRepeatService placeInfoRepeatService;
 
     /**
-     * [ PI-07 ] 플레이스 반복정보 일괄 저장
+     * [ PR-01 ] 플레이스 반복정보 일괄 저장
      * @param list List<PlaceInfoRepeatDto> / PlaceInfoRepeatDto 내의 pirStatus에 따라서 service에서 CRUD를 분산
      * @author OngTK
      */
     @PostMapping
     public ResponseEntity<?> savePlaceRepeatInfo(@RequestBody List<PlaceInfoRepeatDto> list) {
+        System.out.println("PlaceInfoRepeatController.savePlaceRepeatInfo");
+        System.out.println("list = " + list);
         // 들어온 정보가 없다면
         if (list == null) {
             return ResponseEntity.status(460).body("정보 없음");
@@ -43,7 +45,7 @@ public class PlaceInfoRepeatController {
     } // func end
 
     /**
-     * [ PI-15 ] 플레이스 반복정보 삭제
+     * [ PR-02 ] 플레이스 반복정보 삭제
      * @param pirNo 반복정보 번호 PK
      * @author OngTK
      */

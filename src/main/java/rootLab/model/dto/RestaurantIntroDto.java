@@ -39,4 +39,7 @@ public class RestaurantIntroDto {
     private String createdAt;           // 등록일(최초 DB복사일)
     private String updatedAt;           // 수정일(DB업데이트일/해당 레코드 수정일)
 
+    // [추가]
+    private int riStatus;               // 프론트에서 변경여부를 체크하기 위한 상태값 // 변경없음(0) C(1) U(2)
+
 } // class end

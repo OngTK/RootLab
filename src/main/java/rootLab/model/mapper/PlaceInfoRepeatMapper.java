@@ -22,15 +22,19 @@ import java.util.List;
  * Integer : pirNo[PK]
  * <p>
  * RoleCriteria : 본 도메인에서는 검색 기능을 지원하지 않음으로 임의의 검색 객체를 삽입
+ *
  * @author OngTK
  */
 @Mapper
 public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatDto, Integer, PlaceInfoCriteria> {
-    
+
     // [1] 개별 등록
     @Insert("""
-            insert into placeInfoRepeat( pNo, infoName , infoText, serialnum )
-            values (#{pNo}, #{infoName}, #{infoText}, #{serialnum});
+            INSERT INTO placeInfoRepeat (pNo, infoName, infoText, serialnum, fldgubun)
+            SELECT #{pNo}, #{infoName}, #{infoText}, IFNULL(MAX(serialnum) + 1, 0), 0
+            FROM (
+                SELECT serialnum FROM placeInfoRepeat WHERE pNo = #{pNo}
+            ) AS t;
             """)
     @Override
     @Options(useGeneratedKeys = true, keyProperty = "pirNo")
@@ -38,15 +42,16 @@ public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatD
 
     // [2] pno 별 전체 조회
     @Select("""
-            select * from placeInfoRepeat where pNo = #{pNo};
+            SELECT *
+            FROM placeInfoRepeat
+            WHERE pNo = #{pNo}
+              AND NOT (infoName IS NULL AND infoText IS NULL);
             """)
     List<PlaceInfoRepeatDto> readAllToPno(int pno);
 
     // [3] 개별 수정
     @Update("""
-            update placeinforepeat 
-            set infoname = #{infoname}, infotext = #{infotext} 
-            where pirNo = #{pirNo};
+
             """)
     @Override
     boolean update(PlaceInfoRepeatDto placeInfoRepeatDto);
@@ -56,8 +61,9 @@ public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatD
     @Override
     @Update("""
             UPDATE placeInfoRepeat
-               SET infoname = NULL, infotext = NULL
-             WHERE pirNo = #{pirNo};
+               SET infoName = NULL,
+                   infoText = NULL
+             WHERE pirNo = #{pirNo}
             """)
     boolean delete(Integer pirNo);
 
