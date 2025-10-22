@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import UseKakaoLoader from './UseKakaoLoader';
 import axios from "axios";
 import xxx from '../assets/contentTypeMarker/festival.png'
@@ -85,7 +85,7 @@ export default function KakaoMap(props) {
                     width: '1000px',
                     height: '600px'
                 }}
-                level={3}
+                level={10}
                 onIdle={(map) => {
                     const bounds = map.getBounds();
                     const southWest = bounds.getSouthWest();
@@ -99,23 +99,28 @@ export default function KakaoMap(props) {
                 }}
                 onCreate={setInitialMap}
             >
-                {markers && markers.map((marker, index) => (
-                    <MapMarker
-                        key={marker.pno}
-                        position={{
-                            lat: marker.mapy,
-                            lng: marker.mapx
-                        }}
-                        image={{
-                            src: xxx,
-                            size: {
-                                width: 80,
-                                height: 80
-                            }
-                        }}
-                        title={'나중에 변경'}
-                    />
-                ))}
+                <MarkerClusterer
+                    averageCenter={true} // 클러스터 마커를 중앙에 위치
+                    minLevel={6}         // 클러스터링을 적용할 최소 지도 레벨
+                >
+                    {markers && markers.map((marker, index) => (
+                        <MapMarker
+                            key={marker.pno}
+                            position={{
+                                lat: marker.mapy,
+                                lng: marker.mapx
+                            }}
+                            image={{
+                                src: xxx,
+                                size: {
+                                    width: 80,
+                                    height: 80
+                                }
+                            }}
+                            title={'나중에 변경'}
+                        />
+                    ))}
+                </MarkerClusterer>
             </Map>
             <h3>북쪽 : {bounds.north}</h3>
             <h3>남쪽 : {bounds.south}</h3>

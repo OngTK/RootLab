@@ -115,7 +115,7 @@ CREATE TABLE k_tour_headquarter.markersGPS (
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 );
-
+CREATE INDEX idx_mapGPS ON k_tour_headquarter.markersGPS(mapx, mapy);
 -- ------------------------------------ place 상세이미지( #TourAPI 연동테이블 ) -------------------------------------------
 CREATE TABLE k_tour_headquarter.placeImageDetail (
 	pidNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 상세이미지번호[PK]
