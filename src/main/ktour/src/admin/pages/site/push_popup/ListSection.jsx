@@ -97,16 +97,17 @@ export default function ListSection(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="active">
-                                <td>1</td>
-                                <td>푸시알림+팝업</td>
-                                <td>이벤트</td>
-                                <td><b>송지호 해수욕장 페스티벌</b></td>
-                                <td>2025-08-25</td>
-                                <td>2025-09-05</td>
-                                <td>12:00</td>
-                                <td>작성자</td>
-                            </tr>
+                            {pushList.map((p)=>{
+                            return <tr key={p.ppNo} className="active">
+                                <td>{p.ppNo}</td>
+                                <td>{p.ppUse}</td>
+                                <td>{p.ppType}</td>
+                                <td><b>{p.ppTitle}</b></td>
+                                <td>{p.ppStart}</td>
+                                <td>{p.ppEnd}</td>
+                                <td>{p.ppIterated}</td>
+                                <td>{p.mgNo}</td>
+                            </tr>})}
                         </tbody>
                     </table>
                 </div>
