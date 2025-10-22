@@ -19,19 +19,24 @@ public class PushPopupController {
      * 1. 검색
      * [(place번호), (카테고리), (제목)]를 입력받아, 해당하는 푸시알림팝업을 조회한다.
      * @param pNo
+     * @param ppUse
      * @param ppType
      * @param ppTitle
+     * @param status
      * @return 검색결과
      * @author juju9595
      */
-    @PostMapping("/search")
-    public ResponseEntity<List<PushPopupDto>> searchPush(
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPush(
             @RequestParam int pNo,
+            @RequestParam String ppUse,
             @RequestParam String ppType,
-            @RequestParam String ppTitle
-    ){
-        System.out.println("pNo = " + pNo + ", ppType = " + ppType + ", ppTitle = " + ppTitle);
-        return ResponseEntity.ok(pushPopupService.searchPush(pNo, ppType, ppTitle));
+            @RequestParam String ppTitle,
+            @RequestParam String status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize){
+
+        return ResponseEntity.ok(pushPopupService.searchPush(pNo, ppUse, ppType, ppTitle, status, page, pageSize));
     }
 
     /**

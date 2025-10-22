@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.dto.PushPopupDto;
 import rootLab.model.mapper.PushPopupMapper;
+import rootLab.util.pagenation.Page;
 
 import java.util.List;
 
@@ -14,8 +15,14 @@ public class PushPopupService {
     private final PushPopupMapper pushPopupMapper;
 
     //1. 검색
-    public List<PushPopupDto> searchPush(int pNo, String ppType, String ppTitle){
-        return pushPopupMapper.searchPush(pNo, ppType, ppTitle);
+    public Page<PushPopupDto> searchPush(int pNo, String ppUse, String ppType, String ppTitle, String status, int page, int pageSize){
+    List<PushPopupDto> searchPush = pushPopupMapper.searchPush(pNo, ppUse, ppType, ppTitle, status);
+        return new Page<>(
+                searchPush,
+                searchPush.size(),
+                page, pageSize
+
+        );
     }
 
     //2. 등록

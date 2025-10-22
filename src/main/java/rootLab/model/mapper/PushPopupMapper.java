@@ -16,9 +16,11 @@ public interface PushPopupMapper {
      * @author juju95
      */
     List<PushPopupDto> searchPush(
-            @Param("pNo") int pNo,
+            @Param("pNo") Integer pNo,
+            @Param("ppUse") String ppUse,
             @Param("ppType") String ppType,
-            @Param("ppTitle") String ppTitle
+            @Param("ppTitle") String ppTitle,
+            @Param("status") String status // 진행전, 진행중, 진행완료
     );
 
     /**
