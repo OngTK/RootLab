@@ -32,6 +32,10 @@ public class MarkersGPSController {
                                                           @RequestParam double north,
                                                           @RequestParam double west,
                                                           @RequestParam double east){
+        System.out.println("south = " + south);
+        System.out.println("north = " + north);
+        System.out.println("west = " + west);
+        System.out.println("east = " + east);
         // 1. 동서남북 좌표를 담을 Map 선언
         Map<String, Object> coordinates = new HashMap<>();
         // 2. 선언한 Map에 좌표 담기
