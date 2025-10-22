@@ -9,7 +9,37 @@
 
     <!-- 1. 검색 -->
     <select id="searchPush" resultType="rootLab.model.dto.PushPopupDto">
-        SELECT * FROM pushPopup WHERE pNo = #{pNo} , ppType = #{ppType} and ppTitle LIKE CONCAT('%', #{ppTitle}, '%') ORDER BY createdAt DESC
+        SELECT
+        *,
+        CASE
+                WHEN ppStart &gt;  NOW() THEN '진행전'
+                WHEN ppEnd   &lt;  NOW() THEN '진행완료'
+                ELSE '진행중'
+            END AS status
+        FROM pushPopup
+        <where>
+            <if test="pNo != null">
+                AND pNo = #{pNo}
+            </if>
+            <if test="ppUse != null">
+                AND ppUse = #{ppUse}
+            </if>
+            <if test="ppType != null">
+                AND ppType = #{ppType}
+            </if>
+            <if test="ppTitle != null">
+                AND ppTitle LIKE CONCAT('%', #{ppTitle}, '%')
+            </if>
+            <if test="status != null">
+            AND (
+            (#{status} = '진행전'   AND ppStart &gt;  NOW())
+            OR (#{status} = '진행중'   AND ppStart &lt;= NOW() AND ppEnd &gt;= NOW())
+            OR (#{status} = '진행완료' AND ppEnd &lt;  NOW())
+            )
+            </if>
+        </where>
+
+        ORDER BY createdAt DESC
     </select>
 
 <!--    &lt;!&ndash; 2. 등록 &ndash;&gt;-->

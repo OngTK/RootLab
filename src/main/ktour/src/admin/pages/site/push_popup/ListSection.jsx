@@ -7,8 +7,31 @@
  */
 import ResizableTable from "@admin/components/common/ResizableTable";   // 리사이저블 테이블    
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
+import { useState } from "react";
+import axios from "axios";
 
 export default function ListSection(props) {
+
+    // [1] 검색 조건
+    const [pNo, setPno] = useState("");
+    const [ppUse, setppUse] = useState("");
+    const [ppType, setppType] = useState("");
+    const [ppTitle, setppTitle] = useState("");
+    const [status, setstatus] = useState("");
+    const [pushList, setpushList] = useState([]); // 결과값 저장
+
+
+    //[1]검색
+    const pushsearch = async() => {
+        try{
+            const obj = {pNo, ppUse, ppType, ppTitle, status}
+            console.log(obj)
+            const option = {withCredentials : true}
+            const response = await axios.get(`http://localhost:8080/push/search?pNo=20543&ppUse=1&ppType=1&ppTitle=송지호&status=%EC%A7%84%ED%96%89%EC%99%84%EB%A3%8C`, option);
+            console.log("[검색 결과]", response.data)
+            setpushList(response.data);// 결과 테이블에 바인딩 가능
+        }catch(e){console.log("[검색 오류]", e)}
+    }
 
     /** ========================= 관리자단 > 사이트관리 > 푸시/팝업관리(PushPopup) .jsx영역 ================================== */
     return (
@@ -20,7 +43,7 @@ export default function ListSection(props) {
                     <form  method="get">
                         <label for="memberTypeInput"><b>사용구분</b>
                             <select className="memberTypeInput">
-                                <option value="" selected>전체</option>
+                                <option value={ppUse} selected>전체</option>
                                 <option value="0">푸시알림+팝업</option>
                                 <option value="1">푸시알림</option>
                                 <option value="2">팝업</option>
@@ -28,22 +51,22 @@ export default function ListSection(props) {
                         </label>
                         <label for="memberTypeInput"><b>카테고리</b>
                             <select className="memberTypeInput">
-                                <option value="" selected>전체</option>
+                                <option value={ppType} selected>전체</option>
                                 <option value="1">공지</option>
                                 <option value="2">이벤트</option>
                             </select>
                         </label>
                         <label for="subsStatusInput"><b>노출상태</b>
                             <select className="subsStatusInput">
-                                <option value="" selected>전체</option>
+                                <option value={status} selected>전체</option>
                                 <option value="1">진행전</option>
                                 <option value="2">진행중</option>
                                 <option value="3">진행완료</option>
                             </select>
                         </label>
-                        <label for="nameInput"><b>제목</b><input className="nameInput" type="text"
+                        <label for="nameInput"><b>제목</b><input value={ppTitle} onChange={(e) =>{setppTitle(e.target.value);}} className="nameInput" type="text" 
                             placeholder="제목" /></label>
-                        <button type="button" className="searchBtn">검색</button>
+                        <button onClick={pushsearch} type="button" className="searchBtn">검색</button>
                     </form>
                 </div>
                 {/* <!-- 상세 검색창 끝 --> */}
@@ -81,26 +104,6 @@ export default function ListSection(props) {
                                 <td><b>송지호 해수욕장 페스티벌</b></td>
                                 <td>2025-08-25</td>
                                 <td>2025-09-05</td>
-                                <td>12:00</td>
-                                <td>작성자</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>팝업</td>
-                                <td>이벤트</td>
-                                <td><b>공방 스테이 박보검 사인회</b></td>
-                                <td>2025-09-08</td>
-                                <td>2025-09-21</td>
-                                <td>16:00</td>
-                                <td>작성자</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>푸시알림</td>
-                                <td>공지</td>
-                                <td><b>화암사 주자창 공사</b></td>
-                                <td>2025-09-25</td>
-                                <td>2025-10-13</td>
                                 <td>12:00</td>
                                 <td>작성자</td>
                             </tr>
