@@ -32,7 +32,7 @@ public class PlaceInfoRepeatService extends AbstractService<PlaceInfoRepeatDto, 
     } // func end
 
     /**
-     * [ PI-07 ] 플레이스 반복정보 일괄 저장
+     * [ PR-01 ] 플레이스 반복정보 일괄 저장
      * <p>
      * PlaceInfoRepeatDto 내의 pirStatus에 따라서 service에서 CRUD를 분산
      *
@@ -64,7 +64,7 @@ public class PlaceInfoRepeatService extends AbstractService<PlaceInfoRepeatDto, 
     } // func end
 
     /***
-     * [ PI-16 ] 플레이스 반복 정보 조회
+     * [ PR-03 ] 플레이스 반복 정보 조회
      * @param pno 플레이스 번호
      * @author OngTK
      */

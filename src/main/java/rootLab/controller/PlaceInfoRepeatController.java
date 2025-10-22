@@ -26,7 +26,7 @@ public class PlaceInfoRepeatController {
     private final PlaceInfoRepeatService placeInfoRepeatService;
 
     /**
-     * [ PI-07 ] 플레이스 반복정보 일괄 저장
+     * [ PR-01 ] 플레이스 반복정보 일괄 저장
      * @param list List<PlaceInfoRepeatDto> / PlaceInfoRepeatDto 내의 pirStatus에 따라서 service에서 CRUD를 분산
      * @author OngTK
      */
@@ -45,7 +45,7 @@ public class PlaceInfoRepeatController {
     } // func end
 
     /**
-     * [ PI-15 ] 플레이스 반복정보 삭제
+     * [ PR-02 ] 플레이스 반복정보 삭제
      * @param pirNo 반복정보 번호 PK
      * @author OngTK
      */
