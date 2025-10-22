@@ -66,11 +66,27 @@ export default function KakaoMap(props) {
             console.log(error);
         } // try-catch end
     } // func end
+    // =================== useEffect - [initialMap] ===================
+    useEffect(() => {
+        if (!initialMap) return;    // initialMap이 없으면, 실행 X
+        const timer = setTimeout(() => {
+            const bounds = initialMap.getBounds();
+            const southWest = bounds.getSouthWest();
+            const northEast = bounds.getNorthEast();
+            setBounds({
+                south: southWest.getLat(),
+                west: southWest.getLng(),
+                north: northEast.getLat(),
+                east: northEast.getLng()
+            })
+        }, 200);    // 초기 로딩이 될 수 있게 약간의 지연
+    }, [initialMap]);
+
     // =================== useEffect - [bounds] ===================
     useEffect(() => {
         getBoundsByAxios();
         console.log(markers);
-    }, [bounds])
+    }, [bounds]);
     // =================== return ===================
     if (currentLocation.isLoading) {
         return <div>현재 위치를 불러오는 중입니다...</div>;
