@@ -1,6 +1,7 @@
 package rootLab.model.mapper;
 
 import org.apache.ibatis.annotations.*;
+import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.criteria.RoleCriteria;
 import rootLab.model.dto.PlaceInfoRepeatDto;
 import rootLab.model.repository.CommonRepository;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author OngTK
  */
 @Mapper
-public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatDto, Integer, RoleCriteria> {
+public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatDto, Integer, PlaceInfoCriteria> {
     
     // [1] 개별 등록
     @Insert("""
@@ -58,7 +59,7 @@ public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatD
                SET infoname = NULL, infotext = NULL
              WHERE pirNo = #{pirNo};
             """)
-    boolean delete(Integer integer);
+    boolean delete(Integer pirNo);
 
 } // class end
 
