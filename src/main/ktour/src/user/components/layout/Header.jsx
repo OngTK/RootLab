@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.17
- * @version 0.1.0
+ * @version 0.1.1
  */
 import { Link } from "react-router-dom";
 
