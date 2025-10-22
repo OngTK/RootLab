@@ -12,7 +12,7 @@ const LayoutUser = lazy(() => import("@user/components/layout/LayoutUser"));  //
 const MainPlace = lazy(() => import("@user/pages/map/MainPlace"));            // 사용자단 > 메인(플레이스현황) 페이지
 const NotFound404 = lazy(() => import("@user/pages/NotFound404"));            // 404 Not Found 페이지
 
-function Loading() { return <div style={{ padding: 12 }}>로딩 중…</div>; }    // 로딩중
+function Loading() { return <div className="loaing">로딩 중…</div>; }    // 로딩중
 
 export default function UserRouter() {
 

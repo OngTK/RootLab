@@ -1,9 +1,9 @@
 /**
  * 관리자단 > 사이트 관리 > 푸시/팝업 관리 > 목록 섹션
  *
- * @author kimJS    
+ * @author 
  * @since 2025.10.21
- * @version 0.1.0
+ * @version 0.1.1
  */
 import ResizableTable from "@admin/components/common/ResizableTable";   // 리사이저블 테이블    
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css

@@ -1,5 +1,6 @@
 /* CSS reset */
 *{ margin: 0; padding: 0; box-sizing: border-box; /*font-family: "Malgun Gothic", "맑은 고딕", Sans-serif, Roboto, Arial;*/  }
+.loding{ opacity: .4; }
 li{ list-style: none; } 
 button{ cursor:pointer; }
 a{ text-decoration: none; color: rgba(0,0,0,.9);}

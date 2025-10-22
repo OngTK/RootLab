@@ -12,18 +12,15 @@ import { lazy, Suspense } from "react";                 // 코드 스플리팅(�
 // 관리자단 > 사용 페이지 : 코드 스플리팅(*지연 로딩, 필요 시점에만 로드)
 const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin"));    // 관리자단 > 공통레이아웃
 const Login       = lazy(() => import("@admin/pages/member/Login"));               // 관리자단 > 로그인 페이지
-const MainPlace   = lazy(() => import("@user/pages/map/MainPlace"));               // 메인(플레이스현황) 페이지
 const PlaceInfo   = lazy(() => import("@admin/pages/map/place/PlaceInfo"));        // 플레이스현황 페이지 
 const Manager     = lazy(() => import("@admin/pages/member/Manager"));             // 관리자현황 페이지 
 const SiteInfo    = lazy(() => import("@admin/pages/site/SiteInfo"));              // 사이트정보 페이지
 const PushPopup   = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));  // 푸시/팝업관리 페이지
 const NotFound404 = lazy(() => import("@admin/pages/NotFound404"));                // 404 Not Found 페이지
 
-function Loading() { return <div style={{ padding: 12 }}>로딩 중…</div>; }   // 로딩중
-
 export default function AdminRouter() {
   return (
-    <Suspense fallback={<Loading/>}>
+    <Suspense fallback={null}>
       <Routes>
         {/* 비관리자 페이지 */}
         <Route path="login" element={<Login />} />

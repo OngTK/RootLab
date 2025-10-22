@@ -1,7 +1,11 @@
 /**
  * ResizableTable.jsx
- * - 모든 세로 보더(th/td 경계)에서 드래그 → "왼쪽 열" 폭을 드래그 중 실시간(라이브) 반영
- * - 정렬(헤더 클릭), 좌측 1열 sticky, 모든 셀 세로보더
+ * - 관리자단 > 검색리스트 > 공통 스티키 리사이징 테이블
+ * - 기능 : 데이터 정렬(헤더  th cell 클릭), 좌측 1열 sticky, 모든 셀 세로보더(그리드) 좌우 사이즈 조정
+ * 
+ * @author kimJS
+ * @since 2025.10.20
+ * @version 0.1.0
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import "@assets/admin/css/ResizableTable.css"; // ResizableTable.css

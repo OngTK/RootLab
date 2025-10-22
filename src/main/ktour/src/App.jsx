@@ -13,12 +13,10 @@ const UserRouter = lazy(() => import("@user/UserRouter"));          // 사용자
 const AdminRouter = lazy(() => import("@admin/AdminRouter"));       // 관리자단 라우터
 const KakaoMap = lazy(() => import("./kakaomap/KakaoMap"));         // 카카오맵 API 테스트용 페이지
 
-function Loading() { return <div style={{ padding: 12 }}>로딩 중…</div>; } // 로딩중
-
 export default function App() {
     return (
         <BrowserRouter>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={null}>
                 <Routes>
                     <Route path="/*" element={<UserRouter />} />        {/* 사용자단(비회원) */}
                     <Route path="/admin/*" element={<AdminRouter />} /> {/* 관리자단(본사) */}
