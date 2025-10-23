@@ -92,7 +92,7 @@ public class PlaceInfoController {
      * @return Map<String, Object> : [{"placeinfo" : {dto} }, {"detailInfo":{dto}},{"placeInfoRepeat":{dto}}]
      * @author OngTK
      */
-    @GetMapping("/get")
+    @GetMapping("/basic")
     public ResponseEntity<?> getPlace(@RequestParam int pno) {
 
         Map<String, Object> result = placeInfoService.getPlace(pno);
