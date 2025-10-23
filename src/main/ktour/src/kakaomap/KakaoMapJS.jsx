@@ -20,12 +20,12 @@ export default function KakaoMap(props) {
         west: "0.0",
         north: "0.0",
         east: "0.0"
-    });
+    }); // useState end
     const [currentLocation, setCurrentLocation] = useState({
         center: { lat: 37.489457, lng: 126.724494 },
         errMsg: null,
         isLoading: true
-    });
+    }); // useState end
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
@@ -70,9 +70,9 @@ export default function KakaoMap(props) {
                 ...prev,
                 errMsg: "geolocation을 사용할 수 없는 상태입니다.",
                 isLoading: false
-            }));
-        }
-    }, []);
+            })); // setCurrentLocation end
+        } // if end
+    }, []); // useEffect end
 
     // =================== bounds Axios GET ===================
     // 5. 함수를 useCallback으로 감싸서 불필요한 재생성을 방지합니다.
@@ -84,22 +84,19 @@ export default function KakaoMap(props) {
             setMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
         } catch (error) {
             console.log(error);
-        }
+        } // try-catch end
     }, [bounds]); // bounds가 변경될 때만 함수를 새로 생성합니다.
 
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
-        // console.log(markers); // (참고: 여기서 log를 찍으면 이전 state가 나옵니다)
     }, [bounds, getBoundsByAxios]);
 
     // =================== useEffect - [currentLocation] : 지도 초기화 ===================
     // 6. <Map> 컴포넌트의 onCreate, onIdle 프롭을 대체합니다.
     useEffect(() => {
         // 현재 위치 로딩이 끝났고, mapContainerRef가 준비되었고, kakao 스크립트가 로드되었는지 확인
-        if (currentLocation.isLoading || !mapContainerRef.current || !window.kakao) {
-            return;
-        }
+        if (currentLocation.isLoading || !mapContainerRef.current || !window.kakao) return;
 
         const { kakao } = window;
         const mapContainer = mapContainerRef.current;
@@ -117,7 +114,7 @@ export default function KakaoMap(props) {
             map: map,
             averageCenter: true,
             minLevel: 4
-        });
+        }); // clusterer end
         clustererRef.current = clusterer;
 
         // 9. 'idle' 이벤트 리스너 등록 (onIdle 대체)
@@ -132,8 +129,8 @@ export default function KakaoMap(props) {
                 west: sw.getLng(),
                 north: ne.getLat(),
                 east: ne.getLng()
-            });
-        });
+            }); // setBounds end
+        }); // addListener end
 
         // 10. (중요) 지도 생성 직후 'idle' 이벤트를 강제로 한번 실행(하거나 bounds를 직접 설정)
         // 기존 [initialMap] effect의 로직을 대체합니다.
@@ -146,17 +143,13 @@ export default function KakaoMap(props) {
             north: ne.getLat(),
             east: ne.getLng()
         });
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentLocation.isLoading, currentLocation.center]); // Geolocation 완료 시 1회 실행
 
     // =================== useEffect - [markers] : 마커 업데이트 ===================
     // 11. <MarkerClusterer> 내부의 map() 렌더링 로직을 대체합니다.
     useEffect(() => {
         // 클러스터러 인스턴스나 kakao 객체가 없으면 실행 중지
-        if (!clustererRef.current || !window.kakao) {
-            return;
-        }
+        if (!clustererRef.current || !window.kakao) return;
 
         const { kakao } = window;
         const clusterer = clustererRef.current;
@@ -165,9 +158,7 @@ export default function KakaoMap(props) {
         clusterer.clear();
 
         // 새 마커 데이터가 없으면 여기서 종료
-        if (!markers || markers.length === 0) {
-            return;
-        }
+        if (!markers || markers.length === 0) return;
         
         const imageSize = new kakao.maps.Size(80, 80);
 
@@ -183,8 +174,8 @@ export default function KakaoMap(props) {
                 position: position,
                 image: markerImage,
                 title: '나중에 변경' // 실제 데이터로 변경
-            });
-        });
+            }); // return end
+        }); // map end
 
         // 14. 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
@@ -194,7 +185,7 @@ export default function KakaoMap(props) {
     // =================== return ===================
     if (currentLocation.isLoading) {
         return <div>현재 위치를 불러오는 중입니다...</div>;
-    }
+    } // if end
 
     return (
         <>
@@ -214,5 +205,5 @@ export default function KakaoMap(props) {
             <h3>서쪽 : {bounds.west}</h3>
             <button onClick={getBoundsByAxios}>버튼</button>
         </>
-    );
-}
+    ); // return end
+} // func end
