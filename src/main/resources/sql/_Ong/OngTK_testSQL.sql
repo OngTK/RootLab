@@ -40,6 +40,10 @@ select * from siteinfo;
 select * from tourintro;
 select * from push;
 
+-- ---------------------------------------------------------
+-- ldongCode : 법정동
+-- ---------------------------------------------------------
+select * from ldongcode where ldongSignguNm like '고성%';
 
 
 -- ---------------------------------------------------------
@@ -56,6 +60,7 @@ select count(*) from placeinfo;
 -- 관광지(contentTypeID 12 . ctNo1) 정보
 -- ---------------------------------------------------------
 select * from tourIntro where pno = 6881;
+delete from tourIntro where tiNo=128;
 
 
 -- ---------------------------------------------------------
@@ -65,11 +70,14 @@ select * from tourIntro where pno = 6881;
 select * from festivalintro where pno=23405;
 
 
+
 -- ---------------------------------------------------------
 -- RestaurantIntro 
 -- 음식점 (contentTypeID 39 . ctNo 8) 정보
 -- ---------------------------------------------------------
-select * from RestaurantIntro where pno = 51385;
+select * from RestaurantIntro where pno = 740;
+delete from RestaurantIntro where riNo = 64;
+select * from placeinfo where ctNo = 8 and ldNo = 247;
 
 
 -- ---------------------------------------------------------
