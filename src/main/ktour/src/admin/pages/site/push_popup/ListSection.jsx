@@ -1,37 +1,41 @@
 /**
  * 관리자단 > 사이트 관리 > 푸시/팝업 관리 > 목록 섹션
  *
- * @author 
+ * @author kimJS
  * @since 2025.10.21
- * @version 0.1.1
+ * @version 0.1.0
  */
-import ResizableTable from "@admin/components/common/ResizableTable";   // 리사이저블 테이블    
+import ResizableTable from "@admin/components/common/ResizableTable";   // 리사이저블 테이블
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 import { useState } from "react";
 import axios from "axios";
 
 export default function ListSection(props) {
 
-    // [1] 검색 조건
-    const [pNo, setPno] = useState("");
+    // [1] 입력받은 데이터들을 관리하는 useState
+    const [ppTitle, setppTitle] = useState("");
     const [ppUse, setppUse] = useState("");
     const [ppType, setppType] = useState("");
-    const [ppTitle, setppTitle] = useState("");
     const [status, setstatus] = useState("");
-    const [pushList, setpushList] = useState([]); // 결과값 저장
+    const [pushList, setpushList] = useState([]); // 결과 목록
+
 
 
     //[1]검색
     const pushsearch = async() => {
         try{
-            const obj = {pNo, ppUse, ppType, ppTitle, status}
+            const obj = {ppUse, ppType, ppTitle, status}
+            Object.keys(obj).forEach(k => {
+                if (obj[k] === "" || obj[k] == null) delete obj[k];
+            })
             console.log(obj)
             const option = {withCredentials : true}
-            const response = await axios.get(`http://localhost:8080/push/search?pNo=20543&ppUse=1&ppType=1&ppTitle=송지호&status=%EC%A7%84%ED%96%89%EC%99%84%EB%A3%8C`, option);
+            const response = await axios.get(`http://localhost:8080/push/search?ppUse=${ppUse}&ppType=${ppType}&ppTitle=${ppTitle}&status=${status}`, option);
             console.log("[검색 결과]", response.data)
             setpushList(response.data);// 결과 테이블에 바인딩 가능
         }catch(e){console.log("[검색 오류]", e)}
     }
+
 
     /** ========================= 관리자단 > 사이트관리 > 푸시/팝업관리(PushPopup) .jsx영역 ================================== */
     return (
@@ -42,29 +46,29 @@ export default function ListSection(props) {
                 <div className="detailSearch">
                     <form  method="get">
                         <label for="memberTypeInput"><b>사용구분</b>
-                            <select className="memberTypeInput">
-                                <option value={ppUse} selected>전체</option>
+                            <select value={ppUse} onChange={(e) => setppUse(e.target.value)} className="memberTypeInput">
+                                <option value="">전체</option>
                                 <option value="0">푸시알림+팝업</option>
                                 <option value="1">푸시알림</option>
                                 <option value="2">팝업</option>
                             </select>
                         </label>
                         <label for="memberTypeInput"><b>카테고리</b>
-                            <select className="memberTypeInput">
-                                <option value={ppType} selected>전체</option>
+                            <select value={ppType} onChange={(e) => setppType(e.target.value)} className="memberTypeInput">
+                                <option value="">전체</option>
                                 <option value="1">공지</option>
                                 <option value="2">이벤트</option>
                             </select>
                         </label>
                         <label for="subsStatusInput"><b>노출상태</b>
-                            <select className="subsStatusInput">
-                                <option value={status} selected>전체</option>
+                            <select value={status} onChange={(e) => setstatus(e.target.value)} className="subsStatusInput">
+                                <option value="">전체</option>
                                 <option value="1">진행전</option>
                                 <option value="2">진행중</option>
                                 <option value="3">진행완료</option>
                             </select>
                         </label>
-                        <label for="nameInput"><b>제목</b><input value={ppTitle} onChange={(e) =>{setppTitle(e.target.value);}} className="nameInput" type="text" 
+                        <label for="nameInput"><b>제목</b><input value={ppTitle} onChange={(e) =>{setppTitle(e.target.value);}} className="nameInput" type="text"
                             placeholder="제목" /></label>
                         <button onClick={pushsearch} type="button" className="searchBtn">검색</button>
                     </form>
@@ -96,21 +100,29 @@ export default function ListSection(props) {
                                 <th>작성자</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {pushList.map((p)=>{
-                            return <tr key={p.ppNo} className="active">
-                                <td>{p.ppNo}</td>
-                                <td>{p.ppUse}</td>
-                                <td>{p.ppType}</td>
-                                <td><b>{p.ppTitle}</b></td>
-                                <td>{p.ppStart}</td>
-                                <td>{p.ppEnd}</td>
-                                <td>{p.ppIterated}</td>
-                                <td>{p.mgNo}</td>
-                            </tr>})}
+                         <tbody>
+                            {Array.isArray(pushList) && pushList.length > 0 ? (
+                                pushList.map((p) => (
+                                <tr key={p.ppNo}>
+                                    <td>{p.ppNo}</td>
+                                    <td>{p.ppUse}</td>
+                                    <td>{p.ppType}</td>
+                                    <td><b>{p.ppTitle}</b></td>
+                                    <td>{p.ppStart ? String(p.ppStart).substring(0,10) : "-"}</td>
+                                    <td>{p.ppEnd ? String(p.ppEnd).substring(0,10) : "-"}</td>
+                                    <td>{p.ppIterated}</td>
+                                    <td>{p.mgNo}</td>
+                                </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                <td colSpan={8} style={{textAlign:"center"}}>검색 결과가 없습니다.</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
+
                 {/* <!-- 목록 테이블 끝 --> */}
             </section>
             {/* <!-- R.검색/목록 끝 --> */}

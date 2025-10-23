@@ -16,7 +16,6 @@ public interface PushPopupMapper {
      * @author juju95
      */
     List<PushPopupDto> searchPush(
-            @Param("pNo") Integer pNo,
             @Param("ppUse") String ppUse,
             @Param("ppType") String ppType,
             @Param("ppTitle") String ppTitle,

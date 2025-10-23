@@ -12,15 +12,12 @@
         SELECT
         *,
         CASE
-                WHEN ppStart &gt;  NOW() THEN '진행전'
-                WHEN ppEnd   &lt;  NOW() THEN '진행완료'
-                ELSE '진행중'
-            END AS status
+        WHEN ppStart &gt;  NOW() THEN '진행전'
+        WHEN ppEnd   &lt;  NOW() THEN '진행완료'
+        ELSE '진행중'
+        END AS status
         FROM pushPopup
         <where>
-            <if test="pNo != null">
-                AND pNo = #{pNo}
-            </if>
             <if test="ppUse != null">
                 AND ppUse = #{ppUse}
             </if>
@@ -31,32 +28,16 @@
                 AND ppTitle LIKE CONCAT('%', #{ppTitle}, '%')
             </if>
             <if test="status != null">
-            AND (
-            (#{status} = '진행전'   AND ppStart &gt;  NOW())
-            OR (#{status} = '진행중'   AND ppStart &lt;= NOW() AND ppEnd &gt;= NOW())
-            OR (#{status} = '진행완료' AND ppEnd &lt;  NOW())
-            )
+                AND (
+                (#{status} = '1'   AND ppStart &gt;  NOW())
+                OR (#{status} = '2'   AND ppStart &lt;= NOW() AND ppEnd &gt;= NOW())
+                OR (#{status} = '3' AND ppEnd &lt;  NOW())
+                )
             </if>
         </where>
 
         ORDER BY createdAt DESC
     </select>
-
-<!--    &lt;!&ndash; 2. 등록 &ndash;&gt;-->
-<!--    <insert id="insertPush"-->
-<!--            parameterType="rootLab.model.dto.PushPopupDto"-->
-<!--            useGeneratedKeys="true" keyProperty="ppNo">-->
-<!--        INSERT INTO push_popup-->
-<!--        (-->
-<!--        pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated -->
-<!--        )-->
-<!--        VALUES-->
-<!--        (-->
-<!--        #{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},-->
-<!--        #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated},-->
-<!--        NOW(), NULL-->
-<!--        )-->
-<!--    </insert>-->
 
     <!-- 3. 삭제 -->
     <delete id="deletePush" parameterType="int">

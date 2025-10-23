@@ -15,8 +15,8 @@ public class PushPopupService {
     private final PushPopupMapper pushPopupMapper;
 
     //1. 검색
-    public Page<PushPopupDto> searchPush(int pNo, String ppUse, String ppType, String ppTitle, String status, int page, int pageSize){
-    List<PushPopupDto> searchPush = pushPopupMapper.searchPush(pNo, ppUse, ppType, ppTitle, status);
+    public Page<PushPopupDto> searchPush( String ppUse, String ppType, String ppTitle, String status, int page, int pageSize){
+    List<PushPopupDto> searchPush = pushPopupMapper.searchPush( ppUse, ppType, ppTitle, status);
         return new Page<>(
                 searchPush,
                 searchPush.size(),

@@ -28,7 +28,6 @@ public class PushPopupController {
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchPush(
-            @RequestParam int pNo,
             @RequestParam String ppUse,
             @RequestParam String ppType,
             @RequestParam String ppTitle,
@@ -36,7 +35,7 @@ public class PushPopupController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int pageSize){
 
-        return ResponseEntity.ok(pushPopupService.searchPush(pNo, ppUse, ppType, ppTitle, status, page, pageSize));
+        return ResponseEntity.ok(pushPopupService.searchPush(ppUse, ppType, ppTitle, status, page, pageSize));
     }
 
     /**
