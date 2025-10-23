@@ -18,7 +18,7 @@ import rootLab.service.FestivalIntroService;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/placeinfo/save/festivalintro")
+@RequestMapping("/placeinfo/festivalintro")
 public class FestivalIntroController {
 
     private final FestivalIntroService festivalIntroService;

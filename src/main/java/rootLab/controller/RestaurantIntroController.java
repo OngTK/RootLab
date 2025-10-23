@@ -17,7 +17,7 @@ import rootLab.service.RestaurantIntroService;
  * @author OngTK
  */
 @RestController
-@RequestMapping("/placeinfo/save/restaurant")
+@RequestMapping("/placeinfo/restaurant")
 @RequiredArgsConstructor
 public class RestaurantIntroController {
 

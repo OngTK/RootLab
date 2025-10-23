@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/placeinfo/save/repeatinfo")
+@RequestMapping("/placeinfo/repeatinfo")
 @RequiredArgsConstructor
 public class PlaceInfoRepeatController {
 

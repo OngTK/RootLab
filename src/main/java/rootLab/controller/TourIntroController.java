@@ -14,7 +14,7 @@ import rootLab.service.TourIntroService;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/placeinfo/save/tourIntro")
+@RequestMapping("/placeinfo/tourIntro")
 public class TourIntroController {
 
     private final TourIntroService tourIntroService;
