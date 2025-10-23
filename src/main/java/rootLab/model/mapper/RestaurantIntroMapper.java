@@ -80,28 +80,24 @@ public interface RestaurantIntroMapper extends CommonRepository<RestaurantIntroD
      * @author OngTK
      */
     @Update("""
-            <script>
-            UPDATE restaurantIntro
-            <set>
-              <if test="chkCreditCardFood != null">chkCreditCardFood = #{chkCreditCardFood},</if>
-              <if test="discountInfoFood  != null">discountInfoFood  = #{discountInfoFood},</if>
-              <if test="firstMenu         != null">firstMenu         = #{firstMenu},</if>
-              <if test="infoCenterFood    != null">infoCenterFood    = #{infoCenterFood},</if>
-              <if test="kidsFacility      != null">kidsFacility      = #{kidsFacility},</if>
-              <if test="lcnsNo            != null">lcnsNo            = #{lcnsNo},</if>
-              <if test="openDateFood      != null">openDateFood      = #{openDateFood},</if>
-              <if test="openTimeFood      != null">openTimeFood      = #{openTimeFood},</if>
-              <if test="packing           != null">packing           = #{packing},</if>
-              <if test="parkingFood       != null">parkingFood       = #{parkingFood},</if>
-              <if test="reservationFood   != null">reservationFood   = #{reservationFood},</if>
-              <if test="restDateFood      != null">restDateFood      = #{restDateFood},</if>
-              <if test="scaleFood         != null">scaleFood         = #{scaleFood},</if>
-              <if test="seat              != null">seat              = #{seat},</if>
-              <if test="smoking           != null">smoking           = #{smoking},</if>
-              <if test="treatMenu         != null">treatMenu         = #{treatMenu},</if>
-            </set>
-            WHERE riNo = #{riNo}
-            </script>
+                UPDATE restaurantIntro
+                            SET chkCreditCardFood = #{chkCreditCardFood},
+                                discountInfoFood  = #{discountInfoFood},
+                                firstMenu         = #{firstMenu},
+                                infoCenterFood    = #{infoCenterFood},
+                                kidsFacility      = #{kidsFacility},
+                                lcnsNo            = #{lcnsNo},
+                                openDateFood      = #{openDateFood},
+                                openTimeFood      = #{openTimeFood},
+                                packing           = #{packing},
+                                parkingFood       = #{parkingFood},
+                                reservationFood   = #{reservationFood},
+                                restDateFood      = #{restDateFood},
+                                scaleFood         = #{scaleFood},
+                                seat              = #{seat},
+                                smoking           = #{smoking},
+                                treatMenu         = #{treatMenu}
+                          WHERE riNo = #{riNo}
             """)
     @Override
     boolean update(RestaurantIntroDto restaurantIntroDto);
