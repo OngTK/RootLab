@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import UseKakaoLoader from './UseKakaoLoader';
 import axios from "axios";
-import xxx from '../assets/contentTypeMarker/festival.png'
+import festival from '../assets/contentTypeMarker/festival.png'
+import cultural_facilities from '../assets/contentTypeMarker/cultural_facilities.png'
+import food from '../assets/contentTypeMarker/food.png'
+import leports from '../assets/contentTypeMarker/leports.png'
+import shopping from '../assets/contentTypeMarker/shopping.png'
+import stay from '../assets/contentTypeMarker/stay.png'
+import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
+import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
+
 export default function KakaoMap(props) {
     UseKakaoLoader();
     // =================== useState 선언부 ===================
@@ -101,7 +109,7 @@ export default function KakaoMap(props) {
                     width: '1000px',
                     height: '600px'
                 }}
-                level={10}
+                level={5}
                 onIdle={(map) => {
                     const bounds = map.getBounds();
                     const southWest = bounds.getSouthWest();
@@ -117,7 +125,7 @@ export default function KakaoMap(props) {
             >
                 <MarkerClusterer
                     averageCenter={true} // 클러스터 마커를 중앙에 위치
-                    minLevel={6}         // 클러스터링을 적용할 최소 지도 레벨
+                    minLevel={4}         // 클러스터링을 적용할 최소 지도 레벨
                 >
                     {markers && markers.map((marker, index) => (
                         <MapMarker
@@ -127,7 +135,14 @@ export default function KakaoMap(props) {
                                 lng: marker.mapx
                             }}
                             image={{
-                                src: xxx,
+                                src: marker.defaultMarker == 'food.png' ? food 
+                                   : marker.defaultMarker == 'cultural_facilities.png' ? cultural_facilities
+                                   : marker.defaultMarker == 'festival.png' ? festival
+                                   : marker.defaultMarker == 'leports.png' ? leports
+                                   : marker.defaultMarker == 'shopping.png' ? shopping
+                                   : marker.defaultMarker == 'stay.png' ? stay
+                                   : marker.defaultMarker == 'tourSpot.png' ? tourSpot
+                                   : travelCourse,
                                 size: {
                                     width: 80,
                                     height: 80
