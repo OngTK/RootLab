@@ -13,7 +13,7 @@ import java.util.UUID;
 public class FileUtil {
     // 업로드 기본 경로
     private String baseDir = System.getProperty("user.dir");
-    private String uploadPath = baseDir + "/src/main/ktour/src/assets/user/";
+    private String uploadPath = baseDir + "/src/main/ktour/public/uploads/";
 
     /**
      * [업로드 파일, 카테고리 타입]을 받아서, 파일을 업로드한다.

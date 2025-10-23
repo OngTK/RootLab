@@ -29,7 +29,8 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
     Optional<MarkersGPSDto> read(Integer pno);
 
     /**
-     * 렌더링된 화면을 기준으로 동서남북 좌표를 받아와 해당 범위 내의 마커를 반환하는 메소드
+     * [MG-01] 렌더링 기준 마커조회
+     * 렌더링된 화면 기준으로 [동서남북] 좌표를 받아, 해당 범위 내의 마커를 조회한다.
      *
      * @param coordinates 동서남북 좌표가 들어있는 Map
      * @return 해당 범위에 있는 마커 리스트
@@ -47,4 +48,21 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
             "AND kmg.mapy <= #{north}")
     List<MarkersGPSDto> getMarkersGpsByCurrentLatLng(Map<String, Object> coordinates);
 
+    /**
+     * [MG-02] 시군구 기준 마커조회
+     * [시군코드, 시군구코드]를 입력받아, 해당하는 시군구에 속하는 마커를 조회한다.
+     *
+     * @param lDongCode 시도코드 + 시군구코드가 들어있는 Map
+     * @return 해당 시군구에 속한 마커 리스트
+     * @author AhnJH
+     */
+    @Select("SELECT kpi.pNo, kmg.mapx, kmg.mapy, kmg.mkURL " +
+            "FROM k_tour_headquarter.placeinfo kpi " +
+            "JOIN k_tour_headquarter.ldongcode klc " +
+            "USING (ldNo) " +
+            "JOIN k_tour_headquarter.markersgps kmg " +
+            "USING (pNo) " +
+            "WHERE klc.lDongRegnCd = #{lDongRegnCd} " +
+            "AND klc.lDongSignguCd = #{lDongSignguCd}")
+    List<MarkersGPSDto> getMarkersGpsByCurrentLDong(Map<String, Object> lDongCode);
 } // interface end

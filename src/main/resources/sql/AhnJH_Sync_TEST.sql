@@ -242,7 +242,6 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 		USING (contentid);
 
 -- ----------------------------------------marker JOIN TEST------------------------------------------
--- 강사님께 피드백 받은 후, getMarker 로직 구현
 SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM k_tour_headquarter.contenttype;
@@ -256,3 +255,15 @@ SELECT kpi.pNo, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy
     AND kmg.mapx < 128.73106927424288
     AND kmg.mapy > 37.95358854898442
     AND kmg.mapy < 38.12170649772779;
+-- ----------------------------------------marker JOIN TEST------------------------------------------
+SELECT * FROM k_tour_headquarter.ldongcode;
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.markersgps;
+SELECT kpi.pNo, kmg.mapx, kmg.mapy, kmg.mkURL
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN k_tour_headquarter.ldongcode klc
+    USING (ldNo)
+    JOIN k_tour_headquarter.markersgps kmg
+    USING (pNO)
+    WHERE klc.lDongRegnCd = 11
+    AND klc.lDongSignguCd = 110;

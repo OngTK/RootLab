@@ -12,6 +12,7 @@ import "@assets/admin/css/reset.css";                               // 전역 �
 const UserRouter = lazy(() => import("@user/UserRouter"));          // 사용자단 라우터
 const AdminRouter = lazy(() => import("@admin/AdminRouter"));       // 관리자단 라우터
 const KakaoMap = lazy(() => import("./kakaomap/KakaoMap"));         // 카카오맵 API 테스트용 페이지
+const KakaoMapJS = lazy(() => import("./kakaomap/KakaoMapJS"));         // 카카오맵 API 테스트용 페이지
 
 export default function App() {
     return (
@@ -21,6 +22,7 @@ export default function App() {
                     <Route path="/*" element={<UserRouter />} />        {/* 사용자단(비회원) */}
                     <Route path="/admin/*" element={<AdminRouter />} /> {/* 관리자단(본사) */}
                     <Route path="/kakaomap/*" element={<KakaoMap />} /> {/* 사용자단(카카오맵 API 테스트용) */}
+                    <Route path="/kakaomapJS/*" element={<KakaoMapJS />} /> {/* 사용자단(카카오맵 API 테스트용) */}
                 </Routes>
             </Suspense>
         </BrowserRouter>
