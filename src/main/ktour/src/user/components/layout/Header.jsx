@@ -28,7 +28,7 @@ export default function Header(props) {
                 </div>
                 <SelectLdong/><SelectLdong/>
                 <dl className="searchKeword">
-                    <dt><a href="#" >우리동네 <b>AI추천</b> 모임아이템</a></dt>
+                    <dt><a href="#" >우리동네 <b>AI추천</b> 모임아이템</a></dt> 오늘도 난 혼자라는 사실을 잊은 태오
                     <dd>
                         <a href="#"><FontAwesomeIcon icon={faMapMarkedAlt} /> <span>관광</span></a>
                         <a href="#"><FontAwesomeIcon icon={faLandmark} /> <span>전시</span></a>
