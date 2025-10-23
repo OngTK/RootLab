@@ -6,6 +6,7 @@
  * @since 2025.10.22
  * @version 0.1.0
  */
+//import { TwoToneColorExample } from "@user/components/common/MuiIcons"; // MUI 아이콘 컴포넌트
 
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import { Box } from '@mui/material';
@@ -24,4 +25,3 @@ export default function TwoToneColorExample( props ) {
     </Box>
   );
 }
-// 출력: 주황색 투톤 하트, 보라색 투톤 하트 아이콘

@@ -3,23 +3,29 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.0
+ * @version 0.1.1
  */
-import Header from "./Header";                                 // 헤더 컴포넌트
-import AsideLnb from "./AsideLnb";                             // 사이드 네비게이션 컴포넌트
-import PageTitle from "./PageTitle";                           // 페이지 타이틀 컴포넌트
-import Footer from "./Footer";                                 // 푸터 컴포넌트
-import { Outlet } from "react-router-dom";                     // 중첩된 라우트 컴포넌트를 보여주기 위한 컴포넌트, 공통 레이아웃을 유지하면서 콘텐츠 영역만 자식 페이지로 변경
-import TwoToneColorExample from "@user/components/common/MuiIcons";       // MUI 아이콘 컴포넌트
+
+import Header from "@user/components/layout/Header";        // 헤더 
+import AsideLnb from "@user/components/layout/AsideLnb";    // 사이드 네비게이션 
+import PageTitle from "@user/components/layout/PageTitle";  // 페이지 타이틀 
+import Footer from "@user/components/layout/Footer";        // 푸터 
+import { Outlet } from "react-router-dom";                  // 중첩된 라우트 컴포넌트를 보여주기 위한 컴포넌트, 공통 레이아웃을 유지하면서 콘텐츠 영역만 자식 페이지로 변경
+import { Suspense } from "react";                           // 코드 스플리팅(필요한 시점 비동기 로딩_Lazy Loading)
+function Loading() { return <div style={{ padding: 12 }}>로딩 중…</div>; }   // 로딩중
+
 export default function LayoutUser() {
   return (
     <>
       <Header />
       <AsideLnb />
       <PageTitle />
-      <TwoToneColorExample />
-      <main><Outlet /></main>
+      <main id="content" tabIndex={-1} role="main" aria-live="polite">  
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
+      </main>
       <Footer />
     </>
   );
-}//LayoutUser end
+}//LayoutUser.jsx end

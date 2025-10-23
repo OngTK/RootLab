@@ -3,34 +3,29 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.2
+ * @version 0.1.3
  */
-import { lazy, Suspense } from "react"; // 코드 스플리팅을 위한 lazy, Suspense
-import { Routes, Route } from "react-router-dom"; // 라우터(URL 경로) 관련 컴포넌트
 
-// 로그인/사용자 메인
-import Login from "@admin/pages/member/Login";          // 관리자 로그인
-import MainPlace from "@user/pages/map/MainPlace";      // 사용자단 메인
+import { Routes, Route } from "react-router-dom";       // 라우터(URL 경로)
+import { lazy, Suspense } from "react";                 // 코드 스플리팅(필요한 시점 비동기 로딩_Lazy Loading)
 
-// 관리자단 로그인 이후 영역: 코드 스플리팅 (지연 로딩, 필요 시점에만 로드)
-const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin"));
-const PlaceInfo   = lazy(() => import("@admin/pages/map/place/PlaceInfo"));
-const Manager     = lazy(() => import("@admin/pages/member/Manager"));
-const SiteInfo    = lazy(() => import("@admin/pages/site/SiteInfo"));
-const PushPopup   = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));
-const NotFound    = lazy(() => import("@admin/pages/NotFound404"));
-
-import "@assets/admin/css/reset.css"; 
+// 관리자단 > 사용 페이지 : 코드 스플리팅(*지연 로딩, 필요 시점에만 로드)
+const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin"));    // 관리자단 > 공통레이아웃
+const Login       = lazy(() => import("@admin/pages/member/Login"));               // 관리자단 > 로그인 페이지
+const PlaceInfo   = lazy(() => import("@admin/pages/map/place/PlaceInfo"));        // 플레이스현황 페이지 
+const Manager     = lazy(() => import("@admin/pages/member/Manager"));             // 관리자현황 페이지 
+const SiteInfo    = lazy(() => import("@admin/pages/site/SiteInfo"));              // 사이트정보 페이지
+const PushPopup   = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));  // 푸시/팝업관리 페이지
+const NotFound404 = lazy(() => import("@admin/pages/NotFound404"));                // 404 Not Found 페이지
 
 export default function AdminRouter() {
   return (
-    <Suspense fallback={null}> {/* 추후 <div>로딩 중 표시할 컴포넌트</div> */}
+    <Suspense fallback={null}>
       <Routes>
-        {/* 비관리자 라우트 */}
-        <Route path="/" element={<MainPlace />} />
+        {/* 비관리자 페이지 */}
         <Route path="login" element={<Login />} />
 
-        {/* 관리자 레이아웃이 필요한 라우트 그룹 */}
+        {/* /admin 하위 전용 : 관리자 레이아웃 그룹(페이지 ) */}
         <Route element={<LayoutAdmin />}>
           <Route path="map/place_info" element={<PlaceInfo />} />
           <Route path="member/manager" element={<Manager />} />
@@ -39,7 +34,7 @@ export default function AdminRouter() {
         </Route>
 
         {/* 404 */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound404 />} />
       </Routes>
     </Suspense>
   );
