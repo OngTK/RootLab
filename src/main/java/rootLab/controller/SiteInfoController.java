@@ -16,6 +16,7 @@ public class SiteInfoController {
     private final SiteInfoService siteInfoService;
 
     /**
+     * [SI-01] 사이트정보 검색
      * [(공개여부), (도메인), (사이트명)]을 입력받아, 해당하는 사이트정보들을 조회한다.
      *
      * @param siIsPublic 사이트 공개여부, null 여부 판단을 위해 Integer

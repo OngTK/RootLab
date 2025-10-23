@@ -18,7 +18,8 @@ public class MarkersGPSController {
     private final MarkersGPSService markersGPSService;
 
     /**
-     * 렌더링된 화면을 기준으로 동서남북 좌표를 받아와 해당 범위 내의 마커를 반환하는 메소드
+     * [MG-01] 렌더링 기준 마커조회
+     * 렌더링된 화면 기준으로 [동서남북] 좌표를 받아, 해당 범위 내의 마커를 조회한다.
      *
      * @param south 남쪽 좌표
      * @param north 북쪽 좌표
@@ -32,10 +33,10 @@ public class MarkersGPSController {
                                                           @RequestParam double north,
                                                           @RequestParam double west,
                                                           @RequestParam double east){
-        System.out.println("south = " + south);
+        System.out.print("south = " + south);
         System.out.print(", north = " + north);
         System.out.print(", west = " + west);
-        System.out.print(", east = " + east);
+        System.out.println(", east = " + east);
         // 1. 동서남북 좌표를 담을 Map 선언
         Map<String, Object> coordinates = new HashMap<>();
         // 2. 선언한 Map에 좌표 담기
@@ -47,6 +48,15 @@ public class MarkersGPSController {
         return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLatLng(coordinates));
     } // func end
 
+    /**
+     * [MG-02] 시군구 기준 마커조회
+     * [시군코드, 시군구코드]를 입력받아, 해당하는 시군구에 속하는 마커를 조회한다.
+     *
+     * @param lDongRegnCd   시군코드
+     * @param lDongSignguCd 시군구코드
+     * @return 해당 시군구에 속한 마커 리스트
+     * @author AhnJH
+     */
     @GetMapping("/getbycurrentldong")
     public ResponseEntity<?> getMarkersGpsByCurrentLDong(@RequestParam int lDongRegnCd,
                                                          @RequestParam int lDongSignguCd){

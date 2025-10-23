@@ -16,6 +16,7 @@ public class ManagerController {
     private final ManagerService managerService;
 
     /**
+     * [MG-01] 관리자정보 검색
      * [(관리자유형), (회원명), (관리자ID), (휴대전화)]를 입력받아, 해당하는 관리자정보들을 조회한다.
      *
      * @param mgAuth   관리자유형 (1:시스템관리자, 2:지자체관리자)
