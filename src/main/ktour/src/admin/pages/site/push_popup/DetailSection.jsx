@@ -1,13 +1,39 @@
 /**
  * 관리자단 > 사이트 관리 > 푸시/팝업관리 > 상세 섹션 컴포넌트
  *
- * @author kimJS    
+ * @author  
  * @since 2025.10.21
  * @version 0.1.0
  */
 
+import { useState } from "react";
+
 
 export default function DetailSection(props) {
+
+        // [1] 입력받은 데이터들을 관리하는 useState
+        const [pNo, setpNo] = useState("");
+        const [mgNo, setmgNo] = useState("");
+        const [ppTitle, setppTitle] = useState("");
+        const [ppContent, setppContent] = useState("");
+        const [ppImg, setppImg] = useState("");
+        const [ppUse, setppUse] = useState("");
+        const [ppType, setppType] = useState("");
+        const [ppStart, setppStart] = useState("");
+        const [ppEnd, setppEnd] = useState("");
+        const [ppIterated, setppIterated] = useState("");
+    
+        //[2]등록
+    const pushadd = async() =>{
+        try{
+            const obj = {pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated}
+            console.log(obj)
+            const option = {withCredentials : true}
+            const response = await axios.post("http://localhost:8080/push/add", obj, option)
+            const data = response.data
+            console.log(data)
+        }catch(e){console.log("[등록 실패]", e)}
+    }
 
     /** =================== 관리자단 > 사이트관리 > 푸시/팝업관리(PushPopup) 상세 섹션 컴포넌트.jsx영역 ======================= */
     return (
@@ -20,7 +46,7 @@ export default function DetailSection(props) {
                         <li className="active">기본정보</li>
                     </ul>
                     <span className="btnBox">
-                        <button type="button" className="btn full" onclick="">저장</button>
+                        <button onClick={pushadd} type="button" className="btn full" onclick="">저장</button>
                         <button type="button" className="btn line" onclick="">삭제</button>
                         <button type="button" className="btn line" onclick="">신규등록</button>
                     </span>
