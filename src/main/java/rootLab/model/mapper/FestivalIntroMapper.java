@@ -1,7 +1,6 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.FestivalIntroDto;
 import rootLab.model.dto.TourIntroDto;
@@ -19,7 +18,7 @@ import java.util.Optional;
 public interface FestivalIntroMapper extends CommonRepository<FestivalIntroDto, Integer, PlaceInfoCriteria> {
 
     /**
-     * [1] pno별 개별 관광지 상세조회
+     * [1] pno별 개별 축제 정보 조회
      * @author OngTK
      */
     @Select("""
@@ -27,4 +26,88 @@ public interface FestivalIntroMapper extends CommonRepository<FestivalIntroDto, 
             """)
     Optional<FestivalIntroDto> read(Integer pno);
 
+    /**
+     * [2] 축제 정보 생성
+     * @author OngTK
+     */
+    @Override
+    @Insert("""
+             INSERT INTO festivalIntro (
+                    pNo,
+                    eventStartDate,
+                    eventEndDate,
+                    progressType,
+                    festivalType,
+                    ageLimit,
+                    bookingPlace,
+                    discountInfoFestival,
+                    eventHomepage,
+                    eventPlace,
+                    festivalGrade,
+                    placeInfo,
+                    playTime,
+                    program,
+                    spendTimeFestival,
+                    sponsor1,
+                    sponsor1Tel,
+                    sponsor2,
+                    sponsor2Tel,
+                    subEvent,
+                    useTimeFestival
+                ) VALUES (
+                    #{pNo},
+                    #{eventStartDate},
+                    #{eventEndDate},
+                    #{progressType},
+                    #{festivalType},
+                    #{ageLimit},
+                    #{bookingPlace},
+                    #{discountInfoFestival},
+                    #{eventHomepage},
+                    #{eventPlace},
+                    #{festivalGrade},
+                    #{placeInfo},
+                    #{playTime},
+                    #{program},
+                    #{spendTimeFestival},
+                    #{sponsor1},
+                    #{sponsor1Tel},
+                    #{sponsor2},
+                    #{sponsor2Tel},
+                    #{subEvent},
+                    #{useTimeFestival} )
+            """)
+    @Options(useGeneratedKeys = true,  keyProperty = "fiNo")
+    int create(FestivalIntroDto festivalIntroDto);
+
+    /**
+     * [3] 축제 정보 수정
+     * @author OngTK
+     */
+    @Override
+    @Update("""
+            UPDATE festivalIntro
+                   SET eventStartDate        = #{eventStartDate},
+                       eventEndDate          = #{eventEndDate},
+                       progressType          = #{progressType},
+                       festivalType          = #{festivalType},
+                       ageLimit              = #{ageLimit},
+                       bookingPlace          = #{bookingPlace},
+                       discountInfoFestival  = #{discountInfoFestival},
+                       eventHomepage         = #{eventHomepage},
+                       eventPlace            = #{eventPlace},
+                       festivalGrade         = #{festivalGrade},
+                       placeInfo             = #{placeInfo},
+                       playTime              = #{playTime},
+                       program               = #{program},
+                       spendTimeFestival     = #{spendTimeFestival},
+                       sponsor1              = #{sponsor1},
+                       sponsor1Tel           = #{sponsor1Tel},
+                       sponsor2              = #{sponsor2},
+                       sponsor2Tel           = #{sponsor2Tel},
+                       subEvent              = #{subEvent},
+                       useTimeFestival       = #{useTimeFestival}
+                 WHERE fiNo = #{fiNo}
+            """)
+    boolean update(FestivalIntroDto festivalIntroDto);
 } // Interface end
