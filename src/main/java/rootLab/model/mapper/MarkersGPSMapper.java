@@ -47,4 +47,20 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
             "AND kmg.mapy <= #{north}")
     List<MarkersGPSDto> getMarkersGpsByCurrentLatLng(Map<String, Object> coordinates);
 
+    /**
+     * 선택한 시군구에 속하는 마커를 반환하는 메소드
+     *
+     * @param lDongCode 시도코드 + 시군구코드가 들어있는 Map
+     * @return 해당 시군구에 속한 마커 리스트
+     * @author AhnJH
+     */
+    @Select("SELECT kpi.pNo, kmg.mapx, kmg.mapy, kmg.mkURL " +
+            "FROM k_tour_headquarter.placeinfo kpi " +
+            "JOIN k_tour_headquarter.ldongcode klc " +
+            "USING (ldNo) " +
+            "JOIN k_tour_headquarter.markersgps kmg " +
+            "USING (pNo) " +
+            "WHERE klc.lDongRegnCd = #{lDongRegnCd} " +
+            "AND klc.lDongSignguCd = #{lDongSignguCd}")
+    List<MarkersGPSDto> getMarkersGpsByCurrentLDong(Map<String, Object> lDongCode);
 } // interface end
