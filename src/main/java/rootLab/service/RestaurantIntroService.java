@@ -30,7 +30,7 @@ public class RestaurantIntroService extends AbstractService<RestaurantIntroDto, 
             restaurantIntroMapper.create(dto);
             if(dto.getRiNo() > 0) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         } else if(dto.getRiStatus() == 2) {      // Update
