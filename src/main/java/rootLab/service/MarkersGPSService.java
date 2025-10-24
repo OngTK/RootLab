@@ -36,15 +36,14 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
 
     /**
      * [MG-02] 시군구 기준 마커조회
-     * [시군코드, 시군구코드]를 입력받아, 해당하는 시군구에 속하는 마커를 조회한다.
+     * [법정동코드]를 입력받아, 해당하는 법정동코드No에 속하는 마커를 조회한다.
      *
-     * @param lDongCode 시도코드 + 시군구코드가 들어있는 Map
-     * @return 해당 시군구에 속한 마커 리스트
+     * @param ldNo 선택된 법정동코드
+     * @return 해당 법정동코드No에 속한 마커 리스트
      * @author AhnJH
      */
-    public List<MarkersGPSDto> getMarkersGpsByCurrentLDong(Map<String, Object> lDongCode){
-        System.out.println("lDongCode = " + lDongCode);
-        return markersGPSMapper.getMarkersGpsByCurrentLDong(lDongCode);
+    public List<MarkersGPSDto> getMarkersGpsByCurrentLDong(int ldNo){
+        return markersGPSMapper.getMarkersGpsByCurrentLDong(ldNo);
     } // func end
 
 } // class end
