@@ -32,7 +32,7 @@ export default function KakaoMap(props) {
     const [selectedRegnCd, SetSelectedRegnCd] = useState(null);
     const [lDongSignguCd, SetLDongSigngu] = useState([]);
     const [selectedLdNo, SetSelectedLdNo] = useState(null);
-    const [selectedGps, SetSelectedGps] = useState(null);
+    const [selectedGps, SetSelectedGps] = useState(null);           // 추후 선택된 GPS여서, 중심좌표로 변경해야함
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
@@ -122,9 +122,22 @@ export default function KakaoMap(props) {
             console.log(error);
         } // try-catch end
     } // func end
+    // =================== ldNoMarkers Axios GET ===================
+    const getLdNoMarkersByAxios = async () => {
+        if (selectedLdNo == null) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, option);
+            setMarkers(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log('getLdNoMarkersByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
     // =================== useEffect - [selectedLdNo] : 시군구 좌표 가져오기 ===================
     useEffect(() => {
         getLDongCodeByAxios();
+        getLdNoMarkersByAxios();
     }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================
