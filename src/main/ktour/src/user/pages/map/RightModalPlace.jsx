@@ -9,19 +9,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 export default function RightModalPlace(props) {
 
-/** =========================== ★우측모달★ LeftModalPlace.jsx ===================================== */
-     return (
+    /** =========================== ★우측모달★ LeftModalPlace.jsx ===================================== */
+    return (
         <>
             <div className="rightModal" id="rightModalPlace">
                 {/* 모달 박스 시작 */}
                 <div className="modal_box">
                     {/* 콘텐츠 내용 시작 */}
                     <button className="modalClose"><FontAwesomeIcon icon={faXmark} /></button>
-
                     <div className="modal_img_box">
                         <img
-                            src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="타이틀"
-                        />
+                            src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="타이틀"/>
                         <div className="modalContentOutline">
                             <h3>동촌유원지</h3>
                             <div className="category">자연관광&nbsp; 체험관광동궁</div>
@@ -38,9 +36,7 @@ export default function RightModalPlace(props) {
                             <li><b>주소</b> 연중무휴</li>
                             <li>
                                 <b>홈페이지</b>
-                                <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
-                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">//tour.daegu.go.kr</a>
                             </li>
                             <li>
                                 <b>전화</b>
@@ -66,8 +62,7 @@ export default function RightModalPlace(props) {
                         <ul>
                             <li>
                                 <b>홈페이지</b>
-                                <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
+                                <a href="#" target="_blank" rel="noopener noreferrer">//tour.daegu.go.kr
                                 </a>
                             </li>
                             <li>

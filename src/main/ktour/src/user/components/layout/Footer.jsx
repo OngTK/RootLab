@@ -5,7 +5,8 @@
  * @since 2025.10.17
  * @version 0.1.0
  */
-import { Link } from "react-router-dom";
+import "@assets/user/css/footer.css";   // footer.css
+
 export default function Footer(props) {
     return (
         <>
