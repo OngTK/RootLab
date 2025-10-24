@@ -12,7 +12,7 @@ import "@assets/user/css/modal.css";
 import "@assets/user/css/layoutSample.css";
 
 import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
-import KakaoMap from "@/kakaomap/KakaoMapJS"; // 카카오맵 API 연동(안정훈 작업 //추후 해당 폴더 옮기기로 함)
+import KakaoMap from "@/kakaomap/KakaoMap"; // 카카오맵 API 연동(안정훈 작업 //추후 해당 폴더 옮기기로 함)
 
 export default function LayoutSample(props) {
 

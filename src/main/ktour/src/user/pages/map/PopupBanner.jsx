@@ -2,11 +2,12 @@
  * 사용자단(비회원) > 메인 > 팝업배너 컴포넌트
  *
  * @author 
- * @since 2025.10.17
- * @version 0.1.0
+ * @since 2025.10.24
+ * @version 0.1.1
  */
+import "@assets/user/css/popupBanner.css";
 export default function PopupBanner(props) {
-
+console.log("팝업");
 /** =========================== PopupBanner.jsx ===================================== */
     return <>
         {/* 배너 로테이션 1,2,3 시작 */}

@@ -9,10 +9,11 @@ import { Link } from "react-router-dom";
 export default function Footer(props) {
     return (
         <>
-            <h3> 푸터 </h3>
-            <ul>
-                <li> <Link to="/admin/login">관리자로그인</Link></li>
-            </ul>
+           <div className="footerWrap">
+                <footer>
+                    <p className="copyright" to="/admin/login">  © 2025 Root.Lab</p>
+                </footer>
+            </div>
         </>
     );
 }//Footer.jsx end

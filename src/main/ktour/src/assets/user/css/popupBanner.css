@@ -1,0 +1,6 @@
+/* 좌측 하단 배너(팝업) */
+.popupBannerWrap{ position: fixed; left: 0; bottom: 0; z-index: 10000000000; overflow: hidden; width: 279px; height: 200px; }
+.popupBannerWrap .popupBanne > dt { height: 100px; }
+.popupBannerWrap .popupBanne > dt > span{ display: none; }
+.popupBannerWrap .popupBanne > dt > img{ position: absolute; bottom: 30px; width: 100%;  image-rendering: crisp-edges; image-rendering: pixelated; /* 이미지 선명하게/ 일부 브라우저에서 더 강한 효과 */}
+.popupBannerWrap .popupBanne > dd{ display: none;}

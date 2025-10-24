@@ -122,6 +122,7 @@ dl.ai_card > dt .keyword_recommand a{ display: inline-block; color:rgba(0,0,0,.8
 dl.ai_card > dt .keyword_recommand a:before{ content: "#"; display: inline-block; padding-right:1px; color:#009900; font-size:15px }
 dl.ai_card > dt .keyword_recommand a:hover{ color:#009900; font-weight: 600 }
 dl.ai_card > dt .keyword_recommand a:hover:before{ color:#009900; }
+
 /* 스크롤 */
 dl.ai_card dd.body{ max-height: 235px; overflow-y: auto; padding:5px 0; }
 dl.ai_card dd.body{

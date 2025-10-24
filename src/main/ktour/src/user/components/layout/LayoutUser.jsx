@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 import Header from "@user/components/layout/Header";              // 해더 
@@ -13,7 +13,8 @@ import RightMapPlace from "@user/pages/map/RightMapPlace";        // 중앙 지�
 import Footer from "@user/components/layout/Footer";              // 푸터 
 import LeftModalPlace from "@user/pages/map/LeftModalPlace";      // 좌측 모달 레이어(지도 마커 클릭시, 플레이스 상세정보)
 import RightModalPlace from "@user/pages/map/RightModalPlace";    // 우측 모달 레이어(우측 플레이스 목록 클릭시, 플레이스 상세정보)
-
+import { Outlet } from "react-router-dom";                        // 특정 라우트 그룹만 감싸는 중첩 레이아웃(Route nesting), 공통 레이아웃을 유지하면서 콘텐츠 영역만 자식 페이지로 변경
+import { Suspense } from "react";                                 // 코드 스플리팅(필요한 시점 비동기 로딩_Lazy Loading)
 
 export default function LayoutUser() {
   return (
@@ -22,6 +23,11 @@ export default function LayoutUser() {
       <AsideLnb />
       <PopupBanner />
       <RightMapPlace />
+      <main>
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
+      </main>
       <Footer />
       <LeftModalPlace />
       <RightModalPlace />

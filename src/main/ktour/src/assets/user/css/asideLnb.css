@@ -39,7 +39,6 @@
     .gnb::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
     .gnb::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2); background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
     .gnb::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
-    .gnb::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
     .gnb::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
 }
 
@@ -71,9 +70,3 @@
     width: 20px; padding: 20px 0; text-align: center; border-radius:0 5px 5px 0; background: rgba(255,255,255,.95);
     box-shadow: 1px 0px 3px rgba(0,0,0,.4) }
 .btn_lnb_open a{ display: block }
-
-/* 좌측 하단 배너(팝업) */
-.popupBannerWrap{ position: fixed; left: 0; bottom: 0; z-index: 1000; overflow: hidden; width: 279px; height: 200px; }
-.popupBannerWrap .popupBanne > dt { height: 100px; }
-.popupBannerWrap .popupBanne > dt > img{  width: 100%;  image-rendering: crisp-edges; image-rendering: pixelated; /* 이미지 선명하게/ 일부 브라우저에서 더 강한 효과 */}
-.popupBannerWrap .popupBanne > dd{ display: none;}
