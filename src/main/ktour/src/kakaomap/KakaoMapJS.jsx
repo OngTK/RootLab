@@ -29,11 +29,11 @@ export default function KakaoMap(props) {
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
-    const mapContainerRef = useRef(null); 
+    const mapContainerRef = useRef(null);
     // 3. 생성된 지도와 클러스터러 인스턴스를 저장합니다. (state 대신 ref 사용)
     const mapRef = useRef(null);
     const clustererRef = useRef(null);
-    
+
     // 4. 마커 이미지 소스를 객체로 미리 정의합니다.
     const markerImages = {
         'food.png': food,
@@ -63,7 +63,7 @@ export default function KakaoMap(props) {
                     ...prev,
                     errMsg: error.message,
                     isLoading: false
-                })); 
+                }));
             });
         } else {
             setCurrentLocation((prev) => ({
@@ -117,12 +117,26 @@ export default function KakaoMap(props) {
         }); // clusterer end
         clustererRef.current = clusterer;
 
+        // 지도에 원 표시 로직
+        let circle = new kakao.maps.Circle({
+            center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
+            radius: 5000,              // 반경 5KM 표시
+            strokeWeight: 3,           // 선의 두께
+            strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
+            strokeOpacity: 0.5,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            strokeStyle: 'dashed',     // 선의 스타일
+            fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
+            fillOpacity: 0.7           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+        }); // circle end
+
+        circle.setMap(map);
+
         // 9. 'idle' 이벤트 리스너 등록 (onIdle 대체)
         kakao.maps.event.addListener(map, 'idle', () => {
             const mapBounds = map.getBounds();
             const sw = mapBounds.getSouthWest();
             const ne = mapBounds.getNorthEast();
-            
+
             // setBounds를 호출하여 [bounds] effect를 트리거 -> getBoundsByAxios 호출
             setBounds({
                 south: sw.getLat(),
@@ -159,13 +173,13 @@ export default function KakaoMap(props) {
 
         // 새 마커 데이터가 없으면 여기서 종료
         if (!markers || markers.length === 0) return;
-        
+
         const imageSize = new kakao.maps.Size(80, 80);
 
         // 13. JS SDK용 카카오 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {
             const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
-            
+
             // 이미지 소스 선택
             // todo .includes()를 통한 mkURL sort 필요
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
