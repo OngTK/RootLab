@@ -50,7 +50,7 @@ public class LDongCodeController {
      * @return 법정동코드No에 해당하는 시군구 정보
      * @author AhnJH
      */
-    @GetMapping("/getbtldno")
+    @GetMapping("/getbyldno")
     public ResponseEntity<?> getLDongCodeByldNo(@RequestParam int ldNo){
         return ResponseEntity.ok(lDongCodeService.getLDongCodeByldNo(ldNo));
     } // func end

@@ -114,7 +114,7 @@ export default function KakaoMap(props) {
     const getLDongCodeByAxios = async () => {
         if (selectedLdNo == null) return;
         try {
-            const response = await axios.get(`http://localhost:8080/ldongcode/getbtldno?ldNo=${selectedLdNo}`, option);
+            const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, option);
             SetSelectedGps(response.data);
             console.log(response.data);
         } catch (error) {
