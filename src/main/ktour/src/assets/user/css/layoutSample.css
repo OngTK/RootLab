@@ -29,6 +29,25 @@
 .gnbWrap:before{ content:""; display: block; width: 1px; height: 100%; background: rgba(0,0,0,.15); position: absolute; top:0; left:90px }
 .gnbWrap:after{ content:""; display: block; clear:both; }
 
+.gnbWrap{  overflow-y: auto; overflow-x:hidden }
+.gnbWrap{
+    scrollbar-face-color:#ddd;/*스크롤*/
+    scrollbar-highlight-color:#ddd;/*하이라이트*/
+    scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
+    scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
+    scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
+    scrollbar-arrow-color:#ddd;/*화살*/
+    scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
+    /* overflow-x: auto; */
+}
+.gnbWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
+.gnbWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
+.gnbWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
+.gnbWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
+.gnbWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
+.gnbWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
+
 .gnb{ position: fixed; top:180.5px; left:0px; width: 91px; z-index: 99; background: #fff; /*border-right: solid 1px rgba(0,0,0,.1);*/ transition: .2s ease; height: 100%; }
 .main .gnb{ top:0px; width: 50px; }
 @media (max-height: 500px) {
@@ -73,10 +92,16 @@
 .subMenuList li a.active svg{ color: #009900; opacity: 1; width:17px; height: 17px; }
 
 /* 좌측 메뉴 열고 닫기 버튼  */
-.btn_lnb_open{ z-index:9999; position: fixed; top: 270px; left:280px; border:solid 1px rgba(0,0,0,.2); border-width: 1px 1px 1px 0;
+.btn_lnb_open{ z-index:9999999999999; position: fixed; top: 270px; left:280px; border:solid 1px rgba(0,0,0,.2); border-width: 1px 1px 1px 0;
     width: 20px; padding: 20px 0; text-align: center; border-radius:0 5px 5px 0; background: rgba(255,255,255,.95);
     box-shadow: 1px 0px 3px rgba(0,0,0,.4) }
 .btn_lnb_open a{ display: block }
+
+/* 좌측 하단 배너(팝업) */
+.popupBannerWrap{ position: fixed; left: 0; bottom: 0; z-index: 1000; overflow: hidden; width: 279px; height: 200px; }
+.popupBannerWrap .popupBanne > dt { height: 100px; }
+.popupBannerWrap .popupBanne > dt > img{  width: 100%; }
+.popupBannerWrap .popupBanne > dd{ display: none;}
 
 /* 카카오 메인 지도영역 */
 #map{ width: 100%; height: 100%; }
@@ -103,7 +128,7 @@
 .leftContents_padding_right{ position: relative;top:0; right:0; width: 29%; height:100%; min-width: 380px; flex: 0 0 auto; }
 .leftContents_padding_right:after{ content:""; display: block; clear:both; }
 
-.rightContents{ position: fixed; top:100px; right: 0; width:25%; height: calc(100% - 90px); z-index:1;  min-width:380px;  border-left:solid 1px rgba(0,0,0,.1); background:rgba(0,0,0,.4); padding-bottom:10px; overflow-y:auto; }
+.rightContents{ position: fixed; top:100px; right: 0; width:22%; height: calc(100% - 90px); z-index:1;  min-width:380px;  border-left:solid 1px rgba(0,0,0,.1); background:rgba(0,0,0,.4); padding-bottom:10px; overflow-y:auto; }
 
 .rightContents { transition: .2s ease; 
         scrollbar-face-color:#ddd;/*스크롤*/
@@ -118,13 +143,12 @@
     .rightContents::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
     .rightContents::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2); background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
     .rightContents::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
-    .rightContents::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
     .grightContentsnb::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
 
 
 
 /* 페이지 타이틀 및 페이지 네비 경로 */
-.rightContents .pageTitle{ position: fixed; top: 0; right: 0; width: 25%; min-width: 380px; z-index:9999; border-bottom: solid 2px rgba(0,0,0,.7); padding:10px 0 0 0; background: #fff;  border-left:solid 1px rgba(0,0,0,.4) }
+.rightContents .pageTitle{ position: fixed; top: 0; right: 0; width: 22%; min-width: 380px; z-index:9999; border-bottom: solid 2px rgba(0,0,0,.7); padding:10px 0 0 0; background: #fff;  border-left:solid 1px rgba(0,0,0,.4) }
 .rightContents .pageTitle h2{ position: relative; font:400 12x/20px 'Noto Sans KR', SansSerif; display: inline-block; padding: 0 10px 10px 20px; letter-spacing:-1px; }
 .rightContents .pageTitle h2 svg{color: #009900;  }
 
@@ -158,7 +182,7 @@ ul.cotentType li.active svg, ul.cotentType li:hover svg{ color: #009900;}
 .summaryCard:hover{ background: #fff }
 
 .summaryCard input[type=checkbox]{ width:16px; height:16px; }
-.summaryCard .thumb{ position:relative; width: 135px;  height: 100px; box-sizing: border-box; margin-right:2%; opacity:1;  overflow: hidden; border-radius: 3px; text-align: center; background: rgba(0,0,0,.1);}
+.summaryCard .thumb{ position:relative; width: 150px;  height: 100px; box-sizing: border-box; margin-right:2%; opacity:1;  overflow: hidden; border-radius: 3px; text-align: center; background: rgba(0,0,0,.1);}
 .summaryCard .thumb img{ width: 100%; height: 100%; text-align: center; border-radius: 3px; }
 .summaryCard ul{ width: 50%; }
 .summaryCard ul li{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  }
@@ -174,7 +198,6 @@ ul.cotentType li.active svg, ul.cotentType li:hover svg{ color: #009900;}
 
 /* 모임카드 */
 .cardListWrap{ position: relative; padding: 20px 15px 5px 18px;  width:100%;  overflow: hidden;  }
-
 
 dl.ai_card{ position: relative;  padding: 15px 15px 12px 20px;  margin:0 auto 20px; border:solid 1px rgba(0,0,0,.3); box-shadow:2px 2px 3px rgba(0,0,0,.2); border-radius: 5px; min-width: 345px;z-index:1; overflow: hidden; background:#fff }
 dl.ai_card:after{ content:""; display: block; clear:both; }
@@ -234,24 +257,6 @@ dl.ai_card dd.content_data{
     scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
     /* overflow-x: auto; */
 }
-
-.gnbWrap{  overflow-y: auto; overflow-x:hidden }
-.gnbWrap{
-    scrollbar-face-color:#ddd;/*스크롤*/
-    scrollbar-highlight-color:#ddd;/*하이라이트*/
-    scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
-    scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
-    scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
-    scrollbar-arrow-color:#ddd;/*화살*/
-    scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
-    /* overflow-x: auto; */
-}
-.gnbWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
-.gnbWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
-.gnbWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
-.gnbWrap::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
-.gnbWrap::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
-.gnbWrap::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
 
 
 /* 모임카드  반응형 처리  */

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import UseKakaoLoader from './UseKakaoLoader'; // 이 로더는 kakao 스크립트를 로드합니다.
 import axios from "axios";
-import festival from '../assets/contentTypeMarker/festival.png'
-import cultural_facilities from '../assets/contentTypeMarker/cultural_facilities.png'
-import food from '../assets/contentTypeMarker/food.png'
-import leports from '../assets/contentTypeMarker/leports.png'
-import shopping from '../assets/contentTypeMarker/shopping.png'
-import stay from '../assets/contentTypeMarker/stay.png'
-import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
-import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
+import festival from '@assets/contentTypeMarker/festival.png'
+import cultural_facilities from '@assets/contentTypeMarker/cultural_facilities.png'
+import food from '@assets/contentTypeMarker/food.png'
+import leports from '@assets/contentTypeMarker/leports.png'
+import shopping from '@assets/contentTypeMarker/shopping.png'
+import stay from '@assets/contentTypeMarker/stay.png'
+import tourSpot from '@assets/contentTypeMarker/tourSpot.png'
+import travelCourse from '@assets/contentTypeMarker/travelCourse.png'
 
 export default function KakaoMap(props) {
     UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
@@ -193,17 +193,17 @@ export default function KakaoMap(props) {
             <div
                 ref={mapContainerRef}
                 style={{
-                    width: '1000px',
-                    height: '600px'
+                    width: '100%',
+                    height: '100%'
                 }}
             />
 
             {/* 나머지 UI는 동일 */}
-            <h3>북쪽 : {bounds.north}</h3>
+            {/* <h3>북쪽 : {bounds.north}</h3>
             <h3>남쪽 : {bounds.south}</h3>
             <h3>동쪽 : {bounds.east}</h3>
             <h3>서쪽 : {bounds.west}</h3>
-            <button onClick={getBoundsByAxios}>버튼</button>
+            <button onClick={getBoundsByAxios}>버튼</button> */}
         </>
     ); // return end
 } // func end
