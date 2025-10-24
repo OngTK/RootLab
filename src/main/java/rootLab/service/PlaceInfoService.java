@@ -51,7 +51,7 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
 
         // 기본정보 조회
         Optional<PlaceInfoDto> placeInfoDto = placeInfoMapper.read(pno);
-        result.put("palceInfo",placeInfoDto);
+        result.put("placeInfo",placeInfoDto);
 
         // 기본정보에서 컨텐츠 타입 조회
         int ctNo = placeInfoDto.get().getCtNo();

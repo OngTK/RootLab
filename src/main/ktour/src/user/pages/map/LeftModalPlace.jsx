@@ -7,9 +7,34 @@
  */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-export default function LeftModalPlace(props) {
-    console.log(props.pNo);
+import { useSelector } from 'react-redux';
+import axios from "axios";
+import { useEffect, useState } from "react";
 
+export default function LeftModalPlace(props) {
+    // =================== useSelector ===================
+    const { axiosOption } = useSelector((state) => state.relatedMap);
+    // =================== useState 선언부 ===================
+    const [placeInfo, SetPlaceInfo] = useState(null);
+
+    const getplaceInfoByAxios = async () => {
+        if (!props.pNo) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${props.pNo}`, axiosOption);
+            console.log(response.data);
+            SetPlaceInfo(response.data);
+        } catch (error) {
+            console.log('getplaceInfoByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== useEffect - [props.pNo] : 상세정보 GET ===================
+    useEffect(() => {
+        getplaceInfoByAxios();
+    }, [props.pNo])
+
+    // axios 처리가 안 됐으면, 종료
+    if (!placeInfo) return;
     /** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
     return (
         <>
@@ -21,10 +46,10 @@ export default function LeftModalPlace(props) {
 
                     <div className="modal_img_box">
                         <img
-                            src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="타이틀"
+                            src={placeInfo.placeInfo.firstimage} alt="타이틀"
                         />
                         <div className="modalContentOutline">
-                            <h3>동촌유원지</h3>
+                            <h3>{placeInfo.placeInfo.title}</h3>
                             <div className="category">자연관광&nbsp; 체험관광동궁</div>
                         </div>
                     </div>
@@ -36,16 +61,16 @@ export default function LeftModalPlace(props) {
 
                         <h4>상세정보</h4>
                         <ul>
-                            <li><b>주소</b> 연중무휴</li>
+                            <li><b>주소</b>{placeInfo.placeInfo.addr1}{placeInfo.placeInfo.addr2}</li>
                             <li>
                                 <b>홈페이지</b>
                                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
+                                    {placeInfo.placeInfo.homepate}
                                 </a>
                             </li>
                             <li>
                                 <b>전화</b>
-                                <a href="tel:010-1234-5678">010-1234-5678</a>
+                                <a href="tel:010-1234-5678">{placeInfo.placeInfo.tel}</a>
                             </li>
                             <li>
                                 <b>주차여부</b> 가능 / 요금 (최초 2시간 무료 / 이후 30분 당 400원씩 추가 요금 발생)

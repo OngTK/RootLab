@@ -245,7 +245,6 @@ export default function KakaoMap(props) {
             });
             // 마커 클릭 이벤트 생성
             kakao.maps.event.addListener(kakaoMarker, 'click', () => {
-                console.log(marker)
                 SetSelectedGps(marker);
                 dispatch(selectMarker(marker.pno));
             }) // addListener end
