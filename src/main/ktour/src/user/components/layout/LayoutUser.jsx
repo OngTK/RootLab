@@ -15,15 +15,15 @@ import { Outlet } from "react-router-dom";                        // 특정 라�
 import { Suspense } from "react";                                 // 코드 스플리팅(필요한 시점 비동기 로딩_Lazy Loading)
 
 export default function LayoutUser() {
-  return (
-    <>
-      <Header />
-      <AsideLnb />
-      <PopupBanner />
-      <Suspense fallback={null}>
-        <Outlet />
-      </Suspense>
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <AsideLnb />
+            <PopupBanner />
+            <Suspense fallback={null}>
+                <Outlet />
+            </Suspense>
+            <Footer />
+        </>
+    );
 }//LayoutUser.jsx end

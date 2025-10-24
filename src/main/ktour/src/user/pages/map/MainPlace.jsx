@@ -16,8 +16,8 @@ export default function MainPlace(props) {
 
     return <>
         <div id="map"><KakaoMap /></div>
-        <RightModalPlace />
-        <LeftModalPlace />
-        <RightCategory />
+        {/* <RightModalPlace /> */}
+        {/* <LeftModalPlace /> */}
+        {/* <RightCategory /> */}
     </>
 }//MainPlace.jsx end
