@@ -7,7 +7,7 @@
  */
 
 //import CenterKakaoMap from "@user/pages/map/CenterKakaoMap";    // 중앙 지도
-//import KakaoMap from "@/kakaomap/KakaoMap";                       // 카카오맵 API 연동_251024(kimJS)
+import KakaoMap from "@/kakaomap/KakaoMapJS";                       // 카카오맵 API 연동_251024(kimJS)
 import RightCategory from "@user/pages/map/RightCategory";        // 우측 플레이스 목록 
 import LeftModalPlace from "@user/pages/map/LeftModalPlace";      // 좌측 모달 레이어(지도 마커 클릭시, 플레이스 상세정보)
 import RightModalPlace from "@user/pages/map/RightModalPlace";    // 우측 모달 레이어(우측 플레이스 목록 클릭시, 플레이스 상세정보)
@@ -15,7 +15,7 @@ import "@assets/user/css/modal.css";
 export default function MainPlace(props) {
 
     return <>
-        {/* <div id="map"><KakaoMap /></div> */}
+        <div id="map"><KakaoMap /></div>
         <RightModalPlace />
         <LeftModalPlace />
         <RightCategory />

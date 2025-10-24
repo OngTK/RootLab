@@ -13,11 +13,10 @@ import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 const option = { withCredentials: true };
 
 export default function KakaoMap(props) {
-
-    UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
+    const isScriptLoaded = UseKakaoLoader();
 
     // =================== useState 선언부 ===================
-    const [markers, SetMarkers] = useState(null);
+    const [markers, SetMarkers] = useState("");
     const [bounds, SetBounds] = useState({
         south: "0.0",
         west: "0.0",
@@ -30,16 +29,14 @@ export default function KakaoMap(props) {
         isLoading: true
     }); // useState end
     const [lDongRegnCd, SetLDongRegnCd] = useState([]);
-    const [selectedRegnCd, SetSelectedRegnCd] = useState(null);
+    const [selectedRegnCd, SetSelectedRegnCd] = useState("");
     const [lDongSignguCd, SetLDongSigngu] = useState([]);
-    const [selectedLdNo, SetSelectedLdNo] = useState(null);
-    const [selectedGps, SetSelectedGps] = useState(null);
-    const [clickedMarker, SetClickedMarker] = useState(null);       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
+    const [selectedLdNo, SetSelectedLdNo] = useState("");
+    const [selectedGps, SetSelectedGps] = useState("");
+    const [clickedMarker, SetClickedMarker] = useState("");       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
 
     // =================== useRef 선언부 ===================
-    // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
     const mapContainerRef = useRef(null);
-    // 3. 생성된 지도와 클러스터러 인스턴스를 저장합니다. (state 대신 ref 사용)
     const mapRef = useRef(null);
     const clustererRef = useRef(null);
 
@@ -98,7 +95,7 @@ export default function KakaoMap(props) {
     } // func end
     // =================== LDongSignguCd Axios GET ===================
     const getLDongSignguCdByAxios = async () => {
-        if (selectedRegnCd == null) return;
+        if (selectedRegnCd == "") return;
         try {
             const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, option);
             SetLDongSigngu(response.data);
@@ -114,7 +111,7 @@ export default function KakaoMap(props) {
     }, [selectedRegnCd]);
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
-        if (selectedLdNo == null) return;
+        if (selectedLdNo == "") return;
         try {
             const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, option);
             SetSelectedGps(response.data);
@@ -127,7 +124,7 @@ export default function KakaoMap(props) {
     // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
     useEffect(() => {
         // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
-        if (!selectedGps) return;
+        if (!selectedGps || !window.kakao || !mapRef.current) return;
         // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
         const newCoords = new window.kakao.maps.LatLng(
             selectedGps.mapy, // selectedGps의 mapy
@@ -142,7 +139,7 @@ export default function KakaoMap(props) {
 
     // =================== ldNoMarkers Axios GET ===================
     const getLdNoMarkersByAxios = async () => {
-        if (selectedLdNo == null) return;
+        if (selectedLdNo == "") return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, option);
             SetMarkers(response.data);
@@ -179,7 +176,7 @@ export default function KakaoMap(props) {
     // 6. <Map> 컴포넌트의 onCreate, onIdle 프롭을 대체합니다.
     useEffect(() => {
         // 현재 위치 로딩이 끝났고, mapContainerRef가 준비되었고, kakao 스크립트가 로드되었는지 확인
-        if (currentLocation.isLoading || !mapContainerRef.current || !window.kakao) return;
+        if (currentLocation.isLoading || !mapContainerRef.current || !isScriptLoaded || !window.kakao) return;
 
         const { kakao } = window;
         const mapContainer = mapContainerRef.current;
@@ -214,7 +211,7 @@ export default function KakaoMap(props) {
 
         circle.setMap(map);
 
-        // 9. 'idle' 이벤트 리스너 등록 (onIdle 대체)
+        // 9. 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
             const mapBounds = map.getBounds();
             const sw = mapBounds.getSouthWest();
@@ -240,7 +237,7 @@ export default function KakaoMap(props) {
             north: ne.getLat(),
             east: ne.getLng()
         });
-    }, [currentLocation.isLoading, currentLocation.center]); // Geolocation 완료 시 1회 실행
+    }, [currentLocation.isLoading, currentLocation.center, isScriptLoaded]); // Geolocation 완료 시 1회 실행
 
     // =================== useEffect - [markers] : 마커 업데이트 ===================
     // 11. <MarkerClusterer> 내부의 map() 렌더링 로직을 대체합니다.
@@ -302,17 +299,11 @@ export default function KakaoMap(props) {
                 ref={mapContainerRef}
                 style={{
                     width: '100%',
-                    height: '100%'
+                    height: '100vh'
                 }}
             />
-
-            {/* 나머지 UI는 동일 */}
-            <h3>북쪽 : {bounds.north}</h3>
-            <h3>남쪽 : {bounds.south}</h3>
-            <h3>동쪽 : {bounds.east}</h3>
-            <h3>서쪽 : {bounds.west}</h3>
-            <select onChange={changeRegnCd}>
-                <option selected disabled> 시구 선택</option>
+            <select onChange={changeRegnCd} value={selectedRegnCd}>
+                <option value="" disabled> 시구 선택</option>
                 {
                     lDongRegnCd.map((regn) => {
                         return <option key={regn.ldongregncd} value={regn.ldongregncd}>
@@ -321,8 +312,8 @@ export default function KakaoMap(props) {
                     })
                 }
             </select>
-            <select onChange={changeLdNo}>
-                <option selected disabled> 시군구 선택</option>
+            <select onChange={changeLdNo} value={selectedLdNo}>
+                <option value="" disabled> 시군구 선택</option>
                 {
                     lDongSignguCd.map((signgu) => {
                         return <option key={signgu.ldNo} value={signgu.ldNo}>
