@@ -1,7 +1,12 @@
 /* 모달 레이어 */
 .leftModal{ position:fixed; top: 0; left: 279px;  width:360px;  height: 100%; z-index: 99999999;  }
-.modal_box{ position: relative;  height: 100%; background: #fff;  box-shadow: 5px 5px 5px rgba(0,0,0,.3); font-size: 13px; border-left:solid 1px rgba(0,0,0,.3); display: flex;
-    flex-direction: column; }
+.rightModal{ position:fixed; top: 0; right: 420px;  width:360px;  height: 100%; z-index: 99999999;  }
+
+
+.modal_box{ position: relative;  height: 100%; background: #fff;  box-shadow: 5px 5px 5px rgba(0,0,0,.2); font-size: 13px; border-left:solid 1px rgba(0,0,0,.3); display: flex;
+    flex-direction: column; overflow: hidden;}
+.rightModal .modal_box{ box-shadow: -5px -5px 5px rgba(0,0,0,.2);}
+
 
 /* 닫기 버튼 */
 button.modalClose{ font-size: 35px; position: absolute; top:10px; right:10px; background: none; padding: 0; border: 0; outline: 0; opacity: .7; color:#009900; }
@@ -26,3 +31,21 @@ button.modalClose:hover{ opacity: .99; }
 .modalContent ul li{ display: flex; }
 .modalContent ul li b{ display: inline-block; min-width: 70px; color:rgb(19, 121, 19); }
 .modalContent ul li a{ text-decoration: underline; color: rgb(25, 74, 233); }
+
+
+.modalContent { transition: .2s ease; 
+        scrollbar-face-color:#ddd;/*스크롤*/
+        scrollbar-highlight-color:#ddd;/*하이라이트*/
+        scrollbar-3dlight-color:#ddd;/*왼쪽외곽음영*/
+        scrollbar-darkshadow-color:#ddd;/*오른쪽외곽음영*/
+        scrollbar-shadow-color:#ddd;/*오른쪽 안쪽음영*/
+        scrollbar-arrow-color:#ddd;/*화살*/
+        scrollbar-track-color:rgba(255,255,255,.1);/*스크롤영역*/
+    }
+.modalContent::-webkit-scrollbar{opacity:1; width:5px; height: 15px;}/*스크롤바*/
+.modalContent::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
+.modalContent::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2); background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
+.modalContent::-webkit-scrollbar-track{background-color:rgba(255,255,255,1);}/*스크롤바 진행줄*/
+.modalContent::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
+
+

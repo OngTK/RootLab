@@ -1,9 +1,9 @@
 /**
- * 사용자단(비회원) > 메인(html) 샘플 페이지
+ * 사용자단(비회원) > 메인(html) > 중앙 지도/ 우측 플레이스 목록
  *
- * @author kimJS
- * @since 2025.10.23
- * @version 0.1.1
+ * @author 
+ * @since 2025.10.24
+ * @version 0.1.0
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

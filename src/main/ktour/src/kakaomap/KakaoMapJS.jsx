@@ -11,6 +11,7 @@ import tourSpot from '@assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '@assets/contentTypeMarker/travelCourse.png'
 
 export default function KakaoMap(props) {
+
     UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
 
     // =================== useState 선언부 ===================

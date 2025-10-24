@@ -1,5 +1,5 @@
 /**
- * 사용자단(비회원) > 메인 > 지도마커 클릭시, 플레이스 상세정보 ★좌측★모달(레이어) 컴포넌트
+ * 사용자단(비회원) > 메인 > 우측 플레이스목록 개별 클릭시, 플레이스 상세정보 ★우측★모달(레이어) 컴포넌트
  *
  * @author 
  * @since 2025.10.24
@@ -7,12 +7,12 @@
  */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-export default function LeftModalPlace(props) {
+export default function RightModalPlace(props) {
 
-/** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
-    return (
+/** =========================== ★우측모달★ LeftModalPlace.jsx ===================================== */
+     return (
         <>
-            <div className="leftModal" id="leftModalPlace">
+            <div className="rightModal" id="rightModalPlace">
                 {/* 모달 박스 시작 */}
                 <div className="modal_box">
                     {/* 콘텐츠 내용 시작 */}
