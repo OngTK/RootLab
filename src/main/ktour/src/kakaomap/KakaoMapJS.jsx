@@ -16,14 +16,14 @@ export default function KakaoMap(props) {
     UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
 
     // =================== useState 선언부 ===================
-    const [markers, setMarkers] = useState(null);
-    const [bounds, setBounds] = useState({
+    const [markers, SetMarkers] = useState(null);
+    const [bounds, SetBounds] = useState({
         south: "0.0",
         west: "0.0",
         north: "0.0",
         east: "0.0"
     }); // useState end
-    const [currentLocation, setCurrentLocation] = useState({
+    const [currentLocation, SetCurrentLocation] = useState({
         center: { lat: 37.489457, lng: 126.724494 },
         errMsg: null,
         isLoading: true
@@ -32,7 +32,8 @@ export default function KakaoMap(props) {
     const [selectedRegnCd, SetSelectedRegnCd] = useState(null);
     const [lDongSignguCd, SetLDongSigngu] = useState([]);
     const [selectedLdNo, SetSelectedLdNo] = useState(null);
-    const [selectedGps, SetSelectedGps] = useState(null);           // 추후 선택된 GPS여서, 중심좌표로 변경해야함
+    const [selectedGps, SetSelectedGps] = useState(null);
+    const [clickedMarker, SetClickedMarker] = useState(null);       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
@@ -58,7 +59,7 @@ export default function KakaoMap(props) {
         // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((location) => {
-                setCurrentLocation((prev) => ({
+                SetCurrentLocation((prev) => ({
                     ...prev,
                     center: {
                         lat: location.coords.latitude,
@@ -67,18 +68,18 @@ export default function KakaoMap(props) {
                     isLoading: false
                 }));
             }, (error) => {
-                setCurrentLocation((prev) => ({
+                SetCurrentLocation((prev) => ({
                     ...prev,
                     errMsg: error.message,
                     isLoading: false
                 }));
             });
         } else {
-            setCurrentLocation((prev) => ({
+            SetCurrentLocation((prev) => ({
                 ...prev,
                 errMsg: "geolocation을 사용할 수 없는 상태입니다.",
                 isLoading: false
-            })); // setCurrentLocation end
+            })); // SetCurrentLocation end
         } // if end
         // =================== 법정동 코드 가져오기 ===================
         getLDongRegnCdByAxios();
@@ -122,12 +123,28 @@ export default function KakaoMap(props) {
             console.log(error);
         } // try-catch end
     } // func end
+    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
+    useEffect(() => {
+        // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
+        if (!selectedGps) return;
+        // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
+        const newCoords = new window.kakao.maps.LatLng(
+            selectedGps.mapy, // selectedGps의 mapy
+            selectedGps.mapx  // selectedGps의 mapx
+        );
+
+        // 3. mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동시킵니다.
+        mapRef.current.panTo(newCoords);
+
+    }, [selectedGps]); // 4. selectedGps 변경될 때마다 이 효과를 실행
+
+
     // =================== ldNoMarkers Axios GET ===================
     const getLdNoMarkersByAxios = async () => {
         if (selectedLdNo == null) return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, option);
-            setMarkers(response.data);
+            SetMarkers(response.data);
             console.log(response.data);
         } catch (error) {
             console.log('getLdNoMarkersByAxios 오류 발생');
@@ -146,7 +163,7 @@ export default function KakaoMap(props) {
         if (bounds.south === "0.0") return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, option);
-            setMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
+            SetMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
         } catch (error) {
             console.log(error);
         } // try-catch end
@@ -202,13 +219,13 @@ export default function KakaoMap(props) {
             const sw = mapBounds.getSouthWest();
             const ne = mapBounds.getNorthEast();
 
-            // setBounds를 호출하여 [bounds] effect를 트리거 -> getBoundsByAxios 호출
-            setBounds({
+            // SetBounds를 호출하여 [bounds] effect를 트리거 -> getBoundsByAxios 호출
+            SetBounds({
                 south: sw.getLat(),
                 west: sw.getLng(),
                 north: ne.getLat(),
                 east: ne.getLng()
-            }); // setBounds end
+            }); // SetBounds end
         }); // addListener end
 
         // 10. (중요) 지도 생성 직후 'idle' 이벤트를 강제로 한번 실행(하거나 bounds를 직접 설정)
@@ -216,7 +233,7 @@ export default function KakaoMap(props) {
         const initialBounds = map.getBounds();
         const sw = initialBounds.getSouthWest();
         const ne = initialBounds.getNorthEast();
-        setBounds({
+        SetBounds({
             south: sw.getLat(),
             west: sw.getLng(),
             north: ne.getLat(),
