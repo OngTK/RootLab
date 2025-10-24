@@ -11,7 +11,7 @@ import { faList, faAngleRight, faMagnifyingGlass, faMapMarkedAlt, faThumbsUp, fa
 import "@assets/user/css/layoutSample.css";
 import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
 
-export default function RightMapPlace(props) {
+export default function RightCategory(props) {
 
     /** ========================= 사용자단(비회원) > 메인(html) 샘플페이지.jsx영역 ================================== */
     return (
