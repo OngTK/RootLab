@@ -15,20 +15,34 @@ public class LDongCodeController {
     private final LDongCodeService lDongCodeService;
 
     /**
-     * [LC-01] 시군구 전체조회
+     * [LC-01] 시도 전체조회
      * <p>
-     * LDongCode 테이블의 모든 정보를 조회한다.
+     * LDongCode 테이블의 모든 시도 정보를 조회한다.
      *
-     * @return LDongCode 테이블의 모든 정보
+     * @return LDongCode 테이블의 모든 시도 정보
      * @author AhnJH
      */
-    @GetMapping("/get")
-    public ResponseEntity<?> getLDongCode(){
-        return ResponseEntity.ok(lDongCodeService.getLDongCode());
+    @GetMapping("/getregn")
+    public ResponseEntity<?> getLDongRegn(){
+        return ResponseEntity.ok(lDongCodeService.getLDongRegn());
     } // func end
 
     /**
-     * [LC-02] 시군구 개별조회
+     * [LC-02] 시군구 리스트조회
+     * <p>
+     * [시도코드]를 입력받아, 해당하는 시도의 시군구 정보를 조회한다.
+     *
+     * @param lDongRegnCd
+     * @return 해당하는 시도의 시군구 정보
+     * @author AhnJH
+     */
+    @GetMapping("/getsigngu")
+    public ResponseEntity<?> getLDongSignguByRegnCd(@RequestParam int lDongRegnCd){
+        return ResponseEntity.ok(lDongCodeService.getLDongSignguByRegnCd(lDongRegnCd));
+    } // func end
+
+    /**
+     * [LC-03] 시군구 개별조회
      * <p>
      * [법정동코드No]를 입력받아, 해당하는 시군구 정보를 조회한다.
      *

@@ -5,23 +5,38 @@ import org.apache.ibatis.annotations.Select;
 import rootLab.model.dto.LDongCodeDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface LDongCodeMapper {
 
     /**
-     * [LC-01] 시군구 전체조회
+     * [LC-01] 시도 전체조회
      * <p>
-     * LDongCode 테이블의 모든 정보를 조회한다.
+     * LDongCode 테이블의 모든 시도 정보를 조회한다.
      *
-     * @return LDongCode 테이블의 모든 정보
+     * @return LDongCode 테이블의 모든 시도 정보
      * @author AhnJH
      */
-    @Select("SELECT * FROM ldongcode")
-    List<LDongCodeDto> getLDongCode();
+    @Select("SELECT DISTINCT ldongregncd, ldongregnnm FROM ldongcode")
+    List<Map<String, Object>> getLDongRegn();
 
     /**
-     * [LC-02] 시군구 개별조회
+     * [LC-02] 시군구 리스트조회
+     * <p>
+     * [시도코드]를 입력받아, 해당하는 시도의 시군구 정보를 조회한다.
+     *
+     * @param lDongRegnCd
+     * @return 해당하는 시도의 시군구 정보
+     * @author AhnJH
+     */
+    @Select("SELECT ldNo, ldongsigngucd, ldongsigngunm " +
+            "FROM k_tour_headquarter.ldongcode " +
+            "WHERE lDongRegnCd = #{lDongRegnCd}")
+    List<Map<String, Object>> getLDongSignguByRegnCd(int lDongRegnCd);
+
+    /**
+     * [LC-03] 시군구 개별조회
      * <p>
      * [법정동코드No]를 입력받아, 해당하는 시군구 정보를 조회한다.
      *

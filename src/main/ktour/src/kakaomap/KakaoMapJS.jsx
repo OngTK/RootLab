@@ -26,6 +26,7 @@ export default function KakaoMap(props) {
         errMsg: null,
         isLoading: true
     }); // useState end
+    const [ lDongCode, SetLDongCode ] = useState([]);
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
@@ -46,8 +47,9 @@ export default function KakaoMap(props) {
         'travelCourse.png': travelCourse,
     };
 
-    // =================== useEffect - [] : 현재 위치 가져오기 ===================
+    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
+        // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((location) => {
                 setCurrentLocation((prev) => ({
@@ -72,7 +74,21 @@ export default function KakaoMap(props) {
                 isLoading: false
             })); // setCurrentLocation end
         } // if end
+        // =================== 법정동 코드 가져오기 ===================
+        getLDongCodeByAxios();
     }, []); // useEffect end
+    // =================== LDongCode Axios GET ===================
+    const getLDongCodeByAxios = async () => {
+        try {
+            const option = { withCredentials: true };
+            const response = await axios.get("http://localhost:8080/ldongcode/getregn", option);
+            SetLDongCode(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log('getLDongCodeByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
 
     // =================== bounds Axios GET ===================
     // 5. 함수를 useCallback으로 감싸서 불필요한 재생성을 방지합니다.
