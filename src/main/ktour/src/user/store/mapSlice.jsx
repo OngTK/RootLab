@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // 1. 초기값 설정
 const initialState = {
     selectedLdNo: null,
+    selectedMarker: null,
     axiosOption: { withCredentials: true }
 };
 
@@ -13,10 +14,13 @@ const mapSlice = createSlice({
     reducers: {
         selectedSigngu: (state, action) => {
             state.selectedLdNo = action.payload;
-        } // selectedCity end
+        }, // selectedCity end
+        selectMarker: (state, action) => {
+            state.selectedMarker = action.payload;
+        } // selectMarker
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { selectedSigngu } = mapSlice.actions;
+export const { selectedSigngu, selectMarker } = mapSlice.actions;

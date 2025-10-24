@@ -9,13 +9,15 @@ import shopping from '../assets/contentTypeMarker/shopping.png'
 import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectMarker } from '../user/store/mapSlice';
 
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();
     // =================== useSelector ===================
     const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap);
-
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
     // =================== useState 선언부 ===================
     const [markers, SetMarkers] = useState("");
     const [bounds, SetBounds] = useState({
@@ -30,7 +32,6 @@ export default function KakaoMap(props) {
         isLoading: true
     }); // useState end
     const [selectedGps, SetSelectedGps] = useState("");
-    const [clickedMarker, SetClickedMarker] = useState("");       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
 
     // =================== useRef 선언부 ===================
     const mapContainerRef = useRef(null);
@@ -244,8 +245,8 @@ export default function KakaoMap(props) {
             });
             // 마커 클릭 이벤트 생성
             kakao.maps.event.addListener(kakaoMarker, 'click', () => {
-                SetClickedMarker(marker.pno);
-                console.log('클릭된 마커: ', marker.pno);
+                console.log(marker.pno)
+                dispatch(selectMarker(marker.pno));
             }) // addListener end
 
             return kakaoMarker;

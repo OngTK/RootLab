@@ -8,8 +8,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 export default function LeftModalPlace(props) {
+    console.log(props.pNo);
 
-/** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
+    /** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
     return (
         <>
             <div className="leftModal" id="leftModalPlace">
