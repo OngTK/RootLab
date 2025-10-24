@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap );
+    const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap);
 
     // =================== useState 선언부 ===================
     const [markers, SetMarkers] = useState("");
@@ -36,6 +36,7 @@ export default function KakaoMap(props) {
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
     const clustererRef = useRef(null);
+    const isUserMoveRef = useRef(false);
 
     // 4. 마커 이미지 소스를 객체로 미리 정의합니다.
     const markerImages = {
@@ -77,6 +78,22 @@ export default function KakaoMap(props) {
             })); // SetCurrentLocation end
         } // if end
     }, []); // useEffect end
+
+    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
+    useEffect(() => {
+        // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
+        if (!selectedGps || !window.kakao || !mapRef.current) return;
+        // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
+        const newCoords = new window.kakao.maps.LatLng(
+            selectedGps.mapy, // selectedGps의 mapy
+            selectedGps.mapx  // selectedGps의 mapx
+        );
+        // 3. 'idle' eventListener가 작동하지 않게 true로 변경
+        isUserMoveRef.current = true;
+
+        // 4. mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동시킵니다.
+        mapRef.current.panTo(newCoords);
+    }, [selectedGps]); // 4. selectedGps 변경될 때마다 이 효과를 실행
 
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
@@ -164,6 +181,11 @@ export default function KakaoMap(props) {
 
         // 9. 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
+            // 만약에 panTo로 이동했으면, idle 실행 X
+            if (isUserMoveRef.current){
+                isUserMoveRef.current = false;
+                return;
+            } // if end
             const mapBounds = map.getBounds();
             const sw = mapBounds.getSouthWest();
             const ne = mapBounds.getNorthEast();
@@ -178,7 +200,6 @@ export default function KakaoMap(props) {
         }); // addListener end
 
         // 10. (중요) 지도 생성 직후 'idle' 이벤트를 강제로 한번 실행(하거나 bounds를 직접 설정)
-        // 기존 [initialMap] effect의 로직을 대체합니다.
         const initialBounds = map.getBounds();
         const sw = initialBounds.getSouthWest();
         const ne = initialBounds.getNorthEast();
@@ -215,12 +236,19 @@ export default function KakaoMap(props) {
             // todo .includes()를 통한 mkURL sort 필요
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
-
-            return new kakao.maps.Marker({
+            // 마커 생성하기
+            const kakaoMarker = new kakao.maps.Marker({
                 position: position,
                 image: markerImage,
                 title: '나중에 변경' // 실제 데이터로 변경
-            }); // return end
+            });
+            // 마커 클릭 이벤트 생성
+            kakao.maps.event.addListener(kakaoMarker, 'click', () => {
+                SetClickedMarker(marker.pno);
+                console.log('클릭된 마커: ', marker.pno);
+            }) // addListener end
+
+            return kakaoMarker;
         }); // map end
 
         // 14. 클러스터러에 새 마커 추가
