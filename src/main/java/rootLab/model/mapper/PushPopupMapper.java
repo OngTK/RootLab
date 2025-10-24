@@ -40,7 +40,7 @@ public interface PushPopupMapper {
      * 3. 삭제
      * @author juju95
      */
-    int deletePush (int ppNo);
+    int deletePush (@Param("ppNo") int ppNo);
 
     /**
      * 4. 수정
