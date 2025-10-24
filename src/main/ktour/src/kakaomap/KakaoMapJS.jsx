@@ -9,6 +9,8 @@ import shopping from '../assets/contentTypeMarker/shopping.png'
 import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
+// Axios Option
+const option = { withCredentials: true };
 
 export default function KakaoMap(props) {
     UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
@@ -26,7 +28,11 @@ export default function KakaoMap(props) {
         errMsg: null,
         isLoading: true
     }); // useState end
-    const [ lDongCode, SetLDongCode ] = useState([]);
+    const [lDongRegnCd, SetLDongRegnCd] = useState([]);
+    const [selectedRegnCd, SetSelectedRegnCd] = useState(null);
+    const [lDongSignguCd, SetLDongSigngu] = useState([]);
+    const [selectedLdNo, SetSelectedLdNo] = useState(null);
+    const [selectedGps, SetSelectedGps] = useState(null);
 
     // =================== useRef 선언부 ===================
     // 2. 지도를 담을 DOM 엘리먼트를 참조합니다.
@@ -75,27 +81,57 @@ export default function KakaoMap(props) {
             })); // setCurrentLocation end
         } // if end
         // =================== 법정동 코드 가져오기 ===================
-        getLDongCodeByAxios();
+        getLDongRegnCdByAxios();
     }, []); // useEffect end
-    // =================== LDongCode Axios GET ===================
-    const getLDongCodeByAxios = async () => {
+    // =================== LDongRegnCd Axios GET ===================
+    const getLDongRegnCdByAxios = async () => {
         try {
-            const option = { withCredentials: true };
             const response = await axios.get("http://localhost:8080/ldongcode/getregn", option);
-            SetLDongCode(response.data);
+            SetLDongRegnCd(response.data);
             console.log(response.data);
         } catch (error) {
             console.log('getLDongCodeByAxios 오류 발생');
             console.log(error);
         } // try-catch end
     } // func end
+    // =================== LDongSignguCd Axios GET ===================
+    const getLDongSignguCdByAxios = async () => {
+        if (selectedRegnCd == null) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, option);
+            SetLDongSigngu(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log('getLDongSignguCdByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== useEffect - [selectedRegnCd] : 시군구 정보 가져오기 ===================
+    useEffect(() => {
+        getLDongSignguCdByAxios();
+    }, [selectedRegnCd]);
+    // =================== LDongCode Axios GET ===================
+    const getLDongCodeByAxios = async () => {
+        if (selectedLdNo == null) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/ldongcode/getbtldno?ldNo=${selectedLdNo}`, option);
+            SetSelectedGps(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log('getLDongCodeByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== useEffect - [selectedLdNo] : 시군구 좌표 가져오기 ===================
+    useEffect(() => {
+        getLDongCodeByAxios();
+    }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================
     // 5. 함수를 useCallback으로 감싸서 불필요한 재생성을 방지합니다.
     const getBoundsByAxios = useCallback(async () => {
         if (bounds.south === "0.0") return;
         try {
-            const option = { withCredentials: true };
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, option);
             setMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
         } catch (error) {
@@ -212,6 +248,16 @@ export default function KakaoMap(props) {
         clusterer.addMarkers(kakaoMarkers);
 
     }, [markers]); // 'markers' state가 변경될 때마다 실행
+    // =================== Select Markup Change ===================
+    const changeRegnCd = (e) => {
+        SetSelectedRegnCd(e.target.value);
+        console.log(e.target.value);
+    } // func end
+    const changeLdNo = (e) => {
+        SetSelectedLdNo(e.target.value);
+        console.log(e.target.value);
+    } // func end
+
 
     // =================== return ===================
     if (currentLocation.isLoading) {
@@ -234,7 +280,26 @@ export default function KakaoMap(props) {
             <h3>남쪽 : {bounds.south}</h3>
             <h3>동쪽 : {bounds.east}</h3>
             <h3>서쪽 : {bounds.west}</h3>
-            <button onClick={getBoundsByAxios}>버튼</button>
+            <select onChange={changeRegnCd}>
+                <option selected disabled> 시구 선택</option>
+                {
+                    lDongRegnCd.map((regn) => {
+                        return <option key={regn.ldongregncd} value={regn.ldongregncd}>
+                            {regn.ldongregnnm}
+                        </option>
+                    })
+                }
+            </select>
+            <select onChange={changeLdNo}>
+                <option selected disabled> 시군구 선택</option>
+                {
+                    lDongSignguCd.map((signgu) => {
+                        return <option key={signgu.ldNo} value={signgu.ldNo}>
+                            {signgu.ldongsigngunm}
+                        </option>
+                    })
+                }
+            </select>
         </>
     ); // return end
 } // func end
