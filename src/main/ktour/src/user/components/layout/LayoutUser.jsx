@@ -1,29 +1,30 @@
 /**
- * K-Tour > 사용자단 > 공통레이아웃 컴포넌트
+ * K-Tour > 사용자단(비회원) > 메인 > 공통레이아웃 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.1
+ * @version 0.1.0
  */
-import LayoutSample from "@user/components/layout/LayoutSample";        // 헤더
 
-import PageTitle from "@user/components/layout/PageTitle";  // 페이지 타이틀 
-import Footer from "@user/components/layout/Footer";        // 푸터 
-import { Outlet } from "react-router-dom";                  // 중첩된 라우트 컴포넌트를 보여주기 위한 컴포넌트, 공통 레이아웃을 유지하면서 콘텐츠 영역만 자식 페이지로 변경
-import { Suspense } from "react";                           // 코드 스플리팅(필요한 시점 비동기 로딩_Lazy Loading)
-function Loading() { return <div style={{ padding: 12 }}>로딩 중…</div>; }   // 로딩중
+import Header from "@user/components/layout/Header";              // 해더 
+import AsideLnb from "@user/components/layout/AsideLnb";          // 좌측메뉴(Lnb) 
+import PopupBanner from "@user/pages/map/PopupBanner";            // 좌측하단 팝업배너
+import RightMapPlace from "@user/pages/map/RightMapPlace";        // 중앙 지도/우측 플레이스 목록 
+import Footer from "@user/components/layout/Footer";              // 푸터 
+import LeftModalPlace from "@user/pages/map/LeftModalPlace";      // 좌측 모달 레이어(지도 마커 클릭시, 플레이스 상세정보)
+import RightModalPlace from "@user/pages/map/RightModalPlace";    // 우측 모달 레이어(우측 플레이스 목록 클릭시, 플레이스 상세정보)
+
 
 export default function LayoutUser() {
   return (
     <>
-      <LayoutSample/>
-      <PageTitle />
-      <main id="content" tabIndex={-1} role="main" aria-live="polite" class="">  
-        <Suspense fallback={<Loading />}>
-          <Outlet />
-        </Suspense>
-      </main>
+      <Header />
+      <AsideLnb />
+      <PopupBanner />
+      <RightMapPlace />
       <Footer />
+      <LeftModalPlace />
+      <RightModalPlace />
     </>
   );
 }//LayoutUser.jsx end

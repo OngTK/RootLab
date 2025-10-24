@@ -106,8 +106,8 @@ export default function KakaoMap(props) {
                     currentLocation.center
                 }
                 style={{
-                    width: '1000px',
-                    height: '600px'
+                    width: '100%',
+                    height: '100%'
                 }}
                 level={5}
                 onIdle={(map) => {
@@ -153,11 +153,11 @@ export default function KakaoMap(props) {
                     ))}
                 </MarkerClusterer>
             </Map>
-            <h3>북쪽 : {bounds.north}</h3>
+            {/* <h3>북쪽 : {bounds.north}</h3>
             <h3>남쪽 : {bounds.south}</h3>
             <h3>동쪽 : {bounds.east}</h3>
             <h3>서쪽 : {bounds.west}</h3>
-            <button onClick={getBoundsByAxios}>버튼</button>
+            <button onClick={getBoundsByAxios}>버튼</button> */}
         </>
     ) // return end
 } // func end

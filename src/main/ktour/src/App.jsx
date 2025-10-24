@@ -11,7 +11,7 @@ import "@assets/reset.css";                                         // 전역 �
 
 const UserRouter  = lazy(() => import("@user/UserRouter"));         // 사용자단 라우터
 const AdminRouter = lazy(() => import("@admin/AdminRouter"));       // 관리자단 라우터
-const KakaoMap    = lazy(() => import("./kakaomap/KakaoMap"));      // 카카오맵 API 테스트용 페이지
+const KakaoMap    = lazy(() => import("@/kakaomap/KakaoMapJS"));    // 카카오맵 API 테스트용 페이지
 const KakaoMapJS    = lazy(() => import("./kakaomap/KakaoMapJS"));      // 카카오맵 API 테스트용 페이지
 
 export default function App() {

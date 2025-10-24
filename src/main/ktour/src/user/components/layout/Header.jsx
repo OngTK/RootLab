@@ -7,38 +7,40 @@
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkedAlt, faLandmark, faMountain, faHiking, faShoppingBag, faUtensils, faBed } from "@fortawesome/free-solid-svg-icons";
-import { TextField, InputAdornment, IconButton } from "@mui/material";
-import  SearchIcon  from "@mui/icons-material/Search";
-import SelectLdong from "@user/components/common/SelectLdong";
+import {  faMagnifyingGlass  } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 
 export default function Header(props) {
 
-/** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
+    /** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
     return (
         <>
             <div className="headerWrap">
                 <header>
-                    <h1 className="logo"><Link to="/"> 인천광역시</Link> <span>놀러가자<i>!</i></span></h1>
+                    <h1 className="logo">
+                        <Link to="/">
+                            K-TOUR
+                            <span>인천광역시</span>
+                        </Link>
+                    </h1>
                 </header>
-                <div className="pageSearch">
-                    <SearchIcon sx={{ fontSize: 28, color: "primary.main" }} />
-                    <input type="text" placeholder="검색 키워드/상호명 입력" autoFocus="" id="keywordInput" />
+                <div className="placeSearch">
+                    <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+                    <input type="text" placeholder="관광지/상호명 검색" autoFocus="" />
                 </div>
-                <SelectLdong/><SelectLdong/>
-                <dl className="searchKeword">
-                    <dt><a href="#" >우리동네 <b>AI추천</b> 모임아이템</a></dt> 오늘도 난 혼자라는 사실을 잊은 태오
-                    <dd>
-                        <a href="#"><FontAwesomeIcon icon={faMapMarkedAlt} /> <span>관광</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faLandmark} /> <span>전시</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faMountain} /><span>자연</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faHiking} /> <span>레저</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faShoppingBag} /> <span>쇼핑</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faUtensils} /> <span>음식</span></a>
-                        <a href="#"><FontAwesomeIcon icon={faBed} /><span>숙박</span></a>
-                    </dd>
-                </dl>
+                <div className="promotionText">우리동네 <b>AI추천</b> 모임장소</div>
+                <div className="ldongSelect">
+                    <select>
+                        <option value="28">인천광역시</option>
+                        <option value="11">서울특별시</option>
+                        <option value="">1차지역</option>
+                    </select>
+                    <select>
+                        <option value="56">부평구</option>
+                        <option value="53">연수구</option>
+                        <option value="">2차지역</option>
+                    </select>
+                </div>
             </div>
         </>
     );

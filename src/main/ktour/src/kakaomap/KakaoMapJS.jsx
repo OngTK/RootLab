@@ -13,6 +13,7 @@ import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 const option = { withCredentials: true };
 
 export default function KakaoMap(props) {
+
     UseKakaoLoader(); // 1. kakao.maps 스크립트를 로드합니다.
 
     // =================== useState 선언부 ===================
@@ -300,8 +301,8 @@ export default function KakaoMap(props) {
             <div
                 ref={mapContainerRef}
                 style={{
-                    width: '1000px',
-                    height: '600px'
+                    width: '100%',
+                    height: '100%'
                 }}
             />
 
