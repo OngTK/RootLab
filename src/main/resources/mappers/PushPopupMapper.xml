@@ -18,16 +18,16 @@
         END AS status
         FROM pushPopup
         <where>
-            <if test="ppUse != null">
+            <if test="ppUse != null and ppUse != ''">      <!-- ✅ 빈문자열도 제외 -->
                 AND ppUse = #{ppUse}
             </if>
-            <if test="ppType != null">
+            <if test="ppType != null and ppType != ''">
                 AND ppType = #{ppType}
             </if>
-            <if test="ppTitle != null">
+            <if test="ppTitle != null and ppTitle != ''">
                 AND ppTitle LIKE CONCAT('%', #{ppTitle}, '%')
             </if>
-            <if test="status != null">
+            <if test="status != null and status != ''">
                 AND (
                 (#{status} = '1'   AND ppStart &gt;  NOW())
                 OR (#{status} = '2'   AND ppStart &lt;= NOW() AND ppEnd &gt;= NOW())
