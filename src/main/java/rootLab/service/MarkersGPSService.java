@@ -2,16 +2,24 @@ package rootLab.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.MarkersGPSDto;
 import rootLab.model.mapper.MarkersGPSMapper;
+import rootLab.model.repository.CommonRepository;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class MarkersGPSService {
+public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, PlaceInfoCriteria>{
+
     private final MarkersGPSMapper markersGPSMapper;
+
+    @Override
+    protected CommonRepository<MarkersGPSDto, Integer, PlaceInfoCriteria> repo() {
+        return markersGPSMapper;
+    }
 
     /**
      * [MG-01] 렌더링 기준 마커조회
@@ -38,4 +46,5 @@ public class MarkersGPSService {
         System.out.println("lDongCode = " + lDongCode);
         return markersGPSMapper.getMarkersGpsByCurrentLDong(lDongCode);
     } // func end
+
 } // class end

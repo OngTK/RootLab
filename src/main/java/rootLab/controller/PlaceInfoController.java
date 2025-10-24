@@ -1,23 +1,27 @@
 package rootLab.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rootLab.model.criteria.PlaceInfoCriteria;
+import rootLab.model.dto.MarkersGPSDto;
+import rootLab.model.dto.PlaceImageDetailDto;
 import rootLab.model.dto.PlaceInfoDto;
+import rootLab.service.PlaceAggregateService;
 import rootLab.service.PlaceInfoService;
 import rootLab.util.pagenation.Page;
 import rootLab.util.pagenation.PageRequest;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * PlaceInfo
  * <p>
  * 관공·축제 등 모든 장소 공통 정보
+ * @author OngTK
  */
 @RestController
 @RequestMapping("/placeinfo")
@@ -25,6 +29,8 @@ import java.util.Map;
 public class PlaceInfoController {
 
     private final PlaceInfoService placeInfoService;
+    private final PlaceAggregateService placeAggregateService;
+
 
     /**
      * [PI-01] 플레이스 검색
@@ -37,6 +43,7 @@ public class PlaceInfoController {
      * @param address       주소
      * @param title         플레이스명
      * @param pNo           플레이스 번호
+     * @author OngTK
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchPlaces(
@@ -83,7 +90,7 @@ public class PlaceInfoController {
         }
 
         return ResponseEntity.ok(result);
-    } // func end
+    } // func end todo
 
     /**
      * [PI-02] 플레이스 개별조회
@@ -97,7 +104,61 @@ public class PlaceInfoController {
 
         Map<String, Object> result = placeInfoService.getPlace(pno);
         return ResponseEntity.ok(result);
-    }
+    } // func end
+
+    /**
+     * [PI-03] 플레이스 기본정보 등록
+     * 복수 DTO(PlaceInfo, MarkersGPS, PlaceImageDetail) + 복수 파일(마커1, 대표1, 상세N)을
+     * 단일 multipart/form-data 요청으로 받아 트랜잭션으로 처리합니다.
+     * @author OngTK
+     */
+    @PostMapping(value="/basic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> savePlaceBasicInfo(
+            // JSON 파트
+            @RequestPart("placeInfo") PlaceInfoDto placeInfo,
+            @RequestPart("marker") MarkersGPSDto marker,
+            @RequestPart(value = "imagesMeta", required = false) List<PlaceImageDetailDto> imagesMeta,
+
+            // 파일 파트 (JSX 필드명 기준: markerImage / mainImage / detailImage…)
+            @RequestPart(value = "markerImage", required = false) MultipartFile markerImage,
+            @RequestPart(value = "mainImage",   required = false) MultipartFile mainImage,
+            @RequestPart(value = "detailImages", required = false) List<MultipartFile> detailImages // multiple
+    ){
+        boolean ok = placeAggregateService.savePlaceBasicInfo(
+                placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages
+        );
+        if (!ok) return ResponseEntity.status(460).body("저장 실패");
+        return ResponseEntity.ok(true);
+    } // func end todo
+
+    /**
+     * [PI-04] 플레이스 기본정보 수정
+     * @author OngTK
+     */
+    @PutMapping
+    public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto){
+        return ResponseEntity.ok(0);
+    } // func end todo
+
+    /**
+     * [PI-05] 플레이스 기본정보 삭제
+     * @author OngTK
+     */
+    @DeleteMapping
+    public ResponseEntity<?> deletePlaceBasicInfo(@RequestParam int pNo){
+        return ResponseEntity.ok(0);
+    } // func end todo
+
+
+    /**
+     * [PI-06] 플레이스 정보 일괄 저장
+     * @author OngTK
+     */
+    @PutMapping
+    public ResponseEntity<?> saveAllPlaceAndDetailInfo(){
+        return ResponseEntity.ok(0);
+    } // func end todo
+
 
 
 } // class end

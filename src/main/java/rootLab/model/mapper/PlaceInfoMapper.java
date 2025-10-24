@@ -27,6 +27,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             #{showflag}, #{firstimage}, #{firstimage2}, #{addr1}, #{addr2}, 
             #{zipcode}, #{homepage}, #{tel}, #{telname}, #{overview})
             """)
+    @Options(useGeneratedKeys = true, keyProperty = "pNo")
     int create(PlaceInfoDto placeInfoDto);
 
     /**
@@ -48,7 +49,19 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             select * from placeInfo where pno=#{pno};
             """)
     Optional<PlaceInfoDto> read(Integer pno);
-
+    
+    /**
+     * [4] 수정
+     */
+    @Update("""
+        UPDATE placeInfo
+           SET ctNo=#{ctNo}, ldNo=#{ldNo}, ccNo=#{ccNo}, isEditable=#{isEditable},
+               contentid=#{contentid}, title=#{title}, showflag=#{showflag},
+               addr1=#{addr1}, addr2=#{addr2}, zipcode=#{zipcode}, homepage=#{homepage},
+               tel=#{tel}, telname=#{telname}, overview=#{overview}
+         WHERE pNo=#{pNo}
+    """)
+    boolean update(PlaceInfoDto dto);
 
     // Page · Search ================================================================
 

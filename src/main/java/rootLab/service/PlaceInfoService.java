@@ -89,4 +89,5 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
     } // func end
 
 
+
 } // class end

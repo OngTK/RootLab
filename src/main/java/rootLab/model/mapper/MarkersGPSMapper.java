@@ -1,7 +1,6 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.MarkersGPSDto;
 import rootLab.model.repository.CommonRepository;
@@ -65,4 +64,27 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
             "WHERE klc.lDongRegnCd = #{lDongRegnCd} " +
             "AND klc.lDongSignguCd = #{lDongSignguCd}")
     List<MarkersGPSDto> getMarkersGpsByCurrentLDong(Map<String, Object> lDongCode);
+
+    /**
+     * 신규 마커정보 저장
+     */
+    @Insert("""
+        INSERT INTO markersGPS (pNo, mkURL, mapx, mapy)
+        VALUES (#{pNo}, #{mkURL}, #{mapx}, #{mapy})
+    """)
+    @Options(useGeneratedKeys = true, keyProperty = "mkNo")
+    int insert(MarkersGPSDto dto);
+
+    /**
+     * 마커정보 수정
+     */
+    @Update("""
+        UPDATE markersGPS
+           SET mkURL = #{mkURL},
+               mapx  = #{mapx},
+               mapy  = #{mapy},
+         WHERE mkNo = #{mkNo}
+    """)
+    boolean update(MarkersGPSDto dto);
+
 } // interface end

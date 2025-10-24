@@ -1,7 +1,9 @@
 package rootLab.model.mapper;
 
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import rootLab.model.criteria.PlaceInfoCriteria;
 import rootLab.model.dto.PlaceImageDetailDto;
@@ -14,6 +16,7 @@ import java.util.List;
  * [ PlaceImageDetail ]
  * <p>
  * 플레이스 상세 이미지
+ *
  * @author OngTK
  */
 @Mapper
@@ -26,4 +29,24 @@ public interface PlaceImageDetailMapper extends CommonRepository<PlaceImageDetai
             select * from placeimagedetail where pNo = #{pNo};
             """)
     List<PlaceImageDetailDto> readAllToPno(int pno);
+
+    @Select("""
+                SELECT IFNULL(MAX(CAST(serialnum AS UNSIGNED)), -1)
+                FROM placeImageDetail
+                WHERE pNo = #{pNo}
+            """)
+    int findMaxSerial(@Param("pNo") Integer pNo);
+
+    @Insert(
+            """
+                <script>
+                    INSERT INTO placeImageDetail
+                    (pNo, isEditable, serialnum, originimgurl, smallimageurl, imgname) VALUES
+                    <foreach collection='list' item='it' separator=','>
+                        (#{it.pNo}, #{it.isEditable}, #{it.serialnum}, #{it.originimgurl}, #{it.smallimageurl}, #{it.imgname} )
+                    </foreach>
+                </script>
+            """
+    )
+    int bulkInsert(@Param("list") List<PlaceImageDetailDto> list);
 } // interface end

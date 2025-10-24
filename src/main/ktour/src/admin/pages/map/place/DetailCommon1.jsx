@@ -112,13 +112,13 @@ export default function DetailCommon1(props) {
                         {/* 13. 상세 이미지 1 */}
                         <div className="form-group">
                             <label htmlFor="detail-img-1">상세 이미지 1</label>
-                            <input type="file" id="detail-img-1" name="detailImage1" multiple />
+                            <input type="file" id="detail-img-1" name="detailImages" multiple />
                             <span className="info-text" id="detail-img-hint">*멀티업로드(~최대 10개/ 이미지별 용량제한 ~2MB)</span>
                         </div>
 
                         {/* 14. 이미지 설명 1 */}
                         <div className="form-group">
-                            <label htmlFor="img-desc-1">이미지 설명 1</label>
+                            <label htmlFor="img-desc-1">이미지 설명</label>
                             <input type="text" id="img-desc-1" name="imageDesc1" />
                         </div>
 
