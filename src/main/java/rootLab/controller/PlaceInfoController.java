@@ -124,6 +124,9 @@ public class PlaceInfoController {
             @RequestPart(value = "mainImage",   required = false) MultipartFile mainImage,
             @RequestPart(value = "detailImages", required = false) List<MultipartFile> detailImages // multiple
     ){
+        System.out.println("PlaceInfoController.savePlaceBasicInfo");
+        System.out.println("placeInfo = " + placeInfo + ", marker = " + marker + ", imagesMeta = " + imagesMeta + ", markerImage = " + markerImage + ", mainImage = " + mainImage + ", detailImages = " + detailImages);
+
         boolean ok = placeAggregateService.savePlaceBasicInfo(
                 placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages
         );
@@ -135,7 +138,7 @@ public class PlaceInfoController {
      * [PI-04] 플레이스 기본정보 수정
      * @author OngTK
      */
-    @PutMapping
+    @PutMapping("/basic")
     public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto){
         return ResponseEntity.ok(0);
     } // func end todo
@@ -144,7 +147,7 @@ public class PlaceInfoController {
      * [PI-05] 플레이스 기본정보 삭제
      * @author OngTK
      */
-    @DeleteMapping
+    @DeleteMapping("/basic")
     public ResponseEntity<?> deletePlaceBasicInfo(@RequestParam int pNo){
         return ResponseEntity.ok(0);
     } // func end todo
@@ -154,7 +157,7 @@ public class PlaceInfoController {
      * [PI-06] 플레이스 정보 일괄 저장
      * @author OngTK
      */
-    @PutMapping
+    @PutMapping("/all")
     public ResponseEntity<?> saveAllPlaceAndDetailInfo(){
         return ResponseEntity.ok(0);
     } // func end todo
