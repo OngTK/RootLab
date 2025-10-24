@@ -9,11 +9,12 @@ import shopping from '../assets/contentTypeMarker/shopping.png'
 import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
-// Axios Option
-const option = { withCredentials: true };
+import { useSelector } from 'react-redux';
 
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();
+    // =================== useSelector ===================
+    const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap );
 
     // =================== useState 선언부 ===================
     const [markers, SetMarkers] = useState("");
@@ -28,10 +29,6 @@ export default function KakaoMap(props) {
         errMsg: null,
         isLoading: true
     }); // useState end
-    const [lDongRegnCd, SetLDongRegnCd] = useState([]);
-    const [selectedRegnCd, SetSelectedRegnCd] = useState("");
-    const [lDongSignguCd, SetLDongSigngu] = useState([]);
-    const [selectedLdNo, SetSelectedLdNo] = useState("");
     const [selectedGps, SetSelectedGps] = useState("");
     const [clickedMarker, SetClickedMarker] = useState("");       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
 
@@ -79,77 +76,31 @@ export default function KakaoMap(props) {
                 isLoading: false
             })); // SetCurrentLocation end
         } // if end
-        // =================== 법정동 코드 가져오기 ===================
-        getLDongRegnCdByAxios();
     }, []); // useEffect end
-    // =================== LDongRegnCd Axios GET ===================
-    const getLDongRegnCdByAxios = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/ldongcode/getregn", option);
-            SetLDongRegnCd(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('getLDongCodeByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
-    // =================== LDongSignguCd Axios GET ===================
-    const getLDongSignguCdByAxios = async () => {
-        if (selectedRegnCd == "") return;
-        try {
-            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, option);
-            SetLDongSigngu(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('getLDongSignguCdByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
-    // =================== useEffect - [selectedRegnCd] : 시군구 정보 가져오기 ===================
-    useEffect(() => {
-        getLDongSignguCdByAxios();
-    }, [selectedRegnCd]);
+
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
-        if (selectedLdNo == "") return;
+        if (selectedLdNo == null) return;
         try {
-            const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, option);
+            const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, axiosOption);
             SetSelectedGps(response.data);
-            console.log(response.data);
         } catch (error) {
             console.log('getLDongCodeByAxios 오류 발생');
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
-    useEffect(() => {
-        // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
-        if (!selectedGps || !window.kakao || !mapRef.current) return;
-        // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
-        const newCoords = new window.kakao.maps.LatLng(
-            selectedGps.mapy, // selectedGps의 mapy
-            selectedGps.mapx  // selectedGps의 mapx
-        );
-
-        // 3. mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동시킵니다.
-        mapRef.current.panTo(newCoords);
-
-    }, [selectedGps]); // 4. selectedGps 변경될 때마다 이 효과를 실행
-
-
     // =================== ldNoMarkers Axios GET ===================
     const getLdNoMarkersByAxios = async () => {
-        if (selectedLdNo == "") return;
+        if (selectedLdNo == null) return;
         try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, option);
+            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, axiosOption);
             SetMarkers(response.data);
-            console.log(response.data);
         } catch (error) {
             console.log('getLdNoMarkersByAxios 오류 발생');
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== useEffect - [selectedLdNo] : 시군구 좌표 가져오기 ===================
+    // =================== useEffect - [selectedCity] : 시군구 좌표 가져오기 ===================
     useEffect(() => {
         getLDongCodeByAxios();
         getLdNoMarkersByAxios();
@@ -160,7 +111,7 @@ export default function KakaoMap(props) {
     const getBoundsByAxios = useCallback(async () => {
         if (bounds.south === "0.0") return;
         try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, option);
+            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
             SetMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
         } catch (error) {
             console.log(error);
@@ -203,10 +154,10 @@ export default function KakaoMap(props) {
             radius: 5000,              // 반경 5KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.5,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            strokeOpacity: 0.2,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
             fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.7           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle end
 
         circle.setMap(map);
@@ -276,16 +227,6 @@ export default function KakaoMap(props) {
         clusterer.addMarkers(kakaoMarkers);
 
     }, [markers]); // 'markers' state가 변경될 때마다 실행
-    // =================== Select Markup Change ===================
-    const changeRegnCd = (e) => {
-        SetSelectedRegnCd(e.target.value);
-        console.log(e.target.value);
-    } // func end
-    const changeLdNo = (e) => {
-        SetSelectedLdNo(e.target.value);
-        console.log(e.target.value);
-    } // func end
-
 
     // =================== return ===================
     if (currentLocation.isLoading) {
@@ -302,26 +243,6 @@ export default function KakaoMap(props) {
                     height: '100vh'
                 }}
             />
-            <select onChange={changeRegnCd} value={selectedRegnCd}>
-                <option value="" disabled> 시구 선택</option>
-                {
-                    lDongRegnCd.map((regn) => {
-                        return <option key={regn.ldongregncd} value={regn.ldongregncd}>
-                            {regn.ldongregnnm}
-                        </option>
-                    })
-                }
-            </select>
-            <select onChange={changeLdNo} value={selectedLdNo}>
-                <option value="" disabled> 시군구 선택</option>
-                {
-                    lDongSignguCd.map((signgu) => {
-                        return <option key={signgu.ldNo} value={signgu.ldNo}>
-                            {signgu.ldongsigngunm}
-                        </option>
-                    })
-                }
-            </select>
         </>
     ); // return end
 } // func end

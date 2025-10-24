@@ -11,8 +11,14 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { selectedSigngu } from "../../store/mapSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
+    // =================== useSelector ===================
+    const { axiosOption } = useSelector((state) => state.relatedMap );
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
     // =================== useState 선언부 ===================
     const [lDongRegnCd, SetLDongRegnCd] = useState([]);
     const [lDongSignguCd, SetLDongSigngu] = useState([]);
@@ -26,10 +32,8 @@ export default function Header(props) {
     // =================== LDongRegnCd Axios GET ===================
     const getLDongRegnCdByAxios = async () => {
         try {
-            const option = { withCredentials: true };
-            const response = await axios.get("http://localhost:8080/ldongcode/getregn", option);
+            const response = await axios.get("http://localhost:8080/ldongcode/getregn", axiosOption);
             SetLDongRegnCd(response.data);
-            console.log(response.data);
         } catch (error) {
             console.log('getLDongCodeByAxios 오류 발생');
             console.log(error);
@@ -39,10 +43,8 @@ export default function Header(props) {
     const getLDongSignguCdByAxios = async () => {
         if (selectedRegnCd == "") return;
         try {
-            const option = { withCredentials: true };
-            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, option);
+            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, axiosOption);
             SetLDongSigngu(response.data);
-            console.log(response.data);
         } catch (error) {
             console.log('getLDongSignguCdByAxios 오류 발생');
             console.log(error);
@@ -55,11 +57,10 @@ export default function Header(props) {
     // =================== Select Markup Change ===================
     const changeRegnCd = (e) => {
         SetSelectedRegnCd(e.target.value);
-        console.log(e.target.value);
     } // func end
     const changeLdNo = (e) => {
         SetSelectedLdNo(e.target.value);
-        console.log(e.target.value);
+        dispatch(selectedSigngu(e.target.value));
     } // func end
 
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
