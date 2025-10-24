@@ -11,6 +11,9 @@ import { faList, faAngleRight, faMagnifyingGlass, faMapMarkedAlt, faThumbsUp, fa
 import "@assets/user/css/LayoutSample.css";
 import "@assets/user/css/modal.css"; // 헤더 header.css
 import "@assets/user/css/layoutSample.css";
+import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
+import KakaoMap from "@/kakaomap/KakaoMap"; // 우측 플레이스 목록 영역
+
 export default function LayoutSample(props) {
 
 
@@ -103,11 +106,7 @@ export default function LayoutSample(props) {
                     {/* <!--  카카오맵 지도 연동 시작  --> */}
 
                     {/* <!-- 카카오맵 API 연동 --> */}
-                    <div id="map"></div>
-                    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b47cc59ad7a7b09cf4b9ca38e849df19&libraries=clusterer,services"></script>
-                    <script type="module" src="/map/js/kakaoAPI.js"></script>
-                    <script type="module" src="/map/js/rightMapInfo.js"></script>
-                    <script type="module" src="/map/js/userLocationMap.js"></script>
+                    <KakaoMap/>
                     {/* <!--  카카오맵 지도 연동 끝  --> */}
                 </div>
                 {/* <!-- 03-1.우측 본문 영역 시작 --> */}
@@ -127,56 +126,11 @@ export default function LayoutSample(props) {
                         </ul>
                     </div>
                     <div className="cardListWrap" id="mapInfoBox">
+
                         {/* <!-- 추천(조합) 모임카드 시작 --> */}
-                        <dl className="ai_card">
-                            <dt className="header">
-                                <h2 className="subjectKeyword">
-                                    <strong>숙박</strong>
-                                </h2>
-                                <p className="keyword_recommand">
-                                    {/* <!-- 중복을 제거한 모든 category2 키워드를 표시 --> */}
-                                    <a href="#">호텔</a><a href="#">캠핑</a>
-                                </p>
-                            </dt>
-                            <dd className="body" id="mapInfoBody">
-                                <div className="cardList"><div className="summaryCard" onClick="detaiMapInfo()">
-                                    <div className="thumb">
-                                        <img src="http://tong.visitkorea.or.kr/cms/resource/56/2752956_image3_1.jpg" alt="코트야드 메리어트 수원" />
-                                        <span className="category"><b className="depth_2">호텔</b></span>
-                                    </div>
-                                    <ul>
-                                        <li className="subject">코트야드 메리어트 수원</li>
-                                        <li className="workTime">호텔</li>
-                                        <li className="addr">경기도 수원시 영통구 광교호수공원로 320 (하동)</li>
-                                        <li className="tel">Tel. -</li>
-                                    </ul>
-                                    <div className="btnWrap">
-                                        <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                                    </div>
-                                </div>
-                                    <div className="summaryCard" onClick="detaiMapInfo()">
-                                        <div className="thumb">
-                                            <img src="http://tong.visitkorea.or.kr/cms/resource/81/2797481_image2_1.jpg" alt="광교호수공원 가족캠핑장" />
-                                            <span className="category"><b className="depth_2">캠핑</b></span>
-                                        </div>
-                                        <ul>
-                                            <li className="subject">광교호수공원 가족캠핑장</li>
-                                            <li className="workTime">일반야영장</li>
-                                            <li className="addr">경기도 수원시 영통구 광교호수로 57 (하동)</li>
-                                            <li className="tel">Tel. -</li>
-                                        </ul>
-                                        <div className="btnWrap">
-                                            <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </dd>
-                            <dd className="footer">
-                                {/* <button className="basic" onClick="alert('준비중입니다.')"><i className="fa-solid fa-location-dot" aria-hidden="true"></i> 진행중인 모임</button>
-                                <button className="confirm" onClick="alert('준비중입니다.')"><i className="fa-solid fa-pen-to-square" aria-hidden="true"></i> 초대장 만들기</button> */}
-                            </dd>
-                        </dl>
+                        <PlaceGroups />
                         {/* <!-- 추천(조합) 모임카드 끝 --> */}
+
                     </div>
                 </div>
                 <a href="#" className="toTop"> 맨위로 </a>
