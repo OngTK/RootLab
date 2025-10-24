@@ -167,6 +167,7 @@ export default function KakaoMap(props) {
             const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             
             // 이미지 소스 선택
+            // todo .includes()를 통한 mkURL sort 필요
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
 
