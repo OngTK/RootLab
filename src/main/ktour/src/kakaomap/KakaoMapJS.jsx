@@ -11,6 +11,7 @@ import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMarker } from '../user/store/mapSlice';
+import '../assets/user/css/InfoWindow.css';
 
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();
@@ -241,7 +242,8 @@ export default function KakaoMap(props) {
         // 인포윈도우 생성
         if (!infoWindowRef.current){
             infoWindowRef.current = new kakao.maps.InfoWindow({
-                removable: true
+                removable: true,
+                zIndex: 10
             });
         };
         const infowindow = infoWindowRef.current;
@@ -261,15 +263,22 @@ export default function KakaoMap(props) {
             const kakaoMarker = new kakao.maps.Marker({
                 position: position,
                 image: markerImage,
-                title: '나중에 변경' // 실제 데이터로 변경
+                zIndex: 4
             });
             // 마커 클릭 이벤트 생성
             kakao.maps.event.addListener(kakaoMarker, 'click', () => {
                 SetSelectedGps(marker);
-                dispatch(selectMarker(marker.pno));
+                dispatch(selectMarker(marker.pNo));
                 // 인포윈도우 내용 설정
-                console.log(marker)
-                const iwContent = `<div style="padding:5px; min-width:150px; text-align:center;">장소 정보 커스텀 필요</div>`;
+                console.log(marker);
+                const html = `<div class="iw-container">
+                                <p class="iw-header">
+                                    <span class="iw-title">${marker.title || '장소 정보'}</span>
+                                    <span class="iw-category">${marker.contenttypename || '카테고리'}</span>
+                                </p>
+                                <span class="iw-address">${marker.addr1 || '주소 정보 없음'}</span>
+                              </div>`
+                const iwContent = html;
                 infowindow.setContent(iwContent);
                 infowindow.open(map, kakaoMarker);
             }) // addListener end
