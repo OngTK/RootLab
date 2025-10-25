@@ -29,8 +29,7 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
      * @return 해당 범위에 있는 마커 리스트
      * @author AhnJH
      */
-    public List<MarkersGPSDto> getMarkersGpsByCurrentLatLng(Map<String, Object> coordinates){
-        System.out.println("coordinates = " + coordinates);
+    public List<Map<String, Object>> getMarkersGpsByCurrentLatLng(Map<String, Object> coordinates){
         return markersGPSMapper.getMarkersGpsByCurrentLatLng(coordinates);
     } // func end
 
