@@ -200,13 +200,13 @@ export default function KakaoMap(props) {
         // 지도에 원 표시 로직
         let circle = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 5000,              // 반경 5KM 표시
+            radius: 2000,              // 반경 2KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.5,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
             fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.7           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle end
 
         circle.setMap(map);
@@ -254,7 +254,7 @@ export default function KakaoMap(props) {
         // 새 마커 데이터가 없으면 여기서 종료
         if (!markers || markers.length === 0) return;
 
-        const imageSize = new kakao.maps.Size(80, 80);
+        const imageSize = new kakao.maps.Size(33, 50); 
 
         // 13. JS SDK용 카카오 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {
