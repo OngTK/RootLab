@@ -270,7 +270,6 @@ export default function KakaoMap(props) {
                 SetSelectedGps(marker);
                 dispatch(selectMarker(marker.pNo));
                 // 인포윈도우 내용 설정
-                console.log(marker);
                 const html = `<div class="iw-container">
                                 <p class="iw-header">
                                     <span class="iw-title">${marker.title || '장소 정보'}</span>
