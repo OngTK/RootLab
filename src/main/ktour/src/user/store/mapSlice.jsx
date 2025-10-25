@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // 1. 초기값 설정
 const initialState = {
-    selectedLdNo: null,
-    selectedMarker: null,
+    selectedLdNo: null,         // 선택한 법정동코드
+    selectedMarker: null,       // 클릭한 마커
     axiosOption: { withCredentials: true }
 };
 

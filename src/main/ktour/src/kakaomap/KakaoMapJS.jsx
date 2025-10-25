@@ -13,51 +13,51 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectMarker } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
+const markerImages = {      // 마커 이미지를 미리 정의
+    'food.png': food,
+    'cultural_facilities.png': cultural_facilities,
+    'festival.png': festival,
+    'leports.png': leports,
+    'shopping.png': shopping,
+    'stay.png': stay,
+    'tourSpot.png': tourSpot,
+    'travelCourse.png': travelCourse,
+};
+
 export default function KakaoMap(props) {
-    const isScriptLoaded = UseKakaoLoader();
+    const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
     const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
-    const [markers, SetMarkers] = useState("");
-    const [bounds, SetBounds] = useState({
+    const [markers, SetMarkers] = useState("");     // API로부터 받은 마커 배열
+    const [bounds, SetBounds] = useState({          // 현재 지도의 동서남북 좌표
         south: "0.0",
         west: "0.0",
         north: "0.0",
         east: "0.0"
     }); // useState end
-    const [currentLocation, SetCurrentLocation] = useState({
-        center: { lat: 37.489457, lng: 126.724494 },
+    const [currentLocation, SetCurrentLocation] = useState({    // 현재 위치 정보
+        center: { lat: 37.489457, lng: 126.724494 },            // 초기 임의값
         errMsg: null,
         isLoading: true
     }); // useState end
-    const [selectedGps, SetSelectedGps] = useState("");
+    const [selectedGps, SetSelectedGps] = useState("");         // 사용자가 선택한 GPS 정보
 
     // =================== useRef 선언부 ===================
-    const mapContainerRef = useRef(null);
-    const mapRef = useRef(null);
-    const clustererRef = useRef(null);
-    const isUserMoveRef = useRef(false);
-    const infoWindowRef = useRef(null);
-
-    // 4. 마커 이미지 소스를 객체로 미리 정의합니다.
-    const markerImages = {
-        'food.png': food,
-        'cultural_facilities.png': cultural_facilities,
-        'festival.png': festival,
-        'leports.png': leports,
-        'shopping.png': shopping,
-        'stay.png': stay,
-        'tourSpot.png': tourSpot,
-        'travelCourse.png': travelCourse,
-    };
+    const mapContainerRef = useRef(null);   // 렌더링할 지도 div
+    const mapRef = useRef(null);            // 생성된 카카오지도 객체
+    const clustererRef = useRef(null);      // 생성된 클러스터러 객체
+    const isUserMoveRef = useRef(false);    // 사용자의 클릭에 의해 이용했는지, true : 사용자가 클릭 | false : 드래그 또는 줌
+    const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
+    const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
 
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
         // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((location) => {
+            navigator.geolocation.getCurrentPosition((location) => {    // 현재 위치를 가져오는데 성공했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
                     center: {
@@ -66,14 +66,14 @@ export default function KakaoMap(props) {
                     },
                     isLoading: false
                 }));
-            }, (error) => {
+            }, (error) => {     // 현재 위치를 가져오는데 실패했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
                     errMsg: error.message,
                     isLoading: false
                 }));
             });
-        } else {
+        } else {                // Geolocation을 사용할 수 없을 때
             SetCurrentLocation((prev) => ({
                 ...prev,
                 errMsg: "geolocation을 사용할 수 없는 상태입니다.",
@@ -84,19 +84,19 @@ export default function KakaoMap(props) {
 
     // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
     useEffect(() => {
-        // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
+        // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
         if (!selectedGps || !window.kakao || !mapRef.current) return;
-        // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
+        // 카카오 지도용 좌표 객체를 생성
         const newCoords = new window.kakao.maps.LatLng(
             selectedGps.mapy, // selectedGps의 mapy
             selectedGps.mapx  // selectedGps의 mapx
         );
-        // 3. 'idle' eventListener가 작동하지 않게 true로 변경
+        // 'idle' eventListener가 작동하지 않게 true로 변경
         isUserMoveRef.current = true;
 
-        // 4. mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동시킵니다.
+        // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
         mapRef.current.panTo(newCoords);
-    }, [selectedGps]); // 4. selectedGps 변경될 때마다 이 효과를 실행
+    }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
 
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
@@ -127,46 +127,68 @@ export default function KakaoMap(props) {
     }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================
-    // 5. 함수를 useCallback으로 감싸서 불필요한 재생성을 방지합니다.
-    const getBoundsByAxios = useCallback(async () => {
+    const getBoundsByAxios = async () => {
         if (bounds.south === "0.0") return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
-            SetMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
+            SetMarkers(response.data);
         } catch (error) {
             console.log(error);
         } // try-catch end
-    }, [bounds]); // bounds가 변경될 때만 함수를 새로 생성합니다.
+    }; // func end
 
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
-    }, [bounds, getBoundsByAxios]);
+    }, [bounds]);
 
     // =================== useEffect - [currentLocation] : 지도 초기화 ===================
-    // 6. <Map> 컴포넌트의 onCreate, onIdle 프롭을 대체합니다.
     useEffect(() => {
         // 현재 위치 로딩이 끝났고, mapContainerRef가 준비되었고, kakao 스크립트가 로드되었는지 확인
         if (currentLocation.isLoading || !mapContainerRef.current || !isScriptLoaded || !window.kakao) return;
 
-        const { kakao } = window;
-        const mapContainer = mapContainerRef.current;
+        const { kakao } = window;   // window에서 kakao 객체 가져오기
+        const mapContainer = mapContainerRef.current;   // 지도를 표시할 DOM
         const mapOption = {
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
             level: 5
         };
 
-        // 7. 지도 인스턴스 생성
+        // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
-        mapRef.current = map;
+        mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
 
-        // 8. 클러스터러 인스턴스 생성
+        // 클러스터러 인스턴스 생성
         const clusterer = new kakao.maps.MarkerClusterer({
-            map: map,
-            averageCenter: true,
-            minLevel: 4
+            map: map,               // 클러스터러를 찍을 지도
+            averageCenter: true,    // 평균 위치 적용 여부
+            minLevel: 4             // 적용할 최소 지도 레벨
         }); // clusterer end
         clustererRef.current = clusterer;
+
+        // 인포윈도우 생성
+        if (!infoWindowRef.current){
+            infoWindowRef.current = new kakao.maps.InfoWindow({
+                removable: true,
+                zIndex: 10
+            });
+        };
+        // 지도 클릭 시, 인포윈도우 + 좌측 모달 종료
+        kakao.maps.event.addListener(map, 'click', () => {
+            if (infoWindowRef.current){
+                infoWindowRef.current.close();
+                dispatch(selectMarker(null));
+                
+            } // if end
+        }) // addListener end
+        // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
+        kakao.maps.event.addListener(map, 'dragstart', () => {
+            if (infoWindowRef.current){
+                infoWindowRef.current.close();
+                dispatch(selectMarker(null));
+            } // if end
+        }) // addListener end
+
 
         // 지도에 원 표시 로직
         let circle1 = new kakao.maps.Circle({
@@ -180,7 +202,7 @@ export default function KakaoMap(props) {
             fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle1 end
         circle1.setMap(map);
-        // 현재 위치 표시 원
+        // 지도에 현재 위치 표시 로직
         let circle2 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
             radius: 50,                  // 반경 5KM 표시
@@ -193,27 +215,32 @@ export default function KakaoMap(props) {
         }); // circle2 end
         circle2.setMap(map);
 
-        // 9. 'idle' 이벤트 리스너 등록
+        // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
             // 만약에 panTo로 이동했으면, idle 실행 X
-            if (isUserMoveRef.current){
+            if (isUserMoveRef.current) {
                 isUserMoveRef.current = false;
                 return;
             } // if end
-            const mapBounds = map.getBounds();
-            const sw = mapBounds.getSouthWest();
-            const ne = mapBounds.getNorthEast();
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            } // if end
 
-            // SetBounds를 호출하여 [bounds] effect를 트리거 -> getBoundsByAxios 호출
-            SetBounds({
-                south: sw.getLat(),
-                west: sw.getLng(),
-                north: ne.getLat(),
-                east: ne.getLng()
-            }); // SetBounds end
+            timeoutRef.current = setTimeout(() => {
+                const mapBounds = map.getBounds();
+                const sw = mapBounds.getSouthWest();
+                const ne = mapBounds.getNorthEast();
+
+                SetBounds({
+                    south: sw.getLat(),
+                    west: sw.getLng(),
+                    north: ne.getLat(),
+                    east: ne.getLng()
+                }); // SetBounds end
+            }, 300);
         }); // addListener end
 
-        // 10. (중요) 지도 생성 직후 'idle' 이벤트를 강제로 한번 실행(하거나 bounds를 직접 설정)
+        // 지도 생성 직후 bounds를 직접 설정
         const initialBounds = map.getBounds();
         const sw = initialBounds.getSouthWest();
         const ne = initialBounds.getNorthEast();
@@ -226,7 +253,6 @@ export default function KakaoMap(props) {
     }, [currentLocation.isLoading, currentLocation.center, isScriptLoaded]); // Geolocation 완료 시 1회 실행
 
     // =================== useEffect - [markers] : 마커 업데이트 ===================
-    // 11. <MarkerClusterer> 내부의 map() 렌더링 로직을 대체합니다.
     useEffect(() => {
         const map = mapRef.current;
         // 클러스터러 인스턴스나 kakao 객체, map 객체가 없으면 실행 중지
@@ -234,29 +260,21 @@ export default function KakaoMap(props) {
 
         const { kakao } = window;
         const clusterer = clustererRef.current;
-        clusterer.clear();          // 12. 기존 마커 모두 제거
+        clusterer.clear();          // 기존 마커 모두 제거
 
         // 새 마커 데이터가 없으면 여기서 종료
         if (!markers || markers.length === 0) return;
 
-        // 인포윈도우 생성
-        if (!infoWindowRef.current){
-            infoWindowRef.current = new kakao.maps.InfoWindow({
-                removable: true,
-                zIndex: 10
-            });
-        };
         const infowindow = infoWindowRef.current;
-
+        if (!infowindow) return;
 
         const imageSize = new kakao.maps.Size(80, 80);
 
-        // 13. JS SDK용 카카오 마커 객체 배열 생성
+        // 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {
             const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
 
             // 이미지 소스 선택
-            // todo .includes()를 통한 mkURL sort 필요
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
@@ -285,7 +303,7 @@ export default function KakaoMap(props) {
             return kakaoMarker;
         }); // map end
 
-        // 14. 클러스터러에 새 마커 추가
+        // 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
 
     }, [markers]); // 'markers' state가 변경될 때마다 실행
@@ -297,7 +315,6 @@ export default function KakaoMap(props) {
 
     return (
         <>
-            {/* 15. 지도가 렌더링될 실제 DOM 요소 */}
             <div
                 ref={mapContainerRef}
                 style={{

@@ -81,7 +81,6 @@ export default function LeftModalPlace(props) {
         if (!props.pNo) return;
         try {
             const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${props.pNo}`, axiosOption);
-            console.log(response.data);
             SetPlaceInfo(response.data);
         } catch (error) {
             console.log('getplaceInfoByAxios 오류 발생');
