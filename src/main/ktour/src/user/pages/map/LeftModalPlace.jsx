@@ -7,21 +7,23 @@
  */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { selectMarker } from "../../store/mapSlice";
 
 export default function LeftModalPlace(props) {
     // =================== useSelector ===================
     const { axiosOption } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [placeInfo, SetPlaceInfo] = useState(null);
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
 
     const getplaceInfoByAxios = async () => {
         if (!props.pNo) return;
         try {
             const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${props.pNo}`, axiosOption);
-            console.log(response.data);
             SetPlaceInfo(response.data);
         } catch (error) {
             console.log('getplaceInfoByAxios 오류 발생');
@@ -33,6 +35,10 @@ export default function LeftModalPlace(props) {
         getplaceInfoByAxios();
     }, [props.pNo])
 
+    const handleCloseModal = () => {
+        dispatch(selectMarker(null));
+    } // func end
+
     // axios 처리가 안 됐으면, 종료
     if (!placeInfo) return;
     /** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
@@ -42,7 +48,7 @@ export default function LeftModalPlace(props) {
                 {/* 모달 박스 시작 */}
                 <div className="modal_box">
                     {/* 콘텐츠 내용 시작 */}
-                    <button className="modalClose"><FontAwesomeIcon icon={faXmark} /></button>
+                    <button className="modalClose" onClick={handleCloseModal} ><FontAwesomeIcon icon={faXmark} /></button>
 
                     <div className="modal_img_box">
                         <img
@@ -93,7 +99,7 @@ export default function LeftModalPlace(props) {
                             <li>
                                 <b>홈페이지</b>
                                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
+                                    //tour.daegu.go.kr
                                 </a>
                             </li>
                             <li>

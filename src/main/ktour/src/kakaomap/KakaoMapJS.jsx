@@ -38,6 +38,7 @@ export default function KakaoMap(props) {
     const mapRef = useRef(null);
     const clustererRef = useRef(null);
     const isUserMoveRef = useRef(false);
+    const infoWindowRef = useRef(null);
 
     // 4. 마커 이미지 소스를 객체로 미리 정의합니다.
     const markerImages = {
@@ -226,17 +227,25 @@ export default function KakaoMap(props) {
     // =================== useEffect - [markers] : 마커 업데이트 ===================
     // 11. <MarkerClusterer> 내부의 map() 렌더링 로직을 대체합니다.
     useEffect(() => {
-        // 클러스터러 인스턴스나 kakao 객체가 없으면 실행 중지
-        if (!clustererRef.current || !window.kakao) return;
+        const map = mapRef.current;
+        // 클러스터러 인스턴스나 kakao 객체, map 객체가 없으면 실행 중지
+        if (!clustererRef.current || !window.kakao || !map) return;
 
         const { kakao } = window;
         const clusterer = clustererRef.current;
-
-        // 12. 기존 마커 모두 제거
-        clusterer.clear();
+        clusterer.clear();          // 12. 기존 마커 모두 제거
 
         // 새 마커 데이터가 없으면 여기서 종료
         if (!markers || markers.length === 0) return;
+
+        // 인포윈도우 생성
+        if (!infoWindowRef.current){
+            infoWindowRef.current = new kakao.maps.InfoWindow({
+                removable: true
+            });
+        };
+        const infowindow = infoWindowRef.current;
+
 
         const imageSize = new kakao.maps.Size(80, 80);
 
@@ -258,6 +267,11 @@ export default function KakaoMap(props) {
             kakao.maps.event.addListener(kakaoMarker, 'click', () => {
                 SetSelectedGps(marker);
                 dispatch(selectMarker(marker.pno));
+                // 인포윈도우 내용 설정
+                console.log(marker)
+                const iwContent = `<div style="padding:5px; min-width:150px; text-align:center;">장소 정보 커스텀 필요</div>`;
+                infowindow.setContent(iwContent);
+                infowindow.open(map, kakaoMarker);
             }) // addListener end
 
             return kakaoMarker;
