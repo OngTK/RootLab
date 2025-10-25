@@ -7,7 +7,7 @@
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faThumbsUp, faMasksTheater,faStreetView, faCircleChevronRight, faDog  } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faThumbsUp, faMusic, faMasksTheater,faStreetView, faCircleChevronRight, faDog  } from "@fortawesome/free-solid-svg-icons";
 
 import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 
@@ -20,8 +20,8 @@ export default function AsideLnb(props) {
                 <ul>
                     <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
                     <li><FontAwesomeIcon icon={faThumbsUp} />추천지역장소</li>
-                    <li><FontAwesomeIcon icon={faMasksTheater} />축제/행사/공연</li>
-                    <li><FontAwesomeIcon icon={faDog} />반려동물</li>
+                    <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
+                    <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>
                 </ul>
             </div>
             {/* <!-- 02-1. 좌측 고정 업종별 아이콘 메뉴 끝 --> */}
