@@ -1,11 +1,10 @@
 /* CSS reset */
 *{ margin: 0; padding: 0; box-sizing: border-box; /*font-family: "Malgun Gothic", "맑은 고딕", Sans-serif, Roboto, Arial;*/  }
-
+body{ background: rgba(0,0,0,.06); }
 body::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
 body::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
 body::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.2);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
 body::-webkit-scrollbar-track{background-color:rgba(255,255,255,.7);}/*스크롤바 진행줄*/
-body::-webkit-scrollbar-track-piece{}/*진행줄에서 핸들로 덮이지 않은 영역 */
 body::-webkit-scrollbar-corner {background:rgba(0,0,0,.08);}/*상하 좌우 스크롤이 만나는 공간*/
 
 .loding{ opacity: .4; }

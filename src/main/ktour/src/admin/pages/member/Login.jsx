@@ -5,7 +5,7 @@
  * @since 2025.10.16
  * @version 0.1.1
  */
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";              
 import "@assets/admin/css/login.css"; // login.css
 export default function Login(props) {
 
@@ -21,7 +21,7 @@ export default function Login(props) {
     };//loginAdmin end
 
 
-    /** ======================================== Login.jsx 영역 ==============================================  */
+/** ======================================== Login.jsx 영역 ==============================================  */
     return <>
         {/* <!-- login > header start --> */}
         <div className="loginWrap">
