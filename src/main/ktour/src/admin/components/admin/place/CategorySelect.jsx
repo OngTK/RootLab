@@ -60,14 +60,17 @@ export default function CategorySelect({ value, onChange }) {
     console.log(e.target.value)
     const v = e.target.value;
     setL1(v); setL2(""); setL3(""); setCcNo(null);
-    onChange?.({ ccNo: null, l1Cd: v || null, l2Cd: null, l3Cd: null });
+    const l1Nm = v ? l1Map.get(v)?.name : null;
+    onChange?.({ ccNo: null, l1Cd: v || null, l2Cd: null, l3Cd: null, l1Nm, l2Nm: null, l3Nm: null });
   };
 
   const onChangeL2 = (e) => {
     console.log(e.target.value)
     const v = e.target.value;
     setL2(v); setL3(""); setCcNo(null);
-    onChange?.({ ccNo: null, l1Cd: l1 || null, l2Cd: v || null, l3Cd: null });
+    const l1Nm = l1 ? l1Map.get(l1)?.name : null;
+    const l2Nm = v ? l1Map.get(l1)?.children.get(v)?.name : null;
+    onChange?.({ ccNo: null, l1Cd: l1 || null, l2Cd: v || null, l3Cd: null, l1Nm, l2Nm, l3Nm: null });
   };
   const onChangeL3 = (e) => {
     console.log(e.target.value)
@@ -76,7 +79,10 @@ export default function CategorySelect({ value, onChange }) {
     const found = l3Options.find(x => x.code === v);
     const nextCcNo = found?.ccNo ?? null;
     setCcNo(nextCcNo);
-    onChange?.({ ccNo: nextCcNo, l1Cd: l1 || null, l2Cd: l2 || null, l3Cd: v || null });
+    const l1Nm = l1 ? l1Map.get(l1)?.name : null;
+    const l2Nm = l2 ? l1Map.get(l1)?.children.get(l2)?.name : null;
+    const l3Nm = v ? found?.name : null;
+    onChange?.({ ccNo: nextCcNo, l1Cd: l1 || null, l2Cd: l2 || null, l3Cd: v || null, l1Nm, l2Nm, l3Nm });
   };
 
   return (

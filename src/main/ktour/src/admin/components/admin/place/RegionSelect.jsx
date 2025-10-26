@@ -66,7 +66,17 @@ export default function RegionSelect({ value, onChange }) {
         setRegnCd(v);
         setSignguCd("");
         setLdNo(null);
-        onChange?.({ ldNo: null, regnCd: v || null, signguCd: null });
+        const regnNm = v
+            ? regnOptions.find(opt => opt.code === v)?.name
+            : null;
+        // 이름까지 함께 전달
+        onChange?.({
+            ldNo: null,
+            regnCd: v || null,
+            regnNm: regnNm || null,
+            signguCd: null,
+            signguNm: null
+        });
     };
 
     const onChangeSigngu = (e) => {
@@ -74,14 +84,23 @@ export default function RegionSelect({ value, onChange }) {
         const v = e.target.value;
         setSignguCd(v);
 
-        const found = rows.find(r =>
-            (r.lDongRegnCd ?? r.ldongRegnCd) === regnCd &&
-            (r.lDongSignguCd ?? r.ldongSignguCd) === v
+        const found = rows.find(
+            r => (r.lDongRegnCd ?? r.ldongRegnCd) === regnCd &&
+                (r.lDongSignguCd ?? r.ldongSignguCd) === v
         );
         const nextLdNo = found?.ldNo ?? found?.ldno ?? null;
+        const regnNm = found?.lDongRegnNm ?? found?.ldongRegnNm ?? null;
+        const signguNm = found?.lDongSignguNm ?? found?.ldongSignguNm ?? null;
 
         setLdNo(nextLdNo);
-        onChange?.({ ldNo: nextLdNo, regnCd: regnCd || null, signguCd: v || null });
+        // 이름까지 함께 전달
+        onChange?.({
+            ldNo: nextLdNo,
+            regnCd: regnCd || null,
+            regnNm: regnNm || null,
+            signguCd: v || null,
+            signguNm: signguNm || null
+        });
     };
 
     return (

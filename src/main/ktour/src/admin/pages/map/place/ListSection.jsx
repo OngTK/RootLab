@@ -10,21 +10,32 @@ import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import RegionSelect from "../../../components/admin/place/RegionSelect";
 import { useState } from "react";
+import axios from "axios";
 
 export default function ListSection(props) {
 
-    const [category, setCategory] = useState({ ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null });
-    const [region, setRegion] = useState({ ldNo: null, regnCd: null, signguCd: null });
+    const [category, setCategory] = useState({ ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null, l1Nm: null, l2Nm: null, l3Nm: null });
+    const [region, setRegion] = useState({ ldNo: null, regnCd: null, signguCd: null, regnNm: null, signguNm: null });
+    const [ctNo, setCtNo] = useState("");      // 콘텐츠 타입 value
+    const [showVal, setShowVal] = useState("");      // "전체|1|0" → 1:true, 0:false
+    const [title, setTitle] = useState("");      // 플레이스명
+    const [phone, setPhone] = useState("");      // 대표전화(선택)
+    const [pNo, setPNo] = useState("");      // 플레이스 번호
+    const [addressInput, setAddressInput] = useState(""); // 주소명(직접 입력란)
+    const [rows, setRows] = useState([]);      // 검색 결과 테이블 데이터
+    const [size, setSize] = useState(10); // 기본 10
+    const [page, setPage] = useState(1);  // 기본 1 (페이지네이션 붙일 때 업데이트)
 
-    const columns = [
-        { id: "no", title: "No", width: 70 },
-        { id: "pid", title: "플레이스번호", width: 110 },
-        { id: "name", title: "플레이스명", width: 220 },
-        { id: "ctype", title: "콘텐츠타입", width: 120 },
-        { id: "cat", title: "카테고리", width: 140 },
-        { id: "addr", title: "주소", width: 260 },
-        { id: "tel", title: "전화번호", width: 120 },
-    ];
+    const onRegionChange = (v) => {
+        setRegion(v);
+    };
+
+    const ccName = category.l3Cd || category.l2Cd || category.l1Cd || null;
+    const addrFromSelect = [region.regnNm, region.signguNm].filter(Boolean).join(" ");
+    const address = addressInput?.trim() || null;
+    const ldName = region.regnNm && region.signguNm
+        ? `${region.regnNm} ${region.signguNm}` // 1차+2차
+        : region.regnNm || null;                // 1차만 선택 시
 
     const data = [
         { no: 50, pid: 901250, name: "고성 해돋이 축제", ctype: "행사/공연/축제", cat: "문화관광축제", addr: "강원 고성군 아야진해변 일원", tel: "033-681-1001" },
@@ -79,6 +90,63 @@ export default function ListSection(props) {
         { no: 1, pid: 901201, name: "삼포 불꽃쇼", ctype: "공연", cat: "야간행사", addr: "강원 고성군 삼포해변길 9", tel: "033-681-1050" },
     ];
 
+    // 검색 실행 핸들러 
+
+    const onSearch = async (e) => {
+        e?.preventDefault?.();
+        const params = {
+            title: title || null,
+            address: address || null,     // 1차+" "+2차 텍스트 or 직접입력 텍스트
+            ccName: ccName || null,       // "대/중/소" 중 선택된 부분만 join
+            ldName: ldName || null,
+            ctNo: ctNo ? Number(ctNo) : null,
+            showflage: showVal === "1" ? true : (showVal === "0" ? false : null),
+            pNo: pNo ? Number(pNo) : null,
+            tel: phone || null,           // 필요하면 백에서 사용
+            size,
+            page
+        };
+        console.log(params)
+        // null은 보내지 않도록 정리
+        Object.keys(params).forEach(k => params[k] == null && delete params[k]);
+        const { data } = await axios.get("http://localhost:8080/placeinfo/search", { params });
+        // 백 응답 스키마에 맞춰 테이블 row로 변환
+        // 예시: { placeNo, placeName, contentTypeName, categoryName, ... }
+        const mapped = Array.isArray(data) ? data.map((r, i) => ({
+            no: i + 1,
+            placeNo: r.placeNo ?? r.pNo ?? "",
+            placeName: r.placeName ?? r.title ?? "",
+            contentType: r.contentTypeName ?? r.ctName ?? "",
+            category: r.categoryName ?? r.ccName ?? "",
+            // 필요한 컬럼 더 추가
+        })) : [];
+        setRows(mapped);
+    };
+
+    // 초기화 핸들러
+    const onReset = () => {
+        setCategory({ ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null, l1Nm: null, l2Nm: null, l3Nm: null });
+        setRegion({ ldNo: null, regnCd: null, signguCd: null, regnNm: null, signguNm: null });
+        setCtNo("");
+        setShowVal("");
+        setTitle("");
+        setPhone("");
+        setPNo("");
+        setAddressInput("");
+        setRows([]);
+        setPage(1);
+    };
+
+    // 테이블 컬럼 정의
+    const columns = [
+        { id: "no", title: "No", width: 70 },
+        { id: "pid", title: "플레이스번호", width: 110 },
+        { id: "name", title: "플레이스명", width: 220 },
+        { id: "ctype", title: "콘텐츠타입", width: 120 },
+        { id: "cat", title: "카테고리", width: 140 },
+        { id: "addr", title: "주소", width: 260 },
+        { id: "tel", title: "전화번호", width: 120 },
+    ];
 
     /** ============================ [본문 좌측] 플레이스 목록(PlaceList) ================================= */
     return (
@@ -87,13 +155,13 @@ export default function ListSection(props) {
             <section className="listWrap">
                 {/* <!-- 조건검색창 시작 --> */}
                 <div className="detailSearch">
-                    <form aria-label="플레이스 조건 검색" onSubmit={(e)=>{ e.preventDefault(); /* category를 포함해 검색 */ }}>
+                    <form aria-label="플레이스 조건 검색" onSubmit={(e) => { e.preventDefault(); /* category를 포함해 검색 */ }}>
                         <span>
                             {/* 1. 콘텐츠 타입 (단일 Select) */}
                             <span className="form-group">
                                 {/* for-id 명시적 연결 */}
                                 <label htmlFor="content-type">콘텐츠 타입</label>
-                                <select id="content-type" name="contentType">
+                                <select id="content-type" name="contentType" value={ctNo} onChange={(e) => setCtNo(e.target.value)}>
                                     <option value="">전체</option>
                                     <option value="1">관광지</option>
                                     <option value="2">문화시설</option>
@@ -108,7 +176,7 @@ export default function ListSection(props) {
                             {/* 2. 노출 여부 (단일 Select) */}
                             <span className="form-group">
                                 <label htmlFor="exposure-status">노출 여부</label>
-                                <select id="exposure-status" name="exposureStatus">
+                                <select id="exposure-status" name="exposureStatus" value={showVal} onChange={(e) => setShowVal(e.target.value)}>
                                     <option value="">전체</option>
                                     <option value="1">노출</option>
                                     <option value="0">비노출</option>
@@ -151,33 +219,33 @@ export default function ListSection(props) {
                                     <option value="dongjak">동작구</option>
                                 </select>
                             </span>` */}
-                            <RegionSelect value={region} onChange={setRegion} />
+                            <RegionSelect value={region} onChange={onRegionChange} />
                         </span>
                         {/* 6. 대표전화 */}
                         <span className="form-group">
                             <label htmlFor="main-phone">대표전화</label>
-                            <input type="text" id="main-phone" name="mainPhone" />
+                            <input type="text" id="main-phone" name="mainPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
                         </span>
                         {/* 7. 주소명 */}
                         <span className="form-group">
                             <label htmlFor="address-keyword">주소명</label>
-                            <input type="text" id="address-keyword" name="addressKeyword" />
+                            <input type="text" id="address-keyword" name="addressKeyword" value={addressInput} onChange={(e) => setAddressInput(e.target.value)} />
                         </span>
                         <br />
                         {/* 8. 플레이스명 */}
                         <span className="form-group">
                             <label htmlFor="place-name">플레이스명</label>
-                            <input type="text" id="place-name" name="placeName" />
+                            <input type="text" id="place-name" name="placeName" value={title} onChange={(e) => setTitle(e.target.value)} />
                         </span>
                         {/* 9. 플레이스번호 */}
                         <span className="form-group">
                             <label htmlFor="place-number">플레이스 번호</label>
-                            <input type="text" id="place-number" name="placeNumber" />
+                            <input type="number" id="place-number" name="placeNumber" value={pNo} onChange={(e) => setPNo(e.target.value)} />
                         </span>
                         {/* 10. 검색 버튼*/}
                         <span className="form-actions">
-                            <button type="button" className="searchBtn">검색</button>
-                            <button type="button" className="btn line">초기화</button>
+                            <button type="button" className="searchBtn" onClick={onSearch}>검색</button>
+                            <button type="button" className="btn line" onClick={onReset}>초기화</button>
                         </span>
                     </form>
                 </div>
@@ -187,10 +255,14 @@ export default function ListSection(props) {
                 <ul className="titleBox">
                     <li className="result">검색결과 : @@개</li>
                     <li className="btnBox">
-                        <select className="baseDateInput">
-                            <option value="10">10개 보기</option>
-                            <option value="30">30개 보기</option>
-                            <option value="50">50개 보기</option>
+                        <select
+                            className="baseDateInput"
+                            value={size}
+                            onChange={(e) => { setSize(Number(e.target.value)); setPage(1); }}  // 페이지도 1로 리셋 
+                        >
+                            <option value={10}>10개 보기</option>
+                            <option value={30}>30개 보기</option>
+                            <option value={50}>50개 보기</option>
                         </select>
                         <button type="button" className="btn line">엑셀 다운로드</button>
                     </li>
