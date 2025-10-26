@@ -1,5 +1,6 @@
 package rootLab.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
 import rootLab.model.repository.CommonRepository;
 import rootLab.util.pagenation.Page;
@@ -18,6 +19,7 @@ import java.util.Optional;
  *
  * @author OngTK
  */
+@Log4j2
 public abstract class AbstractService<T, ID, C extends BaseCriteria>
         implements CommonRepository<T, ID, C> {
 

@@ -55,7 +55,7 @@ public class PlaceInfoController {
             @RequestParam(required = false) String ldName,
 
             @RequestParam(required = false) Integer ctNo,     // int -> Integer
-            @RequestParam(required = false) Boolean showflag, // boolean -> Boolean
+            @RequestParam(defaultValue = "true") boolean showflag, // boolean -> Boolean
             @RequestParam(required = false) Integer pNo       // int -> Integer
     ) {
         System.out.println("page = " + page + ", size = " + size + ", ctNo = " + ctNo + ", showflag = " + showflag + ", ccName = " + ccName + ", ldName = " + ldName + ", address = " + address + ", title = " + title + ", pNo = " + pNo);
@@ -75,17 +75,19 @@ public class PlaceInfoController {
                 .title(title).pNo(pNo).build();
 
         // 검색조건으 모두 null이면 false / 하나라도 존재하면 true
-        boolean filter = (!showflag) &&
-                (ccName == null || ccName.isEmpty()) &&
+        boolean filter = (ccName == null || ccName.isEmpty()) &&
                 (ldName == null || ldName.isEmpty()) &&
                 (address == null || address.isEmpty()) &&
                 (title == null || title.isEmpty()) ? false : true;
+        System.out.println(filter);
 
         // [1.3] service
         Page<PlaceInfoDto> result;
         if(filter){
+            System.out.println("콘트롤러 87줄 실행");
             result = placeInfoService.searchPage(placeInfoCriteria, pageRequest);
         } else {
+            System.out.println("콘트롤러 90줄 실행");
             result = placeInfoService.findPage(pageRequest);
         }
 
