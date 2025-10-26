@@ -41,7 +41,6 @@ export default function PageTitle() {
         <Link to={group?.path || "/admin"}>{group?.title || "K-Tour"}</Link>
         {child && (
           <>
-            <span className="sep"> › </span>
             <Link to={child.path} className="active">
               {child.label}
             </Link>

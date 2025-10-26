@@ -8,6 +8,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { adminMenus } from "@admin/data/adminMenus";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight  } from "@fortawesome/free-solid-svg-icons";
 import '@assets/admin/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 
 export default function AsideLnb(props) {
@@ -27,7 +28,7 @@ export default function AsideLnb(props) {
       <h2>
         {activeGroup ? (
           <>
-            <FontAwesomeIcon icon={activeGroup.icon} />{/* ← 여기서 JSX 렌더 */}
+            <FontAwesomeIcon icon={activeGroup.icon} />{/* 아이콘 출력 */}
             <span>{activeGroup.title}</span>
           </>
         ) : (
@@ -44,6 +45,7 @@ export default function AsideLnb(props) {
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 {child.label}
+                <FontAwesomeIcon icon={faAngleRight} />
               </NavLink>
             </li>
           ))}
