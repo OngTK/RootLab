@@ -90,11 +90,35 @@
     <!-- COUNT: 검색 총 레코드 수                                  -->
     <!--  * categorycode 조인 포함(카테고리 조건 반영용)           -->
     <!-- ========================================================= -->
-    <select id="countForSearch" resultType="int" parameterType="map">
+    <select id="countForSearch" resultType="int" parameterType="rootLab.model.criteria.PlaceInfoCriteria">
         SELECT COUNT(*)
-        FROM placeinfo pi
-        LEFT JOIN categorycode cc ON cc.ccNo = pi.ccNo
-        <include refid="PlaceInfoCriteriaWhere"/>
+        FROM placeInfo pi
+        LEFT JOIN contenttype  c1 ON pi.ctNo = c1.ctNo
+        LEFT JOIN categoryCode c2 ON pi.ccNo = c2.ccNo
+        LEFT JOIN ldongCode    ld ON pi.ldNo = ld.ldNo
+        <where>
+            <if test="criteria.title != null and criteria.title != ''">
+                AND pi.title LIKE CONCAT('%', #{criteria.title}, '%')
+            </if>
+            <if test="criteria.address != null and criteria.address != ''">
+                AND pi.addr1 LIKE CONCAT('%', #{criteria.address}, '%')
+            </if>
+            <if test="criteria.ccName != null and criteria.ccName != ''">
+                AND c2.lclsSystm3Cd LIKE CONCAT('%', #{criteria.ccName}, '%')
+            </if>
+            <if test="criteria.ldName != null and criteria.ldName != ''">
+                AND pi.addr1 LIKE CONCAT('%', #{criteria.ldName}, '%')
+            </if>
+            <if test="criteria.ctNo != null">
+                AND pi.ctNo = #{criteria.ctNo}
+            </if>
+            <if test="criteria.pNo != null">
+                AND pi.pNo = #{criteria.pNo}
+            </if>
+            <if test="criteria.showflag != null">
+                AND pi.showflag = #{criteria.showflag}
+            </if>
+        </where>
     </select>
 
     <!-- ========================================================= -->
@@ -103,13 +127,40 @@
     <!-- ========================================================= -->
     <select id="searchPaged" resultType="rootLab.model.dto.PlaceInfoDto" parameterType="map">
         SELECT
-        pi.*  <!-- 필요시 cc.lclsSystm3Nm 등 추가해서 별칭으로 매핑 가능 -->
-        FROM placeinfo pi
-        LEFT JOIN categorycode cc ON cc.ccNo = pi.ccNo
-        <include refid="PlaceInfoCriteriaWhere"/>
-        <include refid="PlaceInfoOrderBy"/>
-        LIMIT #{page.limit}
-        OFFSET #{page.offset}
+        pi.*,
+        c1.contentTypeName AS contentTypeName,
+        c2.lclsSystm3Nm    AS lclsSystm3Nm,
+        c2.lclsSystm3Cd   AS lclsSystm3Cd
+        FROM placeInfo pi
+        LEFT JOIN contenttype  c1 ON pi.ctNo = c1.ctNo
+        LEFT JOIN categoryCode c2 ON pi.ccNo = c2.ccNo
+        LEFT JOIN ldongCode    ld ON pi.ldNo = ld.ldNo
+        <where>
+            <if test="criteria.title != null and criteria.title != ''">
+                AND pi.title LIKE CONCAT('%', #{criteria.title}, '%')
+            </if>
+            <if test="criteria.address != null and criteria.address != ''">
+                AND pi.addr1 LIKE CONCAT('%', #{criteria.address}, '%')
+            </if>
+            <if test="criteria.ccName != null and criteria.ccName != ''">
+                AND c2.lclsSystm3Cd LIKE CONCAT('%', #{criteria.ccName}, '%')
+            </if>
+            <if test="criteria.ldName != null and criteria.ldName != ''">
+                AND pi.addr1 LIKE CONCAT('%', #{criteria.ldName}, '%')
+            </if>
+            <if test="criteria.ctNo != null">
+                AND pi.ctNo = #{criteria.ctNo}
+            </if>
+            <if test="criteria.pNo != null">
+                AND pi.pNo = #{criteria.pNo}
+            </if>
+            <if test="criteria.showflag != null">
+                AND pi.showflag = #{criteria.showflag}
+            </if>
+        </where>
+        ORDER BY pi.pNo DESC
+        LIMIT  #{pageRequest.limit}
+        OFFSET #{pageRequest.offset}
     </select>
 
     <!-- ========================================================= -->

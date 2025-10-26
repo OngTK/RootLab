@@ -12,6 +12,7 @@ import RegionSelect from "../../../components/admin/place/RegionSelect";
 import Pagination from "../../../components/admin/place/Pagination";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { createCookieSessionStorage } from "react-router-dom";
 
 export default function ListSection(props) {
 
@@ -58,22 +59,24 @@ export default function ListSection(props) {
         Object.keys(params).forEach(k => params[k] == null && delete params[k]);
         const { data } = await axios.get("http://localhost:8080/placeinfo/search", { params });
         // Page<T> 형태 반영
-        const content = data?.content ?? [];
+        const content = data.content ?? [];
         setPage(data?.currentPage ?? page);
         setSize(data?.size ?? size);
         setTotalElements(data?.totalElements ?? 0);
+
+        console.log(content)
 
         // columns(id) = ["no","pno","title","contentTypeName","lclsSystm3Nm","addr1","tel"]
         // 백엔드 필드 ↔ 화면 컬럼 매핑
         const offset = ((data?.currentPage ?? page) - 1) * (data?.size ?? size);
         const rowsMapped = content.map((r, idx) => ({
             no: offset + idx + 1,
-            pno: r.pNo ?? r.placeNo ?? r.contentid ?? "",
-            title: r.title ?? r.placeName ?? "",
-            contentTypeName: r.contentTypeName ?? r.ctName ?? "",
-            lclsSystm3Nm: r.lclsSystm3Nm ?? r.categoryName ?? r.ccName ?? "",
-            addr1: r.addr1 ?? r.address ?? r.addr ?? "",
-            tel: r.tel ?? r.phone ?? "",
+            pno: r.pno ,
+            title: r.title ,
+            contentTypeName: r.contentTypeName ,
+            lclsSystm3Nm: r.lclsSystm3Nm ,
+            addr1: r.addr1,
+            tel: r.tel,
         }));
         setRows(rowsMapped);
     };
@@ -189,10 +192,10 @@ export default function ListSection(props) {
                             <RegionSelect value={region} onChange={onRegionChange} />
                         </span>
                         {/* 6. 대표전화 */}
-                        <span className="form-group">
+                        {/* <span className="form-group">
                             <label htmlFor="main-phone">대표전화</label>
                             <input type="text" id="main-phone" name="mainPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                        </span>
+                        </span> */}
                         {/* 7. 주소명 */}
                         <span className="form-group">
                             <label htmlFor="address-keyword">주소명</label>

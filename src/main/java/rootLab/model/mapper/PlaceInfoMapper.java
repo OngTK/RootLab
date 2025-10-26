@@ -85,14 +85,14 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      * [3.3] 검색결과 레코드를 반환
      */
     @Override
-    int countForSearch(PlaceInfoCriteria criteria);
+    int countForSearch(@Param("criteria") PlaceInfoCriteria criteria);
 
     /**
      * [3.4] 페이지에 해당하는 레코드를 List로 반환
      */
     @Override
     List<PlaceInfoDto> searchPaged(@Param("criteria") PlaceInfoCriteria criteria,
-                                   @Param("page") PageRequest pageRequest);;
+                                   @Param("pageRequest") PageRequest pageRequest);;
 
 
 } // class end
