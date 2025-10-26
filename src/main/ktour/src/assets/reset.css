@@ -1,5 +1,5 @@
 /* CSS reset */
-*{ margin: 0; padding: 0; box-sizing: border-box; /*font-family: "Malgun Gothic", "맑은 고딕", Sans-serif, Roboto, Arial;*/  }
+*{ margin: 0; padding: 0; box-sizing: border-box; caret-color: transparent;/*font-family: "Malgun Gothic", "맑은 고딕", Sans-serif, Roboto, Arial;*/  }
 body{ background: rgba(0,0,0,.06); }
 body::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
 body::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/

@@ -3,12 +3,12 @@
  *
  * @author 
  * @since 2025.10.17
- * @version 0.1.1
+ * @version 0.1.2
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faThumbsUp, faMusic, faMasksTheater,faStreetView, faCircleChevronRight, faDog  } from "@fortawesome/free-solid-svg-icons";
-
+import { faAngleRight, faThumbsUp, faMusic,faStreetView, faCircleChevronRight, faDog  } from "@fortawesome/free-solid-svg-icons";
+import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 
 export default function AsideLnb(props) {
@@ -19,20 +19,19 @@ export default function AsideLnb(props) {
             <div className="gnb">
                 <ul>
                     <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
-                    <li><FontAwesomeIcon icon={faThumbsUp} />추천지역장소</li>
+                    <li><FontAwesomeIcon icon={faCompass} />추천플레이스</li>
                     <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
                     <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>
                 </ul>
             </div>
-            {/* <!-- 02-1. 좌측 고정 업종별 아이콘 메뉴 끝 --> */}
 
-            {/* <!-- 02-2. 좌측 on/off 페이지 서브 메뉴 노출 시작 --> */}
+            {/* <!-- 좌측 서브 메뉴 시작 --> */}
             <div className="lnb">
                 <h2>
                     <FontAwesomeIcon icon={faStreetView} />내 주변
                     <div className="comment">주제별 다양한 장소를 확인하세요</div>
                 </h2>
-                {/* <!-- 02-2-2.페이지 컨텐츠 서브 메뉴 노출 시작 --> */}
+                {/* <!--  서브 메뉴 --> */}
                 <ul className="subMenuList" id="lnbMap">
                     <li data-code="53">
                         <Link to="#"><span>미추홀구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
@@ -60,7 +59,7 @@ export default function AsideLnb(props) {
                     </li>
                 </ul>
             </div>
-            {/* <!-- 02-2 좌측 on/off 페이지 서브 메뉴 노출 끝 --> */}
+            {/* <!-- 좌측 서브 메뉴  끝 --> */}
             
         </div>
     </>
