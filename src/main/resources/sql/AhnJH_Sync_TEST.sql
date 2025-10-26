@@ -237,7 +237,7 @@ SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM k_tour_headquarter.contenttype;
 SELECT * FROM k_tour_headquarter.categorycode;
-SELECT kpi.pNo, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage, kct.contenttypename
+SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage, kct.contenttypename
 	FROM k_tour_headquarter.placeinfo kpi
 	JOIN k_tour_headquarter.contenttype kct
 	USING (ctNo)

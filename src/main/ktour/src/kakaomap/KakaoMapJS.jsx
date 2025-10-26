@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMarker } from '../user/store/mapSlice';
+import { selectMarker, renderedMarker } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -27,11 +27,10 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
-    const [markers, SetMarkers] = useState("");     // API로부터 받은 마커 배열
     const [bounds, SetBounds] = useState({          // 현재 지도의 동서남북 좌표
         south: "0.0",
         west: "0.0",
@@ -114,7 +113,7 @@ export default function KakaoMap(props) {
         if (selectedLdNo == null) return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, axiosOption);
-            SetMarkers(response.data);
+            dispatch(renderedMarker(response.data));
         } catch (error) {
             console.log('getLdNoMarkersByAxios 오류 발생');
             console.log(error);
@@ -131,7 +130,7 @@ export default function KakaoMap(props) {
         if (bounds.south === "0.0") return;
         try {
             const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
-            SetMarkers(response.data);
+            dispatch(renderedMarker(response.data));
         } catch (error) {
             console.log(error);
         } // try-catch end

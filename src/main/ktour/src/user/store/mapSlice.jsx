@@ -4,7 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     selectedLdNo: null,         // 선택한 법정동코드
     selectedMarker: null,       // 클릭한 마커
-    axiosOption: { withCredentials: true }
+    axiosOption: { withCredentials: true },
+    markers: []
 };
 
 // 2. Slice 함수 정의
@@ -17,10 +18,13 @@ const mapSlice = createSlice({
         }, // selectedCity end
         selectMarker: (state, action) => {
             state.selectedMarker = action.payload;
-        } // selectMarker
+        }, // selectMarker
+        renderedMarker: (state, action) => {
+            state.markers = action.payload;
+        } // renderedMarker end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { selectedSigngu, selectMarker } = mapSlice.actions;
+export const { selectedSigngu, selectMarker, renderedMarker } = mapSlice.actions;
