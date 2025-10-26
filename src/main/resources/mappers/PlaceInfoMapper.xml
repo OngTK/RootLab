@@ -112,4 +112,25 @@
         OFFSET #{page.offset}
     </select>
 
+    <!-- ========================================================= -->
+    <!-- findAllPaged 검색 조건이 없는 조회                          -->
+    <!-- ========================================================= -->
+    <select id="findAllPaged"
+            parameterType="map"
+            resultType="rootLab.model.dto.PlaceInfoDto">
+        SELECT
+            pi.*,
+            c1.contentTypeName  AS contentTypeName,
+            c2.lclsSystm3Nm     AS lclsSystm3Nm
+            FROM placeInfo pi
+            LEFT JOIN contenttype c1
+            ON pi.ctNo = c1.ctNo
+            LEFT JOIN categoryCode c2
+            ON pi.ccNo = c2.ccNo
+            ORDER BY pi.pNo DESC
+        LIMIT  #{pageRequest.limit}
+        OFFSET #{pageRequest.offset}
+    </select>
+
+
 </mapper>

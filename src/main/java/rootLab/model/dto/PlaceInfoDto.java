@@ -34,4 +34,9 @@ public class PlaceInfoDto {
     private String overview;        // 개요(#TourAPI 연동컬럼)
     private String createdAt;       // 등록일(최초 DB복사일)
     private String updatedAt;       // 수정일(DB업데이트일/해당 레코드 수정일)
+
+    // [추가]
+    private String contentTypeName;
+    private String lclsSystm3Nm;
+
 } // class end
