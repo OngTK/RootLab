@@ -50,4 +50,11 @@ public class LDongCodeService {
     public LDongCodeDto getLDongCodeByldNo(int ldNo){
         return lDongCodeMapper.getLDongCodeByldNo(ldNo);
     } // func end
+
+
+    /**
+     * [LC-04] 시군구코드 전체 조회
+     * @author OngTk
+     */
+    public List<LDongCodeDto> getAllLDongCode(){ return lDongCodeMapper.getAllLDongCode(); } // func end
 } // class end

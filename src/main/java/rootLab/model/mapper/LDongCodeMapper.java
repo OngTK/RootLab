@@ -46,4 +46,15 @@ public interface LDongCodeMapper {
      */
     @Select("SELECT * FROM ldongcode WHERE ldNo = #{ldNo}")
     LDongCodeDto getLDongCodeByldNo(int ldNo);
+
+    /**
+     * [LC-04] 시군구코드 전체 조회
+     * @author OngTk
+     */
+    @Select("""
+            select * from ldongcode;
+            """)
+    List<LDongCodeDto> getAllLDongCode();
+
+
 } // interface end
