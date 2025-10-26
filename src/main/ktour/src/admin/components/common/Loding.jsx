@@ -1,11 +1,10 @@
 /**
  * 관리자 공통 로딩 컴포넌트 
- * - 관리자단 > 검색리스트 > 공통 스티키 리사이징 테이블
- * - 기능 : 데이터 정렬(헤더  th cell 클릭), 좌측 1열 sticky, 모든 셀 세로보더(그리드) 좌우 사이즈 조정
+ * - 로딩 페이지/MUI 컴포넌트 테스트
  * 
  * @author kimJS
  * @since 2025.10.22
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 import PropTypes from 'prop-types';

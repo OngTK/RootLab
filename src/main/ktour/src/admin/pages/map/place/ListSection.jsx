@@ -6,7 +6,6 @@
  * @version 0.1.2
  */
 import ResizableTable from "@admin/components/common/ResizableTable";
-import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 
 export default function ListSection(props) {
 

@@ -1,5 +1,5 @@
 /**
- * 관리자단 > 공통컴포넌트(레이어, 테이블 등) > 샘플사용 예시
+ * 관리자단 > 공통컴포넌트(레이어, 테이블 등) > 샘플사용(Sample) > (좌측)목록조회ListSection.jsx
  *
  * @author kimJS
  * @since 2025.10.26
@@ -7,12 +7,11 @@
  */
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import DragResizeLayer from "@admin/components/common/DragResizeLayer"
-
+import DragResizeLayer from "@admin/components/common/DragResizeLayer";
 import ResizableTable from "@admin/components/common/ResizableTable";
-import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 
-export default function Sample(props) {
+
+export default function ListSection(props) {
 
     const { layerContainerRef } = useOutletContext();   // 상위 LayoutAdmin에서 전달받음
     const [showList, setShowList] = useState(false);     // 1번 레이어(목록조회) 표시(노출) 여부 상태
@@ -81,66 +80,139 @@ export default function Sample(props) {
         { no: 1, pid: 901201, name: "삼포 불꽃쇼", ctype: "공연", cat: "야간행사", addr: "강원 고성군 삼포해변길 9", tel: "033-681-1050" },
     ];
 
+    /** ======================================================================================================================================== */
+    return (
+        <>
 
-    /** =========================== Manager.jsx ============================= */
-    return <>
-        <div style={{ height: "100px" }}></div>
-        {/* =============================== 1.DragResizeLayer(리사이징/드래그 레이어) 시작 ===================================================== */}
-        <button onClick={() => setShowList(true)}>레이어1</button>
-        <button onClick={() => setShowDetail(true)}>레이어2</button>
-        {/* 조건부 렌더링(conditional rendering) : {showList && ( ... )} --> showList가 true일 때만 <DragResizeLayer> 출력 */}
-        {/* 1) 목록조회 레이어 */}
-        {showList && (
-            <DragResizeLayer
-                layerContainerRef={layerContainerRef}
-                titleText="레이어1. 목록"
-                initialOffset={{ x: -100, y: -50 }}   // 중앙 기준 오른쪽으로 220px
-                onClose={() => setShowList(false)}
-                onCancel={() => setShowList(false)}
-                onSave={() => { alert("목록 저장 완료!"); setShowList(false); }}
-            >
-                <div style={{ padding: 8 }}>
-                    <p>11111 관리자 목록 데이터를 여기에 표시할 수 있습니다.</p>
-                    <ul>
-                        <li>홍길동 - 최고관리자</li>
-                        <li>김민수 - 운영자</li>
-                        <li>이정은 - 콘텐츠 담당자</li>
-                    </ul>
+            {/* <!-- [좌측] 검색/리스트 시작 --> */}
+            <section className="listWrap">
+                {/* <!-- 조건검색창 시작 --> */}
+                <div className="detailSearch">
+                    <form aria-label="플레이스 조건 검색">
+                        {/* 1. 카테고리 (다중 Select) */}
+                        <div className="form-group category-group">
+                            <label htmlFor="category-large">카테고리</label>
+                            {/* 대분류 */}
+                            <select id="category-large" name="categoryLarge">
+                                <option value="">대분류</option>
+                            </select>
+                            {/* 중분류*/}
+                            <select aria-label="카테고리 중분류" name="categoryMedium">
+                                <option value="">중분류</option>
+                            </select>
+                            {/* 소분류 */}
+                            <select aria-label="카테고리 소분류" name="categorySmall">
+                                <option value="">소분류</option>
+                            </select>
+                        </div>
+                        <span>
+                            {/* 2. 1차 지역 */}
+                            <span className="form-group">
+                                <label htmlFor="region-primary">1차 지역</label>
+                                <select id="region-primary" name="regionPrimary">
+                                    <option value="">전체</option>
+                                    <option value="seoul">서울</option>
+                                    <option value="gyeonggi">경기도</option>
+                                </select>
+                            </span>
+                            {/* 2. 2차 지역 */}
+                            <span className="form-group">
+                                <label htmlFor="region-secondary">2차 지역</label>
+                                <select id="region-secondary" name="regionSecondary">
+                                    <option value="">전체</option>
+                                    <option value="gangnam">강남구</option>
+                                    <option value="dongjak">동작구</option>
+                                </select>
+                            </span>
+                        </span>
+                        {/* 3. 플레이스명 */}
+                        <span className="form-group">
+                            <label htmlFor="place-name">플레이스명</label>
+                            <input type="text" id="place-name" name="placeName" />
+                        </span>
+
+                        {/* 4. 검색 버튼*/}
+                        <span className="form-actions">
+                            <button type="button" className="searchBtn">검색</button>
+                            <button type="button" className="btn line">초기화</button>
+                        </span>
+                    </form>
                 </div>
-            </DragResizeLayer>
-        )}
+                {/* <!-- 조건검색창 끝 --> */}
 
-        {/* 2) 상세조회 레이어 (겹칠 수 있어 z-index만 살짝 높임) */}
-        {showDetail && (
-            <DragResizeLayer
-                layerContainerRef={layerContainerRef}
-                titleText="레이어2. 상세조회"
-                initialOffset={{ x: 100, y: 0 }}   // 중앙 기준 오른쪽으로 220px
-                onClose={() => setShowDetail(false)}
-                onCancel={() => setShowDetail(false)}
-                onSave={() => { alert("상세 저장 완료!"); setShowDetail(false); }}
-            >
-                <div style={{ padding: 8 }}>
-                    <p>22222 관리자 상세 정보를 여기에 표시할 수 있습니다.</p>
-                    <div style={{ display: "grid", gap: 8 }}>
-                        <div><strong>이름</strong> : 홍길동</div>
-                        <div><strong>권한</strong> : 최고관리자</div>
-                        <div><strong>상태</strong> : 활성</div>
+                {/* <!-- 목록(리스트) 테이블 시작 --> */}
+                <ul className="titleBox">
+                    <li className="result">검색결과 : @@개</li>
+                    <li className="btnBox">
+                        <select className="baseDateInput">
+                            <option value="10">10개 보기</option>
+                            <option value="30">30개 보기</option>
+                            <option value="50">50개 보기</option>
+                        </select>
+                        <button type="button" className="btn line">엑셀 다운로드</button>
+                        <button className="btn full" onClick={() => setShowList(true)}>레이어1</button>
+                        <button className="btn full" onClick={() => setShowDetail(true)}>레이어2</button>
+                    </li>
+                </ul>
+                {/* =============================== 1.ResizableTable(리사이징/드래그  테이블) 시작 ===================================================== */}
+                <div className="tableWrap">
+                    <ResizableTable
+                        columns={columns}
+                        data={data}
+                        rememberKey="PlaceInfo.columns"
+                        minColWidth={80}
+                        stickyFirst={false}
+                        sortable={true}
+                    />
+                </div>
+                  {/* =============================== 1.ResizableTable(리사이징/드래그  테이블) 끝 ===================================================== */}
+            </section>
+            {/* <!-- [좌측] 검색/리스트 끝 --> */}
+            {/* =============================== 1.DragResizeLayer(리사이징/드래그 레이어) 시작 ===================================================== */}
+
+            {/* 조건부 렌더링(conditional rendering) : {showList && ( ... )} --> showList가 true일 때만 <DragResizeLayer> 출력 */}
+            {/* 1) 목록조회 레이어 */}
+            {showList && (
+                <DragResizeLayer
+                    layerContainerRef={layerContainerRef}
+                    titleText="레이어1. 목록"
+                    initialOffset={{ x: -100, y: -50 }}   // 중앙 기준 오른쪽으로 220px
+                    onClose={() => setShowList(false)}
+                    onCancel={() => setShowList(false)}
+                    onSave={() => { alert("목록 저장 완료!"); setShowList(false); }}
+                >
+                    <div style={{ padding: 8 }}>
+                        <p>11111 관리자 목록 데이터를 여기에 표시할 수 있습니다.관리자 목록 데이터를 여기에 표시할 수 있습니다.</p>
+                        <ul>
+                            <li>홍길동 - 최고관리자</li>
+                            <li>김민수 - 운영자</li>
+                            <li>이정은 - 콘텐츠 담당자</li>
+                        </ul>
                     </div>
-                </div>
-            </DragResizeLayer>
-        )}
-        {/* =============================== 1.DragResizeLayer(리사이징/드래그 레이어) 끝 ===================================================== */}
+                </DragResizeLayer>
+            )}
 
-        <div className="tableWrap">
-            <ResizableTable
-                columns={columns}
-                data={data}
-                rememberKey="PlaceInfo.columns"
-                minColWidth={80}
-                stickyFirst={false}
-                sortable={true}
-            />
-        </div>
-    </>
-}// Manager.jsx end
+            {/* 2) 상세조회 레이어 (겹칠 수 있어 z-index만 살짝 높임) */}
+            {showDetail && (
+                <DragResizeLayer
+                    layerContainerRef={layerContainerRef}
+                    titleText="레이어2. 상세조회"
+                    initialOffset={{ x: 100, y: 0 }}   // 중앙 기준 오른쪽으로 220px
+                    onClose={() => setShowDetail(false)}
+                    onCancel={() => setShowDetail(false)}
+                    onSave={() => { alert("상세 저장 완료!"); setShowDetail(false); }}
+                >
+                    <div style={{ padding: 8 }}>
+                        <p>22222 관리자 상세 정보를 여기에 표시할 수 있습니다.</p>
+                        <div style={{ display: "grid", gap: 8 }}>
+                            <div><strong>이름</strong> : 홍길동</div>
+                            <div><strong>권한</strong> : 최고관리자</div>
+                            <div><strong>상태</strong> : 활성</div>
+                        </div>
+                    </div>
+                </DragResizeLayer>
+            )}
+            {/* =============================== 1.DragResizeLayer(리사이징/드래그 레이어) 끝 ===================================================== */}
+        </>
+    );
+}// ListSection.jsx end

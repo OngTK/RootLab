@@ -6,12 +6,14 @@
 
 import { useRef, useState, useCallback, useLayoutEffect, useEffect } from "react";
 import "@assets/admin/css/dragResizeLayer.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {  faCircleXmark  } from "@fortawesome/free-solid-svg-icons";
 
 const HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
 let zSeed = 1000; // 모든 인스턴스 공유: 마지막으로 클릭한 레이어가 위로
 
 export default function DragResizeLayer({
-  containerRef,                      // 부모 컨테이너(ref, position:relative 권장)
+  layerContainerRef,                      // 부모 컨테이너(ref, position:relative 권장)
   id = "layer",
   initial = { w: 360, h: 300 },      // 초기 크기
   minSize = { w: 180, h: 200 },      // 최소 크기
@@ -33,12 +35,12 @@ export default function DragResizeLayer({
 
   // 부모 크기(없으면 viewport) 가져오기
   const getBounds = useCallback(() => {
-    const rect = containerRef?.current?.getBoundingClientRect();
+    const rect = layerContainerRef?.current?.getBoundingClientRect();
     return {
       W: rect?.width || window.innerWidth,
       H: rect?.height || window.innerHeight,
     };
-  }, [containerRef]);
+  }, [layerContainerRef]);
 
   // 중앙 기준 오프셋/크기 제한(부모 밖으로 못 나가게)
   const clampOffset = useCallback((x, y, w, h) => {
@@ -66,14 +68,14 @@ export default function DragResizeLayer({
 
   // 부모 사이즈 변경에도 위치/크기 재클램프
   useEffect(() => {
-    const parent = containerRef?.current;
+    const parent = layerContainerRef?.current;
     if (!parent || !("ResizeObserver" in window)) return;
     const ro = new ResizeObserver(() => {
       setState(prev => clampOffset(prev.x, prev.y, prev.w, prev.h));
     });
     ro.observe(parent);
     return () => ro.disconnect();
-  }, [containerRef, clampOffset]);
+  }, [layerContainerRef, clampOffset]);
 
   // 클릭하면 해당 레이어를 맨 앞으로
   const bringToFront = useCallback(() => {
@@ -166,7 +168,7 @@ export default function DragResizeLayer({
           ? <div className="drzlTitle" dangerouslySetInnerHTML={{ __html: titleHtml }} />
           : <div className="drzlTitle">{titleText || "제목"}</div>
         }
-        <button className="drzlBtnClose" onPointerDown={(e) => e.stopPropagation()} onClick={onClose} title="닫기" aria-label="닫기">×</button>
+        <button className="drzlBtnClose" onPointerDown={(e) => e.stopPropagation()} onClick={onClose} title="닫기" aria-label="닫기"><FontAwesomeIcon icon={faCircleXmark} /></button>
       </div>
 
       {/* 본문 + 액션 */}

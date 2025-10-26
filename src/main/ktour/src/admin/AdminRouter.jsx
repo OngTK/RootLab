@@ -17,7 +17,7 @@ const Manager     = lazy(() => import("@admin/pages/member/Manager"));          
 const SiteInfo    = lazy(() => import("@admin/pages/site/SiteInfo"));              // 사이트정보 페이지
 const PushPopup   = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));  // 푸시/팝업관리 페이지
 const NotFound404 = lazy(() => import("@admin/pages/NotFound404"));                // 404 Not Found 페이지
-const Sample      = lazy(() => import("@admin/components/common/Sample"));         // 컴포넌트 샘플페이지(레이어/테이블/폼태그 등..)
+const Sample      = lazy(() => import("@admin/components/common/sample/Sample"));         // 컴포넌트 샘플페이지(레이어/테이블/폼태그 등..)
 export default function AdminRouter() {
   return (
     <Suspense fallback={null}>
