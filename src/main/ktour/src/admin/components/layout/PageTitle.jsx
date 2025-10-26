@@ -6,7 +6,7 @@
  * - 경로(path): 그룹 > 서브 구조로 표시
  * @author kimJS
  * @since 2025.10.16
- * @version 0.1.2
+ * @version 0.1.3
  */
 
 import { Link, useLocation } from "react-router-dom";
@@ -14,32 +14,40 @@ import { adminMenus } from "@admin/data/adminMenus";
 import "@assets/admin/css/pageTitle.css";
 
 export default function PageTitle() {
+  const { pathname } = useLocation();
 
-    const { pathname } = useLocation(); // 1. 현재 브라우저 주소 가져오기
-    const group = adminMenus.find(      // 2. 현재 URL과 일치하는 그룹 찾기
-        (g) =>
-            g.path === pathname ||
-            g.children?.some((c) => c.path === pathname)
-    );
-    const child = group?.children?.find((c) => c.path === pathname);   // 3. 그룹 내에서 현재 활성화된 서브메뉴 찾기
-    const pageTitle = child?.label || group?.title || "K-Tour";         // 4. 페이지 타이틀 결정: 서브 > 그룹 > 기본
+  // 현재 URL과 일치하는 메뉴 그룹 찾기
+  const group = adminMenus.find(
+    (g) =>
+      pathname.startsWith(g.path) ||
+      g.children?.some((c) => pathname.startsWith(c.path))
+  );
 
-/** ====================== 관리자 > 공통레이아웃 > 페이지 타이틀/경로 .jsx영역 =========================== */
-    return (
-        <div className="pageTitle">
-            <h1>{pageTitle}</h1> {/* 페이지 타이틀 표시 */}
-            <div className="path"> {/* 경로(Breadcrumb) 표시 */}
-                {/* 상위 그룹 경로 */}
-                <Link to={group?.path || "/admin"}>{group?.title || "K-Tour"}</Link>
-                {/* 서브 메뉴가 존재할 경우만 표시 */}
-                {child && (
-                    <>
-                        <Link to={child.path} className="active">
-                            {child.label}
-                        </Link>
-                    </>
-                )}
-            </div>
-        </div>
-    );
+  // 그룹 안에서 현재 활성화된 서브메뉴 찾기
+  const child = group?.children?.find((c) =>
+    pathname.startsWith(c.path)
+  );
+
+  // 페이지 제목 (서브 > 그룹 > 기본)
+  const pageTitle = child?.label || group?.title || "K-Tour";
+
+  return (
+    <div className="pageTitle">
+      {/* 페이지 제목 */}
+      <h1>{pageTitle}</h1>
+
+      {/* 경로 표시 (Breadcrumb) */}
+      <div className="path">
+        <Link to={group?.path || "/admin"}>{group?.title || "K-Tour"}</Link>
+        {child && (
+          <>
+            <span className="sep"> › </span>
+            <Link to={child.path} className="active">
+              {child.label}
+            </Link>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }// PageTitle.jsx end

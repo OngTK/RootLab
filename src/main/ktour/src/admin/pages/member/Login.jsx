@@ -27,8 +27,8 @@ export default function Login(props) {
         <div className="loginWrap">
             <header className="loginWrap">
                 <h1 className="logo">
-                    <Link to="/"  title="K-Tour 홈으로 이동">
-                        <strong className="logo">K-Tour</strong><span>테마형 관광지도 플랫폼</span>
+                    <Link to="/"  title="K-TOUR 홈으로 이동">
+                        <strong className="logo">K-TOUR</strong><span>테마형 관광지도 플랫폼</span>
                     </Link>
                 </h1>
             </header>
@@ -55,7 +55,7 @@ export default function Login(props) {
             <footer>
                 <ul className="footerMenu">
                     <li>
-                        <Link to="/" className="btn" title="K-Tour 홈으로 이동">K-Tour</Link>
+                        <Link to="/" className="btn" title="K-Tour 홈으로 이동">K-TOUR</Link>
                     </li>
                     <li><a href="#">솔루션문의</a></li>
                     <li><a href="#">구독신청</a></li>

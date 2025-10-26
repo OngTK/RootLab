@@ -3,11 +3,11 @@
 
 /* 해더 > 좌측 ( 로고/전체메뉴 ) */
 .admin-scope .logoHeader{ display: flex; align-items: center; width: 170px;   }
-.admin-scope .logoHeader .logo{ color: rgba(0, 191, 99, 1); display: block; padding:0 20px 0 20px; }
-.admin-scope .logoHeader .logo strong{ display: block;  font-size: 22px; line-height: 100%;  font-weight: 700; }
-.logoHeader .logo span{ display: block; padding:3px 0; font-size: 10px; line-height: 100%; font-weight: 400; letter-spacing:-0.7px; }
-.admin-scope .menuIcon{ display: inline-block;  cursor: pointer;  opacity: .3; margin:-4px 0 0 2px; width:20px; height:20px; }
-.admin-scope .menuIcon svg{ fill: none;  }
+.admin-scope .logoHeader .logo{ color: rgba(0, 191, 99, 1); display: block; padding:0 20px 0 15px; }
+.admin-scope .logoHeader .logo strong{ display: block;  font-size: 20px; line-height: 100%;  font-weight: 700; }
+.logoHeader .logo span{ display: block; padding:3px 0; font-size: 10px; line-height: 100%; font-weight: 400; letter-spacing:-0.7px;  }
+.admin-scope .menuIcon{ display: inline-block;  cursor: pointer;  opacity: .3; margin:-4px 0 0 2px;  }
+.admin-scope .menuIcon svg{ fill: none; width: }
 .menuIcon svg path{ fill:currentColor; }
 
 /* 해더 > 중앙 > 검색창 */

@@ -3,24 +3,29 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.0
+ * @version 0.1.1
  */
+import { faGear, faUsers, faMapMarkedAlt } from "@fortawesome/free-solid-svg-icons";
+
 export const adminMenus = [
   {
     no: "1",
     title: "관광정보관리",
+    icon: faMapMarkedAlt,
     path: "/admin/map/place_info",
     children: [{ label: "플레이스현황", path: "/admin/map/place_info" }],
   },
   {
     no: "2",
     title: "회원관리",
+    icon: faUsers,
     path: "/admin/member/manager",
     children: [{ label: "관리자현황", path: "/admin/member/manager" }],
   },
   {
     no: "3",
     title: "사이트관리",
+    icon: faGear,
     path: "/admin/site/site_info",
     children: [
       { label: "사이트정보", path: "/admin/site/site_info" },
