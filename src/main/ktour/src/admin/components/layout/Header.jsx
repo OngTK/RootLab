@@ -3,12 +3,12 @@
  *
  * @author kimJS
  * @since 2025.10.16
- * @version 0.1.2
+ * @version 0.1.3
  */
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { adminMenus } from "@admin/data/adminMenus";                //  관리자단 상단/좌측 메뉴데이터
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/admin/css/header.css"; // 헤더 header.css
 
 export default function Header() {
@@ -34,10 +34,7 @@ export default function Header() {
             <div className="gnb">
                 {/* 2.1. 플레이스 통합검색창 */}
                 <div className="headerSearch">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
-                        <path d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" />
-                        <path d="M20.9992 21L14.9492 14.95" />
-                    </svg>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <input type="text" name="search" placeholder="플레이스 검색" aria-label="플레이스 검색"/>
                     <button type="button">검색 </button>
                 </div>
