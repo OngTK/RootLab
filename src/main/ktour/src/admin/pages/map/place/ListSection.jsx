@@ -8,11 +8,13 @@
 import ResizableTable from "@admin/components/common/ResizableTable";
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 import CategorySelect from "../../../components/admin/place/CategorySelect";
+import RegionSelect from "../../../components/admin/place/RegionSelect";
 import { useState } from "react";
 
 export default function ListSection(props) {
 
     const [category, setCategory] = useState({ ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null });
+    const [region, setRegion] = useState({ ldNo: null, regnCd: null, signguCd: null });
 
     const columns = [
         { id: "no", title: "No", width: 70 },
@@ -132,23 +134,24 @@ export default function ListSection(props) {
                         </div>
                         <span>
                             {/* 4. 1차 지역 */}
-                            <span className="form-group">
+                            {/* <span className="form-group">
                                 <label htmlFor="region-primary">1차 지역</label>
                                 <select id="region-primary" name="regionPrimary">
                                     <option value="">전체</option>
                                     <option value="seoul">서울</option>
                                     <option value="gyeonggi">경기도</option>
                                 </select>
-                            </span>
+                            </span> */}
                             {/* 5. 2차 지역 */}
-                            <span className="form-group">
+                            {/* `<span className="form-group">
                                 <label htmlFor="region-secondary">2차 지역</label>
                                 <select id="region-secondary" name="regionSecondary">
                                     <option value="">전체</option>
                                     <option value="gangnam">강남구</option>
                                     <option value="dongjak">동작구</option>
                                 </select>
-                            </span>
+                            </span>` */}
+                            <RegionSelect value={region} onChange={setRegion} />
                         </span>
                         {/* 6. 대표전화 */}
                         <span className="form-group">
