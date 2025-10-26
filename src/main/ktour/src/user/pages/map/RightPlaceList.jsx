@@ -16,6 +16,7 @@ const PLACE_GROUPS_TEMPLATE = [
 ];
 
 export default function PlaceGroups() {
+    // =================== useSelector ===================
     const { markers } = useSelector((state) => state.relatedMap);
 
     const placeGroups = useMemo(() => {
