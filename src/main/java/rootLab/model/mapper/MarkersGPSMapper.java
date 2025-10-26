@@ -35,12 +35,14 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
      * @return 해당 범위에 있는 마커 리스트
      * @author AhnJH
      */
-    @Select("SELECT kpi.pNo, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kct.contenttypename " +
+    @Select("SELECT kpi.pNo, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage, kct.contenttypename " +
             "FROM k_tour_headquarter.placeinfo kpi " +
             "JOIN k_tour_headquarter.contenttype kct " +
             "USING (ctNo) " +
             "JOIN k_tour_headquarter.markersgps kmg " +
             "USING (pNo) " +
+            "JOIN k_tour_headquarter.categorycode kcc " +
+            "USING (ccNo) " +
             "WHERE kmg.mapx >= #{west} " +
             "AND kmg.mapx <= #{east} " +
             "AND kmg.mapy >= #{south} " +
