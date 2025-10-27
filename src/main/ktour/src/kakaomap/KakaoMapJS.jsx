@@ -137,6 +137,10 @@ export default function KakaoMap(props) {
         } // try-catch end
     }; // func end
 
+    useEffect(() => {
+        getBoundsByAxios();
+    }, [props.selectedCategory])
+
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
@@ -244,7 +248,7 @@ export default function KakaoMap(props) {
 
 
         // 'idle' 이벤트 리스너 등록
-        kakao.maps.event.addListener(map, 'idle', () => {
+        kakao.maps.event.addListener(map, 'tilesloaded', () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             } // if end
