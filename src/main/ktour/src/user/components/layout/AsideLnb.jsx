@@ -10,15 +10,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faThumbsUp, faMusic, faStreetView, faCircleChevronRight, faDog } from "@fortawesome/free-solid-svg-icons";
 import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { selectedSigngu, selectLDong } from "../../store/mapSlice";
 
 export default function AsideLnb(props) {
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
     // =================== useSelector ===================
     const { firstLDong, LdongName, axiosOption } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);
+    const [activeLdNo, setActiveLdNo] = useState(null);
     // =================== useEffect ===================
     useEffect(() => {
         LdongName.map((name) => {
@@ -33,11 +37,27 @@ export default function AsideLnb(props) {
         if (ldongregncd == null) return;
         try {
             const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${ldongregncd}`, axiosOption);
-            SetSurroundingPlace(response.data);
+            const data = response.data;
+            SetSurroundingPlace(data);
+
+            const initialSignguName = firstLDong.split(" ")[1];
+            const initialActiveNo = data.find((signgu) => {
+                signgu.ldongsigngunm == initialSignguName
+            }) // find end
+            if (initialActiveNo) {
+                setActiveLdNo(initialActiveNo.ldNo);
+            } else {
+                setActiveLdNo(null);
+            }
         } catch (error) {
             console.log('getLDongSignguCdByAxios 오류 발생');
             console.log(error);
         } // try-catch end
+    } // func end
+
+    const handleLdNoClick = (signgu) => {
+        setActiveLdNo(signgu.ldNo);
+        dispatch(selectedSigngu(signgu.ldNo));
     } // func end
 
     if (!surroundingPlace) return;
@@ -65,41 +85,21 @@ export default function AsideLnb(props) {
                     {
                         surroundingPlace &&
                         surroundingPlace.map((signgu) => {
-                            if (signgu.ldongsigngunm == firstLDong.split(" ")[1]) {
-                                return <li key={signgu.ldNo}>
-                                    <Link to="#" className="active"><span>{signgu.ldongsigngunm}</span><FontAwesomeIcon icon={faAngleRight} /></Link>
+                            const isActive = signgu.ldNo == activeLdNo;
+                            return (
+                                <li key={signgu.ldNo}>
+                                    <Link
+                                        to="#"
+                                        className={isActive ? 'active' : ''}
+                                        onClick={() => handleLdNoClick(signgu)}
+                                    >
+                                        <span>{signgu.ldongsigngunm}</span>
+                                        <FontAwesomeIcon icon={faAngleRight} />
+                                    </Link>
                                 </li>
-                            } else {
-                                return <li key={signgu.ldNo}>
-                                    <Link to="#"><span>{signgu.ldongsigngunm}</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                                </li>
-                            }
+                            );
                         })
                     }
-                    <li data-code="53">
-                        <Link to="#"><span>미추홀구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="54">
-                        <Link to="#"><span>연수구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="55">
-                        <Link to="#"><span>남동구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="56">
-                        <Link to="#" className="active"><span>부평구</span><FontAwesomeIcon icon={faCircleChevronRight} /></Link>
-                    </li>
-                    <li data-code="57">
-                        <Link to="#"><span>계양구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="58">
-                        <Link to="#"><span>서구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="59">
-                        <Link to="#"><span>강화군</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
-                    <li data-code="60">
-                        <Link to="#"><span>옹진군</span><FontAwesomeIcon icon={faAngleRight} /></Link>
-                    </li>
                 </ul>
             </div>
             {/* <!-- 좌측 서브 메뉴  끝 --> */}

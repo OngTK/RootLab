@@ -9,6 +9,7 @@ const initialState = {
     selectedCategory: "all",            // 선택한 카테고리
     centeredLDong: null,                // 중심좌표 기준 법정동
     firstLDong: null,                   // 최초 렌더링된 법정동
+    selectedLDong: null,
     axiosOption: { withCredentials: true },
     LdongName: [],
 };
@@ -42,9 +43,12 @@ const mapSlice = createSlice({
         firstLDongRegn: (state, action) => {
             state.firstLDong = action.payload;
         }, // firstLDongRegn end
+        selectLDong: (state, action) => {
+            state.selectedLDong = action.payload;
+        }, // selectLDong end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

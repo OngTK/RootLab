@@ -48,7 +48,6 @@ export default function KakaoMap(props) {
     const mapContainerRef = useRef(null);   // 렌더링할 지도 div
     const mapRef = useRef(null);            // 생성된 카카오지도 객체
     const clustererRef = useRef(null);      // 생성된 클러스터러 객체
-    const isUserMoveRef = useRef(false);    // 사용자의 클릭에 의해 이용했는지, true : 사용자가 클릭 | false : 드래그 또는 줌
     const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
     const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
 
@@ -90,9 +89,6 @@ export default function KakaoMap(props) {
             selectedGps.mapy, // selectedGps의 mapy
             selectedGps.mapx  // selectedGps의 mapx
         );
-        // 'idle' eventListener가 작동하지 않게 true로 변경
-        isUserMoveRef.current = true;
-
         // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
         mapRef.current.panTo(newCoords);
     }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
@@ -144,6 +140,10 @@ export default function KakaoMap(props) {
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
+        getLDongName();
+    }, [bounds]);
+
+    const getLDongName = async () => {
         if (!window.kakao) return;
         const { kakao } = window;
         const map = mapRef.current;
@@ -155,7 +155,7 @@ export default function KakaoMap(props) {
             } // if end
         } // func end
         geoCoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback)
-    }, [bounds]);
+    } // func end
 
     // =================== useEffect - [currentLocation] : 지도 초기화 ===================
     useEffect(() => {
@@ -245,11 +245,6 @@ export default function KakaoMap(props) {
 
         // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
-            // 만약에 panTo로 이동했으면, idle 실행 X
-            if (isUserMoveRef.current) {
-                isUserMoveRef.current = false;
-                return;
-            } // if end
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             } // if end

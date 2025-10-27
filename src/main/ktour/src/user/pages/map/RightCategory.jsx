@@ -31,6 +31,7 @@ export default function RightCategory(props) {
     const { centeredLDong } = useSelector((state) => state.relatedMap);
     // =================== useState ===================
     const [activeCategory, setActiveCategory] = useState("all");
+    const [activeLDong, setActiveLDOng] = useState(null);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
 
@@ -40,8 +41,8 @@ export default function RightCategory(props) {
     };
 
     useEffect(() => {
-        
-    }, [activeCategory, centeredLDong])
+        setActiveLDOng(centeredLDong);
+    }, [centeredLDong])
 
     /** ========================= 사용자단(비회원) > 메인(html) 샘플페이지.jsx영역 ================================== */
     return (
@@ -51,7 +52,7 @@ export default function RightCategory(props) {
                 {/* <!-- 03-1.우측 본문 영역 시작 --> */}
                 <div className="rightContents">
                     <div className="pageTitle">
-                        <h2><FontAwesomeIcon icon={faLocationDot} />{centeredLDong}</h2>
+                        <h2><FontAwesomeIcon icon={faLocationDot} />{activeLDong}</h2>
                         <ul className="cotentType">
                             {
                                 categories.map((category) => {
