@@ -20,7 +20,7 @@ export default function MainPlace(props) {
 
     return <>
         <div id="map"><KakaoMap /></div>
-        {/* <RightModalPlace /> */}
+        <RightModalPlace />
         {selectedMarker && <LeftModalPlace pNo={selectedMarker} />}
         <RightCategory />
     </>
