@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ManagerDto {
     // 기본적인 정보
-    private String mgNo;                // 관리자번호[PK] || UUID로 되어있기에 안전하게 String으로 반환
+    private String mgNo;                // 관리자번호[PK]
     private int siNo;                   // 사이트번호[FK]
     private String mId;                 // 아이디
     private String mPwd;                // 비밀번호
