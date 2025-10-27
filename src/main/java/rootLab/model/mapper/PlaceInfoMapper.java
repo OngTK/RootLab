@@ -28,7 +28,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             #{zipcode}, #{homepage}, #{tel}, #{telname}, #{overview})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "pNo")
-    int create(PlaceInfoDto placeInfoDto);
+    int create(@Param("PlaceInfoDto") PlaceInfoDto placeInfoDto);
 
     /**
      * [2.1] 전체 조회 - 검색X, pageX

@@ -7,8 +7,9 @@
  */
 
 import DetailCommon1 from "@admin/pages/map/place/DetailCommon1";  //* (본문 우측)플레이스 공통정보(1.기본) 컴포넌트 */
-import DetailIntro2 from "@admin/pages/map/place/DetailIntro2";    //* (본문 우측)플레이스 상세정보(2.인트로) 컴포넌트 */
+import TourIntro2 from "@admin/pages/map/place/TourIntro2";    //* (본문 우측)플레이스 상세정보(2.인트로) 컴포넌트 */
 import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3";  //* (본문 우측)플레이스 반복정보(3.info2) 컴포넌트 */
+import TourIntro2 from "./TourIntro2";
 
 export default function DetailSection(props) {
 
@@ -36,7 +37,9 @@ export default function DetailSection(props) {
                 <div className="formWrap">
                     <DetailCommon1 />
                     <hr />
-                    <DetailIntro2 />
+                    <TourIntro2/>
+                    <hr />
+
                     <hr />
                     <DetailRepeat3 />
                 </div>

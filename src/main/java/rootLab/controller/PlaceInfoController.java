@@ -151,8 +151,12 @@ public class PlaceInfoController {
             @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
             @RequestPart(value = "detailImages", required = false) List<MultipartFile> detailImages // multiple
     ) {
-        System.out.println("PlaceInfoController.savePlaceBasicInfo");
-        System.out.println("placeInfo = " + placeInfo + ", marker = " + marker + ", imagesMeta = " + imagesMeta + ", markerImage = " + markerImage + ", mainImage = " + mainImage + ", detailImages = " + detailImages);
+        System.out.println("placeInfo = " + placeInfo + "\n"+
+                ", marker = " + marker + "\n"+
+                ", imagesMeta = " + imagesMeta +"\n"+
+                ", markerImage = " + markerImage + "\n"+
+                ", mainImage = " + mainImage +"\n"+
+                ", detailImages = " + detailImages);
 
         boolean ok = placeAggregateService.savePlaceBasicInfo(
                 placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages

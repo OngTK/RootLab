@@ -1,6 +1,7 @@
 package rootLab.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Log4j2
 public class PlaceAggregateService {
 
     private final PlaceInfoService placeInfoService;
@@ -28,16 +30,23 @@ public class PlaceAggregateService {
     private final PlaceImageDetailService placeImageDetailService;
     private final FileUtil fileUtil;
 
-
     /**
      * [PI-03] 플레이스 기본정보 등록
+     * <p>
      * 대표이미지 1 + 마커이미지 1 + 상세이미지(<=10) + 3 DTO를 한 번에 저장합니다.
+     * <p>
      * 1) 파일 임시저장
+     * <p>
      * 2) PlaceInfo upsert (pNo 확보)
+     * <p>
      * 3) 대표/상세 첫 이미지 URL 반영
+     * <p>
      * 4) Marker upsert
+     * <p>
      * 5) 상세이미지 bulk insert (pNo별 serialnum = MAX+1 ~)
+     * <p>
      * 6) (선택) 커밋 후 파일 승격
+     * @author OngTK
      */
     public boolean savePlaceBasicInfo(
             PlaceInfoDto placeInfo,
@@ -62,6 +71,7 @@ public class PlaceAggregateService {
         placeInfo.setFirstimage2(tmpDetailFiles.get(0));
 
         // ---- [3] PlaceInfo upsert → pNo 확보 ----
+        System.out.println(placeInfo);
         Integer pNo = upsertPlaceInfoAndGetPno(placeInfo);
 
         // ---- [4] Marker upsert ----

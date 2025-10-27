@@ -6,7 +6,7 @@
  * @version 0.1.1
  */
 
-export default function DetailIntro2(props) {
+export default function TourIntro2(props) {
 
 /** ========================= [본문 우측] 플레이스 Intro상세정보(2.인트로) 컴포넌트============================== */
     return (
@@ -96,6 +96,7 @@ export default function DetailIntro2(props) {
                             <label htmlFor="usage-time">이용 시간</label>
                             <input type="text" id="usage-time" name="usageTime" />
                         </div>
+                        
                         <div className="info_date">
                             <b>등록일:</b>2025-00-00 (00:00:00)<b>수정일:</b>2025-00-00 (00:00:00)
                         </div>
