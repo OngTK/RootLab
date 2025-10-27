@@ -3,6 +3,7 @@ package rootLab.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rootLab.model.dto.PushPopupDto;
 import rootLab.service.PushPopupService;
 
@@ -18,7 +19,6 @@ public class PushPopupController {
     /**
      * 1. 검색
      * [(place번호), (카테고리), (제목)]를 입력받아, 해당하는 푸시알림팝업을 조회한다.
-     * @param pNo
      * @param ppUse
      * @param ppType
      * @param ppTitle
@@ -39,12 +39,13 @@ public class PushPopupController {
     }
 
     /**
-     * 2. 등록
+     * 2. 등록/ 파일등록
      *
      * @author juju9595
      */
     @PostMapping("/add")
-    public ResponseEntity<?> addPush(@RequestBody PushPopupDto pushPopupDto){
+    public ResponseEntity<?> addPush(@RequestPart("dto") PushPopupDto pushPopupDto, @RequestPart(value = "file", required = false)MultipartFile file
+    ){
         System.out.println("pushPopupDto = " + pushPopupDto);
         int result = pushPopupService.addPush(pushPopupDto);
         return ResponseEntity.ok(result);
@@ -72,5 +73,7 @@ public class PushPopupController {
         boolean result = pushPopupService.updatePush(dto);
         return ResponseEntity.ok(result);
     }
+
+
 
 }
