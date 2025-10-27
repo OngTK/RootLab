@@ -21,6 +21,7 @@ import java.util.Map;
  * PlaceInfo
  * <p>
  * 관공·축제 등 모든 장소 공통 정보
+ *
  * @author OngTK
  */
 @RestController
@@ -34,15 +35,16 @@ public class PlaceInfoController {
 
     /**
      * [PI-01] 플레이스 검색
-     * @param page          조회하려는 현재 페이지
-     * @param size          한 페이지 당 노출되는 콘텐츠 수
-     * @param ctNo          콘텐츠번호 FK
-     * @param showflag      노출여부
-     * @param ccName        분류체계 번호 : 3단계 카테고리
-     * @param ldName        법정동 명칭
-     * @param address       주소
-     * @param title         플레이스명
-     * @param pNo           플레이스 번호
+     *
+     * @param page     조회하려는 현재 페이지
+     * @param size     한 페이지 당 노출되는 콘텐츠 수
+     * @param ctNo     콘텐츠번호 FK
+     * @param showflag 노출여부
+     * @param ccName   분류체계 번호 : 3단계 카테고리
+     * @param ldName   법정동 명칭
+     * @param address  주소
+     * @param title    플레이스명
+     * @param pNo      플레이스 번호
      * @author OngTK
      */
     @GetMapping("/search")
@@ -55,42 +57,66 @@ public class PlaceInfoController {
             @RequestParam(required = false) String ldName,
 
             @RequestParam(required = false) Integer ctNo,     // int -> Integer
-            @RequestParam(required = false) Boolean showflag, // boolean -> Boolean
+            @RequestParam(defaultValue = "true") boolean showflag, // boolean -> Boolean
             @RequestParam(required = false) Integer pNo       // int -> Integer
     ) {
-        System.out.println("page = " + page + ", size = " + size + ", ctNo = " + ctNo + ", showflag = " + showflag + ", ccName = " + ccName + ", ldName = " + ldName + ", address = " + address + ", title = " + title + ", pNo = " + pNo);
+        System.out.println("page = " + page
+                + ", size = " + size
+                + ", title = " + title
+                + ", address = " + address
+                + ", ccName = " + ccName
+                + ", ldName = " + ldName
+                + ", ctNo = " + ctNo
+                + ", showflag = " + showflag
+                + ", pNo = " + pNo);
 
         // [1.1] 페이지 처리 요청을 위한 PageRequest 개체 생성
         // 참고 정렬을 위한 sort 개체 생성 과정 생략
         PageRequest pageRequest = new PageRequest(page, size);
 
-        // [1.2] 검색조건 Criteria 객체 생성
-        PlaceInfoCriteria placeInfoCriteria = PlaceInfoCriteria
-                .builder()
-                .ctNo(ctNo)
-                .showflag(showflag)
-                .ccName(ccName)
-                .ldName(ldName)
-                .address(address)
-                .title(title).pNo(pNo).build();
-
-        // 검색조건으 모두 null이면 false / 하나라도 존재하면 true
-        boolean filter = (!showflag) &&
-                (ccName == null || ccName.isEmpty()) &&
-                (ldName == null || ldName.isEmpty()) &&
-                (address == null || address.isEmpty()) &&
-                (title == null || title.isEmpty()) ? false : true;
+        // [1.2] 검색조건이 모두 null이면 false / 하나라도 존재하면 true
+        boolean filter =
+                (ccName != null && !ccName.isEmpty()) ||
+                        (ctNo != null) ||
+                        (pNo != null) ||
+                        (ldName != null && !ldName.isEmpty()) ||
+                        (address != null && !address.isEmpty()) ||
+                        (title != null && !title.isEmpty());
 
         // [1.3] service
         Page<PlaceInfoDto> result;
-        if(filter){
+
+        if (filter) {
+            // [1.4] 검색조건 Criteria 객체 생성
+            PlaceInfoCriteria placeInfoCriteria = new PlaceInfoCriteria();
+
+            if (ctNo != null && ctNo != 0) {
+                placeInfoCriteria.setCtNo(ctNo);
+            }
+            if (pNo != null && pNo != 0) {
+                placeInfoCriteria.setPNo(pNo);
+            }
+            if (ccName != null && !ccName.isEmpty()) {
+                placeInfoCriteria.setCcName(ccName);
+            }
+            if (ldName != null && !ldName.isEmpty()) {
+                placeInfoCriteria.setLdName(ldName);
+            }
+            if (address != null && !address.isEmpty()) {
+                placeInfoCriteria.setAddress(address);
+            }
+            if (title != null && !title.isEmpty()) {
+                placeInfoCriteria.setTitle(title);
+            }
+            placeInfoCriteria.setShowflag(showflag);
+            System.out.println(placeInfoCriteria);
+
             result = placeInfoService.searchPage(placeInfoCriteria, pageRequest);
         } else {
             result = placeInfoService.findPage(pageRequest);
         }
-
         return ResponseEntity.ok(result);
-    } // func end todo
+    } // func end
 
     /**
      * [PI-02] 플레이스 개별조회
@@ -110,9 +136,10 @@ public class PlaceInfoController {
      * [PI-03] 플레이스 기본정보 등록
      * 복수 DTO(PlaceInfo, MarkersGPS, PlaceImageDetail) + 복수 파일(마커1, 대표1, 상세N)을
      * 단일 multipart/form-data 요청으로 받아 트랜잭션으로 처리합니다.
+     *
      * @author OngTK
      */
-    @PostMapping(value="/basic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/basic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> savePlaceBasicInfo(
             // JSON 파트
             @RequestPart("placeInfo") PlaceInfoDto placeInfo,
@@ -121,9 +148,9 @@ public class PlaceInfoController {
 
             // 파일 파트 (JSX 필드명 기준: markerImage / mainImage / detailImage…)
             @RequestPart(value = "markerImage", required = false) MultipartFile markerImage,
-            @RequestPart(value = "mainImage",   required = false) MultipartFile mainImage,
+            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
             @RequestPart(value = "detailImages", required = false) List<MultipartFile> detailImages // multiple
-    ){
+    ) {
         System.out.println("PlaceInfoController.savePlaceBasicInfo");
         System.out.println("placeInfo = " + placeInfo + ", marker = " + marker + ", imagesMeta = " + imagesMeta + ", markerImage = " + markerImage + ", mainImage = " + mainImage + ", detailImages = " + detailImages);
 
@@ -136,32 +163,34 @@ public class PlaceInfoController {
 
     /**
      * [PI-04] 플레이스 기본정보 수정
+     *
      * @author OngTK
      */
     @PutMapping("/basic")
-    public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto){
+    public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto) {
         return ResponseEntity.ok(0);
     } // func end todo
 
     /**
      * [PI-05] 플레이스 기본정보 삭제
+     *
      * @author OngTK
      */
     @DeleteMapping("/basic")
-    public ResponseEntity<?> deletePlaceBasicInfo(@RequestParam int pNo){
+    public ResponseEntity<?> deletePlaceBasicInfo(@RequestParam int pNo) {
         return ResponseEntity.ok(0);
     } // func end todo
 
 
     /**
      * [PI-06] 플레이스 정보 일괄 저장
+     *
      * @author OngTK
      */
     @PutMapping("/all")
-    public ResponseEntity<?> saveAllPlaceAndDetailInfo(){
+    public ResponseEntity<?> saveAllPlaceAndDetailInfo() {
         return ResponseEntity.ok(0);
     } // func end todo
-
 
 
 } // class end

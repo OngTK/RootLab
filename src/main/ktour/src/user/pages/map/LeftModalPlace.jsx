@@ -7,78 +7,212 @@
  */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-export default function LeftModalPlace(props) {
+import { useDispatch, useSelector } from 'react-redux';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { selectMarker } from "../../store/mapSlice";
 
-/** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
+// tourIntro 속성명
+const tourIntroLabels = {
+    infoCenter: "문의 및 안내",
+    restDate: "휴무일",
+    openDate: "개장일",
+    useSeason: "이용 시기",
+    useTime: "이용 시간",
+    accomcount: "수용인원",
+    expAgeRange: "체험 가능 연령",
+    expGuide: "체험 안내",
+    parking: "주차시설",
+    chkBabyCarriage: "유모차 대여",
+    chkCreditCard: "신용카드",
+    chkPet: "애완동물 동반"
+};
+// RestaurantIntro 속성명
+const restaurantIntroLabels = {
+    infoCenterFood: "문의 및 안내",
+    restDateFood: "휴무일",
+    openDateFood: "개업일",
+    openTimeFood: "영업시간",
+    firstMenu: "대표메뉴",
+    treatMenu: "취급메뉴",
+    packing: "포장",
+    kidsFacility: "어린이놀이방",
+    chkCreditCardFood: "신용카드",
+    discountInfoFood: "할인안내",
+    reservationFood: "예약안내",
+    parkingFood: "주차시설",
+    scaleFood: "매장규모",
+    seat: "좌석 수",
+    smoking: "금연시설 여부"
+};
+// FestivalIntro 속성명
+const festivalIntroLabels = {
+    eventStartDate: "행사시작일",
+    eventEndDate: "행사종료일",
+    eventPlace: "장소",
+    eventHomepage: "행사홈페이지",
+    ageLimit: "관람가능연령",
+    useTimeFestival: "이용요금",
+    bookingPlace: "예매처",
+    discountInfoFestival: "할인정보",
+    placeInfo: "행사장 위치",
+    festivalGrade: "축제등급",
+    festivalType: "축제유형",
+    playTime: "공연시간",
+    program: "프로그램",
+    progressType: "진행상태",
+    spendTimeFestival: "관람소요시간",
+    sponsor1: "주최자",
+    sponsor1Tel: "주최자 연락처",
+    sponsor2: "주관사",
+    sponsor2Tel: "주관사 연락처",
+    subEvent: "부대행사"
+};
+
+export default function LeftModalPlace(props) {
+    // =================== useSelector ===================
+    const { axiosOption } = useSelector((state) => state.relatedMap);
+    // =================== useState 선언부 ===================
+    const [placeInfo, SetPlaceInfo] = useState(null);
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
+
+    const getplaceInfoByAxios = async () => {
+        if (!props.pNo) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${props.pNo}`, axiosOption);
+            SetPlaceInfo(response.data);
+        } catch (error) {
+            console.log('getplaceInfoByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== useEffect - [props.pNo] : 상세정보 GET ===================
+    useEffect(() => {
+        getplaceInfoByAxios();
+    }, [props.pNo])
+
+    const handleCloseModal = () => {
+        dispatch(selectMarker(null));
+    } // func end
+
+    // axios 처리가 안 됐으면, 종료
+    if (!placeInfo) return;
+    /** =========================== ★좌측모달★ LeftModalPlace.jsx ===================================== */
     return (
         <>
             <div className="leftModal" id="leftModalPlace">
                 {/* 모달 박스 시작 */}
                 <div className="modal_box">
                     {/* 콘텐츠 내용 시작 */}
-                    <button className="modalClose"><FontAwesomeIcon icon={faXmark} /></button>
+                    <button className="modalClose" onClick={handleCloseModal} ><FontAwesomeIcon icon={faXmark} /></button>
 
                     <div className="modal_img_box">
-                        <img
-                            src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="타이틀"
-                        />
+                        {placeInfo.placeInfo.firstimage && <img src={placeInfo.placeInfo.firstimage} alt="타이틀" />}
                         <div className="modalContentOutline">
-                            <h3>동촌유원지</h3>
-                            <div className="category">자연관광&nbsp; 체험관광동궁</div>
+                            <h3>{placeInfo.placeInfo.title}</h3>
+                            <div className="category">{placeInfo.placeInfo.lclsSystm2Nm}&nbsp; {placeInfo.placeInfo.lclsSystm3Nm}</div>
                         </div>
                     </div>
 
                     <div className="modalContent">
                         <p className="description">
-                            동촌유원지는 대구시 동쪽 금호강변에 있는 44만 평의 유원지로 오래전부터 대구 시민이 즐겨 찾는 곳이다. 각종 위락시설이 잘 갖춰져 있으며, 드라이브를 즐길 수 있는 도로가 건설되어 있다. 수량이 많은 금호강에는 조교가 가설되어 있고, 우아한 다리 이름을 가진 아양교가 걸쳐 있다. 금호강(琴湖江)을 끼고 있어 예로부터 봄에는 그네뛰기, 봉숭아꽃 구경, 여름에는 수영과 보트 놀이, 가을에는 밤 줍기 등 즐길 거리가 많은 곳이다. 또한, 해맞이다리, 유선장, 체육시설, 실내 롤러스케이트장 등 다양한 즐길 거리가 있어 여행의 재미를 더해준다.
+                            {
+                                placeInfo.placeInfo.overview || '정보 없음'
+                            }
                         </p>
 
                         <h4>상세정보</h4>
                         <ul>
-                            <li><b>주소</b> 연중무휴</li>
-                            <li>
-                                <b>홈페이지</b>
-                                <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
-                                </a>
-                            </li>
-                            <li>
-                                <b>전화</b>
-                                <a href="tel:010-1234-5678">010-1234-5678</a>
-                            </li>
-                            <li>
-                                <b>주차여부</b> 가능 / 요금 (최초 2시간 무료 / 이후 30분 당 400원씩 추가 요금 발생)
-                            </li>
-                            <li><b>휴무일</b> 연중무휴</li>
-                            <li><b>컬럼명</b> 컬럼값</li>
+                            <li><b>주소</b>{placeInfo.placeInfo.addr1}{'\t'}{placeInfo.placeInfo.addr2}</li>
+                            {
+                                placeInfo.placeInfo.homepate &&
+                                <li>
+                                    <b>홈페이지</b>
+                                    <a href="#" target="_blank" rel="noopener noreferrer">
+                                        {placeInfo.placeInfo.homepate}
+                                    </a>
+                                </li>
+                            }
+                            {
+                                placeInfo.placeInfo.tel &&
+                                <li>
+                                    <b>전화</b>
+                                    <a href={placeInfo.placeInfo.tel}>{placeInfo.placeInfo.tel}</a>
+                                </li>
+                            }
                         </ul>
 
                         <h4>사진이미지</h4>
                         <ul className="additionImgWrap">
-                            <li><img src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="" /></li>
-                            <li><img src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="" /></li>
-                            <li><img src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="" /></li>
-                            <li><img src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="" /></li>
-                            <li><img src="http://tong.visitkorea.or.kr/cms/resource/86/3488286_image2_1.JPG" alt="" /></li>
+                            {
+                                placeInfo.PlaceImageDetail.map((image) => {
+                                    return <li key={image.pidNo}><img src={image.originimgurl} alt="" /></li>
+                                })
+                            }
                         </ul>
 
                         <h4>부가정보</h4>
                         <ul>
-                            <li>
-                                <b>홈페이지</b>
-                                <a href="#" target="_blank" rel="noopener noreferrer">
-                  //tour.daegu.go.kr
-                                </a>
-                            </li>
-                            <li>
-                                <b>전화</b>
-                                <a href="tel:010-1234-5678">010-1234-5678</a>
-                            </li>
-                            <li>
-                                <b>주차</b> 가능 / 요금 (최초 2시간 무료 / 이후 30분 당 400원씩 추가 요금 발생)
-                            </li>
-                            <li><b>휴무일</b> 연중무휴</li>
-                            <li><b>휴무일</b> 연중무휴</li>
+                            {
+                                placeInfo.PlaceInfoDtoList.map((info) => {
+                                    if (info.infoText) {
+                                        return <li key={info.pirNo}> <b>{info.infoName}</b> {info.infoText.replace('_', ',')} </li>
+                                    } else {
+                                        return null;
+                                    }
+
+                                })
+                            }
+                            {placeInfo.TourIntro &&
+                                Object.keys(tourIntroLabels).map((key) => {
+                                    const value = placeInfo.TourIntro[key];
+                                    if (value) {
+                                        const label = tourIntroLabels[key];
+                                        return (
+                                            <li key={key}>
+                                                <b>{label}</b> {value}
+                                            </li>
+                                        );
+                                    } // if end
+                                    // 값이 없으면, 렌더링 X
+                                    return null;
+                                })
+                            }
+                            {placeInfo.RestaurantIntro &&
+                                Object.keys(restaurantIntroLabels).map((key) => {
+                                    const value = placeInfo.RestaurantIntro[key];
+                                    if (value) {
+                                        const label = restaurantIntroLabels[key];
+                                        return (
+                                            <li key={key}>
+                                                <b>{label}</b> {value}
+                                            </li>
+                                        );
+                                    } // if end
+                                    // 값이 없으면, 렌더링 X
+                                    return null;
+                                })
+                            }
+                            {placeInfo.FestivalIntro &&
+                                Object.keys(festivalIntroLabels).map((key) => {
+                                    const value = placeInfo.FestivalIntro[key];
+                                    if (value && value != '선택안함') {
+                                        const label = festivalIntroLabels[key];
+                                        const displayValue = String(value).replace(
+                                            /^((?:19|20)\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/,
+                                            '$1년 $2월 $3일'
+                                        );
+                                        return (
+                                            <li key={key}>
+                                                <b>{label}</b> {displayValue}
+                                            </li>
+                                        );
+                                    } // if end
+                                    // 값이 없으면, 렌더링 X
+                                    return null;
+                                })
+                            }
                         </ul>
                     </div>
                     {/* 콘텐츠 내용 끝 */}

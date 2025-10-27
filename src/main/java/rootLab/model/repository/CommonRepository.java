@@ -74,8 +74,10 @@ public interface CommonRepository<T, ID, C extends BaseCriteria> {
     default Page<T> findPage(PageRequest pageRequest) {
         // [5.1] 조회 시, 전체 레코드 수를 반환하는 method
         int total = countAll();
+        System.out.println("total : " +total);
         // [5.2] 페이지 처리 요청 객체를 매개변수로 해당 레코드를 가져오는 method
         List<T> content = findAllPaged(pageRequest);
+        System.out.println("pageRequest = " + pageRequest);
         // Page<> 생성자를 이용한 페이지 결과 객체 반환
         return new Page<>(content, total, pageRequest.getPage(), pageRequest.getSize());
     } // func end
@@ -102,12 +104,29 @@ public interface CommonRepository<T, ID, C extends BaseCriteria> {
      * @author OngTK
      */
     default Page<T> searchPage(C criteria, PageRequest pageRequest) {
+
         // [6.1] 검색 결과 총 레코드 수를 반환하는 method
         int total = countForSearch(criteria);
+
+        int size = pageRequest.getLimit();         // == pageRequest.getSize()
+        int totalPages = (total + size - 1) / size;
+
+        if (total == 0) {
+            return new Page<>(List.of(), 0, pageRequest.getPage(), size);
+        }
+
+        // 현재 page가 총 페이지 수를 초과하면 마지막 페이지로 보정
+        int currPage = pageRequest.getPage();
+        if (currPage > totalPages) {
+            currPage = totalPages;
+            pageRequest = new PageRequest(currPage, size); // offset/limit 재계산
+        }
+
+
         // [6.2] 검색 + 페이지 처리 결과 레코드만 List로 반환하는 method
         List<T> content = searchPaged(criteria, pageRequest);
         // Page<> 생성자를 이용한 페이지 결과 객체 반환
-        return new Page<>(content, total, pageRequest.getPage(), pageRequest.getSize());
+        return new Page<>(content, total, currPage, size);
     } // func end
 
     /**

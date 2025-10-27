@@ -16,53 +16,44 @@ INSERT INTO k_tour_headquarter.categorycode ( rnum, lclsSystm1Cd, lclsSystm1Nm, 
 
 -- ----------------------------------------placeInfo_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.contenttype;		-- ctNo
+SELECT * FROM k_tour_headquarter.ldongcode;			-- ldNo
+SELECT * FROM k_tour_headquarter.categorycode;		-- ccNo
+
+SELECT * FROM tour_api_origin.areabasedsynclist2;	-- contentid, title, showflag, firstImage, firstImage2, addr1, addr2, zipcode, tel
+SELECT * FROM tour_api_origin.detailcommon2;		-- homepage, telname, overview
+
+SELECT kcc.ccNo, tabsl2.lclsSystm3, kcc.lclsSystm3Cd
+	FROM tour_api_origin.areabasedsynclist2 tabsl2
+    LEFT OUTER JOIN k_tour_headquarter.categorycode kcc
+    ON kcc.lclsSystm3Cd = UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(tabsl2.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')));
+
+SELECT kct.ctNo, tabsl2.contentid
+	FROM tour_api_origin.areabasedsynclist2 tabsl2
+    JOIN k_tour_headquarter.contenttype kct
+    USING (contenttypeid);
+SELECT ldc.ldNo, ldc.lDongRegnCd, tabsl2.lDongRegnCd, ldc.lDongSignguCd, tabsl2.lDongSignguCd
+	FROM tour_api_origin.areabasedsynclist2 tabsl2
+    LEFT OUTER JOIN k_tour_headquarter.ldongcode ldc
+    ON tabsl2.lDongRegnCd = ldc.lDongRegnCd
+    AND tabsl2.lDongSignguCd = ldc.lDongSignguCd;
+
+-- FROM API 완료
+SELECT kct.ctNo, ldc.ldNo, kcc.ccNo, tabsl2.contentid, tabsl2.title, tabsl2.showflag, tabsl2.firstimage, tabsl2.firstimage2, tabsl2.addr1, tabsl2.addr2, tabsl2.zipcode, tabsl2.tel, tdc2.homepage, tdc2.telname, tdc2.overview
+	FROM tour_api_origin.areabasedsynclist2 tabsl2
+    LEFT OUTER JOIN tour_api_origin.detailcommon2 tdc2
+    USING (contentid)
+    JOIN k_tour_headquarter.contenttype kct
+    ON tabsl2.contenttypeid = kct.contenttypeid
+    LEFT OUTER JOIN k_tour_headquarter.ldongcode ldc
+    ON tabsl2.lDongRegnCd = ldc.lDongRegnCd
+    AND tabsl2.lDongSignguCd = ldc.lDongSignguCd
+    LEFT OUTER JOIN k_tour_headquarter.categorycode kcc
+    ON kcc.lclsSystm3Cd = UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(tabsl2.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')));
 -- ----------------------------------------INSERT------------------------------------------
-INSERT INTO k_tour_headquarter.placeinfo ( ctNo, ldNo, ccNo, isEditable, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt )
-	SELECT
-			/* FK: contentType.ctNo */
-			( SELECT ct.ctNo
-			FROM k_tour_headquarter.contentType ct
-			WHERE ct.contenttypeID = TRIM(al.contenttypeid)
-			LIMIT 1 ) AS ctNo,
-
-			/* FK: ldongCode.ldNo (법정동: lDongRegnCd + lDongSignguCd) */
-			( SELECT ld.ldNo
-			FROM k_tour_headquarter.ldongCode ld
-			WHERE ld.lDongRegnCd = TRIM(al.lDongRegnCd)
-			AND ld.lDongSignguCd= TRIM(al.lDongSignguCd)
-			LIMIT 1 ) AS ldNo,
-
-			/* FK: categoryCode.ccNo (al.lclsSystm3 기준 매칭) */
-			( SELECT cc.ccNo
-			FROM k_tour_headquarter.categoryCode cc
-			WHERE cc.lclsSystm3Cd =
-			UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(
-			al.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')))
-			LIMIT 1 ) AS ccNo,
-
-			TRUE AS isEditable,
-			CAST(al.contentid AS UNSIGNED) AS contentid,
-			LEFT(TRIM(al.title), 50) AS title,
-			al.showflag AS showflag,
-			NULLIF(TRIM(al.firstimage), '') AS firstimage,
-			NULLIF(TRIM(al.firstimage2), '') AS firstimage2,
-			COALESCE(NULLIF(TRIM(al.addr1), ''), '-') AS addr1,
-			NULLIF(TRIM(al.addr2), '') AS addr2,
-			NULLIF(TRIM(al.zipcode), '') AS zipcode,
-
-			/* 부가정보: dc가 있으면 채움, 없으면 NULL */
-			NULLIF(TRIM(dc.homepage), '') AS homepage,
-			LEFT(NULLIF(TRIM(al.tel), ''), 10) AS tel,
-			NULLIF(TRIM(dc.telname), '') AS telname,
-			NULLIF(dc.overview, '') AS overview,
-
-			/* [] createdAt, updatedAt을 DATETIME 형식으로 변환 */
-			STR_TO_DATE(al.createdtime, '%Y%m%d%H%i%s') AS createdAt,
-			STR_TO_DATE(al.modifiedtime, '%Y%m%d%H%i%s') AS updatedAt
-
-			FROM tour_api_origin.areabasedsynclist2 al
-			LEFT JOIN tour_api_origin.detailcommon2 dc
-			ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
+INSERT INTO k_tour_headquarter.placeinfo
+	( ctNo, ldNo, ccNo, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt )
+	SELECT * FROM tour_api_origin.areabasedsynclist2;
 
 -- ----------------------------------------markersGPS_test SQL------------------------------------------
 SELECT * FROM k_tour_headquarter.markersgps;
@@ -245,12 +236,15 @@ INSERT INTO k_tour_headquarter.placeinforepeat(pNo, fldgubun, infoname, infotext
 SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM k_tour_headquarter.contenttype;
-SELECT kpi.pNo, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy
+SELECT * FROM k_tour_headquarter.categorycode;
+SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage, kct.contenttypename
 	FROM k_tour_headquarter.placeinfo kpi
 	JOIN k_tour_headquarter.contenttype kct
 	USING (ctNo)
     JOIN k_tour_headquarter.markersgps kmg
     USING (pNo)
+    JOIN k_tour_headquarter.categorycode kcc
+    USING (ccNo)
     WHERE kmg.mapx > 128.3630474080145
     AND kmg.mapx < 128.73106927424288
     AND kmg.mapy > 37.95358854898442
@@ -267,3 +261,16 @@ SELECT kpi.pNo, kmg.mapx, kmg.mapy, kmg.mkURL
     USING (pNO)
     WHERE klc.lDongRegnCd = 11
     AND klc.lDongSignguCd = 110;
+    
+-- ----------------------------------------placeInfo JOIN TEST------------------------------------------
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.categorycode;
+SELECT * FROM k_tour_headquarter.ldongcode;
+
+SELECT kpi.*, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN k_tour_headquarter.categorycode kcc
+    USING (ccNo);
+
+SELECT * FROM k_tour_headquarter.markersgps WHERE pno = 23405;
+    USING (ccNo);

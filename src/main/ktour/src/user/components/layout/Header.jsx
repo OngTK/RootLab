@@ -7,10 +7,61 @@
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  faMagnifyingGlass  } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { selectedSigngu } from "../../store/mapSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
+    // =================== useSelector ===================
+    const { axiosOption } = useSelector((state) => state.relatedMap );
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
+    // =================== useState 선언부 ===================
+    const [lDongRegnCd, SetLDongRegnCd] = useState([]);
+    const [lDongSignguCd, SetLDongSigngu] = useState([]);
+    const [selectedRegnCd, SetSelectedRegnCd] = useState("");
+    const [selectedLdNo, SetSelectedLdNo] = useState("");
+
+    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
+    useEffect(() => {
+        getLDongRegnCdByAxios();        // 시도코드를 얻어오는 함수 실행
+    }, []); // useEffect end
+    // =================== LDongRegnCd Axios GET ===================
+    const getLDongRegnCdByAxios = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/ldongcode/getregn", axiosOption);
+            SetLDongRegnCd(response.data);
+        } catch (error) {
+            console.log('getLDongCodeByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== LDongSignguCd Axios GET ===================
+    const getLDongSignguCdByAxios = async () => {
+        if (selectedRegnCd == "") return;
+        try {
+            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, axiosOption);
+            SetLDongSigngu(response.data);
+        } catch (error) {
+            console.log('getLDongSignguCdByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+    // =================== useEffect - [selectedRegnCd] : 시군구 정보 가져오기 ===================
+    useEffect(() => {
+        getLDongSignguCdByAxios();
+    }, [selectedRegnCd]);
+    // =================== Select Markup Change ===================
+    const changeRegnCd = (e) => {
+        SetSelectedRegnCd(e.target.value);
+    } // func end
+    const changeLdNo = (e) => {
+        SetSelectedLdNo(e.target.value);
+        dispatch(selectedSigngu(e.target.value));
+    } // func end
 
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
     return (
@@ -28,17 +79,27 @@ export default function Header(props) {
                     <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                     <input type="text" placeholder="관광지/상호명 검색" autoFocus="" />
                 </div>
-                <div className="promotionText">우리동네 <b>AI추천</b> 모임장소</div>
+                <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">
-                    <select>
-                        <option value="28">인천광역시</option>
-                        <option value="11">서울특별시</option>
-                        <option value="">1차지역</option>
+                    <select onChange={changeRegnCd} value={selectedRegnCd}>
+                        <option value="" disabled> 시구 선택</option>
+                        {
+                            lDongRegnCd.map((regn) => {
+                                return <option key={regn.ldongregncd} value={regn.ldongregncd}>
+                                    {regn.ldongregnnm}
+                                </option>
+                            })
+                        }
                     </select>
-                    <select>
-                        <option value="56">부평구</option>
-                        <option value="53">연수구</option>
-                        <option value="">2차지역</option>
+                    <select onChange={changeLdNo} value={selectedLdNo}>
+                        <option value="" disabled> 시군구 선택</option>
+                        {
+                            lDongSignguCd.map((signgu) => {
+                                return <option key={signgu.ldNo} value={signgu.ldNo}>
+                                    {signgu.ldongsigngunm}
+                                </option>
+                            })
+                        }
                     </select>
                 </div>
             </div>

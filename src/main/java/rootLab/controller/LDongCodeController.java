@@ -54,4 +54,14 @@ public class LDongCodeController {
     public ResponseEntity<?> getLDongCodeByldNo(@RequestParam int ldNo){
         return ResponseEntity.ok(lDongCodeService.getLDongCodeByldNo(ldNo));
     } // func end
+
+    /**
+     * [LC-04] 시군구코드 전체 조회
+     * @author OngTk
+     */
+    @GetMapping("/getAllDong")
+    public ResponseEntity<?> getAllLDongCode(){
+        return ResponseEntity.ok(lDongCodeService.getAllLDongCode());
+    } // func end
+
 } // class end

@@ -1,0 +1,42 @@
+/* 인포윈도우의 전체 컨테이너 */
+.iw-container {
+    z-index: 500;
+    padding: 10px 15px;
+    min-width: 280px;
+    max-width: 380px;
+    line-height: 1.5;
+}
+
+/* 상단 (제목, 카테고리) */
+.iw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 0 8px 0;
+    padding: 0;
+}
+
+/* 장소 이름 (제목) */
+.iw-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2170C3;
+    margin-right: 9px;
+}
+
+/* 장소 카테고리 (음식점, 관광지 등) */
+.iw-category {
+    font-size: 0.8rem;
+    color: #888;
+    white-space: nowrap;
+    /* 줄바꿈 방지 */
+}
+
+/* 주소 텍스트 */
+.iw-address {
+    font-size: 0.8rem;
+    color: #555;
+    display: block;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}

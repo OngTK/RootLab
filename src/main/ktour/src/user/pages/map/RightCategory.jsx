@@ -30,7 +30,7 @@ export default function RightCategory(props) {
                             <li><FontAwesomeIcon icon={faHiking} /><span>레저</span></li>
                             <li><FontAwesomeIcon icon={faShoppingBag} /><span>쇼핑</span></li>
                             <li><FontAwesomeIcon icon={faUtensils} /><span>음식</span></li>
-                            <li><FontAwesomeIcon icon={faMasksTheater} /><span>축제</span></li>
+                            <li><FontAwesomeIcon icon={faMusic} /><span>축제</span></li>
                             <li><FontAwesomeIcon icon={faBed} /><span>숙박</span></li>
                         </ul>
                     </div>

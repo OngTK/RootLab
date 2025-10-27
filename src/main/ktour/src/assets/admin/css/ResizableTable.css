@@ -20,12 +20,12 @@
 }
 
 /* 헤더/첫열 고정 */
-.rzTable thead th { position:sticky; top:-1px; z-index:5; background:#fff; font-weight:600; cursor: default; }
+.rzTable thead th { position:sticky; top:-1px; z-index:5; background:#fff; font-weight:600; }
 .rzTable.has-sticky-first th.sticky-first,
 .rzTable.has-sticky-first td.sticky-first { position:sticky; left:0; z-index:6; background:#fff;  }
 
 /* 보더 시각 가이드 (hover 표시) */
-.rz-border-visual { position:absolute; right:-3px; top:0; width:6px; height:100%; pointer-events:none; }
+.rz-border-visual { position:absolute; right:-20px; top:0; width:6px; height:100%; pointer-events:none; }
 .rzTable th:hover .rz-border-visual, .rzTable td:hover .rz-border-visual { background-color: rgba(0,0,0,.08); }
 
 /* 드래그용 임시 가이드선 */

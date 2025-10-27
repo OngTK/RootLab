@@ -34,4 +34,4 @@ export default function UseKakaoLoader(props) {
     }, []); // useEffect end
 
     return isScriptLoaded;
-};
+}; // func end

@@ -9,54 +9,54 @@ import shopping from '../assets/contentTypeMarker/shopping.png'
 import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
-// Axios Option
-const option = { withCredentials: true };
+import { useDispatch, useSelector } from 'react-redux';
+import { selectMarker, renderedMarker } from '../user/store/mapSlice';
+import '../assets/user/css/InfoWindow.css';
+
+const markerImages = {      // 마커 이미지를 미리 정의
+    'food.png': food,
+    'cultural_facilities.png': cultural_facilities,
+    'festival.png': festival,
+    'leports.png': leports,
+    'shopping.png': shopping,
+    'stay.png': stay,
+    'tourSpot.png': tourSpot,
+    'travelCourse.png': travelCourse,
+};
 
 export default function KakaoMap(props) {
-    const isScriptLoaded = UseKakaoLoader();
-
+    const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
+    // =================== useSelector ===================
+    const { selectedLdNo, axiosOption, markers } = useSelector((state) => state.relatedMap);
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
     // =================== useState 선언부 ===================
-    const [markers, SetMarkers] = useState("");
-    const [bounds, SetBounds] = useState({
+    const [bounds, SetBounds] = useState({          // 현재 지도의 동서남북 좌표
         south: "0.0",
         west: "0.0",
         north: "0.0",
         east: "0.0"
     }); // useState end
-    const [currentLocation, SetCurrentLocation] = useState({
-        center: { lat: 37.489457, lng: 126.724494 },
+    const [currentLocation, SetCurrentLocation] = useState({    // 현재 위치 정보
+        center: { lat: 37.489457, lng: 126.724494 },            // 초기 임의값
         errMsg: null,
         isLoading: true
     }); // useState end
-    const [lDongRegnCd, SetLDongRegnCd] = useState([]);
-    const [selectedRegnCd, SetSelectedRegnCd] = useState("");
-    const [lDongSignguCd, SetLDongSigngu] = useState([]);
-    const [selectedLdNo, SetSelectedLdNo] = useState("");
-    const [selectedGps, SetSelectedGps] = useState("");
-    const [clickedMarker, SetClickedMarker] = useState("");       // 마커를 클릭했을 때, 마커의 정보를 저장할 useState
+    const [selectedGps, SetSelectedGps] = useState("");         // 사용자가 선택한 GPS 정보
 
     // =================== useRef 선언부 ===================
-    const mapContainerRef = useRef(null);
-    const mapRef = useRef(null);
-    const clustererRef = useRef(null);
-
-    // 4. 마커 이미지 소스를 객체로 미리 정의합니다.
-    const markerImages = {
-        'food.png': food,
-        'cultural_facilities.png': cultural_facilities,
-        'festival.png': festival,
-        'leports.png': leports,
-        'shopping.png': shopping,
-        'stay.png': stay,
-        'tourSpot.png': tourSpot,
-        'travelCourse.png': travelCourse,
-    };
+    const mapContainerRef = useRef(null);   // 렌더링할 지도 div
+    const mapRef = useRef(null);            // 생성된 카카오지도 객체
+    const clustererRef = useRef(null);      // 생성된 클러스터러 객체
+    const isUserMoveRef = useRef(false);    // 사용자의 클릭에 의해 이용했는지, true : 사용자가 클릭 | false : 드래그 또는 줌
+    const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
+    const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
 
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
         // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((location) => {
+            navigator.geolocation.getCurrentPosition((location) => {    // 현재 위치를 가져오는데 성공했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
                     center: {
@@ -65,169 +65,181 @@ export default function KakaoMap(props) {
                     },
                     isLoading: false
                 }));
-            }, (error) => {
+            }, (error) => {     // 현재 위치를 가져오는데 실패했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
                     errMsg: error.message,
                     isLoading: false
                 }));
             });
-        } else {
+        } else {                // Geolocation을 사용할 수 없을 때
             SetCurrentLocation((prev) => ({
                 ...prev,
                 errMsg: "geolocation을 사용할 수 없는 상태입니다.",
                 isLoading: false
             })); // SetCurrentLocation end
         } // if end
-        // =================== 법정동 코드 가져오기 ===================
-        getLDongRegnCdByAxios();
     }, []); // useEffect end
-    // =================== LDongRegnCd Axios GET ===================
-    const getLDongRegnCdByAxios = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/ldongcode/getregn", option);
-            SetLDongRegnCd(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('getLDongCodeByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
-    // =================== LDongSignguCd Axios GET ===================
-    const getLDongSignguCdByAxios = async () => {
-        if (selectedRegnCd == "") return;
-        try {
-            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, option);
-            SetLDongSigngu(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('getLDongSignguCdByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
-    // =================== useEffect - [selectedRegnCd] : 시군구 정보 가져오기 ===================
-    useEffect(() => {
-        getLDongSignguCdByAxios();
-    }, [selectedRegnCd]);
-    // =================== LDongCode Axios GET ===================
-    const getLDongCodeByAxios = async () => {
-        if (selectedLdNo == "") return;
-        try {
-            const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, option);
-            SetSelectedGps(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('getLDongCodeByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
+
     // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
     useEffect(() => {
-        // 1. 선택된 좌표(selectedGps)가 없으면 아무것도 안 함
+        // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
         if (!selectedGps || !window.kakao || !mapRef.current) return;
-        // 2. window.kakao.maps.LatLng를 사용해 카카오 지도용 좌표 객체를 생성합니다.
+        // 카카오 지도용 좌표 객체를 생성
         const newCoords = new window.kakao.maps.LatLng(
             selectedGps.mapy, // selectedGps의 mapy
             selectedGps.mapx  // selectedGps의 mapx
         );
+        // 'idle' eventListener가 작동하지 않게 true로 변경
+        isUserMoveRef.current = true;
 
-        // 3. mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동시킵니다.
+        // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
         mapRef.current.panTo(newCoords);
+    }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
 
-    }, [selectedGps]); // 4. selectedGps 변경될 때마다 이 효과를 실행
-
-
+    // =================== LDongCode Axios GET ===================
+    const getLDongCodeByAxios = async () => {
+        if (selectedLdNo == null) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/ldongcode/getbyldno?ldNo=${selectedLdNo}`, axiosOption);
+            SetSelectedGps(response.data);
+        } catch (error) {
+            console.log('getLDongCodeByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
     // =================== ldNoMarkers Axios GET ===================
     const getLdNoMarkersByAxios = async () => {
-        if (selectedLdNo == "") return;
+        if (selectedLdNo == null) return;
         try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, option);
-            SetMarkers(response.data);
-            console.log(response.data);
+            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, axiosOption);
+            dispatch(renderedMarker(response.data));
         } catch (error) {
             console.log('getLdNoMarkersByAxios 오류 발생');
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== useEffect - [selectedLdNo] : 시군구 좌표 가져오기 ===================
+    // =================== useEffect - [selectedCity] : 시군구 좌표 가져오기 ===================
     useEffect(() => {
         getLDongCodeByAxios();
         getLdNoMarkersByAxios();
     }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================
-    // 5. 함수를 useCallback으로 감싸서 불필요한 재생성을 방지합니다.
-    const getBoundsByAxios = useCallback(async () => {
+    const getBoundsByAxios = async () => {
         if (bounds.south === "0.0") return;
         try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, option);
-            SetMarkers(response.data); // 이 state 변경이 마커 업데이트 effect를 트리거합니다.
+            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
+            dispatch(renderedMarker(response.data));
         } catch (error) {
             console.log(error);
         } // try-catch end
-    }, [bounds]); // bounds가 변경될 때만 함수를 새로 생성합니다.
+    }; // func end
 
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
-    }, [bounds, getBoundsByAxios]);
+    }, [bounds]);
 
     // =================== useEffect - [currentLocation] : 지도 초기화 ===================
-    // 6. <Map> 컴포넌트의 onCreate, onIdle 프롭을 대체합니다.
     useEffect(() => {
         // 현재 위치 로딩이 끝났고, mapContainerRef가 준비되었고, kakao 스크립트가 로드되었는지 확인
         if (currentLocation.isLoading || !mapContainerRef.current || !isScriptLoaded || !window.kakao) return;
 
-        const { kakao } = window;
-        const mapContainer = mapContainerRef.current;
+        const { kakao } = window;   // window에서 kakao 객체 가져오기
+        const mapContainer = mapContainerRef.current;   // 지도를 표시할 DOM
         const mapOption = {
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
             level: 5
         };
 
-        // 7. 지도 인스턴스 생성
+        // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
-        mapRef.current = map;
+        mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
 
-        // 8. 클러스터러 인스턴스 생성
+        // 클러스터러 인스턴스 생성
         const clusterer = new kakao.maps.MarkerClusterer({
-            map: map,
-            averageCenter: true,
-            minLevel: 4
+            map: map,               // 클러스터러를 찍을 지도
+            averageCenter: true,    // 평균 위치 적용 여부
+            minLevel: 4             // 적용할 최소 지도 레벨
         }); // clusterer end
         clustererRef.current = clusterer;
 
+        // 인포윈도우 생성
+        if (!infoWindowRef.current){
+            infoWindowRef.current = new kakao.maps.InfoWindow({
+                removable: true,
+                zIndex: 10
+            });
+        };
+        // 지도 클릭 시, 인포윈도우 + 좌측 모달 종료
+        kakao.maps.event.addListener(map, 'click', () => {
+            if (infoWindowRef.current){
+                infoWindowRef.current.close();
+                dispatch(selectMarker(null));
+
+            } // if end
+        }) // addListener end
+        // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
+        kakao.maps.event.addListener(map, 'dragstart', () => {
+            if (infoWindowRef.current){
+                infoWindowRef.current.close();
+                dispatch(selectMarker(null));
+            } // if end
+        }) // addListener end
+
+
         // 지도에 원 표시 로직
-        let circle = new kakao.maps.Circle({
+        let circle1 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 5000,              // 반경 5KM 표시
+            radius: 2000,              // 반경 2KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.5,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
             fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.7           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle end
+    // 지도에 현재 위치 표시 로직
+            let circle2 = new kakao.maps.Circle({
+                center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
+                radius: 50,                  // 반경 5KM 표시
+                strokeWeight: 3,             // 선의 두께
+                strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
+                strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+                strokeStyle: 'solid',        // 선의 스타일
+                fillColor: '#ff0101ff',    // 채우기 색깔 -> 추후 원하는 색으로 변경
+                fillOpacity: 0.5             // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            }); // circle2 end
+            circle2.setMap(map);
 
-        circle.setMap(map);
 
-        // 9. 'idle' 이벤트 리스너 등록
+        // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
-            const mapBounds = map.getBounds();
-            const sw = mapBounds.getSouthWest();
-            const ne = mapBounds.getNorthEast();
+            // 만약에 panTo로 이동했으면, idle 실행 X
+            if (isUserMoveRef.current) {
+                isUserMoveRef.current = false;
+                return;
+            } // if end
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            } // if end
 
-            // SetBounds를 호출하여 [bounds] effect를 트리거 -> getBoundsByAxios 호출
-            SetBounds({
-                south: sw.getLat(),
-                west: sw.getLng(),
-                north: ne.getLat(),
-                east: ne.getLng()
-            }); // SetBounds end
+            timeoutRef.current = setTimeout(() => {
+                const mapBounds = map.getBounds();
+                const sw = mapBounds.getSouthWest();
+                const ne = mapBounds.getNorthEast();
+
+                SetBounds({
+                    south: sw.getLat(),
+                    west: sw.getLng(),
+                    north: ne.getLat(),
+                    east: ne.getLng()
+                }); // SetBounds end
+            }, 300);
         }); // addListener end
 
-        // 10. (중요) 지도 생성 직후 'idle' 이벤트를 강제로 한번 실행(하거나 bounds를 직접 설정)
-        // 기존 [initialMap] effect의 로직을 대체합니다.
+        // 지도 생성 직후 bounds를 직접 설정
         const initialBounds = map.getBounds();
         const sw = initialBounds.getSouthWest();
         const ne = initialBounds.getNorthEast();
@@ -240,52 +252,60 @@ export default function KakaoMap(props) {
     }, [currentLocation.isLoading, currentLocation.center, isScriptLoaded]); // Geolocation 완료 시 1회 실행
 
     // =================== useEffect - [markers] : 마커 업데이트 ===================
-    // 11. <MarkerClusterer> 내부의 map() 렌더링 로직을 대체합니다.
     useEffect(() => {
-        // 클러스터러 인스턴스나 kakao 객체가 없으면 실행 중지
-        if (!clustererRef.current || !window.kakao) return;
+        const map = mapRef.current;
+        // 클러스터러 인스턴스나 kakao 객체, map 객체가 없으면 실행 중지
+        if (!clustererRef.current || !window.kakao || !map) return;
 
         const { kakao } = window;
         const clusterer = clustererRef.current;
-
-        // 12. 기존 마커 모두 제거
-        clusterer.clear();
+        clusterer.clear();          // 기존 마커 모두 제거
 
         // 새 마커 데이터가 없으면 여기서 종료
         if (!markers || markers.length === 0) return;
 
-        const imageSize = new kakao.maps.Size(80, 80);
+        const infowindow = infoWindowRef.current;
+        if (!infowindow) return;
 
-        // 13. JS SDK용 카카오 마커 객체 배열 생성
+        const imageSize = new kakao.maps.Size(33, 50);
+
+        // 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {
             const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
 
             // 이미지 소스 선택
-            // todo .includes()를 통한 mkURL sort 필요
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
-
-            return new kakao.maps.Marker({
+            // 마커 생성하기
+            const kakaoMarker = new kakao.maps.Marker({
                 position: position,
                 image: markerImage,
-                title: '나중에 변경' // 실제 데이터로 변경
-            }); // return end
+                zIndex: 4
+            });
+            // 마커 클릭 이벤트 생성
+            kakao.maps.event.addListener(kakaoMarker, 'click', () => {
+                SetSelectedGps(marker);
+                dispatch(selectMarker(marker.pNo));
+                // 인포윈도우 내용 설정
+                const html = `<div class="iw-container">
+                                <p class="iw-header">
+                                    <span class="iw-title">${marker.title || '장소 정보'}</span>
+                                    <span class="iw-category">${marker.contenttypename || '카테고리'}</span>
+                                </p>
+                                <span class="iw-address">${marker.addr1 || '주소 정보 없음'}</span>
+                              </div>`
+                const iwContent = html;
+                infowindow.setContent(iwContent);
+                infowindow.open(map, kakaoMarker);
+            }) // addListener end
+
+            return kakaoMarker;
         }); // map end
 
-        // 14. 클러스터러에 새 마커 추가
+        // 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
 
     }, [markers]); // 'markers' state가 변경될 때마다 실행
-    // =================== Select Markup Change ===================
-    const changeRegnCd = (e) => {
-        SetSelectedRegnCd(e.target.value);
-        console.log(e.target.value);
-    } // func end
-    const changeLdNo = (e) => {
-        SetSelectedLdNo(e.target.value);
-        console.log(e.target.value);
-    } // func end
-
 
     // =================== return ===================
     if (currentLocation.isLoading) {
@@ -294,7 +314,6 @@ export default function KakaoMap(props) {
 
     return (
         <>
-            {/* 15. 지도가 렌더링될 실제 DOM 요소 */}
             <div
                 ref={mapContainerRef}
                 style={{
@@ -302,26 +321,6 @@ export default function KakaoMap(props) {
                     height: '100vh'
                 }}
             />
-            <select onChange={changeRegnCd} value={selectedRegnCd}>
-                <option value="" disabled> 시구 선택</option>
-                {
-                    lDongRegnCd.map((regn) => {
-                        return <option key={regn.ldongregncd} value={regn.ldongregncd}>
-                            {regn.ldongregnnm}
-                        </option>
-                    })
-                }
-            </select>
-            <select onChange={changeLdNo} value={selectedLdNo}>
-                <option value="" disabled> 시군구 선택</option>
-                {
-                    lDongSignguCd.map((signgu) => {
-                        return <option key={signgu.ldNo} value={signgu.ldNo}>
-                            {signgu.ldongsigngunm}
-                        </option>
-                    })
-                }
-            </select>
         </>
     ); // return end
 } // func end

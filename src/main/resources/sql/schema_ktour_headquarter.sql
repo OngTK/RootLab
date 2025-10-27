@@ -67,7 +67,7 @@ CREATE TABLE k_tour_headquarter.placeInfo (
     ccNo SMALLINT UNSIGNED,									-- 분류체계번호[FK]
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
     contentid INT UNIQUE,									-- 콘텐츠ID(#TourAPI 연동컬럼)
-    title VARCHAR(50) NOT NULL,								-- 콘텐츠명/제목 (#TourAPI 연동컬럼)
+    title VARCHAR(255) NOT NULL,							-- 콘텐츠명/제목 (#TourAPI 연동컬럼)
     showflag TINYINT DEFAULT 0,								-- 콘텐츠 표출여부(#TourAPI 연동컬럼)
     firstimage VARCHAR(255),								-- 대표원본이미지(#TourAPI 연동컬럼)
     firstimage2 VARCHAR(255),								-- 대표섬네일이미지(#TourAPI 연동컬럼)
@@ -75,7 +75,7 @@ CREATE TABLE k_tour_headquarter.placeInfo (
     addr2 VARCHAR(100),										-- 상세주소(#TourAPI 연동컬럼)
     zipcode VARCHAR(10),									-- 우편번호(#TourAPI 연동컬럼)
     homepage TEXT,											-- 홈페이지링크(#TourAPI 연동컬럼)
-    tel VARCHAR(255),										-- 전화(#TourAPI 연동컬럼)
+    tel TEXT,												-- 전화(#TourAPI 연동컬럼)
     telname VARCHAR(30),									-- 전화번호명(#TourAPI 연동컬럼)
     overview TEXT,											-- 개요(#TourAPI 연동컬럼)
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,			-- 등록일(최초 DB복사일)

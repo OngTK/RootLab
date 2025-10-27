@@ -5,10 +5,10 @@
  * 
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.0
+ * @version 0.1.1
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import "@assets/admin/css/ResizableTable.css"; // ResizableTable.css
+import "@assets/admin/css/resizableTable.css"; // ResizableTable.css
 
 export default function ResizableTable({
   columns = [],                // [{ id, title, width? }]
