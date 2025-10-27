@@ -4,8 +4,11 @@
 .headerWrap header{ position: relative; margin:0 auto; width: 100%;  }
 .headerWrap header .search_box{ position: absolute; top:1px; right:2% }
 
-.headerWrap header h1{ width: 100%; text-align: center; letter-spacing: -0.5px; font:600 26px/30px 'Noto Sans KR', SansSerif; letter-spacing:-1px; padding:17px 0 13px 0; }
-.headerWrap header h1 a{ display: inline-block;  background:url("/user/img/em_ic.png") no-repeat 0 2px; padding-left:33px; background-size: 28px 28px; margin-left: -10px; }
+.headerWrap header h1{ position:relative; width: 100%; text-align: left; letter-spacing: -0.5px; font:600 26px/30px 'Noto Sans KR', SansSerif; letter-spacing:-1px; padding:17px 0 13px 65px; }
+.headerWrap header h1 a{ display: inline-block; /* background:url("/user/img/em_ic.png") no-repeat 0 2px; padding-left:33px;*/ background-size: 28px 28px; margin-left: -10px; }
+.headerWrap header h1 a svg{ color:#009900; font-size:18px; margin:0 2px 3px 0; }
+.headerWrap header h1 svg{ position:absolute; top:24px; left:20px; font-size:20px; opacity:.25; transition:.2s ease; }
+.headerWrap header h1 svg:hover{ opacity:.9 }
 .headerWrap header h1 span{ font:600 18px/20px 'Noto Sans KR', SansSerif; letter-spacing:-0.5px;  color: rgba(0,0,0,.9); display: inline-block; padding-left: 5px; }
 
 /* 페이지 검색창 */
@@ -20,5 +23,5 @@
 
 /* 법정동 1차/12차 지역선택 */
 .ldongSelect{ position: absolute; bottom:-1px; left: 0; width: 100%; }
-.ldongSelect > select{ width: 50%; margin: 0; border-radius: 0; border-width: 1px 0; font:500 14px/30px 'Noto Sans KR', SansSerif; padding: 5px 0 5px 10px; outline: 0; border-color:rgba(0,0,0,.15); background:rgba( 0,0,0,.03);}
+.ldongSelect > select{ width: 50%; margin: 0; border-radius: 0; border-width: 1px 0; font:500 13px/30px 'Noto Sans KR', SansSerif; padding: 5px 0 5px 10px; outline: 0; border-color:rgba(0,0,0,.15); background:rgba( 0,0,0,.03); color:rgba(0,0,0,.6); }
 .ldongSelect > select:first-child{border-right-width:1px;}

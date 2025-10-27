@@ -3,11 +3,11 @@
  *
  * @author kimJS
  * @since 2025.10.17
- * @version 0.1.2
+ * @version 0.1.3
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faLocationArrow, faBars } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -80,9 +80,10 @@ export default function Header(props) {
                 <header>
                     <h1 className="logo">
                         <Link to="/">
-                            K-TOUR
+                         K-TOUR
                             <span>{centeredLDong && centeredLDong.split(" ")[0]}</span>
                         </Link>
+                        <FontAwesomeIcon icon={faBars} />
                     </h1>
                 </header>
                 <div className="placeSearch">
@@ -92,7 +93,7 @@ export default function Header(props) {
                 <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">
                     <select onChange={changeRegnCd} value={selectedRegnCd}>
-                        <option value="" disabled> 시구 선택</option>
+                        <option value="" disabled> 도/광역시 선택</option>
                         {
                             lDongRegnCd.map((regn) => {
                                 return <option key={regn.ldongregncd} value={regn.ldongregncd}>
@@ -102,7 +103,7 @@ export default function Header(props) {
                         }
                     </select>
                     <select onChange={changeLdNo} value={selectedLdNo}>
-                        <option value="" disabled> 시군구 선택</option>
+                        <option value="" disabled> 시/군/구 선택</option>
                         {
                             lDongSignguCd.map((signgu) => {
                                 return <option key={signgu.ldNo} value={signgu.ldNo}>
