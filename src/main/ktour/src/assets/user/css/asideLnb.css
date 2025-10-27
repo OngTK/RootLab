@@ -43,10 +43,11 @@
 
 .gnb ul{ min-height: 400px; font-family: "Malgun Gothic" ,"맑은고딕" ,Sans-serif, Roboto, Arial; }
 .gnb ul li{ padding: 15px 0; word-break: initial; cursor: pointer; text-transform:uppercase; text-align: center; opacity:.7; text-align: center; letter-spacing: -0.2px; text-align: center; opacity: .6; }
-.gnb ul li svg{ display: block; margin: 0 auto 7px; font-size: 18px; font-weight: 400; }
+.gnb ul li svg{ display: block; margin: 0 auto 7px; font-size: 20px; font-weight: 400;  opacity:.9;  }
 .gnb ul li:hover{ opacity:1; background: rgba(0,0,0,.05); color: #009900 }
-.gnb ul li:hover a{ color: #009900 }
-.gnb ul li.active{  opacity:1;  background: #009900; color: #fff  }
+.gnb ul li:hover a{ color: #009900;  }
+.gnb ul li.active{  background: #009900; color: #fff; opacity:1;  }
+.gnb ul li.active svg{ opacity:1; }
 .gnb ul li.active a{ color: #fff; }
 .gnb ul i{ display: block; font-size: 16px; padding-bottom: 7px; }
 
