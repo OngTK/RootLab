@@ -21,7 +21,7 @@ public class ManagerController {
      *
      * @param mgAuth   관리자유형 (1:시스템관리자, 2:지자체관리자)
      * @param mName    회원명
-     * @param mId      관리자ID
+     * @param mId      관리자ID == 회원ID
      * @param mPhone   휴대전화
      * @param page     조회할 페이지
      * @param pageSize 페이지당 개수
