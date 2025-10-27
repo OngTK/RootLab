@@ -35,16 +35,16 @@ export default function DetailSection(props) {
                         <fieldset>
 
                             <div className="form-group">
-                                <label htmlFor="memberTypeInput"><b>관리자유형</b></label>
-                                <select id="memberTypeInput" className="memberTypeInput">
+                                <label htmlFor="mgAuth"><b>관리자유형</b></label>
+                                <select id="mgAuth" name="memberTypeInput">
                                     <option value="1">시스템관리자</option>
                                     <option value="2">업체관리자</option>
                                 </select>
                             </div>
                             <div>
                                 <span className="form-group">
-                                    <label htmlFor="siteNameInput"><b>사이트명</b></label>
-                                    <input type="text" id="siteNameInput" className="loginIdInput" placeholder="K-Tour" disabled />
+                                    <label htmlFor="siNo "><b>사이트명</b></label>
+                                    <input type="text" id="siNo"  placeholder="K-Tour" disabled />
                                 </span>
 
                                 <span className="form-group">
@@ -55,48 +55,51 @@ export default function DetailSection(props) {
                             </div>
                             <div>
                                 <span className="form-group">
-                                    <label htmlFor="nameInput"><b>관리자명</b></label>
-                                    <input type="text" id="nameInput" className="nameInput" placeholder="김진숙" required disabled />
+                                    <label htmlFor="mName"><b>관리자명</b></label>
+                                    <input type="text" id="mName" className="mName" placeholder="김진숙" required disabled />
                                 </span>
 
                                 <span className="form-group">
-                                    <label htmlFor="nicknameInput"><b>닉네임</b></label>
-                                    <input type="text" id="nicknameInput" className="loginIdInput" placeholder="시스템관리자" disabled />
+                                    <label htmlFor="mNick"><b>닉네임</b></label>
+                                    <input type="text" id="mNick" placeholder="시스템관리자" disabled />
                                 </span>
                             </div>
                             <div>
                                 <span className="form-group">
-                                    <label htmlFor="adminIdInput"><b>관리자ID</b></label>
-                                    <input type="text" id="adminIdInput" className="loginIdInput" placeholder="admin" disabled />
+                                    <label htmlFor="mId"><b>관리자ID</b></label>
+                                    <input type="text" id="mId" className="loginIdInput" placeholder="admin" disabled />
                                 </span>
 
                                 <span className="form-group">
-                                    <label htmlFor="genderInput"><b>성별</b></label>
-                                    <select id="genderInput" className="genderInput">
-                                        <option value="1">남성</option>
-                                        <option value="2">여성</option>
+                                    <label htmlFor="mGender"><b>성별</b></label>
+                                    <select id="mGender" name="mGender">
+                                        <option value="남">남성</option>
+                                        <option value="여">여성</option>
                                     </select>
                                 </span>
                             </div>
                             <span className="form-group">
-                                <label htmlFor="passwordInput"><b>비밀번호</b></label>
-                                <input type="password" id="passwordInput" className="loginIdInput" placeholder="*******" disabled />
+                                <label htmlFor="mPwd"><b>비밀번호</b></label>
+                                <input type="password" id="mPwd" placeholder="*******" disabled />
+
                                 {/* 비밀번호 수정 버튼/레이어 시작 */}
                                 <UpdatePwd />
                                 {/* 비밀번호 수정 버튼/레이어 끝 */}
+
                                 {/* 비밀번호 초기화 버튼/레이어 시작 */}
                                 <ResetPwd />
                                 {/* 비밀번호 초기화 버튼/레이어 끝 */}
+
                             </span>
                             <div>
                                 <span className="form-group">
-                                    <label htmlFor="phoneInput"><b>휴대전화</b></label>
-                                    <input type="number" id="phoneInput" className="phoneInput" placeholder="010-0000-0000" required />
+                                    <label htmlFor="mPhone"><b>휴대전화</b></label>
+                                    <input type="number" id="mPhone" placeholder="010-0000-0000" required />
                                 </span>
 
                                 <span className="form-group">
-                                    <label htmlFor="emailInput"><b>이메일</b></label>
-                                    <input type="text" id="emailInput" className="emailInput" name="emailInput" placeholder="root.kjs82@gmail.com" required />
+                                    <label htmlFor="mEmail"><b>이메일</b></label>
+                                    <input type="text" id="mEmail" name="mEmail" placeholder="root.kjs82@gmail.com" required />
                                 </span>
                             </div>
                             <div>
@@ -104,7 +107,7 @@ export default function DetailSection(props) {
                                     <label htmlFor="zipCodeInput"><b>기본주소</b></label>
                                     <button type="button" id="zipCodeBtn">우편번호</button>
                                     <input type="text" id="zipCodeInput" name="zipCodeInput" placeholder="우편번호" />
-                                    <input type="text" id="addrInput" name="addrInput" placeholder="주소" />
+                                    <input type="text" id="mAdd1" name="mAdd1" placeholder="주소" />
                                 </span>
                             </div>
                             <div>

@@ -1,5 +1,5 @@
 /**
- * 관리자단 > 회원관리 > 관리자현황(manage) > 검색리스트단(ListSection.jsx) 컴포넌트
+ * 관리자단 > 사이트관리 > 사이트정보(site) > 검색리스트단(ListSection.jsx) 컴포넌트
  *
  * @author kimJS
  * @since 2025.10.27
@@ -12,60 +12,55 @@ export default function ListSection(props) {
 
     const columns = [
         { id: "no", title: "No", width: 70 },
-        { id: "mgAuth", title: "관리자유형", width: 110 },
-        { id: "siName ", title: "사이트명", width: 200 },
-        { id: "mName", title: "관리자명", width: 120 },
-        { id: "mId", title: "관리자ID", width: 140 },
-        { id: "mPhone", title: "휴대전화", width: 260 },
-        { id: "createdAt", title: "가입일", width: 120 },
-        { id: "updatedAt", title: "최종로그인", width: 120 },
+        { id: "siName", title: "사이트명", width: 150 },
+        { id: "siDomain", title: "도메인(URL)", width: 220 },
+        { id: "siTel", title: "대표전화", width: 120 },
+        { id: "siEmail", title: "대표이메일", width: 140 },
+        { id: "siIsPublic", title: "사이트공개여부", width: 100 },
+        { id: "createdAt", title: "등록일", width: 120 },
+        { id: "updatedAt", title: "수정일", width: 120 },
     ];
 
-    const data = [
-        { no: 1, mgAuth: "시스템관리자", siName: "K-TOUR", mName: "김진숙", mId: "admin", mPhone: "010-1234-5678", createdAt: "2025-10-27", updatedAt: "2025-10-27 10:32:00" }
-    ];
+  const data = [
+    { no: 1, siName: "K-Tour", siDomain: "rootlab.kr", siTel: "02-1234-5678", siEmail: "contact@rootlab.kr", siIsPublic: "공개", createdAt: "2025-10-27", updatedAt: "2025-10-27" }
+];
 
 
-    /** =========================================== 관리자현황 > 검색리스트단 ListSection.jsx ====================================== */
+    /** =========================================== 사이트정보(site) > 검색리스트단 ListSection.jsx ====================================== */
     return (
         <>
             {/* <!-- [좌측] 검색/리스트 시작 --> */}
             <section className="listWrap">
-                {/* <!-- 관리자현황 조건검색창 시작 --> */}
+                {/* <!-- 사이트정보 조건검색창 시작 --> */}
                 <div className="detailSearch">
-                    <form aria-label="관리자현황 조건검색">
-                        {/* 1.관리자유형 */}
+                    <form aria-label="사이트정보 조건검색">
+                        {/* 1.사이트 공개여부(0: 비공개/ 1: 공개 ) */}
                         <span className="form-group">
-                            <label htmlFor="mgAuth">관리자유형</label>
-                            <select id="mgAuth" name="mgAuth">
+                            <label htmlFor="siIsPublic ">공개여부</label>
+                            <select id="siIsPublic " name="siIsPublic ">
                                 <option value="">전체</option>
                                 <option value="1">시스템관리자</option>
                                 <option value="2">업체관리자</option>
                             </select>
                         </span>
-                        {/* 2.관리자명 */}
+                        {/* 2.도메인(URL) */}
                         <span className="form-group">
-                            <label htmlFor="mName">관리자명</label>
-                            <input type="text" id="mName" name="mName" />
+                            <label htmlFor="siDomain">도메인(URL)</label>
+                            <input type="text" id="siDomain" name="siDomain" />
                         </span>
-                        {/* 3.관리자ID */}
+                        {/* 3.사이트명 */}
                         <span className="form-group">
-                            <label htmlFor="mId">관리자ID</label>
-                            <input type="text" id="mId" name="mId" />
+                            <label htmlFor="siName ">관리자ID</label>
+                            <input type="text" id="siName " name="siName " />
                         </span>
-                        {/* 4.휴대전화 */}
-                        <span className="form-group">
-                            <label htmlFor="mPhone">휴대전화</label>
-                            <input type="text" id="mPhone" name="mPhone" />
-                        </span>
-                        {/* 5.검색 버튼*/}
+                        {/* 4.검색 버튼*/}
                         <span className="form-actions">
                             <button type="button" className="searchBtn">검색</button>
                             <button type="button" className="btn line">검색조건 초기화</button>
                         </span>
                     </form>
                 </div>
-                {/* <!-- 관리자현황 조건검색창 끝 --> */}
+                {/* <!-- 사이트정보 조건검색창 끝 --> */}
 
                 {/* <!-- 목록(리스트) 테이블 시작 --> */}
                 <ul className="titleBox">
@@ -85,7 +80,7 @@ export default function ListSection(props) {
                     <ResizableTable
                         columns={columns}
                         data={data}
-                        rememberKey="Manager.columns"
+                        rememberKey="SiteInfo.columns"
                         minColWidth={80}
                         stickyFirst={false}
                         sortable={true}
@@ -94,8 +89,8 @@ export default function ListSection(props) {
                 {/* === ResizableTable(리사이징/드래그  테이블) 끝 ===== */}
             </section>
             {/* <!-- [좌측] 검색/리스트 끝 --> */}
-
-
+            
+           
         </>
     );
 }// ListSection.jsx end

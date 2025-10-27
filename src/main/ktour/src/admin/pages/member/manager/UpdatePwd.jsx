@@ -33,20 +33,20 @@ export default function UpdatePwd(props) {
                         <ul>
                             <li>
                                 <span className="form-group">
-                                    <label htmlFor="place-name">기존 비밀번호</label>
+                                    <label htmlFor="oldMPwd">기존 비밀번호</label>
                                     <input type="password" id="oldMPwd" name="oldMPwd" />
                                 </span>
                             </li>
                             <li>
                                 <span className="form-group">
-                                    <label htmlFor="place-name">신규 비밀번호</label>
+                                    <label htmlFor="newMPwd">신규 비밀번호</label>
                                     <input type="password" id="newMPwd" name="newMPwd" />
                                 </span>
                             </li>
                             <li>
                                 <span className="form-group">
-                                    <label htmlFor="place-name">신규 비밀번호(확인)</label>
-                                    <input type="password" id="newMPwd" name="newMPwd" />
+                                    <label htmlFor="newMPwd2">신규 비밀번호(확인)</label>
+                                    <input type="password" id="newMPwd2" name="newMPwd2" />
                                 </span>
                             </li>
                         </ul>

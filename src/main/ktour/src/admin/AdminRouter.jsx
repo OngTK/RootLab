@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.3
+ * @version 0.1.4
  */
 
 import { Routes, Route } from "react-router-dom";       // 라우터(URL 경로)
@@ -14,7 +14,7 @@ const LayoutAdmin = lazy(() => import("@admin/components/layout/LayoutAdmin")); 
 const Login = lazy(() => import("@admin/pages/member/Login"));               // 관리자단 > 로그인 페이지
 const PlaceInfo = lazy(() => import("@admin/pages/map/place/PlaceInfo"));        // 플레이스현황 페이지 
 const Manager = lazy(() => import("@admin/pages/member/manager/Manager"));     // 관리자현황 페이지 
-const SiteInfo = lazy(() => import("@admin/pages/site/SiteInfo"));              // 사이트정보 페이지
+const SiteInfo = lazy(() => import("@admin/pages/site/site/SiteInfo"));              // 사이트정보 페이지
 const PushPopup = lazy(() => import("@admin/pages/site/push_popup/PushPopup"));  // 푸시/팝업관리 페이지
 const NotFound404 = lazy(() => import("@admin/pages/NotFound404"));                // 404 Not Found 페이지
 const Sample = lazy(() => import("@admin/components/common/sample/Sample"));  // 컴포넌트 샘플페이지(레이어/테이블/폼태그 등..)

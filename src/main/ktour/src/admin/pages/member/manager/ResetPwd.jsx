@@ -10,7 +10,7 @@ import DragResizeLayer from "@admin/components/common/DragResizeLayer";
 
 export default function UpdatePwd(props) {
 
-    const { layerContainerRef } = useOutletContext();       // 레이어 관련 상속
+    const { layerContainerRef } = useOutletContext();     // 레이어 관련 상속
     const [ resetPwd, setResetPwd ] = useState(false);    // 비밀번호 수정 레이어 표시(노출)여부 상태
 
     /** ========================= 회원관리 > 비밀번호수정 ResetPwd.jsx ================================== */
@@ -33,13 +33,13 @@ export default function UpdatePwd(props) {
                         <ul>
                             <li>
                                 <span className="form-group">
-                                    <label htmlFor="place-name">초기화 비밀번호</label>
+                                    <label htmlFor="resetMPwd">초기화 비밀번호</label>
                                     <input type="password" id="resetMPwd" name="newMPwd" />
                                 </span>
                             </li>
                             <li>
                                 <span className="form-group">
-                                    <label htmlFor="place-name">초기화 비밀번호(확인)</label>
+                                    <label htmlFor="resetMPwd">초기화 비밀번호(확인)</label>
                                     <input type="password" id="resetMPwd" name="newMPwd" />
                                 </span>
                             </li>
