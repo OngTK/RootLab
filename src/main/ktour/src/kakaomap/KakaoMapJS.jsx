@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -51,12 +51,6 @@ export default function KakaoMap(props) {
     const isUserMoveRef = useRef(false);    // 사용자의 클릭에 의해 이용했는지, true : 사용자가 클릭 | false : 드래그 또는 줌
     const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
     const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
-
-    useEffect(() => {
-        console.log(currentLocation);
-        console.log(LdongName);
-        // 여기서부터!!!!!!!!!!!!!!!!!!!!!!!!!! 작업!!!!!!!!!!!!!!!!!!!!!!!! currentLocation으로 시구 뽑아서 비교!!!!!!!
-    }, [LdongName]);
 
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
@@ -184,6 +178,7 @@ export default function KakaoMap(props) {
         const callback = (result, status) => {
             if (status === kakao.maps.services.Status.OK) {
                 dispatch(centerLDong(result[0].address_name));
+                dispatch(firstLDongRegn(result[0].address_name));
             } // if end
         } // func end
         geoCoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback)

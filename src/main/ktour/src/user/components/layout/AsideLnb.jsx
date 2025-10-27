@@ -7,12 +7,40 @@
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faThumbsUp, faMusic,faStreetView, faCircleChevronRight, faDog  } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faThumbsUp, faMusic, faStreetView, faCircleChevronRight, faDog } from "@fortawesome/free-solid-svg-icons";
 import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function AsideLnb(props) {
+    // =================== useSelector ===================
+    const { firstLDong, LdongName, axiosOption } = useSelector((state) => state.relatedMap);
+    // =================== useState 선언부 ===================
+    const [surroundingPlace, SetSurroundingPlace] = useState([]);
+    // =================== useEffect ===================
+    useEffect(() => {
+        LdongName.map((name) => {
+            if (name.ldongregnnm == firstLDong.split(" ")[0]) {
+                getLDongSignguCdByAxios(name.ldongregncd);
+            }
+        })
+    }, [firstLDong])
 
+    // =================== LDongSignguCd Axios GET ===================
+    const getLDongSignguCdByAxios = async (ldongregncd) => {
+        if (ldongregncd == null) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${ldongregncd}`, axiosOption);
+            SetSurroundingPlace(response.data);
+        } catch (error) {
+            console.log('getLDongSignguCdByAxios 오류 발생');
+            console.log(error);
+        } // try-catch end
+    } // func end
+
+    if (!surroundingPlace) return;
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 좌측메뉴(asideLnb) .jsx영역 ================================== */
     return <>
         <div className="gnbWrap">
@@ -34,6 +62,20 @@ export default function AsideLnb(props) {
                 </h2>
                 {/* <!--  서브 메뉴 --> */}
                 <ul className="subMenuList" id="lnbMap">
+                    {
+                        surroundingPlace &&
+                        surroundingPlace.map((signgu) => {
+                            if (signgu.ldongsigngunm == firstLDong.split(" ")[1]) {
+                                return <li key={signgu.ldNo}>
+                                    <Link to="#" className="active"><span>{signgu.ldongsigngunm}</span><FontAwesomeIcon icon={faAngleRight} /></Link>
+                                </li>
+                            } else {
+                                return <li key={signgu.ldNo}>
+                                    <Link to="#"><span>{signgu.ldongsigngunm}</span><FontAwesomeIcon icon={faAngleRight} /></Link>
+                                </li>
+                            }
+                        })
+                    }
                     <li data-code="53">
                         <Link to="#"><span>미추홀구</span><FontAwesomeIcon icon={faAngleRight} /></Link>
                     </li>
@@ -61,7 +103,7 @@ export default function AsideLnb(props) {
                 </ul>
             </div>
             {/* <!-- 좌측 서브 메뉴  끝 --> */}
-            
+
         </div>
     </>
 }//AsideLnb.jsx end
