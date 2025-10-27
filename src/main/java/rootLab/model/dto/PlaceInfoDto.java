@@ -38,4 +38,7 @@ public class PlaceInfoDto {
     // 부가적인 정보
     private String lclsSystm2Nm;
     private String lclsSystm3Nm;
+    private String contentTypeName;
+
+
 } // class end

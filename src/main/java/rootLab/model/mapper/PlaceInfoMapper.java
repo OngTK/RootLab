@@ -83,20 +83,20 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      * [3.2] 페이지 처리 요청
      */
     @Override
-    List<PlaceInfoDto> findAllPaged(PageRequest pageRequest);
+    List<PlaceInfoDto> findAllPaged(@Param("pageRequest") PageRequest pageRequest);
     
     /**
      * [3.3] 검색결과 레코드를 반환
      */
     @Override
-    int countForSearch(PlaceInfoCriteria criteria);
+    int countForSearch(@Param("criteria") PlaceInfoCriteria criteria);
 
     /**
      * [3.4] 페이지에 해당하는 레코드를 List로 반환
      */
     @Override
     List<PlaceInfoDto> searchPaged(@Param("criteria") PlaceInfoCriteria criteria,
-                                   @Param("page") PageRequest pageRequest);;
+                                   @Param("pageRequest") PageRequest pageRequest);;
 
 
 } // class end

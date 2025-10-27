@@ -1,8 +1,6 @@
 package rootLab.model.criteria;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import rootLab.util.search.BaseCriteria;
 
 /**
@@ -12,7 +10,7 @@ import rootLab.util.search.BaseCriteria;
  */
 
 @Data
-@Builder
+@Getter
 @EqualsAndHashCode(callSuper = false)
 public class PlaceInfoCriteria extends BaseCriteria {
 
