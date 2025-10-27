@@ -7,7 +7,8 @@ import axios from "axios";
  *  - 2차 표기: lDongSignguNm
  *  - 값/코드: lDongRegnCd, lDongSignguCd, ldNo(최종)
  */
-export default function RegionSelect({ value, onChange }) {
+export default function RegionSelect({ value, onChange, idSuffix = "", namePrefix = "" }) {
+
     const [rows, setRows] = useState([]);
     const [regnCd, setRegnCd] = useState("");    // 1차 선택값(lDongRegnCd)
     const [signguCd, setSignguCd] = useState(""); // 2차 선택값(lDongSignguCd)
@@ -103,20 +104,25 @@ export default function RegionSelect({ value, onChange }) {
         });
     };
 
+    const idR1 = `region-1${idSuffix ? "-" + idSuffix : ""}`;
+    const idR2 = `region-2${idSuffix ? "-" + idSuffix : ""}`;
+    const nmR1 = `${namePrefix ? namePrefix + "-" : ""}region1`;
+    const nmR2 = `${namePrefix ? namePrefix + "-" : ""}region2`;
+
     return (
         <span className="form-group">
-            <label htmlFor="region-1">1차 지역</label>
-            <select id="region-1" name="region1" value={regnCd} onChange={onChangeRegn}>
+            <label htmlFor={idR1}>1차 지역</label>
+            <select id={idR1} name={nmR1} value={regnCd} onChange={onChangeRegn}>
                 <option value="">전체</option>
                 {regnOptions.map(opt => (
                     <option key={opt.code} value={opt.code}>{opt.name}</option>
                 ))}
             </select>
 
-            <label className="sr-only" htmlFor="region-2">2차 지역</label>
+            <label className="sr-only" htmlFor={idR2}>2차 지역</label>
             <select
-                id="region-2"
-                name="region2"
+                id={idR2} 
+                name={nmR2}
                 value={signguCd}
                 onChange={onChangeSigngu}
                 disabled={!regnCd}

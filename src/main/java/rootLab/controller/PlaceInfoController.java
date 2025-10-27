@@ -143,7 +143,7 @@ public class PlaceInfoController {
     public ResponseEntity<?> savePlaceBasicInfo(
             // JSON 파트
             @RequestPart("placeInfo") PlaceInfoDto placeInfo,
-            @RequestPart("marker") MarkersGPSDto marker,
+            @RequestPart("marker" ) MarkersGPSDto marker,
             @RequestPart(value = "imagesMeta", required = false) List<PlaceImageDetailDto> imagesMeta,
 
             // 파일 파트 (JSX 필드명 기준: markerImage / mainImage / detailImage…)

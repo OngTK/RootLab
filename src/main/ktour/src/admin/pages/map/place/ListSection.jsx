@@ -71,10 +71,10 @@ export default function ListSection(props) {
         const offset = ((data?.currentPage ?? page) - 1) * (data?.size ?? size);
         const rowsMapped = content.map((r, idx) => ({
             no: offset + idx + 1,
-            pno: r.pno ,
-            title: r.title ,
-            contentTypeName: r.contentTypeName ,
-            lclsSystm3Nm: r.lclsSystm3Nm ,
+            pno: r.pno,
+            title: r.title,
+            contentTypeName: r.contentTypeName,
+            lclsSystm3Nm: r.lclsSystm3Nm,
             addr1: r.addr1,
             tel: r.tel,
         }));
@@ -238,13 +238,13 @@ export default function ListSection(props) {
                     </li>
                 </ul>
                 <div className="tableWrap">
-                    <ResizableTable 
-                    columns={columns}
-                    data={rows}
-                    rememberKey="PlaceInfo.columns"
-                    minColWidth={80}
-                    stickyFirst={false}
-                    sortable={true}
+                    <ResizableTable
+                        columns={columns}
+                        data={rows}
+                        rememberKey="PlaceInfo.columns"
+                        minColWidth={80}
+                        stickyFirst={false}
+                        sortable={true}
                     />
                     {/* <table>
                         <thead>
@@ -291,6 +291,13 @@ export default function ListSection(props) {
                     */}
                 </div>
                 {/* <!-- 목록(리스트) 테이블 끝 --> */}
+                <Pagination
+                    currentPage={page}
+                    size={size}
+                    totalElements={totalElements}
+                    onPageChange={handlePageChange}
+                    onSizeChange={handleSizeChange}
+                />
             </section>
             {/* <!-- [좌측] 검색/리스트 끝 --> */}
         </>
