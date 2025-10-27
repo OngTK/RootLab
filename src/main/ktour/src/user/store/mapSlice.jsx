@@ -2,11 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // 1. 초기값 설정
 const initialState = {
-    selectedLdNo: null,             // 선택한 법정동코드
-    selectedLeftMarker: null,       // 클릭한 마커
+    selectedLdNo: null,                 // 선택한 법정동코드
+    selectedLeftMarker: null,           // 클릭한 마커
     selectedRigthMarker: null,
     markers: [],
-    selectedCategory: "all",          // 선택한 카테고리
+    selectedCategory: "all",            // 선택한 카테고리
+    centeredLDong: null,                // 중심좌표 기준 법정동
     axiosOption: { withCredentials: true },
 };
 
@@ -30,9 +31,12 @@ const mapSlice = createSlice({
         selectCategory: (state, action) => {
             state.selectedCategory = action.payload;
         }, // selectCategory end
+        centerLDong: (state, action) => {
+            state.centeredLDong = action.payload;
+        }, // centerLDong end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory } = mapSlice.actions;
+export const { selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -161,6 +161,16 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
+
+        const geoCoder = new kakao.maps.services.Geocoder();
+        const coords = map.getCenter();
+        const callback = (result, status) => {
+            if (status === kakao.maps.services.Status.OK){
+                dispatch(centerLDong(result[0].address_name));
+                console.log(result[0].address_name);
+            } // if end
+        } // func end
+        geoCoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback)
 
         // 클러스터러 인스턴스 생성
         const clusterer = new kakao.maps.MarkerClusterer({

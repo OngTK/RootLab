@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faAngleRight, faMagnifyingGlass, faMapMarkedAlt, faThumbsUp, faLandmark, faMountainSun, faHiking, faShoppingBag, faUtensils, faBed, faMasksTheater, faMapLocationDot, faStreetView, faCircleChevronRight, faMusic, faDog, faPaw, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/layoutSample.css";
 import { useEffect, useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from "../../store/mapSlice";
 import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
 
@@ -27,6 +27,8 @@ const categories = [
 ];
 
 export default function RightCategory(props) {
+    // =================== useSelector ===================
+    const { centeredLDong } = useSelector((state) => state.relatedMap);
     // =================== useState ===================
     const [activeCategory, setActiveCategory] = useState("all");
     // =================== useDispatch ===================
@@ -39,7 +41,7 @@ export default function RightCategory(props) {
 
     useEffect(() => {
         
-    }, [activeCategory])
+    }, [activeCategory, centeredLDong])
 
     /** ========================= 사용자단(비회원) > 메인(html) 샘플페이지.jsx영역 ================================== */
     return (
@@ -49,7 +51,7 @@ export default function RightCategory(props) {
                 {/* <!-- 03-1.우측 본문 영역 시작 --> */}
                 <div className="rightContents">
                     <div className="pageTitle">
-                        <h2><FontAwesomeIcon icon={faLocationDot} />인천광역시 부평구 부평1동</h2>
+                        <h2><FontAwesomeIcon icon={faLocationDot} />{centeredLDong}</h2>
                         <ul className="cotentType">
                             {
                                 categories.map((category) => {

@@ -40,7 +40,6 @@ export default function PlaceGroups(props) {
                         const keyword = marker.lclsSystm3Nm;
                         if (keyword && !group.keywords.includes(keyword) && group.keywords.length < 5) {
                             group.keywords.push(keyword);
-                            console.log(group.keywords)
                         } // if end
                         if (group.places.length < 10) {
                             group.places.push(marker);

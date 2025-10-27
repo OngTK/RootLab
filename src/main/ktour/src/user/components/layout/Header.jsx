@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
     // =================== useSelector ===================
-    const { axiosOption } = useSelector((state) => state.relatedMap );
+    const { axiosOption, centeredLDong } = useSelector((state) => state.relatedMap );
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -71,7 +71,7 @@ export default function Header(props) {
                     <h1 className="logo">
                         <Link to="/">
                             K-TOUR
-                            <span>인천광역시</span>
+                            <span>{centeredLDong && centeredLDong.split(" ")[0]}</span>
                         </Link>
                     </h1>
                 </header>
