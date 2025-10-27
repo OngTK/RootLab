@@ -1,12 +1,12 @@
 /* 부모 컨테이너*/
-.dragContainer {
+.admin-scope .dragContainer {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
 }
 
-.layerPortalRoot {
+.admin-scope .layerPortalRoot {
   position: fixed;
   inset: 0;
   z-index: 2147483000;
@@ -14,7 +14,7 @@
 }
 
 /* 중앙(50%,50%) 기준 + 오프셋 변환 */
-.drzlLayer {
+.admin-scope .drzlLayer {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -34,7 +34,7 @@
   touch-action: none;
 }
 
-.drzlHeader {
+.admin-scope .drzlHeader {
   height: 42px;
   display: flex;
   align-items: center;
@@ -45,26 +45,26 @@
   padding: 0 15px 0 20px;
 }
 
-.drzlTitle { flex: 1; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drzlTitleInput { flex: 1; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 6px; }
+.admin-scope .drzlTitle { flex: 1; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-scope .drzlTitleInput { flex: 1; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 6px; }
 
-.drzlBtnClose { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 0; color: rgba(0,0,0,.6); }
+.admin-scope .drzlBtnClose { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 0; color: rgba(0,0,0,.6); }
 
-.drzlContent { padding: 12px; height: calc(100% - 42px); display: flex; flex-direction: column; justify-content: space-between; }
-.drzlContentBody { flex: 1; overflow: auto; font:400 12px/18px "Malgun Gothic", "맑은 고딕", Arial; }
-.drzlText { font-size: 13px; color: #555; margin: 0; }
+.admin-scope .drzlContent { padding: 12px; height: calc(100% - 42px); display: flex; flex-direction: column; justify-content: space-between; }
+.admin-scope .drzlContentBody { flex: 1; overflow: auto; font:400 12px/18px "Malgun Gothic", "맑은 고딕", Arial; }
+.admin-scope .drzlText { font-size: 13px; color: #555; margin: 0; }
 
-.drzlActions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
-.drzlBtn { border: 1px solid #cbd5e1; background: #fff; color: #111827; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
-.drzlBtnPrimary { border: none; background:  rgba(0, 191, 99, 1); color: #fff; }
+.admin-scope .drzlActions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.admin-scope .drzlBtn { border: 1px solid #cbd5e1; background: #fff; color: #111827; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.admin-scope .drzlBtnPrimary { border: none; background:  rgba(0, 191, 99, 1); color: #fff; }
 
 /* 8방향 리사이즈 핸들 (투명 히트영역) */
-.drzlHandle { position: absolute; width: 12px; height: 12px; background: transparent; }
-.drzlHandleN  { left: 50%; top: -6px; transform: translateX(-6px); cursor: ns-resize; }
-.drzlHandleS  { left: 50%; bottom: -6px; transform: translateX(-6px); cursor: ns-resize; }
-.drzlHandleE  { top: 50%; right: -6px; transform: translateY(-6px); cursor: ew-resize; }
-.drzlHandleW  { top: 50%; left: -6px; transform: translateY(-6px); cursor: ew-resize; }
-.drzlHandleNE { right: -6px; top: -6px; cursor: nesw-resize; }
-.drzlHandleNW { left: -6px; top: -6px; cursor: nwse-resize; }
-.drzlHandleSE { right: -6px; bottom: -6px; cursor: nwse-resize; }
-.drzlHandleSW { left: -6px; bottom: -6px; cursor: nesw-resize; }
+.admin-scope .drzlHandle { position: absolute; width: 12px; height: 12px; background: transparent; }
+.admin-scope .drzlHandleN  { left: 50%; top: -6px; transform: translateX(-6px); cursor: ns-resize; }
+.admin-scope .drzlHandleS  { left: 50%; bottom: -6px; transform: translateX(-6px); cursor: ns-resize; }
+.admin-scope .drzlHandleE  { top: 50%; right: -6px; transform: translateY(-6px); cursor: ew-resize; }
+.admin-scope .drzlHandleW  { top: 50%; left: -6px; transform: translateY(-6px); cursor: ew-resize; }
+.admin-scope .drzlHandleNE { right: -6px; top: -6px; cursor: nesw-resize; }
+.admin-scope .drzlHandleNW { left: -6px; top: -6px; cursor: nwse-resize; }
+.admin-scope .drzlHandleSE { right: -6px; bottom: -6px; cursor: nwse-resize; }
+.admin-scope .drzlHandleSW { left: -6px; bottom: -6px; cursor: nesw-resize; }

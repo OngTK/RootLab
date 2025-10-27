@@ -1,6 +1,6 @@
 /* 좌측 하단 배너(팝업) */
-.popupBannerWrap{ position: fixed; left: 0; bottom: 30px; z-index: 10000000000; overflow: hidden; width: 279px; height: 200px; }
-.popupBannerWrap .popupBanne > dt { height: 100px; }
-.popupBannerWrap .popupBanne > dt > span{ display: none; }
-.popupBannerWrap .popupBanne > dt > img{ position: absolute; bottom: 0; width: 100%;  image-rendering: crisp-edges; image-rendering: pixelated; /* 이미지 선명하게/ 일부 브라우저에서 더 강한 효과 */  border-top: solid 1px rgba(0,0,0,.2); }
-.popupBannerWrap .popupBanne > dd{ display: none;}
+.user-scope .popupBannerWrap{ position: fixed; left: 0; bottom: 30px; z-index: 10000000000; overflow: hidden; width: 279px; height: 200px; }
+.user-scope .popupBannerWrap .popupBanne > dt { height: 100px; }
+.user-scope .popupBannerWrap .popupBanne > dt > span{ display: none; }
+.user-scope .popupBannerWrap .popupBanne > dt > img{ position: absolute; bottom: 0; width: 100%;  image-rendering: crisp-edges; image-rendering: pixelated; /* 이미지 선명하게/ 일부 브라우저에서 더 강한 효과 */  border-top: solid 1px rgba(0,0,0,.2); }
+.user-scope .popupBannerWrap .popupBanne > dd{ display: none;}
