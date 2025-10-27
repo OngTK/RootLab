@@ -9,6 +9,7 @@ const initialState = {
     selectedCategory: "all",            // 선택한 카테고리
     centeredLDong: null,                // 중심좌표 기준 법정동
     axiosOption: { withCredentials: true },
+    LdongName: [],
 };
 
 // 2. Slice 함수 정의
@@ -34,9 +35,12 @@ const mapSlice = createSlice({
         centerLDong: (state, action) => {
             state.centeredLDong = action.payload;
         }, // centerLDong end
+        ByLdongCode: (state, action) => {
+            state.LdongName = action.payload;
+        }, // ByLdongCode end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

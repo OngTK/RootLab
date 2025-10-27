@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, LdongName } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -51,6 +51,12 @@ export default function KakaoMap(props) {
     const isUserMoveRef = useRef(false);    // 사용자의 클릭에 의해 이용했는지, true : 사용자가 클릭 | false : 드래그 또는 줌
     const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
     const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
+
+    useEffect(() => {
+        console.log(currentLocation);
+        console.log(LdongName);
+        // 여기서부터!!!!!!!!!!!!!!!!!!!!!!!!!! 작업!!!!!!!!!!!!!!!!!!!!!!!! currentLocation으로 시구 뽑아서 비교!!!!!!!
+    }, [LdongName]);
 
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
@@ -144,6 +150,17 @@ export default function KakaoMap(props) {
     // =================== useEffect - [bounds] : 데이터 가져오기 ===================
     useEffect(() => {
         getBoundsByAxios();
+        if (!window.kakao) return;
+        const { kakao } = window;
+        const map = mapRef.current;
+        const geoCoder = new kakao.maps.services.Geocoder();
+        const coords = map.getCenter();
+        const callback = (result, status) => {
+            if (status === kakao.maps.services.Status.OK) {
+                dispatch(centerLDong(result[0].address_name));
+            } // if end
+        } // func end
+        geoCoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback)
     }, [bounds]);
 
     // =================== useEffect - [currentLocation] : 지도 초기화 ===================
@@ -165,7 +182,7 @@ export default function KakaoMap(props) {
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();
         const callback = (result, status) => {
-            if (status === kakao.maps.services.Status.OK){
+            if (status === kakao.maps.services.Status.OK) {
                 dispatch(centerLDong(result[0].address_name));
             } // if end
         } // func end
@@ -291,7 +308,7 @@ export default function KakaoMap(props) {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
             let position = null
-            if (marker.ctNo == category){
+            if (marker.ctNo == category) {
                 position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             }
             // 이미지 소스 선택
