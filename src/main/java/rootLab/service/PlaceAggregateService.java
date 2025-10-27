@@ -158,14 +158,13 @@ public class PlaceAggregateService {
         List<PlaceImageDetailDto> rows = new ArrayList<>();
         if (files == null || files.isEmpty()) return rows;
 
-        // pNo별 serialnum을 DB에서 계산하도록 Service에서 Max 이후 +i로 부여해도 되고,
-        // 여기서는 파일명/메타만 묶어서 넘깁니다.
         for (int i = 0; i < files.size(); i++) {
             PlaceImageDetailDto d = new PlaceImageDetailDto();
             d.setPNo(pNo);
             d.setEditable(true);
             d.setOriginimgurl(files.get(i));
             d.setSmallimageurl(files.get(i)); // 썸네일 별도면 여기 교체
+            d.setImgname(metas.get(0).getImgname());
             if (metas != null && i < metas.size()) {
                 PlaceImageDetailDto m = metas.get(i);
                 d.setImgname(Objects.requireNonNullElse(m.getImgname(), null));

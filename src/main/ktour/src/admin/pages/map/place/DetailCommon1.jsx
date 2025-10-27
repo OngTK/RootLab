@@ -10,12 +10,9 @@ import { useEffect, useRef, useState } from "react";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import axios from "axios";
 
-export default function DetailCommon1(props) {
-
-    const { placeInfo } = props; // PlaceInfo 출력 방법에서 내려주는 detail.placeInfo
+export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, onChangeContentType, ...rest }) {
 
     // Detail 전용 로컬 상태 (검색 폼과 분리) ============================================================
-    const [contentType, setContentType] = useState("");
     const [category, setCategory] = useState({
         ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null,
         l1Nm: null, l2Nm: null, l3Nm: null,
@@ -23,6 +20,11 @@ export default function DetailCommon1(props) {
     const [region, setRegion] = useState({
         ldNo: null, regnCd: null, signguCd: null, regnNm: null, signguNm: null,
     });
+    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType ?? ""));
+    useEffect(() => {
+        setContentTypeLocal(String(contentType ?? ""));
+    }, [contentType]);
+    const placeInfo = placeInfoProp;
 
     // 파일 & 설명 입력 ref====================================================
     const markerImgRef = useRef(null);
@@ -41,11 +43,9 @@ export default function DetailCommon1(props) {
     // 상세 조회로 들어온 값을 초기값으로 반영(있을 때만) =========================================
     useEffect(() => {
         if (!placeInfo) return;
-        setContentType(placeInfo.ctNo ?? "");
         // 상세 진입 시 기존 주소값을 미리 채우고 싶다면:
         setZipCode(placeInfo.zipcode ?? "");
         setRoadAddr(placeInfo.addr1 ?? "");
-
         setShowFlag(placeInfo.showflag === 1);
         setTitle(placeInfo.title ?? "");
         setPhone(placeInfo.tel ?? "");
@@ -159,13 +159,13 @@ export default function DetailCommon1(props) {
     // 저장 (멀티파트: JSON 파트 + 파일 파트) ==============================
     const handleSave = async () => {
         try {
-            if (!contentType) { alert("콘텐츠 타입을 선택해 주세요."); return; }
+            if (!contentTypeLocal) { alert("콘텐츠 타입을 선택해 주세요."); return; }
             if (!category?.ccNo) { alert("카테고리는 소분류까지 선택해 주세요."); return; }
-            if (!roadAddr){alert("주소를 입력해주세요.");return}
+            if (!roadAddr) { alert("주소를 입력해주세요"); return }
 
             // 1) 화면 값 수집
             const pNoFromDetail = placeInfo?.pno ?? placeInfo?.pNo ?? null;
-            const ctNoVal = Number(contentType);
+            const ctNoVal = Number(contentTypeLocal);
             const ccNoVal = category.ccNo;
             const showflag = showFlag ? 1 : 0;
             const titleVal = title.trim();
@@ -253,25 +253,34 @@ export default function DetailCommon1(props) {
 
                         {/* 1. 콘텐츠 타입 (선택 필드) */}
                         <div className="form-group">
-                            <label htmlFor="content-type">콘텐츠 타입</label>
-                            <select id="content-type" name="contentType" value={contentType} onChange={(e) => setContentType(e.target.value)}>
-                                <option value="">전체</option>
-                                <option value="1">관광지</option>
-                                <option value="3">행사/공연/축제</option>
-                                <option value="8">음식점</option>
-                            </select>
-                            {/* 2. 노출 여부 (라디오 버튼 그룹) - fieldset과 legend로 그룹화 필수 */}
-                            <span className="form-group">
-                                <span>노출 여부</span>
-                                <span className="radio-group">
-                                    <input type="radio" id="exposure-on" name="exposure" value="Y"
-                                        checked={showFlag} onChange={() => setShowFlag(true)} />
-                                    <label htmlFor="exposure-on">노출</label>
-                                    <input type="radio" id="exposure-off" name="exposure" value="N"
-                                        checked={!showFlag} onChange={() => setShowFlag(false)} />
-                                    <label htmlFor="exposure-off">비노출</label>
+                            <div className="form-group">
+                                <label htmlFor="content-type-detail">콘텐츠 타입</label>
+                                <select
+                                    id="content-type-detail"
+                                    name="contentTypeDetail"
+                                    value={contentTypeLocal}
+                                    onChange={(e) => {
+                                        const v = e.target.value;
+                                        setContentTypeLocal(v);
+                                        onChangeContentType?.(v); 
+                                    }} >
+                                    <option value="1">관광지</option>
+                                    <option value="3">행사/공연/축제</option>
+                                    <option value="8">음식점</option>
+                                </select>
+                                {/* 2. 노출 여부 (라디오 버튼 그룹) - fieldset과 legend로 그룹화 필수 */}
+                                <span className="form-group">
+                                    <span>노출 여부</span>
+                                    <span className="radio-group">
+                                        <input type="radio" id="exposure-on" name="exposure" value="Y"
+                                            checked={showFlag} onChange={() => setShowFlag(true)} />
+                                        <label htmlFor="exposure-on">노출</label>
+                                        <input type="radio" id="exposure-off" name="exposure" value="N"
+                                            checked={!showFlag} onChange={() => setShowFlag(false)} />
+                                        <label htmlFor="exposure-off">비노출</label>
+                                    </span>
                                 </span>
-                            </span>
+                            </div>
                         </div>
                         {/* 3. 카테고리 (다중 Select 필드) */}
                         <div className="form-group category-group">

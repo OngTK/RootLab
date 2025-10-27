@@ -118,6 +118,15 @@ export default function ListSection(props) {
         onSearch();
     }, [page, size]);
 
+    const handleRowClick = (pno) => {
+        axios.get(`http://localhost:8080/placeinfo/basic?pno=${pno}`)
+            .then(res => {
+                setDetail(res.data);     // PlaceInfo 상세 전체 데이터 저장
+                setSelectedPno(pno);     // 선택한 플레이스 번호 저장
+            })
+            .catch(err => console.error(err));
+    };
+
     /** ============================ [본문 좌측] 플레이스 목록(PlaceList) ================================= */
     return (
         <>
@@ -245,6 +254,8 @@ export default function ListSection(props) {
                         minColWidth={80}
                         stickyFirst={false}
                         sortable={true}
+                        rows={rows}
+                        onRowClick={(row) => handleRowClick(row.pNo)}
                     />
                     {/* <table>
                         <thead>

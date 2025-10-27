@@ -221,7 +221,7 @@ export default function ResizableTable({
 
           <tbody>
             {sorted.map((row, rIdx) => (
-              <tr key={rIdx} className={row._active ? "active" : undefined}>
+              <tr key={rIdx} className={row._active ? "active" : undefined} >
                 {columns.map((c, i) => (
                   <td key={c.id} className={i===0 && stickyFirst ? "sticky-first" : ""}>
                     {row[c.id]}
