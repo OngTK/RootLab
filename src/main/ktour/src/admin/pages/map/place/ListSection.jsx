@@ -240,7 +240,7 @@ export default function ListSection(props) {
                 <div className="tableWrap">
                     <ResizableTable 
                     columns={columns}
-                    data={data}
+                    data={rows}
                     rememberKey="PlaceInfo.columns"
                     minColWidth={80}
                     stickyFirst={false}
