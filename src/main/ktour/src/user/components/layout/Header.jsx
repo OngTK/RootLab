@@ -11,7 +11,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu, ByLdongCode, setActiveLnbMenu } from "../../store/mapSlice";
+import { selectedSigngu, ByLdongCode, setActiveLnbMenu, setRegionSignguList } from "../../store/mapSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
@@ -42,10 +42,15 @@ export default function Header(props) {
     } // func end
     // =================== LDongSignguCd Axios GET ===================
     const getLDongSignguCdByAxios = async () => {
-        if (selectedRegnCd == "") return;
+        if (selectedRegnCd == "") {
+            SetLDongSigngu([]);
+            dispatch(setRegionSignguList([]));
+            return;
+        } // if end
         try {
             const response = await axios.get(`http://localhost:8080/ldongcode/getsigngu?lDongRegnCd=${selectedRegnCd}`, axiosOption);
             SetLDongSigngu(response.data);
+            dispatch(setRegionSignguList(response.data));
         } catch (error) {
             console.log('getLDongSignguCdByAxios 오류 발생');
             console.log(error);
@@ -58,6 +63,7 @@ export default function Header(props) {
     // =================== Select Markup Change ===================
     const changeRegnCd = (e) => {
         SetSelectedRegnCd(e.target.value);
+        dispatch(setActiveLnbMenu('regionSelect'));
     } // func end
     const changeLdNo = (e) => {
         SetSelectedLdNo(e.target.value);

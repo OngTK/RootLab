@@ -19,7 +19,7 @@ export default function AsideLnb(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
-    const { firstLDong, LdongName, axiosOption, activeLnbMenu } = useSelector((state) => state.relatedMap);
+    const { firstLDong, LdongName, axiosOption, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);
     const [activeLdNo, setActiveLdNo] = useState(null);
@@ -28,8 +28,8 @@ export default function AsideLnb(props) {
         LdongName.map((name) => {
             if (name.ldongregnnm == firstLDong.split(" ")[0]) {
                 getLDongSignguCdByAxios(name.ldongregncd);
-            }
-        })
+            } // if end
+        }) // map end
     }, [firstLDong])
 
     const handleGnbClick = (menuName) => {
@@ -52,7 +52,7 @@ export default function AsideLnb(props) {
                 setActiveLdNo(initialActiveNo.ldNo);
             } else {
                 setActiveLdNo(null);
-            }
+            } // if end
         } catch (error) {
             console.log('getLDongSignguCdByAxios 오류 발생');
             console.log(error);
@@ -64,7 +64,6 @@ export default function AsideLnb(props) {
         dispatch(selectedSigngu(signgu.ldNo));
     } // func end
 
-    if (!surroundingPlace) return;
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 좌측메뉴(asideLnb) .jsx영역 ================================== */
     return <>
         <div className="gnbWrap">
@@ -118,18 +117,40 @@ export default function AsideLnb(props) {
                 </div>
             )}
 
-            {/* '지역 선택'이 활성화되었을 때 보여줄 서브메뉴 */}
+            {/* '지역 선택' 서브 메뉴 */}
             {activeLnbMenu === 'regionSelect' && (
                 <div className="lnb">
                     <h2>
                         <FontAwesomeIcon icon={faCompass} />지역 선택
-                        <div className="comment">상단 헤더에서 지역을 선택하세요.</div>
+                        <div className="comment">
+                            {regionSignguList.length > 0
+                                ? '시군구를 선택하세요.'
+                                : '상단 헤더에서 시도를 먼저 선택하세요.'
+                            }
+                        </div>
                     </h2>
+                    <ul className="subMenuList" id="lnbRegion">
+                        {
+                            regionSignguList &&
+                            regionSignguList.map((signgu) => {
+                                const isActive = signgu.ldNo == activeLdNo;
+                                return (
+                                    <li key={signgu.ldNo}>
+                                        <Link
+                                            to="#"
+                                            className={isActive ? 'active' : ''}
+                                            onClick={() => handleLdNoClick(signgu)}
+                                        >
+                                            <span>{signgu.ldongsigngunm}</span>
+                                            <FontAwesomeIcon icon={faAngleRight} />
+                                        </Link>
+                                    </li>
+                                );
+                            })
+                        }
+                    </ul>
                 </div>
             )}
-            {/* */}
-            {/* <!-- 좌측 서브 메뉴  끝 --> */}
-
         </div>
     </>
 }//AsideLnb.jsx end

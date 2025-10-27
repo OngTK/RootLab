@@ -13,6 +13,7 @@ const initialState = {
     axiosOption: { withCredentials: true },
     LdongName: [],
     activeLnbMenu: 'mySurroundings',    // 활성화된 Lnb 메뉴
+    regionSignguList: [],               // '지역 선택'의 시군구 목록
 };
 
 // 2. Slice 함수 정의
@@ -50,9 +51,12 @@ const mapSlice = createSlice({
         setActiveLnbMenu: (state, action) => {
             state.activeLnbMenu = action.payload;
         }, // setActiveLnbMenu end
+        setRegionSignguList: (state, action) => {
+            state.regionSignguList = action.payload;
+        }, // setRegionSignguList end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
