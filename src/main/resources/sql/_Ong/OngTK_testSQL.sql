@@ -43,7 +43,9 @@ select * from push;
 -- ---------------------------------------------------------
 -- ldongCode : 법정동
 -- ---------------------------------------------------------
-select * from ldongcode where ldongSignguNm like '고성%';
+select * from ldongcode;
+
+select * from ldongcode where ldongregnnm like '%경기%' and ldongsigngunm like '%수원%' limit 1;
 
 
 -- ---------------------------------------------------------
@@ -51,7 +53,8 @@ select * from ldongcode where ldongSignguNm like '고성%';
 -- 관광, 플레이스 관련 기본 공통 정보
 -- ---------------------------------------------------------
 
-select * from placeInfo;
+select * from placeInfo where pno = 65538;
+select * from placeInfo order by pno desc;
 
 select count(*) from placeinfo;
 SELECT pi.* FROM placeInfo pi ORDER BY pi.pNo DESC LIMIT 10 OFFSET 2;
@@ -87,6 +90,7 @@ select * from festivalintro where pno=23405;
 
 
 
+
 -- ---------------------------------------------------------
 -- RestaurantIntro 
 -- 음식점 (contentTypeID 39 . ctNo 8) 정보
@@ -119,3 +123,4 @@ select * from placeimagedetail where pno = 6881;
 -- 마커 이미지 관리 table
 -- ---------------------------------------------------------
 select * from markersgps where pno = 6881;
+select * from markersgps order by pNo desc;

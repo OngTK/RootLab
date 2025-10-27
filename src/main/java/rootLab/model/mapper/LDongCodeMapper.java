@@ -56,5 +56,13 @@ public interface LDongCodeMapper {
             """)
     List<LDongCodeDto> getAllLDongCode();
 
+    @Select("""
+            select * from ldongcode 
+            where ldongregnnm like CONCAT('%', #{lDongRegnNm}, '%') 
+            and ldongsigngunm like CONCAT('%', #{lDongSignguNm}, '%') 
+            limit 1;
+            """)
+    LDongCodeDto lookforLdNo(String lDongRegnNm, String lDongSignguNm);
+
 
 } // interface end

@@ -11,7 +11,7 @@ export default function TourIntro2(props) {
 /** ========================= [본문 우측] 플레이스 Intro상세정보(2.인트로) 컴포넌트============================== */
     return (
         <>
-            <div className="placeIntroWrap">
+            <div className="TourIntroWrap">
                 <form aria-label="관광지 상세 정보 입력">
                     <fieldset>
                         <legend>관광지 상세 정보</legend>

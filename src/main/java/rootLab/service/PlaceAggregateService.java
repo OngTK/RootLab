@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import rootLab.model.dto.LDongCodeDto;
 import rootLab.model.dto.MarkersGPSDto;
 import rootLab.model.dto.PlaceImageDetailDto;
 import rootLab.model.dto.PlaceInfoDto;
@@ -13,6 +14,8 @@ import rootLab.util.file.FileUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
+
 /**
  * [ PlaceAggregate ]
  * PlaceInfo 처리에 대하여
@@ -29,6 +32,7 @@ public class PlaceAggregateService {
     private final MarkersGPSService markersGPSService;
     private final PlaceImageDetailService placeImageDetailService;
     private final FileUtil fileUtil;
+    private final LDongCodeService lDongCodeService;
 
     /**
      * [PI-03] 플레이스 기본정보 등록
@@ -69,10 +73,17 @@ public class PlaceAggregateService {
         // ---- [2] 파일명을 placeInfo에 삽입
         placeInfo.setFirstimage(tmpMainFile);
         placeInfo.setFirstimage2(tmpDetailFiles.get(0));
+        // ---- [2.1] ldNo 처리
+        StringTokenizer st = new StringTokenizer(placeInfo.getAddr1(), " " );
+        String lDongRegnNm = st.nextToken();
+        String lDongSignguNm = st.nextToken();
+        LDongCodeDto lDongCodeDto =lDongCodeService.lookforLdNo(lDongRegnNm, lDongSignguNm);
+        placeInfo.setLdNo(lDongCodeDto.getLdNo());
 
         // ---- [3] PlaceInfo upsert → pNo 확보 ----
         System.out.println(placeInfo);
         Integer pNo = upsertPlaceInfoAndGetPno(placeInfo);
+        System.out.println(pNo);
 
         // ---- [4] Marker upsert ----
         if (tmpMarkerFile != null) marker.setMkURL(tmpMarkerFile);

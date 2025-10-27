@@ -19,7 +19,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     @Insert("""
-            isnert into placeinfo( ctNo, ldNo , ccNo , contentid ,
+            insert into placeinfo( ctNo, ldNo , ccNo , contentid ,
             title , showflag ,firstimage,firstimage2,addr1 , addr2,
             zipcode,homepage,tel,telname,overview)
             values
@@ -28,7 +28,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             #{zipcode}, #{homepage}, #{tel}, #{telname}, #{overview})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "pNo")
-    int create(@Param("PlaceInfoDto") PlaceInfoDto placeInfoDto);
+    int create(PlaceInfoDto placeInfoDto);
 
     /**
      * [2.1] 전체 조회 - 검색X, pageX

@@ -57,4 +57,12 @@ public class LDongCodeService {
      * @author OngTk
      */
     public List<LDongCodeDto> getAllLDongCode(){ return lDongCodeMapper.getAllLDongCode(); } // func end
+
+    /**
+     * 행정구역명을 통한 ldNo 찾기
+     * @author OngTK
+     *
+     */
+    public LDongCodeDto lookforLdNo(String lDongRegnNm, String lDongSignguNm){return  lDongCodeMapper.lookforLdNo(lDongRegnNm, lDongSignguNm);}
+
 } // class end

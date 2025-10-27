@@ -75,7 +75,7 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
         VALUES (#{pNo}, #{mkURL}, #{mapx}, #{mapy})
     """)
     @Options(useGeneratedKeys = true, keyProperty = "mkNo")
-    int insert(MarkersGPSDto dto);
+    int create(MarkersGPSDto dto);
 
     /**
      * 마커정보 수정

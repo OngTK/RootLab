@@ -161,6 +161,7 @@ export default function DetailCommon1(props) {
         try {
             if (!contentType) { alert("콘텐츠 타입을 선택해 주세요."); return; }
             if (!category?.ccNo) { alert("카테고리는 소분류까지 선택해 주세요."); return; }
+            if (!roadAddr){alert("주소를 입력해주세요.");return}
 
             // 1) 화면 값 수집
             const pNoFromDetail = placeInfo?.pno ?? placeInfo?.pNo ?? null;
