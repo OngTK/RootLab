@@ -25,12 +25,12 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
      * [MG-01] 렌더링 기준 마커조회
      * 렌더링된 화면 기준으로 [동서남북] 좌표를 받아, 해당 범위 내의 마커를 조회한다.
      *
-     * @param coordinates 동서남북 좌표가 들어있는 Map
+     * @param markersGPSDto 동서남북 좌표가 들어있는 Dto
      * @return 해당 범위에 있는 마커 리스트
      * @author AhnJH
      */
-    public List<Map<String, Object>> getMarkersGpsByCurrentLatLng(Map<String, Object> coordinates){
-        return markersGPSMapper.getMarkersGpsByCurrentLatLng(coordinates);
+    public List<Map<String, Object>> getMarkersGpsByCurrentLatLng(MarkersGPSDto markersGPSDto){
+        return markersGPSMapper.getMarkersGpsByCurrentLatLng(markersGPSDto);
     } // func end
 
     /**
@@ -41,7 +41,7 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
      * @return 해당 법정동코드No에 속한 마커 리스트
      * @author AhnJH
      */
-    public List<MarkersGPSDto> getMarkersGpsByCurrentLDong(int ldNo){
+    public List<Map<String, Object>> getMarkersGpsByCurrentLDong(int ldNo){
         return markersGPSMapper.getMarkersGpsByCurrentLDong(ldNo);
     } // func end
 

@@ -80,11 +80,11 @@ ul.cotentType li.active svg, ul.cotentType li:hover svg{ color: #009900;}
 
 /* 모임카드 */
 .cardListWrap{ position: relative; padding: 20px 15px 5px 18px;  width:100%;  overflow: hidden;  }
-dl.ai_card{ position: relative;  padding: 15px 15px 12px 20px;  margin:0 auto 20px; border:solid 1px rgba(0,0,0,.3); box-shadow:2px 2px 3px rgba(0,0,0,.2); border-radius: 5px; min-width: 345px;z-index:1; overflow: hidden; background:#fff }
+dl.ai_card{ position: relative;  padding: 15px 15px 12px 20px;  margin:0 auto 20px; border:solid 1px rgba(0,0,0,.3); box-shadow:2px 2px 3px rgba(0,0,0,.2); border-radius: 5px; min-width: 345px;z-index:1; overflow: hidden; background:#fff;}
 dl.ai_card:after{ content:""; display: block; clear:both; }
 
 .analisys dl.ai_card{ width: 100%; border-radius: 3px }
-.analisys dl.ai_card dd.body{ min-hight:300px }
+.analisys dl.ai_card dd.body{ min-height:300px }
 
 dl.ai_card > dt h2{  height: 35px; }
 dl.ai_card > dt h2 strong{ display:inline-block;  width:88%; font:600 20px/30px 'Noto Sans KR', SansSerif; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: rgba(0,0,0,.95);  letter-spacing: -0.5px   }
@@ -110,7 +110,11 @@ dl.ai_card > dt .keyword_recommand a:hover{ color:#009900; font-weight: 600 }
 dl.ai_card > dt .keyword_recommand a:hover:before{ color:#009900; }
 
 /* 스크롤 */
-dl.ai_card dd.body{ max-height: 235px; overflow-y: auto; padding:5px 0; }
+dl.ai_card dd.body { max-height: 235px; overflow-y: auto; padding: 5px 0; }
+/* 유일한 자식일 때: 카드(<dl>)가 유일한 자식일 때 */
+dl.ai_card:only-child { max-height: 830px; display: flex; flex-direction: column; }
+/* [추가] 유일한 자식 카드 내부의 본문(<dd>) 스타일 */
+dl.ai_card:only-child dd.body { max-height: none; flex-grow: 1; }
 dl.ai_card dd.body{
     scrollbar-face-color:#ddd;/*스크롤*/
     scrollbar-highlight-color:#ddd;/*하이라이트*/

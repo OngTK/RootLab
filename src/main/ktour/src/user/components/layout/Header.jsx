@@ -11,12 +11,12 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu } from "../../store/mapSlice";
+import { selectedSigngu, ByLdongCode } from "../../store/mapSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
     // =================== useSelector ===================
-    const { axiosOption } = useSelector((state) => state.relatedMap );
+    const { axiosOption, centeredLDong } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -33,6 +33,7 @@ export default function Header(props) {
     const getLDongRegnCdByAxios = async () => {
         try {
             const response = await axios.get("http://localhost:8080/ldongcode/getregn", axiosOption);
+            dispatch(ByLdongCode(response.data));
             SetLDongRegnCd(response.data);
         } catch (error) {
             console.log('getLDongCodeByAxios 오류 발생');
@@ -63,6 +64,15 @@ export default function Header(props) {
         dispatch(selectedSigngu(e.target.value));
     } // func end
 
+    let fisrtName = null;
+    let secondName = null;
+    useEffect(() => {
+        if (!centeredLDong) return;
+        fisrtName = centeredLDong.split(" ")[0];
+        secondName = centeredLDong.split(" ")[1];
+    }, [centeredLDong])
+
+    if (!centeredLDong) return;
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
     return (
         <>
@@ -71,7 +81,7 @@ export default function Header(props) {
                     <h1 className="logo">
                         <Link to="/">
                             K-TOUR
-                            <span>인천광역시</span>
+                            <span>{centeredLDong && centeredLDong.split(" ")[0]}</span>
                         </Link>
                     </h1>
                 </header>
