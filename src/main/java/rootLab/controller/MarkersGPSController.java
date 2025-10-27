@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import rootLab.model.dto.MarkersGPSDto;
 import rootLab.service.MarkersGPSService;
 
 import java.util.HashMap;
@@ -33,17 +34,17 @@ public class MarkersGPSController {
                                                           @RequestParam double north,
                                                           @RequestParam double west,
                                                           @RequestParam double east,
-                                                          @RequestParam(defaultValue = "3") int ctNo){
-        // 1. 동서남북 좌표를 담을 Map 선언
-        Map<String, Object> coordinates = new HashMap<>();
+                                                          @RequestParam(required = false) Integer ctNo){
+        // 1. 동서남북 좌표를 담을 Dto 선언
+        MarkersGPSDto markersGPSDto = new MarkersGPSDto();
         // 2. 선언한 Map에 좌표 담기
-        coordinates.put("south", south);
-        coordinates.put("north", north);
-        coordinates.put("west", west);
-        coordinates.put("east", east);
-        coordinates.put("ctNo", ctNo);
+        markersGPSDto.setSouth(south);
+        markersGPSDto.setNorth(north);
+        markersGPSDto.setWest(west);
+        markersGPSDto.setEast(east);
+        if (ctNo != null) markersGPSDto.setCtNo(ctNo);
         // 3. 좌표를 Service에게 전달하여 값 반환하기
-        return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLatLng(coordinates));
+        return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLatLng(markersGPSDto));
     } // func end
 
     /**

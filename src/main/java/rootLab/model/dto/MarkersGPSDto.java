@@ -26,4 +26,9 @@ public class MarkersGPSDto {
     // 부가적인 정보
     private File uploadedMk;        // 업로드된 마커 파일
     private String defaultMarker;   // 기본마커 이미지
+    private double south;
+    private double north;
+    private double west;
+    private double east;
+    private Integer ctNo;
 } // class end

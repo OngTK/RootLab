@@ -16,10 +16,10 @@ import { useSelector } from "react-redux";
 
 
 export default function MainPlace(props) {
-    const { selectedLeftMarker, selectedRigthMarker, markers } = useSelector((state) => state.relatedMap);
+    const { selectedLeftMarker, selectedRigthMarker, selectedCategory } = useSelector((state) => state.relatedMap);
 
     return <>
-        <div id="map"><KakaoMap /></div>
+        <div id="map"><KakaoMap selectedCategory={selectedCategory} /></div>
         {selectedRigthMarker && <RightModalPlace pNo={selectedRigthMarker} />}
         {selectedLeftMarker && <LeftModalPlace pNo={selectedLeftMarker} />}
         <RightCategory />

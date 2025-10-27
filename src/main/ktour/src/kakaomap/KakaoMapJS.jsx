@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, renderedMarker } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -129,7 +129,12 @@ export default function KakaoMap(props) {
     const getBoundsByAxios = async () => {
         if (bounds.south === "0.0") return;
         try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
+            let response = null;
+            if (props.selectedCategory == 'all') {
+                response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}`, axiosOption);
+            } else {
+                response = await axios.get(`http://localhost:8080/markersgps/getbycurrentlatlng?south=${bounds.south}&north=${bounds.north}&west=${bounds.west}&east=${bounds.east}&ctNo=${props.selectedCategory}`, axiosOption);
+            } // if end
             dispatch(renderedMarker(response.data));
         } catch (error) {
             console.log(error);
@@ -177,7 +182,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
-
+                dispatch(selectRigthMarker(null));
             } // if end
         }) // addListener end
         // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
@@ -185,6 +190,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
+                dispatch(selectRigthMarker(null));
             } // if end
         }) // addListener end
 
@@ -273,8 +279,12 @@ export default function KakaoMap(props) {
 
         // 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {
-            const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
-
+            let category = props.selectedCategory;
+            if (props.selectedCategory == 'all') category = 3;
+            let position = null
+            if (marker.ctNo == category){
+                position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
+            }
             // 이미지 소스 선택
             const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
@@ -287,7 +297,7 @@ export default function KakaoMap(props) {
             // 마커 클릭 이벤트 생성
             kakao.maps.event.addListener(kakaoMarker, 'click', () => {
                 SetSelectedGps(marker);
-                dispatch(selectMarker(marker.pNo));
+                dispatch(selectLeftMarker(marker.pNo));
                 // 인포윈도우 내용 설정
                 const html = `<div class="iw-container">
                                 <p class="iw-header">
@@ -307,7 +317,7 @@ export default function KakaoMap(props) {
         // 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
 
-    }, [markers]); // 'markers' state가 변경될 때마다 실행
+    }, [markers, props.selectedCategory]); // 'markers' state가 변경될 때마다 실행
 
     // =================== return ===================
     if (currentLocation.isLoading) {

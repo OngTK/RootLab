@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { selectRigthMarker } from "../../store/mapSlice";
 
 // 미리 카테고리 정의해놓기
@@ -16,7 +16,7 @@ const PLACE_GROUPS_TEMPLATE = [
     { category: "음식점", keywords: [], places: [] }
 ];
 
-export default function PlaceGroups() {
+export default function PlaceGroups(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
@@ -34,20 +34,35 @@ export default function PlaceGroups() {
 
         if (markers && markers.length > 0) {
             markers.forEach((marker) => {
-                const group = groupsMap.get(marker.contenttypename);
-                if (group) { // 일치하는 그룹이 있을 때만
-                    const keyword = marker.lclsSystm3Nm;
-                    if (keyword && !group.keywords.includes(keyword)) {
-                        group.keywords.push(keyword);
+                if (props.selectedCategory == 'all') {
+                    const group = groupsMap.get(marker.contenttypename);
+                    if (group) { // 일치하는 그룹이 있을 때만
+                        const keyword = marker.lclsSystm3Nm;
+                        if (keyword && !group.keywords.includes(keyword) && group.keywords.length < 5) {
+                            group.keywords.push(keyword);
+                            console.log(group.keywords)
+                        } // if end
+                        if (group.places.length < 10) {
+                            group.places.push(marker);
+                        } // if end
                     } // if end
-                    if (group.places.length < 5){
-                        group.places.push(marker);
-                    }                    
-                } // if end
+                } else {
+                    if (marker.ctNo != props.selectedCategory) return;
+                    const group = groupsMap.get(marker.contenttypename);
+                    if (group) { // 일치하는 그룹이 있을 때만
+                        const keyword = marker.lclsSystm3Nm;
+                        if (keyword && !group.keywords.includes(keyword) && group.keywords.length < 5) {
+                            group.keywords.push(keyword);
+                        } // if end
+                        if (group.places.length < 10) {
+                            group.places.push(marker);
+                        } // if end
+                    } // if end
+                }
             }); // get end
         } // if end
         return Array.from(groupsMap.values());
-    }, [markers]);
+    }, [markers, props.selectedCategory]);
 
     const detailMapInfo = (pNo) => {
         dispatch(selectRigthMarker(pNo));
@@ -80,17 +95,17 @@ export default function PlaceGroups() {
                                     <div className="thumb">
                                         {
                                             place.firstimage2 ?
-                                            (<img
-                                                loading="lazy"
-                                                decoding="async"
-                                                onError={(e) => {e.target.src = "/user/img/no_img.jpg"}}
-                                                src={place.firstimage2}
-                                                alt={place.name}
-                                                width="150"
-                                                height="100"
-                                            />)
-                                            :
-                                            (<img src="/user/img/no_img.jpg" alt={place.name} />)
+                                                (<img
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    onError={(e) => { e.target.src = "/user/img/no_img.jpg" }}
+                                                    src={place.firstimage2}
+                                                    alt={place.name}
+                                                    width="150"
+                                                    height="100"
+                                                />)
+                                                :
+                                                (<img src="/user/img/no_img.jpg" alt={place.name} />)
                                         }
                                         <span className="category">
                                             <b className="depth_2">{place.lclsSystm2Nm}</b>

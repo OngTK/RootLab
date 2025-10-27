@@ -9,9 +9,37 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faAngleRight, faMagnifyingGlass, faMapMarkedAlt, faThumbsUp, faLandmark, faMountainSun, faHiking, faShoppingBag, faUtensils, faBed, faMasksTheater, faMapLocationDot, faStreetView, faCircleChevronRight, faMusic, faDog, faPaw, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/layoutSample.css";
+import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { selectCategory } from "../../store/mapSlice";
 import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
 
+const categories = [
+    { name: "전체", icon: faList, value: "all" }, // value는 API 요청 시 사용할 값 (예시)
+    { name: "관광", icon: faMapMarkedAlt, value: "1" },
+    { name: "문화", icon: faLandmark, value: "2" },
+    { name: "축제", icon: faMusic, value: "3" },
+    { name: "여행코스", icon: faMountainSun, value: "4" },
+    { name: "레포츠", icon: faHiking, value: "5" },
+    { name: "숙박", icon: faBed, value: "6" },
+    { name: "쇼핑", icon: faShoppingBag, value: "7" },
+    { name: "음식", icon: faUtensils, value: "8" }
+];
+
 export default function RightCategory(props) {
+    // =================== useState ===================
+    const [activeCategory, setActiveCategory] = useState("all");
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
+
+    const handleCategoryClick = (categoryValue) => {
+        setActiveCategory(categoryValue);
+        dispatch(selectCategory(categoryValue))
+    };
+
+    useEffect(() => {
+        
+    }, [activeCategory])
 
     /** ========================= 사용자단(비회원) > 메인(html) 샘플페이지.jsx영역 ================================== */
     return (
@@ -23,21 +51,24 @@ export default function RightCategory(props) {
                     <div className="pageTitle">
                         <h2><FontAwesomeIcon icon={faLocationDot} />인천광역시 부평구 부평1동</h2>
                         <ul className="cotentType">
-                            <li className="active"><FontAwesomeIcon icon={faList} /><span>전체</span></li>
-                            <li><FontAwesomeIcon icon={faMapMarkedAlt} /><span>관광</span></li>
-                            <li><FontAwesomeIcon icon={faLandmark} /><span>전시</span></li>
-                            <li><FontAwesomeIcon icon={faMountainSun} /><span>자연</span></li>
-                            <li><FontAwesomeIcon icon={faHiking} /><span>레저</span></li>
-                            <li><FontAwesomeIcon icon={faShoppingBag} /><span>쇼핑</span></li>
-                            <li><FontAwesomeIcon icon={faUtensils} /><span>음식</span></li>
-                            <li><FontAwesomeIcon icon={faMusic} /><span>축제</span></li>
-                            <li><FontAwesomeIcon icon={faBed} /><span>숙박</span></li>
+                            {
+                                categories.map((category) => {
+                                    return <li
+                                        key={category.name}
+                                        className={activeCategory === category.value ? "active" : ""}
+                                        onClick={() => handleCategoryClick(category.value)}
+                                    >
+                                        <FontAwesomeIcon icon={category.icon} />
+                                        <span>{category.name}</span>
+                                    </li>
+                                })
+                            }
                         </ul>
                     </div>
                     <div className="cardListWrap" id="mapInfoBox">
 
                         {/* <!-- (우측)플레이스 리스트 시작 --> */}
-                        <PlaceGroups />
+                        <PlaceGroups selectedCategory={activeCategory} />
                         {/* <!-- (우측)플레이스 리스트 끝 --> */}
 
                     </div>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rootLab.model.mapper.MarkersGPSMapper">
+    <select id="getMarkersGpsByCurrentLatLng" parameterType="rootLab.model.dto.MarkersGPSDto">
+        SELECT
+        kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
+        kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo
+        FROM k_tour_headquarter.placeinfo kpi
+        JOIN k_tour_headquarter.contenttype kct
+        ON kpi.ctNo = kct.ctNo
+        JOIN k_tour_headquarter.markersgps kmg
+        ON kpi.pNo = kmg.pNo
+        JOIN k_tour_headquarter.categorycode kcc
+        ON kpi.ccNo = kcc.ccNo
+        <where>
+            <if test="east != null">
+                AND kmg.mapx &lt; #{east}
+            </if>
+            <if test="west != null">
+                AND kmg.mapx &gt; #{west}
+            </if>
+            <if test="north != null">
+                AND kmg.mapy &lt; #{north}
+            </if>
+            <if test="south != null">
+                AND kmg.mapy &gt; #{south}
+            </if>
+            <if test="ctNo != null">
+                AND kct.ctNo = #{ctNo}
+            </if>
+        </where>
+    </select>
+</mapper>
