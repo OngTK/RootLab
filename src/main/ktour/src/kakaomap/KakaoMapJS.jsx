@@ -167,7 +167,6 @@ export default function KakaoMap(props) {
         const callback = (result, status) => {
             if (status === kakao.maps.services.Status.OK){
                 dispatch(centerLDong(result[0].address_name));
-                console.log(result[0].address_name);
             } // if end
         } // func end
         geoCoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback)

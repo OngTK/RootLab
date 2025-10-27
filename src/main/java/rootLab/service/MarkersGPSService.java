@@ -41,7 +41,7 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
      * @return 해당 법정동코드No에 속한 마커 리스트
      * @author AhnJH
      */
-    public List<MarkersGPSDto> getMarkersGpsByCurrentLDong(int ldNo){
+    public List<Map<String, Object>> getMarkersGpsByCurrentLDong(int ldNo){
         return markersGPSMapper.getMarkersGpsByCurrentLDong(ldNo);
     } // func end
 
