@@ -237,7 +237,7 @@ SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM k_tour_headquarter.contenttype;
 SELECT * FROM k_tour_headquarter.categorycode;
-SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage, kct.contenttypename
+SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage2, kct.contenttypename
 	FROM k_tour_headquarter.placeinfo kpi
 	JOIN k_tour_headquarter.contenttype kct
 	USING (ctNo)
@@ -248,7 +248,8 @@ SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defa
     WHERE kmg.mapx > 128.3630474080145
     AND kmg.mapx < 128.73106927424288
     AND kmg.mapy > 37.95358854898442
-    AND kmg.mapy < 38.12170649772779;
+    AND kmg.mapy < 38.12170649772779
+    AND kct.ctNo = 1;
 -- ----------------------------------------marker JOIN TEST------------------------------------------
 SELECT * FROM k_tour_headquarter.ldongcode;
 SELECT * FROM k_tour_headquarter.placeinfo;

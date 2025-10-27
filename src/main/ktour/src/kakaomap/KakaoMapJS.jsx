@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMarker, renderedMarker } from '../user/store/mapSlice';
+import { selectLeftMarker, renderedMarker } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -176,7 +176,7 @@ export default function KakaoMap(props) {
         kakao.maps.event.addListener(map, 'click', () => {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
-                dispatch(selectMarker(null));
+                dispatch(selectLeftMarker(null));
 
             } // if end
         }) // addListener end
@@ -184,7 +184,7 @@ export default function KakaoMap(props) {
         kakao.maps.event.addListener(map, 'dragstart', () => {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
-                dispatch(selectMarker(null));
+                dispatch(selectLeftMarker(null));
             } // if end
         }) // addListener end
 

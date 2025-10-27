@@ -32,7 +32,8 @@ public class MarkersGPSController {
     public ResponseEntity<?> getMarkersGpsByCurrentLatLng(@RequestParam double south,
                                                           @RequestParam double north,
                                                           @RequestParam double west,
-                                                          @RequestParam double east){
+                                                          @RequestParam double east,
+                                                          @RequestParam(defaultValue = "3") int ctNo){
         // 1. 동서남북 좌표를 담을 Map 선언
         Map<String, Object> coordinates = new HashMap<>();
         // 2. 선언한 Map에 좌표 담기
@@ -40,6 +41,7 @@ public class MarkersGPSController {
         coordinates.put("north", north);
         coordinates.put("west", west);
         coordinates.put("east", east);
+        coordinates.put("ctNo", ctNo);
         // 3. 좌표를 Service에게 전달하여 값 반환하기
         return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLatLng(coordinates));
     } // func end

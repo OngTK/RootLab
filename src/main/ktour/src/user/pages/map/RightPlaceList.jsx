@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from "react";
+import { selectRigthMarker } from "../../store/mapSlice";
 
 // 미리 카테고리 정의해놓기
 const PLACE_GROUPS_TEMPLATE = [
@@ -16,6 +17,8 @@ const PLACE_GROUPS_TEMPLATE = [
 ];
 
 export default function PlaceGroups() {
+    // =================== useDispatch ===================
+    const dispatch = useDispatch();
     // =================== useSelector ===================
     const { markers } = useSelector((state) => state.relatedMap);
 
@@ -37,15 +40,17 @@ export default function PlaceGroups() {
                     if (keyword && !group.keywords.includes(keyword)) {
                         group.keywords.push(keyword);
                     } // if end
-                    group.places.push(marker);
+                    if (group.places.length < 5){
+                        group.places.push(marker);
+                    }                    
                 } // if end
             }); // get end
         } // if end
         return Array.from(groupsMap.values());
     }, [markers]);
 
-    const detailMapInfo = (place) => {
-        console.log("지도 상세보기:", place.name);
+    const detailMapInfo = (pNo) => {
+        dispatch(selectRigthMarker(pNo));
     };
 
     return (
@@ -70,16 +75,22 @@ export default function PlaceGroups() {
                                 <div
                                     key={place.pNo}
                                     className="summaryCard"
-                                    onClick={() => detailMapInfo(place)}
+                                    onClick={() => detailMapInfo(place.pNo)}
                                 >
                                     <div className="thumb">
                                         {
-                                            place.firstimage &&
-                                            <img src={place.firstimage} alt={place.name} />
-                                        }
-                                        {
-                                            !place.firstimage &&
-                                            <img src="/user/img/no_img.jpg" alt={place.name} />
+                                            place.firstimage2 ?
+                                            (<img
+                                                loading="lazy"
+                                                decoding="async"
+                                                onError={(e) => {e.target.src = "/user/img/no_img.jpg"}}
+                                                src={place.firstimage2}
+                                                alt={place.name}
+                                                width="150"
+                                                height="100"
+                                            />)
+                                            :
+                                            (<img src="/user/img/no_img.jpg" alt={place.name} />)
                                         }
                                         <span className="category">
                                             <b className="depth_2">{place.lclsSystm2Nm}</b>
