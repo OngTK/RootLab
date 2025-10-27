@@ -13,13 +13,13 @@ import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu, selectLDong } from "../../store/mapSlice";
+import { selectedSigngu, setActiveLnbMenu } from "../../store/mapSlice";
 
 export default function AsideLnb(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
-    const { firstLDong, LdongName, axiosOption } = useSelector((state) => state.relatedMap);
+    const { firstLDong, LdongName, axiosOption, activeLnbMenu } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);
     const [activeLdNo, setActiveLdNo] = useState(null);
@@ -31,6 +31,10 @@ export default function AsideLnb(props) {
             }
         })
     }, [firstLDong])
+
+    const handleGnbClick = (menuName) => {
+        dispatch(setActiveLnbMenu(menuName));
+    } // func end
 
     // =================== LDongSignguCd Axios GET ===================
     const getLDongSignguCdByAxios = async (ldongregncd) => {
@@ -66,8 +70,18 @@ export default function AsideLnb(props) {
         <div className="gnbWrap">
             <div className="gnb">
                 <ul>
-                    <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
-                    <li><FontAwesomeIcon icon={faCompass} />지역 선택</li>
+                    <li
+                        className={activeLnbMenu === 'mySurroundings' ? 'active' : ''}
+                        onClick={() => handleGnbClick('mySurroundings')}
+                    >
+                        <FontAwesomeIcon icon={faStreetView} />내 주변
+                    </li>
+                    <li
+                        className={activeLnbMenu === 'regionSelect' ? 'active' : ''}
+                        onClick={() => handleGnbClick('regionSelect')}
+                    >
+                        <FontAwesomeIcon icon={faCompass} />지역 선택
+                    </li>
                     <li><FontAwesomeIcon icon={faCompass} />추천플레이스</li>
                     <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
                     <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>
@@ -75,33 +89,45 @@ export default function AsideLnb(props) {
             </div>
 
             {/* <!-- 좌측 서브 메뉴 시작 --> */}
-            <div className="lnb">
-                <h2>
-                    <FontAwesomeIcon icon={faStreetView} />내 주변
-                    <div className="comment">주제별 다양한 장소를 확인하세요</div>
-                </h2>
-                {/* <!--  서브 메뉴 --> */}
-                <ul className="subMenuList" id="lnbMap">
-                    {
-                        surroundingPlace &&
-                        surroundingPlace.map((signgu) => {
-                            const isActive = signgu.ldNo == activeLdNo;
-                            return (
-                                <li key={signgu.ldNo}>
-                                    <Link
-                                        to="#"
-                                        className={isActive ? 'active' : ''}
-                                        onClick={() => handleLdNoClick(signgu)}
-                                    >
-                                        <span>{signgu.ldongsigngunm}</span>
-                                        <FontAwesomeIcon icon={faAngleRight} />
-                                    </Link>
-                                </li>
-                            );
-                        })
-                    }
-                </ul>
-            </div>
+            {activeLnbMenu === 'mySurroundings' && (
+                <div className="lnb">
+                    <h2>
+                        <FontAwesomeIcon icon={faStreetView} />내 주변
+                        <div className="comment">주제별 다양한 장소를 확인하세요</div>
+                    </h2>
+                    <ul className="subMenuList" id="lnbMap">
+                        {
+                            surroundingPlace &&
+                            surroundingPlace.map((signgu) => {
+                                const isActive = signgu.ldNo == activeLdNo;
+                                return (
+                                    <li key={signgu.ldNo}>
+                                        <Link
+                                            to="#"
+                                            className={isActive ? 'active' : ''}
+                                            onClick={() => handleLdNoClick(signgu)}
+                                        >
+                                            <span>{signgu.ldongsigngunm}</span>
+                                            <FontAwesomeIcon icon={faAngleRight} />
+                                        </Link>
+                                    </li>
+                                );
+                            })
+                        }
+                    </ul>
+                </div>
+            )}
+
+            {/* '지역 선택'이 활성화되었을 때 보여줄 서브메뉴 */}
+            {activeLnbMenu === 'regionSelect' && (
+                <div className="lnb">
+                    <h2>
+                        <FontAwesomeIcon icon={faCompass} />지역 선택
+                        <div className="comment">상단 헤더에서 지역을 선택하세요.</div>
+                    </h2>
+                </div>
+            )}
+            {/* */}
             {/* <!-- 좌측 서브 메뉴  끝 --> */}
 
         </div>

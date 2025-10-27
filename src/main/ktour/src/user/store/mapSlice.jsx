@@ -12,6 +12,7 @@ const initialState = {
     selectedLDong: null,
     axiosOption: { withCredentials: true },
     LdongName: [],
+    activeLnbMenu: 'mySurroundings',    // 활성화된 Lnb 메뉴
 };
 
 // 2. Slice 함수 정의
@@ -46,9 +47,12 @@ const mapSlice = createSlice({
         selectLDong: (state, action) => {
             state.selectedLDong = action.payload;
         }, // selectLDong end
+        setActiveLnbMenu: (state, action) => {
+            state.activeLnbMenu = action.payload;
+        }, // setActiveLnbMenu end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

@@ -11,7 +11,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu, ByLdongCode } from "../../store/mapSlice";
+import { selectedSigngu, ByLdongCode, setActiveLnbMenu } from "../../store/mapSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
@@ -62,6 +62,7 @@ export default function Header(props) {
     const changeLdNo = (e) => {
         SetSelectedLdNo(e.target.value);
         dispatch(selectedSigngu(e.target.value));
+        dispatch(setActiveLnbMenu('regionSelect'))
     } // func end
 
     let fisrtName = null;
