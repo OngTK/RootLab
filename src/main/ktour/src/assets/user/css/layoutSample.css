@@ -1,7 +1,5 @@
 /* 카카오 메인 지도영역 */
-#map{ width: 100%; height: 100%; }
-#map222{ width: 100%; height: 100%; background-color: red; }
-#map222 > div{ display: block !important;}
+#map{ width: 100%; height: 100%; overflow: hidden; }
 
 /* ==============================
     우측 컨텐츠

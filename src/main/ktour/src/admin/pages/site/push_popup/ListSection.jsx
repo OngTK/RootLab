@@ -4,8 +4,7 @@
  * @since 2025.10.21
  * @version 0.1.0
  */
-import ResizableTable from "@admin/components/common/ResizableTable";
-import "@assets/admin/css/resizableTable.css";
+
 import { useState } from "react";
 import axios from "axios";
 

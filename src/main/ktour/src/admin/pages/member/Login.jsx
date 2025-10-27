@@ -3,9 +3,9 @@
  *
  * @author kimJS
  * @since 2025.10.16
- * @version 0.1.1
+ * @version 0.1.2
  */
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";              
 import "@assets/admin/css/login.css"; // login.css
 export default function Login(props) {
 
@@ -21,15 +21,15 @@ export default function Login(props) {
     };//loginAdmin end
 
 
-    /** ======================================== Login.jsx 영역 ==============================================  */
+/** ======================================== Login.jsx 영역 ==============================================  */
     return <>
         {/* <!-- login > header start --> */}
         <div className="loginWrap">
             <header className="loginWrap">
                 <h1 className="logo">
-                    <a href="/html/index.jsp" title="K-Tour 홈으로 이동">
-                        <strong className="logo">K-Tour</strong><span>테마형 관광지도 플랫폼</span>
-                    </a>
+                    <Link to="/"  title="K-TOUR 홈으로 이동">
+                        <strong className="logo">K-TOUR</strong><span>테마형 관광지도 플랫폼</span>
+                    </Link>
                 </h1>
             </header>
             {/* <!-- login > header end --> */}
@@ -55,7 +55,7 @@ export default function Login(props) {
             <footer>
                 <ul className="footerMenu">
                     <li>
-                        <Link to="/" className="btn" target="_blank" rel="noopener noreferrer" title="K-Tour 홈으로 이동">K-Tour</Link>
+                        <Link to="/" className="btn" title="K-Tour 홈으로 이동">K-TOUR</Link>
                     </li>
                     <li><a href="#">솔루션문의</a></li>
                     <li><a href="#">구독신청</a></li>

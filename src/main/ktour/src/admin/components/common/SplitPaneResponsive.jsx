@@ -6,6 +6,7 @@
  * @version 0.1.0
  */
 import { useRef } from "react";
+import "@assets/admin/css/dragResizeLayer.css";
 
 export default function SimpleSplitPane({
   initLeftPct = 50,

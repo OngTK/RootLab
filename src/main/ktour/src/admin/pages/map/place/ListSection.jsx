@@ -39,7 +39,7 @@ export default function ListSection(props) {
         ? `${region.regnNm} ${region.signguNm}` // 1차+2차
         : region.regnNm || null;                // 1차만 선택 시
 
-    // 검색 실행 핸들러 
+    // 검색 실행 핸들러
     const onSearch = async (e) => {
         e?.preventDefault?.();
         const params = {
@@ -228,7 +228,7 @@ export default function ListSection(props) {
                         <select
                             className="baseDateInput"
                             value={size}
-                            onChange={(e) => { setSize(Number(e.target.value)); setPage(1); }}  // 페이지도 1로 리셋 
+                            onChange={(e) => { setSize(Number(e.target.value)); setPage(1); }}  // 페이지도 1로 리셋
                         >
                             <option value={10}>10개 보기</option>
                             <option value={30}>30개 보기</option>
@@ -238,35 +238,13 @@ export default function ListSection(props) {
                     </li>
                 </ul>
                 <div className="tableWrap">
-                    {rows && rows.length > 0 ? (
-                        <ResizableTable
-                            columns={columns}
-                            data={rows}
-                            rememberKey="PlaceInfo.columns"
-                            stickyFirst
-                            sortable
-                        />
-                    ) : (
-                        <div
-                            style={{
-                                padding: "40px",
-                                textAlign: "center",
-                                color: "#999",
-                                fontSize: "15px",
-                                border: "1px solid #ddd",
-                                borderRadius: "6px",
-                                backgroundColor: "#fafafa",
-                            }}
-                        >
-                            검색 결과가 없습니다.
-                        </div>
-                    )}
-                    <Pagination
-                        currentPage={page}
-                        size={size}
-                        totalElements={totalElements}
-                        onPageChange={handlePageChange}
-                        onSizeChange={handleSizeChange}
+                    <ResizableTable 
+                    columns={columns}
+                    data={data}
+                    rememberKey="PlaceInfo.columns"
+                    minColWidth={80}
+                    stickyFirst={false}
+                    sortable={true}
                     />
                     {/* <table>
                         <thead>

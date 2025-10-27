@@ -177,7 +177,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current){
                 infoWindowRef.current.close();
                 dispatch(selectMarker(null));
-                
+
             } // if end
         }) // addListener end
         // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
@@ -192,27 +192,27 @@ export default function KakaoMap(props) {
         // 지도에 원 표시 로직
         let circle1 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 5000,              // 반경 5KM 표시
+            radius: 2000,              // 반경 2KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.2,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
             fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
             fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-        }); // circle1 end
-        circle1.setMap(map);
-        // 지도에 현재 위치 표시 로직
-        let circle2 = new kakao.maps.Circle({
-            center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 50,                  // 반경 5KM 표시
-            strokeWeight: 3,             // 선의 두께
-            strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-            strokeStyle: 'solid',        // 선의 스타일
-            fillColor: '#ff0101ff',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.5             // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-        }); // circle2 end
-        circle2.setMap(map);
+        }); // circle end
+    // 지도에 현재 위치 표시 로직
+            let circle2 = new kakao.maps.Circle({
+                center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
+                radius: 50,                  // 반경 5KM 표시
+                strokeWeight: 3,             // 선의 두께
+                strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
+                strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+                strokeStyle: 'solid',        // 선의 스타일
+                fillColor: '#ff0101ff',    // 채우기 색깔 -> 추후 원하는 색으로 변경
+                fillOpacity: 0.5             // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            }); // circle2 end
+            circle2.setMap(map);
+
 
         // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'idle', () => {
@@ -267,7 +267,7 @@ export default function KakaoMap(props) {
         const infowindow = infoWindowRef.current;
         if (!infowindow) return;
 
-        const imageSize = new kakao.maps.Size(80, 80);
+        const imageSize = new kakao.maps.Size(33, 50);
 
         // 마커 객체 배열 생성
         const kakaoMarkers = markers.map(marker => {

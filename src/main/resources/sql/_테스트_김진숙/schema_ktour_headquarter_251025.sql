@@ -1,26 +1,22 @@
-DROP DATABASE IF EXISTS k_tour_headquarter;
-CREATE DATABASE k_tour_headquarter;
-USE k_tour_headquarter;
-SET SQL_SAFE_UPDATES = 0;
-
+-- ------------------------------------ k_tour_headquarter -------------------------------------------
 -- ------------------------------------ DROP TABLE -------------------------------------------
-DROP TABLE IF EXISTS pushPopup;			# 푸시알림/팝업(*자체 테이블)
-DROP TABLE IF EXISTS manager;			# 관리자정보(*자체 테이블)
-DROP TABLE IF EXISTS siteInfo;			# 사이트정보(*자체 테이블)
-DROP TABLE IF EXISTS placeInfoRepeat;   # 플레이스 반복정보(*api)
-DROP TABLE IF EXISTS restaurantIntro;	# 음식점(39) 상세정보(*api)
-DROP TABLE IF EXISTS festivalIntro; 	# 축제공연행사(15) 상세정보(*api)
-DROP TABLE IF EXISTS tourIntro;			# 관광지(12) 상세정보(*api)
-DROP TABLE IF EXISTS detailPetTour;		# 반려동물 동반여행 상세정보(*api)
-DROP TABLE IF EXISTS placeImageDetail;	# 플레이스 상세이미지(*api)
-DROP TABLE IF EXISTS markersGPS;		# 지도마커GPS(*api)
-DROP TABLE IF EXISTS placeInfo;			# 플레이스 기본정보(*api)
-DROP TABLE IF EXISTS contentType;		# 콘텐츠타입(*api: 총8개 타입) 1.관광지(12) 2.문화시설(14) 3.행사공연축제(15) 4.여행코스(25) 5.레포츠(28) 6.숙박(32) 7.쇼핑(38) 8.음식점(39)
-DROP TABLE IF EXISTS categoryCode;		# 분류체계코드(*api)
-DROP TABLE IF EXISTS ldongCode;			# 법정동코드(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.pushPopup;			# 푸시알림/팝업(*자체 테이블)
+DROP TABLE IF EXISTS k_tour_headquarter.manager;			# 관리자정보(*자체 테이블)
+DROP TABLE IF EXISTS k_tour_headquarter.siteInfo;			# 사이트정보(*자체 테이블)
+DROP TABLE IF EXISTS k_tour_headquarter.placeInfoRepeat;   	# 플레이스 반복정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.restaurantIntro;	# 음식점(39) 상세정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.festivalIntro; 		# 축제공연행사(15) 상세정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.tourIntro;			# 관광지(12) 상세정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.detailPetTour;		# 반려동물 동반여행 상세정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.placeImageDetail;	# 플레이스 상세이미지(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.markersGPS;			# 지도마커GPS(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.placeInfo;			# 플레이스 기본정보(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.contentType;		# 콘텐츠타입(*api: 총8개 타입) 1.관광지(12) 2.문화시설(14) 3.행사공연축제(15) 4.여행코스(25) 5.레포츠(28) 6.숙박(32) 7.쇼핑(38) 8.음식점(39)
+DROP TABLE IF EXISTS k_tour_headquarter.categoryCode;		# 분류체계코드(*api)
+DROP TABLE IF EXISTS k_tour_headquarter.ldongCode;			# 법정동코드(*api)
 
 -- ------------------------------------ 법정동코드( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE ldongCode (
+CREATE TABLE k_tour_headquarter.ldongCode (
 	ldNo SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 법정동코드번호[PK] *첫글자 주의! L의 소문자 l 임.
     rnum SMALLINT UNSIGNED NOT NULL,						-- 일련번호(#TourAPI 연동컬럼)
     lDongRegnCd CHAR(5) NOT NULL, 							-- 시도코드(#TourAPI 연동컬럼) *36110 : 세종특별자치시 
@@ -36,7 +32,7 @@ CREATE TABLE ldongCode (
 );
 
 -- ------------------------------------ 분류체계코드( #TourAPI 연동테이블 )  -------------------------------------------
-CREATE TABLE categoryCode (
+CREATE TABLE k_tour_headquarter.categoryCode (
 	ccNo SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 분류체계번호[PK]
     rnum SMALLINT NOT NULL,										-- 일련번호(#TourAPI 연동컬럼)
     lclsSystm1Cd CHAR(9) NOT NULL, 								-- 대분류코드(#TourAPI 연동컬럼)
@@ -52,7 +48,7 @@ CREATE TABLE categoryCode (
 );
 
 -- ------------------------------------ 콘텐츠타입( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE contentType (
+CREATE TABLE k_tour_headquarter.contentType (
     ctNo TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,       -- 콘텐츠타입No[PK]
     contenttypeid VARCHAR(5) NOT NULL,                		-- 콘텐츠타입ID( *TourAPI연동 컬럼* )
     contentTypeName VARCHAR(30) NOT NULL,           		-- 콘텐츠타입명
@@ -64,7 +60,7 @@ CREATE TABLE contentType (
 );
 
 -- ------------------------------------ Place 기본정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE placeInfo (
+CREATE TABLE k_tour_headquarter.placeInfo (
 	pNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- place번호[PK]
     ctNo TINYINT UNSIGNED,									-- 콘텐츠타입번호[FK]
     ldNo SMALLINT UNSIGNED,									-- 법정동코드번호[FK] *첫글자 주의! L의 소문자 l 임.
@@ -101,9 +97,10 @@ CREATE TABLE placeInfo (
 		ON UPDATE CASCADE
 		ON DELETE SET NULL
 );
+CREATE INDEX idx_contentid ON k_tour_headquarter.placeInfo(contentid);
 
 -- ------------------------------------ 지도마커GPS( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE markersGPS (
+CREATE TABLE k_tour_headquarter.markersGPS (
 	mkNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 마커번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     mkURL VARCHAR(255),										-- 마커이미지경로
@@ -118,9 +115,9 @@ CREATE TABLE markersGPS (
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 );
-
+CREATE INDEX idx_mapGPS ON k_tour_headquarter.markersGPS(mapx, mapy);
 -- ------------------------------------ place 상세이미지( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE placeImageDetail (
+CREATE TABLE k_tour_headquarter.placeImageDetail (
 	pidNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 상세이미지번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
@@ -139,7 +136,7 @@ CREATE TABLE placeImageDetail (
 );
 
 -- ------------------------------------ 반려동물 동반여행 정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE detailPetTour (
+CREATE TABLE k_tour_headquarter.detailPetTour (
 	dptNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 반려동물 동반여행 번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     relaAcdntRiskMtr TEXT,									-- 관련 사고 대비사항(#TourAPI 연동컬럼)
@@ -163,7 +160,7 @@ CREATE TABLE detailPetTour (
 );
 
 -- ------------------------------------ 관광지 소개정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE tourIntro (
+CREATE TABLE k_tour_headquarter.tourIntro (
 	tiNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 관광지소개번호[PK]
     pNo INT UNSIGNED,									-- place번호[FK]
     accomcount VARCHAR(255),							-- 수용인원(#TourAPI 연동컬럼)
@@ -180,7 +177,7 @@ CREATE TABLE tourIntro (
     parking VARCHAR(255),								-- 주차시설(#TourAPI 연동컬럼)
     restdate VARCHAR(255),								-- 쉬는날(#TourAPI 연동컬럼)
     useseason VARCHAR(255),								-- 이용시기(#TourAPI 연동컬럼)
-    usetime VARCHAR(30),								-- 이용시간(#TourAPI 연동컬럼)
+    usetime VARCHAR(255),								-- 이용시간(#TourAPI 연동컬럼)
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,		-- 등록일(최초 DB복사일)
     updatedAt DATETIME DEFAULT NULL						-- 수정일(DB업데이트일/해당 레코드 수정일)
               ON UPDATE CURRENT_TIMESTAMP,
@@ -192,7 +189,7 @@ CREATE TABLE tourIntro (
 );
 
 -- ------------------------------------ 축제행사공연 소개정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE festivalIntro (
+CREATE TABLE k_tour_headquarter.festivalIntro (
 	fiNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 축제행사번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     eventstartdate VARCHAR(255),							-- 행사시작일(#TourAPI 연동컬럼)
@@ -226,7 +223,7 @@ CREATE TABLE festivalIntro (
 );
 
 -- ------------------------------------ 음식점 소개정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE restaurantIntro (
+CREATE TABLE k_tour_headquarter.restaurantIntro (
 	riNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- 음식점소개 번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     chkcreditcardfood VARCHAR(100),							-- 신용카드가능정보(#TourAPI 연동컬럼)
@@ -234,7 +231,7 @@ CREATE TABLE restaurantIntro (
     firstmenu VARCHAR(100),									-- 대표메뉴(#TourAPI 연동컬럼)
     infocenterfood VARCHAR(255),							-- 문의및안내(#TourAPI 연동컬럼)
     kidsfacility TINYINT UNSIGNED DEFAULT 0,				-- 어린이놀이방여부(#TourAPI 연동컬럼)
-    lcnsno DECIMAL(11),										-- 인허가번호(#TourAPI 연동컬럼)
+    lcnsno VARCHAR(12),										-- 인허가번호(#TourAPI 연동컬럼)
     opendatefood VARCHAR(100),								-- 개업일(#TourAPI 연동컬럼)
     opentimefood VARCHAR(255),								-- 영업시간(#TourAPI 연동컬럼)
     packing VARCHAR(100),									-- 포장가능(#TourAPI 연동컬럼)
@@ -256,7 +253,7 @@ CREATE TABLE restaurantIntro (
 );
 
 -- ------------------------------------ Place 반복정보( #TourAPI 연동테이블 ) -------------------------------------------
-CREATE TABLE placeInfoRepeat (
+CREATE TABLE k_tour_headquarter.placeInfoRepeat (
 	pirNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,			-- place반복번호[PK]
     pNo INT UNSIGNED,										-- place번호[FK]
     fldgubun TINYINT UNSIGNED,								-- 구분일련번호(#TourAPI 연동컬럼)
@@ -274,7 +271,7 @@ CREATE TABLE placeInfoRepeat (
 );
 
 -- ------------------------------------ 사이트정보(자체 테이블) -------------------------------------------
-CREATE TABLE siteInfo (
+CREATE TABLE k_tour_headquarter.siteInfo (
 	siNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,   -- 사이트번호[PK]
     siName VARCHAR(50) NOT NULL UNIQUE,             -- 사이트명
     siDomain VARCHAR(100) NOT NULL UNIQUE,          -- 도메인(URL)
@@ -294,8 +291,8 @@ CREATE TABLE siteInfo (
 );
 
 -- ------------------------------------ 관리자정보(자체 테이블) -------------------------------------------
-CREATE TABLE manager (
-	mgNo BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY, 	-- 관리자No[PK]
+CREATE TABLE k_tour_headquarter.manager (
+	mgNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 					-- 관리자No[PK]
     siNo INT UNSIGNED,												-- 사이트No[FK]
     mId VARCHAR(60) NOT NULL UNIQUE,                              	-- 아이디
     mPwd VARCHAR(60) NOT NULL,                                    	-- 패스워드
@@ -322,10 +319,10 @@ CREATE TABLE manager (
 );
 
 -- ------------------------------------ 푸시알림/팝업(자체 테이블) -------------------------------------------
-CREATE TABLE pushPopup (
+CREATE TABLE k_tour_headquarter.pushPopup (
 	ppNo INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,		-- 푸시팝업No[PK]
     pNo INT UNSIGNED,					        		-- place번호[FK]
-    mgNo BINARY(16),									-- 관리자No[FK]
+    mgNo INT UNSIGNED,									-- 관리자No[FK]
     ppTitle VARCHAR(150) NOT NULL,						-- 제목
     ppContent VARCHAR(255),								-- 내용
     ppImg VARCHAR(255),									-- 이미지

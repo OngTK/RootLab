@@ -79,7 +79,7 @@ export default function Header(props) {
                     <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                     <input type="text" placeholder="관광지/상호명 검색" autoFocus="" />
                 </div>
-                <div className="promotionText">우리동네 <b>AI추천</b> 모임장소</div>
+                <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">
                     <select onChange={changeRegnCd} value={selectedRegnCd}>
                         <option value="" disabled> 시구 선택</option>
