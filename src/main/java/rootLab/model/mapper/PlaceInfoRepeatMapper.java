@@ -2,7 +2,6 @@ package rootLab.model.mapper;
 
 import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.PlaceInfoCriteria;
-import rootLab.model.criteria.RoleCriteria;
 import rootLab.model.dto.PlaceInfoRepeatDto;
 import rootLab.model.repository.CommonRepository;
 
