@@ -217,9 +217,16 @@ export default function ListSection(props) {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(pushList) && pushList.length > 0 ? (
-                pushList.map((p, idx) => (
-                  <tr key={p.ppNo ?? idx}>
+               {Array.isArray(pushList) && pushList.length > 0 ? (
+              pushList.map((p, idx) => {
+                const active = props.selectedId === p.ppNo;
+                return (
+                  <tr
+                    key={p.ppNo ?? idx}
+                    onClick={() => props.onSelect?.(p)}
+                    className={active ? "active" : ""}
+                    style={{ cursor: "pointer" }}
+                  >
                     <td>{p.ppNo ?? idx + 1}</td>
                     <td>{p.ppUse ?? "-"}</td>
                     <td>{p.ppType ?? "-"}</td>
@@ -229,7 +236,7 @@ export default function ListSection(props) {
                     <td>{p.ppIterated ?? "-"}</td>
                     <td>{p.mgNick ?? p.mgNo ?? "-"}</td>
                   </tr>
-                ))
+                );})
               ) : (
                 <tr>
                   <td colSpan={8} style={{ textAlign: "center" }}>
