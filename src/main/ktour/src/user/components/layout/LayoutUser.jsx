@@ -23,7 +23,7 @@ export default function LayoutUser() {
         <Header />
         <AsideLnb />
         <PopupBanner />
-        <ModalSearchHeader /> : 검색 기능 후순위
+        <ModalSearchHeader />
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>

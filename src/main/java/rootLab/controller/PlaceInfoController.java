@@ -196,5 +196,21 @@ public class PlaceInfoController {
         return ResponseEntity.ok(0);
     } // func end todo
 
-
+    /**
+     * [PI-07] 플레이스 검색(by사용자)
+     * <p>
+     * [키워드, 사용자위치]를 입력받아, 해당하는 플레이스 정보들을 조회한다.
+     *
+     * @param keyword 검색한 키워드
+     * @param lat 사용자 위치 기준 위도
+     * @param lng 사용자 위치 기준 경도
+     * @return 키워드에 의한 검색 결과
+     * @author AhnJH
+     */
+    @GetMapping("/searchbyusers")
+    public ResponseEntity<?> searchPlacesByUsers(@RequestParam String keyword,
+                                                 @RequestParam double lat,
+                                                 @RequestParam double lng){
+        return ResponseEntity.ok(placeInfoService.searchPlacesByUsers(keyword, lat, lng));
+    } // func end
 } // class end
