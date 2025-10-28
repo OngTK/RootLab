@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, LdongName } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -51,8 +51,7 @@ export default function KakaoMap(props) {
     const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
     const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
 
-    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
-    useEffect(() => {
+    const getCurrentPositionFunc = () => {
         // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((location) => {    // 현재 위치를 가져오는데 성공했을 때
@@ -78,6 +77,11 @@ export default function KakaoMap(props) {
                 isLoading: false
             })); // SetCurrentLocation end
         } // if end
+    } // func end
+    
+    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
+    useEffect(() => {
+        getCurrentPositionFunc();
     }, []); // useEffect end
 
     // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
@@ -164,7 +168,7 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
-        map.setMaxLevel(7);
+        map.setMaxLevel(8);
 
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();
@@ -291,7 +295,7 @@ export default function KakaoMap(props) {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
             let position = null
-            if (marker.ctNo == category){
+            if (marker.ctNo == category) {
                 position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             }
             // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)

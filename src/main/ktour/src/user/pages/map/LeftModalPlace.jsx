@@ -157,7 +157,7 @@ export default function LeftModalPlace(props) {
                             {
                                 placeInfo.PlaceInfoDtoList.map((info) => {
                                     if (info.infoText) {
-                                        return <li key={info.pirNo}> <b>{info.infoName}</b> {info.infoText.replace('_', ',')} </li>
+                                        return <li key={info.pirNo}> <b>{info.infoName}</b> {info.infoText.replace('_', ',').replaceAll("<br>", "\t")} </li>
                                     } else {
                                         return null;
                                     }
@@ -171,7 +171,7 @@ export default function LeftModalPlace(props) {
                                         const label = tourIntroLabels[key];
                                         return (
                                             <li key={key}>
-                                                <b>{label}</b> {value}
+                                                <b>{label}</b> {value.replaceAll("_", ",").replaceAll("<br>", "\t")}
                                             </li>
                                         );
                                     } // if end
@@ -186,7 +186,7 @@ export default function LeftModalPlace(props) {
                                         const label = restaurantIntroLabels[key];
                                         return (
                                             <li key={key}>
-                                                <b>{label}</b> {value}
+                                                <b>{label}</b> {value.replaceAll("_", ",").replaceAll("<br>", "\t")}
                                             </li>
                                         );
                                     } // if end
@@ -205,7 +205,7 @@ export default function LeftModalPlace(props) {
                                         );
                                         return (
                                             <li key={key}>
-                                                <b>{label}</b> {displayValue}
+                                                <b>{label}</b> {displayValue.replaceAll("_", ",").replaceAll("<br>", "\t")}
                                             </li>
                                         );
                                     } // if end

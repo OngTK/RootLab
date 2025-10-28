@@ -34,6 +34,7 @@ export default function AsideLnb(props) {
 
     const handleGnbClick = (menuName) => {
         dispatch(setActiveLnbMenu(menuName));
+        if (menuName == 'mySurroundings') location.href='/';
     } // func end
 
     useEffect(() => {

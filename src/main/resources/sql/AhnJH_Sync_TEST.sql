@@ -273,5 +273,6 @@ SELECT kpi.*, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
     JOIN k_tour_headquarter.categorycode kcc
     USING (ccNo);
 
-SELECT * FROM k_tour_headquarter.markersgps WHERE pno = 23405;
-    USING (ccNo);
+SELECT A.* 
+	FROM (SELECT *, ROW_NUMBER() OVER(PARTITION BY mapx, mapy ORDER BY mkNo) RN FROM k_tour_headquarter.markersgps) A
+    WHERE RN = 1;
