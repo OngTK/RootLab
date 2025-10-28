@@ -65,6 +65,16 @@ export default function ListSection(props) {
         }
     };
 
+  // 초기화 핸들러
+    // const onReset = () => {
+    //     setMType("");
+    //     setMName("");
+    //     setMId("");
+    //     setMPhone("");
+    //     setRows([]);
+    //     setPage(1);
+    // };
+
     // 테이블 해더 컬럼명
     const columns = [
         { id: "no", title: "No", width: 20 },
@@ -108,8 +118,9 @@ export default function ListSection(props) {
                         {/* 1.회원유형 */}
                         <span className="form-group">
                             <label htmlFor="member_mType">회원유형</label>
-                            <select id="member_mType" name="mType">
+                            <select id="member_mType" name="mType" value={mType}  onChange={(e) => setMType(e.target.value)}>
                                 <option value="">전체</option>
+                                <option value="0">관리자</option>
                                 <option value="1">일반회원</option>
                                 <option value="2">사업자</option>
                                 <option value="3">단체/모임</option>
@@ -118,17 +129,17 @@ export default function ListSection(props) {
                         {/* 2.회원명 */}
                         <span className="form-group">
                             <label htmlFor="member_mName">회원명</label>
-                            <input type="text" id="member_mName" name="mName" />
+                            <input type="text" id="member_mName" name="mName" valucccce={mName} onChange={(e) => setMName(e.target.value)}/>
                         </span>
                         {/* 3.회원ID */}
                         <span className="form-group">
                             <label htmlFor="member_mId">회원ID</label>
-                            <input type="text" id="member_mId" name="mId" />
+                            <input type="text" id="member_mId" name="mId" value={mId} onChange={(e) => setMName(e.target.value)}/>
                         </span>
                         {/* 4.휴대전화 */}
                         <span className="form-group">
                             <label htmlFor="member_mPhone">휴대전화</label>
-                            <input type="text" id="member_mPhone" name="mPhone" />
+                            <input type="text" id="member_mPhone" name="mPhone" value={mPhone} onChange={(e) => setMName(e.target.value)}/>
                         </span>
                         {/* 5.검색 버튼*/}
                         <span className="form-actions">
