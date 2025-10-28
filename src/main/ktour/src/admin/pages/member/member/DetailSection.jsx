@@ -1,8 +1,8 @@
 /**
- * 관리자단 > 회원관리 > 관리자현황(manage) > 상세정보(DetailSection.jsx) 컴포넌트
+ * 관리자단 > 회원관리 > 회원현황(member) > 상세정보(DetailSection.jsx) 컴포넌트
  *
  * @author kimJS
- * @since 2025.10.26
+ * @since 2025.10.27
  * @version 0.1.0
  */
 
@@ -19,7 +19,9 @@ export default function DetailSection(props) {
                 {/* <!-- 탭/타이틀/버튼 시작 --> */}
                 <div className="titleBox">
                     <ul className="tabtitle">
-                        <li className="active">관리자정보</li>
+                        <li className="active">일반회원</li>
+                        <li>사업자</li>
+                        <li>단체/모임</li>
                     </ul>
                     <span className="btnBox">
                         <button type="button" className="btn line">신규등록</button>
@@ -35,10 +37,11 @@ export default function DetailSection(props) {
                         <fieldset>
 
                             <div className="form-group">
-                                <label htmlFor="mgAuth"><b>관리자유형</b></label>
+                                <label htmlFor="mgAuth"><b>회원유형</b></label>
                                 <select id="mgAuth" name="memberTypeInput">
-                                    <option value="1">시스템관리자</option>
-                                    <option value="2">업체관리자</option>
+                                    <option value="1">일반회원</option>
+                                    <option value="2">사업자회원</option>
+                                    <option value="3">단체/모임회원</option>
                                 </select>
                             </div>
                             <div>

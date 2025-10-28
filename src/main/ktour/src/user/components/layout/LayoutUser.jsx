@@ -18,14 +18,17 @@ import { Suspense } from "react";             // 코드 스플리팅(필요한 �
 export default function LayoutUser() {
   return (
     <>
-      <Header />
-      <AsideLnb />
-      <PopupBanner />
-      {/* <ModalSearchHeader /> : 검색 기능 후순위 */}
-      <Suspense fallback={null}>
-        <Outlet />
-      </Suspense>
-      <Footer />
+      {/* 사용자단 모든 CSS 내 클래스명 앞에 붙이는 .user-scope 사용자단 갔다가 관리자 링크 타고 들어가면 사용자 스타일 정의가 관리자 스타일과 중첩이되어 ui 깨짐. */}
+      <div className="user-scope">
+        <Header />
+        <AsideLnb />
+        <PopupBanner />
+        {/* <ModalSearchHeader /> : 검색 기능 후순위 */}
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
+        <Footer />
+      </div>
     </>
   );
 }//LayoutUser.jsx end

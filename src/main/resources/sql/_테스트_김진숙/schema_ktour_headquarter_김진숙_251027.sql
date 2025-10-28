@@ -67,7 +67,7 @@ CREATE TABLE k_tour_headquarter.placeInfo (
     ccNo SMALLINT UNSIGNED,									-- 분류체계번호[FK]
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
     contentid INT UNIQUE,									-- 콘텐츠ID(#TourAPI 연동컬럼)
-    title VARCHAR(50) NOT NULL,								-- 콘텐츠명/제목 (#TourAPI 연동컬럼)
+    title VARCHAR(255) NOT NULL,							-- 콘텐츠명/제목 (#TourAPI 연동컬럼)
     showflag TINYINT DEFAULT 0,								-- 콘텐츠 표출여부(#TourAPI 연동컬럼)
     firstimage VARCHAR(255),								-- 대표원본이미지(#TourAPI 연동컬럼)
     firstimage2 VARCHAR(255),								-- 대표섬네일이미지(#TourAPI 연동컬럼)
@@ -75,7 +75,7 @@ CREATE TABLE k_tour_headquarter.placeInfo (
     addr2 VARCHAR(100),										-- 상세주소(#TourAPI 연동컬럼)
     zipcode VARCHAR(10),									-- 우편번호(#TourAPI 연동컬럼)
     homepage TEXT,											-- 홈페이지링크(#TourAPI 연동컬럼)
-    tel VARCHAR(255),										-- 전화(#TourAPI 연동컬럼)
+    tel TEXT,												-- 전화(#TourAPI 연동컬럼)
     telname VARCHAR(30),									-- 전화번호명(#TourAPI 연동컬럼)
     overview TEXT,											-- 개요(#TourAPI 연동컬럼)
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,			-- 등록일(최초 DB복사일)
@@ -301,8 +301,9 @@ CREATE TABLE k_tour_headquarter.manager (
     mGender ENUM('남', '여') NOT NULL,                      		  	-- 성별
     mPhone VARCHAR(16) NOT NULL UNIQUE,                           	-- 전화번호
     mEmail VARCHAR(255) NOT NULL UNIQUE,                          	-- 이메일
-    mAdd1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
-    mAdd2 VARCHAR(255),                                           	-- 상세 주소
+	zipCode VARCHAR(15) NOT NULL,                                   -- 우편번호
+    mAddr1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
+    mAddr2 VARCHAR(255),                                           	-- 상세 주소
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,                  	-- 가입일
     updatedAt DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,	-- 수정일
     deletedAt DATETIME DEFAULT NULL,                             	-- 탈퇴일
@@ -310,7 +311,8 @@ CREATE TABLE k_tour_headquarter.manager (
     mLocationAgreed BOOLEAN NOT NULL,                             	-- 위치정보 동의
     mPushAgreed BOOLEAN NOT NULL,                                 	-- 푸시알림 동의
     memo TEXT,                                       				-- 이슈/메모
-    mgAuth TINYINT NOT NULL DEFAULT 2,                              -- 관리자유형(1=시스템관리자, 2=업체관리자)
+    mType TINYINT UNSIGNED NOT NULL DEFAULT 1,                      -- 회원유형(0=관리자회원, 1=일반회원, 2=사업자, 3=단체,모임)
+    mgAuth TINYINT UNSIGNED NOT NULL DEFAULT 1,                     -- 관리자유형(0=시스템관리자, 1=업체(지자체)관리자)
     
 	CONSTRAINT fk_manager_siteInfo
 		FOREIGN KEY (siNo) REFERENCES siteInfo(siNo)

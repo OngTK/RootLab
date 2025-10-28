@@ -19,8 +19,8 @@ const categories = [
     { name: "관광", icon: faMapMarkedAlt, value: "1" },
     { name: "문화", icon: faLandmark, value: "2" },
     { name: "축제", icon: faMusic, value: "3" },
-    { name: "여행코스", icon: faMountainSun, value: "4" },
-    { name: "레포츠", icon: faHiking, value: "5" },
+    { name: "여행", icon: faMountainSun, value: "4" },
+    { name: "레저", icon: faHiking, value: "5" },
     { name: "숙박", icon: faBed, value: "6" },
     { name: "쇼핑", icon: faShoppingBag, value: "7" },
     { name: "음식", icon: faUtensils, value: "8" }
@@ -61,7 +61,7 @@ export default function RightCategory(props) {
                                         className={activeCategory === category.value ? "active" : ""}
                                         onClick={() => handleCategoryClick(category.value)}
                                     >
-                                        <FontAwesomeIcon icon={category.icon} />
+                                        <b><FontAwesomeIcon icon={category.icon} /></b>
                                         <span>{category.name}</span>
                                     </li>
                                 })

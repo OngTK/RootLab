@@ -8,13 +8,14 @@ VALUES
 
 -- ------------------------------------ 관리자정보(자체 테이블) -------------------------------------------
 INSERT INTO k_tour_headquarter.manager 
-    (siNo, mId, mPwd, mName, mNick, mGender, mPhone, mEmail, 
-     mAdd1, mAdd2, mTermsAgreed, mLocationAgreed, mPushAgreed, memo, mgAuth)
+    (siNo, mId, mPwd, mName, mNick, mGender, mPhone, mEmail, zipCode,
+     mAddr1, mAddr2, mTermsAgreed, mLocationAgreed, mPushAgreed, memo, mType, mgAuth)
 VALUES
 -- 1. 시스템 관리자
-	(1,'admin','admin', '김진숙', 'admin', '여', '032-111-2222', 'root.kjs82@gmail.com',
-     '인천광역시 부평구 경원대로 1368', NULL, TRUE, TRUE, TRUE, '본사(시스템관리자)입니다.', 1);
-
+	(1,'admin','admin', '김진숙', 'admin', '여', '032-111-2222', 'root.kjs82@gmail.com', '12345', 
+     '인천광역시 부평구 경원대로 1368', NULL, TRUE, TRUE, TRUE, '본사(시스템관리자)입니다.', 0, 0);
+     
+     
 -- ------------------------------------ 콘텐츠타입( #TourAPI 연동테이블 ) -------------------------------------------
 INSERT INTO k_tour_headquarter.contentType 
     (contenttypeid, contentTypeName, defaultMarker)
@@ -301,52 +302,19 @@ update k_tour_headquarter.ldongcode set mapx = 127.1375000000 , mapy = 35.374277
 update k_tour_headquarter.ldongcode set mapx = 126.7020277778 , mapy = 35.4348611111 where ldno=263;
 update k_tour_headquarter.ldongcode set mapx = 126.7333611111 , mapy = 35.7313888889 where ldno=264;
 -- [3] 관광정보 동기화 목록 동기화 =========================================================
-INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, isEditable, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview, createdAt, updatedAt)
-	SELECT
-		/* FK: contentType.ctNo */
-		( SELECT ct.ctNo
-		  FROM k_tour_headquarter.contentType ct
-		  WHERE ct.contenttypeID = TRIM(al.contenttypeid)
-			LIMIT 1 ) AS ctNo,
-
-		/* FK: ldongCode.ldNo (법정동: lDongRegnCd + lDongSignguCd) */
-		( SELECT ld.ldNo
-		FROM k_tour_headquarter.ldongCode ld
-		WHERE ld.lDongRegnCd = TRIM(al.lDongRegnCd)
-		AND ld.lDongSignguCd= TRIM(al.lDongSignguCd)
-		LIMIT 1 ) AS ldNo,
-
-		/* FK: categoryCode.ccNo (al.lclsSystm3 기준 매칭) */
-		( SELECT cc.ccNo
-		FROM k_tour_headquarter.categoryCode cc
-		WHERE cc.lclsSystm3Cd =
-		UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(
-		al.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')))
-		LIMIT 1 ) AS ccNo,
-
-		TRUE AS isEditable,
-		CAST(al.contentid AS UNSIGNED) AS contentid,
-		LEFT(TRIM(al.title), 50) AS title,
-		al.showflag AS showflag,
-		NULLIF(TRIM(al.firstimage), '') AS firstimage,
-		NULLIF(TRIM(al.firstimage2), '') AS firstimage2,
-		COALESCE(NULLIF(TRIM(al.addr1), ''), '-') AS addr1,
-		NULLIF(TRIM(al.addr2), '') AS addr2,
-		NULLIF(TRIM(al.zipcode), '') AS zipcode,
-
-		/* 부가정보: dc가 있으면 채움, 없으면 NULL */
-		NULLIF(TRIM(dc.homepage), '') AS homepage,
-		LEFT(NULLIF(TRIM(al.tel), ''), 10) AS tel,
-		NULLIF(TRIM(dc.telname), '') AS telname,
-		NULLIF(dc.overview, '') AS overview,
-
-		/* [] createdAt, updatedAt을 DATETIME 형식으로 변환 */
-		STR_TO_DATE(al.createdtime, '%Y%m%d%H%i%s') AS createdAt,
-		STR_TO_DATE(al.modifiedtime, '%Y%m%d%H%i%s') AS updatedAt
-
-	FROM tour_api_origin.areabasedsynclist2 al
-	LEFT JOIN tour_api_origin.detailcommon2 dc
-	ON CAST(TRIM(al.contentid) AS UNSIGNED) = CAST(TRIM(dc.contentid) AS UNSIGNED);
+INSERT INTO k_tour_headquarter.placeinfo (ctNo, ldNo, ccNo, contentid, title, showflag, firstimage, firstimage2, addr1, addr2, zipcode, homepage, tel, telname, overview)
+	SELECT kct.ctNo, ldc.ldNo, kcc.ccNo, tabsl2.contentid, tabsl2.title, tabsl2.showflag, tabsl2.firstimage, tabsl2.firstimage2, tabsl2.addr1, tabsl2.addr2, tabsl2.zipcode, tdc2.homepage, tabsl2.tel, tdc2.telname, tdc2.overview
+		FROM tour_api_origin.areabasedsynclist2 tabsl2
+		LEFT OUTER JOIN tour_api_origin.detailcommon2 tdc2
+		USING (contentid)
+		JOIN k_tour_headquarter.contenttype kct
+		ON tabsl2.contenttypeid = kct.contenttypeid
+		LEFT OUTER JOIN k_tour_headquarter.ldongcode ldc
+		ON tabsl2.lDongRegnCd = ldc.lDongRegnCd
+		AND tabsl2.lDongSignguCd = ldc.lDongSignguCd
+		LEFT OUTER JOIN k_tour_headquarter.categorycode kcc
+		ON kcc.lclsSystm3Cd = UPPER(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(tabsl2.lclsSystm3, CHAR(13), ''), CHAR(10), ''), CHAR(9), ''), ' ', '')));
+    
 -- [4] 지도마커GPS 동기화 =========================================================
 INSERT INTO k_tour_headquarter.markersgps (pNo, mapx, mapy)
 	SELECT kpi.pNo, tabsl2.mapx, tabsl2.mapy

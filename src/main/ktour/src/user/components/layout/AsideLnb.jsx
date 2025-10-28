@@ -7,7 +7,7 @@
  */
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faThumbsUp, faMusic, faStreetView, faCircleChevronRight, faDog } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faThumbsUp, faMusic, faStreetView, faCircleChevronRight, faDog, faSignsPost, faLocationCrosshairs, faMagnifyingGlassLocation  } from "@fortawesome/free-solid-svg-icons";
 import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 import { useDispatch, useSelector } from "react-redux";
@@ -69,6 +69,8 @@ export default function AsideLnb(props) {
         <div className="gnbWrap">
             <div className="gnb">
                 <ul>
+                    <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
+                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li
                         className={activeLnbMenu === 'mySurroundings' ? 'active' : ''}
                         onClick={() => handleGnbClick('mySurroundings')}

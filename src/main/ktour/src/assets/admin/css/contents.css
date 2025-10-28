@@ -58,7 +58,7 @@
 .admin-scope .detailSearch > form > label > b{ display:inline-block;  min-width: 60px; padding: 0 5px; font-size: 11px; }
 
 /* 스티키 테이블 */
-.admin-scope .tableWrap { position: relative; overflow: auto; width:100%; max-height: calc( 100vh - 310px ); min-height: 100px; padding: 0; border: solid 1px rgba(0,0,0,.1); border-width: 1px; }
+.admin-scope .tableWrap { position: relative; overflow: auto; width:100%; max-height: calc( 100vh - 310px ); min-height: 50px; padding: 0; border: solid 1px rgba(0,0,0,.1); border-width: 1px; }
 .admin-scope .tableWrap table{  width: 100%; border-collapse: collapse; border-spacing: 0; font-size: 12px; line-height: 120%; color: rgba(0,0,0,.7);  }
 .admin-scope .tableWrap table tbody tr:nth-child(odd){ background: rgba(0,0,0,.04); }
 .admin-scope .tableWrap table th, .tableWrap table td{ padding:5px 2px; border: solid 1px rgba(0,0,0,.1); border-width:0 1px; text-align: center; vertical-align: middle; }

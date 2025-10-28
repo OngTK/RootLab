@@ -301,8 +301,9 @@ CREATE TABLE k_tour_headquarter.manager (
     mGender ENUM('남', '여') NOT NULL,                      		  	-- 성별
     mPhone VARCHAR(16) NOT NULL UNIQUE,                           	-- 전화번호
     mEmail VARCHAR(255) NOT NULL UNIQUE,                          	-- 이메일
-    mAdd1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
-    mAdd2 VARCHAR(255),                                           	-- 상세 주소
+	zipCode VARCHAR(15) NOT NULL,                                   -- 우편번호
+    mAddr1 VARCHAR(255) NOT NULL,                                  	-- 도로명 주소
+    mAddr2 VARCHAR(255),                                           	-- 상세 주소
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,                  	-- 가입일
     updatedAt DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,	-- 수정일
     deletedAt DATETIME DEFAULT NULL,                             	-- 탈퇴일
@@ -310,7 +311,8 @@ CREATE TABLE k_tour_headquarter.manager (
     mLocationAgreed BOOLEAN NOT NULL,                             	-- 위치정보 동의
     mPushAgreed BOOLEAN NOT NULL,                                 	-- 푸시알림 동의
     memo TEXT,                                       				-- 이슈/메모
-    mgAuth TINYINT NOT NULL DEFAULT 2,                              -- 관리자유형(1=시스템관리자, 2=업체관리자)
+    mType TINYINT UNSIGNED NOT NULL DEFAULT 1,                      -- 회원유형(0=관리자회원, 1=일반회원, 2=사업자, 3=단체,모임)
+    mgAuth TINYINT UNSIGNED NOT NULL DEFAULT 1,                     -- 관리자유형(0=시스템관리자, 1=업체(지자체)관리자)
     
 	CONSTRAINT fk_manager_siteInfo
 		FOREIGN KEY (siNo) REFERENCES siteInfo(siNo)

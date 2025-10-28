@@ -341,7 +341,7 @@ export default function KakaoMap(props) {
 
     // =================== return ===================
     if (currentLocation.isLoading) {
-        return <div>현재 위치를 불러오는 중입니다...</div>;
+        return <div></div>; //현재 위치를 불러오는 중입니다...
     } // if end
 
     return (

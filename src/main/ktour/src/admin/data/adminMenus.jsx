@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.1
+ * @version 0.1.2
  */
 import { faGear, faUsers, faMapMarkedAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,8 +19,11 @@ export const adminMenus = [
     no: "2",
     title: "회원관리",
     icon: faUsers,
-    path: "/admin/member/manager",
-    children: [{ label: "관리자현황", path: "/admin/member/manager" }],
+    path: "/admin/member/member",
+    children: [
+      { label: "회원현황", path: "/admin/member/member" },
+      { label: "관리자현황", path: "/admin/member/manager" },
+    ],
   },
   {
     no: "3",
