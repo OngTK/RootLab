@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -101,6 +101,18 @@ export default function KakaoMap(props) {
         mapRef.current.panTo(newCoords);
     }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
 
+    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
+    useEffect(() => {
+        // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
+        if (!searchLatLng || !window.kakao || !mapRef.current) return;
+        // 카카오 지도용 좌표 객체를 생성
+        const newCoords = new window.kakao.maps.LatLng(
+            searchLatLng.lat, // selectedGps의 mapy
+            searchLatLng.lng  // selectedGps의 mapx
+        );
+        // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
+        mapRef.current.panTo(newCoords);
+    }, [searchLatLng]); // selectedGps 변경될 때마다 이 효과를 실행
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
         if (selectedLdNo == null) return;

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "@assets/user/css/modalSearchHeader.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSearchBox } from "../../store/mapSlice";
+import { setActiveSearchBox, selectLeftMarker, setSearchLatLng, selectCategory } from "../../store/mapSlice";
 import { useEffect } from "react";
 
 export default function ModalSearchHeader(props) {
@@ -20,6 +20,17 @@ export default function ModalSearchHeader(props) {
 
     const handleSearchBox = () => {
         dispatch(setActiveSearchBox(null));
+    } // func end
+
+    const clickSearchPlace = (place) => {
+        console.log(place);
+        dispatch(setSearchLatLng({
+            lat: place.mapy,
+            lng: place.mapx
+        }))
+        dispatch(selectCategory(place.ctNo));
+
+        dispatch(selectLeftMarker(place.pNo));
     } // func end
 
     useEffect(() => {
@@ -38,7 +49,7 @@ export default function ModalSearchHeader(props) {
                     {/*  검색결과(플레이스) 시작 */}
                     {searchResult &&
                         searchResult.map((place) => (
-                            <dl className="searchResult" key={place.pNo}>
+                            <dl onClick={() => { clickSearchPlace(place) }} className="searchResult" key={place.pNo}>
                                 <dt>
                                     {
                                         place.firstimage2 ?

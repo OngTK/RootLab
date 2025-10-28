@@ -28,17 +28,16 @@ const categories = [
 
 export default function RightCategory(props) {
     // =================== useSelector ===================
-    const { centeredLDong } = useSelector((state) => state.relatedMap);
+    const { centeredLDong, selectedCategory } = useSelector((state) => state.relatedMap);
+    console.log("리렌더링! 현재 selectedCategory:", selectedCategory);
     // =================== useState ===================
-    const [activeCategory, setActiveCategory] = useState("all");
     const [activeLDong, setActiveLDOng] = useState(null);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
 
     const handleCategoryClick = (categoryValue) => {
-        setActiveCategory(categoryValue);
-        dispatch(selectCategory(categoryValue))
-    };
+        dispatch(selectCategory(categoryValue));
+    }; // func end
 
     useEffect(() => {
         setActiveLDOng(centeredLDong);
@@ -58,7 +57,7 @@ export default function RightCategory(props) {
                                 categories.map((category) => {
                                     return <li
                                         key={category.name}
-                                        className={activeCategory === category.value ? "active" : ""}
+                                        className={selectedCategory == category.value ? "active" : ""}
                                         onClick={() => handleCategoryClick(category.value)}
                                     >
                                         <b><FontAwesomeIcon icon={category.icon} /></b>
@@ -71,7 +70,7 @@ export default function RightCategory(props) {
                     <div className="cardListWrap" id="mapInfoBox">
 
                         {/* <!-- (우측)플레이스 리스트 시작 --> */}
-                        <PlaceGroups selectedCategory={activeCategory} />
+                        <PlaceGroups selectedCategory={selectedCategory} />
                         {/* <!-- (우측)플레이스 리스트 끝 --> */}
 
                     </div>

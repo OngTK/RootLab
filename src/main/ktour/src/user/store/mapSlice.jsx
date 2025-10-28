@@ -20,6 +20,10 @@ const initialState = {
         lng: null
     },
     searchResult: [],                   // 검색결과
+    searchLatLng: {                     // 검색결과에서 선택한 장소 좌표
+        lat: null,
+        lng: null
+    },
 };
 
 // 2. Slice 함수 정의
@@ -69,9 +73,12 @@ const mapSlice = createSlice({
         setSearchResult: (state, action) => {
             state.searchResult = action.payload;
         }, // setSearchResult end
+        setSearchLatLng: (state, action) => {
+            state.searchLatLng = action.payload;
+        }, // setSearchLatLng end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setSearchLatLng, setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

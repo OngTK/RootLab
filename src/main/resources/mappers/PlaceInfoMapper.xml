@@ -184,14 +184,14 @@
     </select>
 
     <select id="searchPlacesByUsers">
-        SELECT kpi.pNo, kpi.title, kpi.addr1, kpi.addr2, kpi.tel, kpi.firstimage2, kcc.lclsSystm3Nm,
+        SELECT kpi.pNo, kpi.title, kpi.addr1, kpi.addr2, kpi.tel, kpi.firstimage2, kcc.lclsSystm3Nm, kmg.mapx, kmg.mapy, kpi.ctNo,
                ST_Distance_Sphere(POINT(kmg.mapx, kmg.mapy), -- DB에 저장된 장소의 좌표
                                   POINT(#{lng}, #{lat})         -- API로 전달받은 사용자의 현재 좌표
                                   ) AS distance
         FROM k_tour_headquarter.placeinfo kpi
         JOIN k_tour_headquarter.markersgps kmg
         USING (pNo)
-        LEFT OUTER JOIN k_tour_headquarter.categorycode kcc
+        JOIN k_tour_headquarter.categorycode kcc
         USING (ccNo)
         WHERE kpi.title LIKE CONCAT('%', #{keyword}, '%')
         OR kpi.addr1 LIKE CONCAT('%', #{keyword}, '%')
