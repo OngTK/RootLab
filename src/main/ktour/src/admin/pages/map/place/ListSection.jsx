@@ -5,14 +5,13 @@
  * @since 2025.10.20
  * @version 0.1.2
  */
-import ResizableTable from "@admin/components/common/ResizableTable";
+import ResizableTable from "../../../components/admin/place/ResizableTableAtplace";
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import RegionSelect from "../../../components/admin/place/RegionSelect";
 import Pagination from "../../../components/admin/place/Pagination";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { createCookieSessionStorage } from "react-router-dom";
 
 export default function ListSection(props) {
 
@@ -24,16 +23,16 @@ export default function ListSection(props) {
     const [phone, setPhone] = useState("");      // 대표전화(선택)
     const [pNo, setPNo] = useState("");      // 플레이스 번호
     const [addressInput, setAddressInput] = useState(""); // 주소명(직접 입력란)
-    const [rows, setRows] = useState([]);      // 검색 결과 테이블 데이터
-    const [size, setSize] = useState(10); // 기본 10
-    const [page, setPage] = useState(1);  // 기본 1 (페이지네이션 붙일 때 업데이트)
+    const [rows, setRows] = useState([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
     const [totalElements, setTotalElements] = useState(0);
 
     const onRegionChange = (v) => {
         setRegion(v);
     };
 
-    const ccName = category.l3Cd || category.l2Cd || category.l1Cd || null;
+    const ccName = category.l3Nm || category.l2Nm || category.l1Nm || null;
     const address = addressInput?.trim() || null;
     const ldName = region.regnNm && region.signguNm
         ? `${region.regnNm} ${region.signguNm}` // 1차+2차
@@ -41,45 +40,49 @@ export default function ListSection(props) {
 
     // 검색 실행 핸들러
     const onSearch = async (e) => {
-        e?.preventDefault?.();
         const params = {
-            title: title || null,
-            address: address || null,     // 1차+" "+2차 텍스트 or 직접입력 텍스트
-            ccName: ccName || null,       // "대/중/소" 중 선택된 부분만 join
-            ldName: ldName || null,
-            ctNo: ctNo ? Number(ctNo) : null,
-            showflage: showVal === "1" ? true : (showVal === "0" ? false : null),
-            pNo: pNo ? Number(pNo) : null,
-            tel: phone || null,           // 필요하면 백에서 사용
-            size,
-            page
+            // 아래 네이밍은 기존 state와 서버 파라미터 규칙에 맞춰 넣으세요.
+            title: title?.trim() || null,
+            address: (region.regnNm && region.signguNm)
+                ? `${region.regnNm} ${region.signguNm}`
+                : (addressInput?.trim() || null),
+            ccName: category.l3Nm || category.l2Nm || category.l1Nm || null,
+            ctNo: ctNo || null,
+            showflag: showVal ? 1 : 0,
+            pNo: pNo || null,
+            page, size,
         };
-        console.log(params)
-        // null은 보내지 않도록 정리
-        Object.keys(params).forEach(k => params[k] == null && delete params[k]);
-        const { data } = await axios.get("http://localhost:8080/placeinfo/search", { params });
-        // Page<T> 형태 반영
-        const content = data.content ?? [];
-        setPage(data?.currentPage ?? page);
-        setSize(data?.size ?? size);
-        setTotalElements(data?.totalElements ?? 0);
+        Object.keys(params).forEach(k => (params[k] === null || params[k] === '') && delete params[k]);
 
-        console.log(content)
-
-        // columns(id) = ["no","pno","title","contentTypeName","lclsSystm3Nm","addr1","tel"]
-        // 백엔드 필드 ↔ 화면 컬럼 매핑
-        const offset = ((data?.currentPage ?? page) - 1) * (data?.size ?? size);
-        const rowsMapped = content.map((r, idx) => ({
-            no: offset + idx + 1,
-            pno: r.pno,
-            title: r.title,
-            contentTypeName: r.contentTypeName,
-            lclsSystm3Nm: r.lclsSystm3Nm,
-            addr1: r.addr1,
-            tel: r.tel,
-        }));
-        setRows(rowsMapped);
+        try {
+            // 서버 응답: { content: [...], totalElements: 62591, size: 10, currentPage: 1, ... }
+            const { data } = await axios.get("http://localhost:8080/placeinfo/search", { params });
+            setRows(data?.content || []);
+            setTotalElements(data?.totalElements ?? 0);
+            // 서버가 현재 page/size를 되돌려 주면 동기화
+            if (data?.size) setSize(data.size);
+            if (data?.currentPage) setPage(data.currentPage);
+        } catch (e) {
+            console.error(e);
+        }
     };
+
+    // 페이지/사이즈 상태가 있다면 함께 포함하세요(예: page, size)
+    useEffect(() => {
+        const params = {
+            title: title?.trim() || null,
+            address: ldName || (addressInput?.trim() || null),
+            ccName,
+            ctNo: ctNo || null,
+            showflag: showVal ? 1 : 0,
+            pNo: pNo || null,
+
+        };
+        // 불필요한 빈 값은 빼주면 깔끔합니다
+        Object.keys(params).forEach(k => (params[k] === null || params[k] === '') && delete params[k]);
+
+        // 조건 배열은 실제로 사용하는 상태만 추가
+    }, [title, addressInput, ldName, ccName, ctNo, showVal, pNo]);
 
     // 초기화 핸들러
     const onReset = () => {
@@ -118,13 +121,8 @@ export default function ListSection(props) {
         onSearch();
     }, [page, size]);
 
-    const handleRowClick = (pno) => {
-        axios.get(`http://localhost:8080/placeinfo/basic?pno=${pno}`)
-            .then(res => {
-                setDetail(res.data);     // PlaceInfo 상세 전체 데이터 저장
-                setSelectedPno(pno);     // 선택한 플레이스 번호 저장
-            })
-            .catch(err => console.error(err));
+    const handleRowClick = (row) => {
+        props?.onPick?.(row);
     };
 
     /** ============================ [본문 좌측] 플레이스 목록(PlaceList) ================================= */
@@ -254,52 +252,8 @@ export default function ListSection(props) {
                         minColWidth={80}
                         stickyFirst={false}
                         sortable={true}
-                        rows={rows}
-                        onRowClick={(row) => handleRowClick(row.pNo)}
+                        onRowClick={(row) => props?.onPick?.(row)} // 부모(PlaceInfo)로 row 전달
                     />
-                    {/* <table>
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">플레이스번호</th>
-                                <th scope="col">플레이스명</th>
-                                <th scope="col">콘텐츠타입</th>
-                                <th scope="col">카테고리(소분류)</th>
-                                <th scope="col">주소</th>
-                                <th scope="col">대표전화</th>
-                                <th scope="col">노출여부</th>
-                                <th scope="col">등록일</th>
-                                <th scope="col">수정일</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="active">
-                                <td>2</td>
-                                <td>2932765</td>
-                                <td><strong>새해 맞이 불꽃쇼 & 소원 풍선 날리기 축제</strong></td>
-                                <td>행사/공연/축제</td>
-                                <td>문화관광축제</td>
-                                <td>강원특별자치도 고성군 삼포해변길 9 오션투유콘도</td>
-                                <td>1666-1243</td>
-                                <td>비노출</td>
-                                <td>2025-00-00</td>
-                                <td>2025-00-00</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>421977</td>
-                                <td><strong>고성명태축제</strong></td>
-                                <td>행사/공연/축제</td>
-                                <td>문화관광축제</td>
-                                <td>강원특별자치도 고성군 거진읍 대대리</td>
-                                <td>033-681-0121,0122</td>
-                                <td>노출</td>
-                                <td>2025-00-00</td>
-                                <td>2025-00-00</td>
-                            </tr>
-                        </tbody>
-                    </table> 
-                    */}
                 </div>
                 {/* <!-- 목록(리스트) 테이블 끝 --> */}
                 <Pagination

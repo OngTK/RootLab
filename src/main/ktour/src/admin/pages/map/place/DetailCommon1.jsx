@@ -10,7 +10,8 @@ import { useEffect, useRef, useState } from "react";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import axios from "axios";
 
-export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, onChangeContentType, ...rest }) {
+export default function DetailCommon1({
+    placeInfo: placeInfoProp, contentType, onChangeContentType, ...rest }) {
 
     // Detail 전용 로컬 상태 (검색 폼과 분리) ============================================================
     const [category, setCategory] = useState({
@@ -39,6 +40,9 @@ export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, o
     const [homepage, setHomepage] = useState("");           // 홈페이지
     const [overview, setOverview] = useState("");           // 개요
     const [placeNo, setPlaceNo] = useState("");             // 플레이스 번호(표시용)
+    const createdAt = placeInfo?.createdAt || "";
+    const updatedAt = placeInfo?.updatedAt || "";
+    const displayUpdated = updatedAt || createdAt; // 수정일 없으면 생성일로 대체
 
     // 상세 조회로 들어온 값을 초기값으로 반영(있을 때만) =========================================
     useEffect(() => {
@@ -151,8 +155,6 @@ export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, o
             mapObj.setCenter(latlng);
             // 저장용 좌표 상태 업데이트
             setCoord({ x, y });
-            console.log(x)
-            console.log(y)
         });
     }, [roadAddr, mapObj]);
 
@@ -262,7 +264,7 @@ export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, o
                                     onChange={(e) => {
                                         const v = e.target.value;
                                         setContentTypeLocal(v);
-                                        onChangeContentType?.(v); 
+                                        onChangeContentType?.(v);
                                     }} >
                                     <option value="1">관광지</option>
                                     <option value="3">행사/공연/축제</option>
@@ -397,7 +399,8 @@ export default function DetailCommon1({ placeInfo: placeInfoProp, contentType, o
                         </div>
 
                         <div className="info_date">
-                            <b>등록일:</b>2025-00-00 (00:00:00)<b>수정일:</b>2025-00-00 (00:00:00)
+                            <b>등록일:</b> {createdAt || "-"} &nbsp;
+                            <b>수정일:</b> {displayUpdated || "-"}
                         </div>
                         <div className="form-actions">
                             <button type="button" onClick={handleSave}>저장</button>

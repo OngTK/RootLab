@@ -36,6 +36,7 @@ public class PlaceInfoDto {
     private String updatedAt;       // 수정일(DB업데이트일/해당 레코드 수정일)
 
     // 부가적인 정보
+    private String lclsSystm1Nm;
     private String lclsSystm2Nm;
     private String lclsSystm3Nm;
     private String contentTypeName;

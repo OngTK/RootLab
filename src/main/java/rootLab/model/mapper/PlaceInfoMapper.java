@@ -47,7 +47,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     @Select("""
-            SELECT kpi.*, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
+            SELECT kpi.*, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
             	FROM k_tour_headquarter.placeinfo kpi
                 JOIN k_tour_headquarter.categorycode kcc
                 USING (ccNo)
