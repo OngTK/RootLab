@@ -14,13 +14,42 @@ import FestivalIntro2 from "./FestivalIntro2";
 import { useEffect, useState, useMemo } from "react";
 
 export default function DetailSection({ detail, loading, error, ...rest }) {
-    console.log(detail)
+    // 신규등록 초기화를 위한 "빈 상세" 템플릿
+    const EMPTY_DETAIL = {
+        placeInfo: {},
+        MarkersGPSDto: null,
+        PlaceImageDetail: [],
+        PlaceInfoDtoList: [],
+        TourIntro: null,
+        RestaurantIntro: null,
+        FestivalIntro: null,
+    };
+
+    // 서버에서 내려온 detail을 로컬에 보관(신규등록시 부모 상태에 영향 없이 초기화)
+    const [localDetail, setLocalDetail] = useState(detail ?? EMPTY_DETAIL);
+
+    // 외부 detail이 변경되면 동기화 (목록행 클릭 시 갱신)
+    useEffect(() => {
+        setLocalDetail(detail ?? EMPTY_DETAIL);
+    }, [detail]);
+
+    // 자식 강제 재마운트를 위한 키
+    const [resetSeq, setResetSeq] = useState(0);
+
+    // 신규등록(전체 초기화)
+    const handleNew = () => {
+        setLocalDetail(EMPTY_DETAIL);   // 데이터 비움
+        setContentType("1");            // 기본: 관광지
+        setResetSeq((n) => n + 1);      // key 변경 → 자식 재마운트
+    };
+
+
 
     // 안전한 디폴트 (신규 등록/상세 없음일 때도 빈 값으로 동작)
-    const placeInfo = detail?.placeInfo ?? {};
-    const markers = detail?.MarkersGPSDto ?? null;
-    const images = detail?.PlaceImageDetail ?? [];
-    const placeInfoDtoList = detail?.PlaceInfoDtoList ?? [];
+    const placeInfo = localDetail?.placeInfo ?? {};
+    const markers = localDetail?.MarkersGPSDto ?? null;
+    const images = localDetail?.PlaceImageDetail ?? [];
+    const placeInfoDtoList = localDetail?.PlaceInfoDtoList ?? [];
 
     // - 조회된 detail이 바뀌면 placeInfo.ctNo를 반영
     const [contentType, setContentType] = useState(String(placeInfo?.ctNo ?? ""));
@@ -34,7 +63,6 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
         const fromData = String(placeInfo?.ctNo ?? "");
         return fromUser || fromData || "1"; // 기본 1=관광지(Tour)
     }, [contentType, placeInfo?.ctNo]);
-
 
     /** ============================ [본문 우측]플레이스 상세정보(CRUD) ============================== */
     return (
@@ -51,7 +79,7 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                     <span className="btnBox">
                         <button type="button" className="btn full">저장</button>
                         <button type="button" className="btn line">삭제</button>
-                        <button type="button" className="btn line">신규등록</button>
+                        <button type="button" className="btn line" onClick={handleNew} >신규등록</button>
                     </span>
                 </div>
                 {/* <!--탭/타이틀/버튼 시작  --> */}
@@ -59,6 +87,7 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                 {/* <!-- 상세정보 1.2.3.입/출력 시작 --> */}
                 <div className="formWrap">
                     <DetailCommon1
+                        key={`dc1-${resetSeq}`}
                         placeInfo={placeInfo}
                         markers={markers}
                         images={images}
@@ -68,16 +97,16 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                     <hr />
                     {/* 타입별 섹션 : effectiveCt만 사용 */}
                     {(!effectiveCt || effectiveCt === "1") && (
-                        <TourIntro2 data={detail?.TourIntro ?? null} />
+                        <TourIntro2 key={`tour-${resetSeq}`} data={localDetail?.TourIntro ?? null} />
                     )}
                     {effectiveCt === "3" && (
-                        <FestivalIntro2 data={detail?.FestivalIntro ?? null} />
+                        <FestivalIntro2 key={`fest-${resetSeq}`} data={localDetail?.FestivalIntro ?? null} />
                     )}
                     {effectiveCt === "8" && (
-                        <RestaurantIntro2 data={detail?.RestaurantIntro ?? null} />
+                        <RestaurantIntro2 key={`rest-${resetSeq}`} data={localDetail?.RestaurantIntro ?? null} />
                     )}
                     <hr />
-                    <DetailRepeat3 items={placeInfoDtoList} />
+                    <DetailRepeat3 key={`rep-${resetSeq}`} items={placeInfoDtoList} />
                 </div>
                 {/* <!-- 상세정보 1.2.3.입/출력 끝 --> */}
             </section>
