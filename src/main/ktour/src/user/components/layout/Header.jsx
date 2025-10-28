@@ -11,12 +11,12 @@ import { faMagnifyingGlass, faLocationArrow, faBars } from "@fortawesome/free-so
 import "@assets/user/css/header.css"; // 헤더 header.css
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu, ByLdongCode, setActiveLnbMenu, setRegionSignguList } from "../../store/mapSlice";
+import { selectedSigngu, ByLdongCode, setActiveLnbMenu, setRegionSignguList, setSearchResult, setActiveSearchBox } from "../../store/mapSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Header(props) {
     // =================== useSelector ===================
-    const { axiosOption, centeredLDong } = useSelector((state) => state.relatedMap);
+    const { axiosOption, centeredLDong, currentPosition } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -24,6 +24,7 @@ export default function Header(props) {
     const [lDongSignguCd, SetLDongSigngu] = useState([]);
     const [selectedRegnCd, SetSelectedRegnCd] = useState("");
     const [selectedLdNo, SetSelectedLdNo] = useState("");
+    const [searchBoxInput, SetSearchBoxInput] = useState("");
 
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
@@ -70,6 +71,9 @@ export default function Header(props) {
         dispatch(selectedSigngu(e.target.value));
         dispatch(setActiveLnbMenu('regionSelect'))
     } // func end
+    const activeEnter = (e) => {
+        if (e.key === "Enter") searchingPlace();
+    } // func end
 
     let fisrtName = null;
     let secondName = null;
@@ -79,6 +83,18 @@ export default function Header(props) {
         secondName = centeredLDong.split(" ")[1];
     }, [centeredLDong])
 
+    // =================== Search Axios GET ===================
+    const searchingPlace = async () => {
+        if (!searchBoxInput || !currentPosition) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/placeinfo/searchbyusers?keyword=${searchBoxInput}&lat=${currentPosition.lat}&lng=${currentPosition.lng}`, axiosOption);
+            dispatch(setSearchResult(response.data));
+            dispatch(setActiveSearchBox("active"));
+        } catch (error) {
+            console.log(error);
+        } // try-catch end
+    } // func end
+
     if (!centeredLDong) return;
     /** ========================= 사용자단(비회원) > 공통레이아웃 > 헤더(header).jsx영역 ================================== */
     return (
@@ -87,20 +103,20 @@ export default function Header(props) {
                 <header>
                     <h1 className="logo">
                         <Link to="/">
-                         K-TOUR
+                            K-TOUR
                             <span>{centeredLDong && centeredLDong.split(" ")[0]}</span>
                         </Link>
                         <FontAwesomeIcon icon={faBars} />
                     </h1>
                 </header>
                 <div className="placeSearch">
-                    <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                    <input type="text" placeholder="관광지/상호명 검색" autoFocus="" />
+                    <button onClick={searchingPlace}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+                    <input type="text" placeholder="관광지/상호명 검색" autoFocus="" value={searchBoxInput} onChange={(e) => { SetSearchBoxInput(e.target.value) }} onKeyDown={(e) => activeEnter(e)} />
                 </div>
                 <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">
                     <select onChange={changeRegnCd} value={selectedRegnCd}>
-                        <option value="" disabled> 도/광역시 선택</option>
+                        <option value=""> 도/광역시 선택</option>
                         {
                             lDongRegnCd.map((regn) => {
                                 return <option key={regn.ldongregncd} value={regn.ldongregncd}>
@@ -110,7 +126,7 @@ export default function Header(props) {
                         }
                     </select>
                     <select onChange={changeLdNo} value={selectedLdNo}>
-                        <option value="" disabled> 시/군/구 선택</option>
+                        <option value=""> 시/군/구 선택</option>
                         {
                             lDongSignguCd.map((signgu) => {
                                 return <option key={signgu.ldNo} value={signgu.ldNo}>

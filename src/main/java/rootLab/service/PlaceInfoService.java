@@ -88,6 +88,21 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         
     } // func end
 
-
-
+    /**
+     * [PI-07] 플레이스 검색(by사용자)
+     * <p>
+     * [키워드, 사용자위치]를 입력받아, 해당하는 플레이스 정보들을 조회한다.
+     *
+     * @param keyword 검색한 키워드
+     * @param lat 사용자 위치 기준 위도
+     * @param lng 사용자 위치 기준 경도
+     * @return 키워드에 의한 검색 결과
+     * @author AhnJH
+     */
+    public List<Map<String, Object>> searchPlacesByUsers(String keyword, double lat, double lng){
+        System.out.println("keyword = " + keyword);
+        System.out.println("lat = " + lat);
+        System.out.println("lng = " + lng);
+        return placeInfoMapper.searchPlacesByUsers(keyword, lat, lng);
+    } // func end
 } // class end

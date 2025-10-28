@@ -19,7 +19,7 @@ export default function AsideLnb(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
-    const { firstLDong, LdongName, axiosOption, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
+    const { firstLDong, LdongName, axiosOption, selectedLdNo, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);
     const [activeLdNo, setActiveLdNo] = useState(null);
@@ -34,7 +34,12 @@ export default function AsideLnb(props) {
 
     const handleGnbClick = (menuName) => {
         dispatch(setActiveLnbMenu(menuName));
+        if (menuName == 'mySurroundings') location.href='/';
     } // func end
+
+    useEffect(() => {
+        setActiveLdNo(selectedLdNo);
+    }, [selectedLdNo])
 
     // =================== LDongSignguCd Axios GET ===================
     const getLDongSignguCdByAxios = async (ldongregncd) => {
@@ -69,8 +74,6 @@ export default function AsideLnb(props) {
         <div className="gnbWrap">
             <div className="gnb">
                 <ul>
-                    <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
-                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li
                         className={activeLnbMenu === 'mySurroundings' ? 'active' : ''}
                         onClick={() => handleGnbClick('mySurroundings')}
@@ -83,6 +86,7 @@ export default function AsideLnb(props) {
                     >
                         <FontAwesomeIcon icon={faCompass} />지역 선택
                     </li>
+                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li><FontAwesomeIcon icon={faCompass} />추천플레이스</li>
                     <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
                     <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>

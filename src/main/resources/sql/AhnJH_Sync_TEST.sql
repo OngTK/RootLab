@@ -273,5 +273,28 @@ SELECT kpi.*, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
     JOIN k_tour_headquarter.categorycode kcc
     USING (ccNo);
 
-SELECT * FROM k_tour_headquarter.markersgps WHERE pno = 23405;
-    USING (ccNo);
+SELECT A.* 
+	FROM (SELECT *, ROW_NUMBER() OVER(PARTITION BY mapx, mapy ORDER BY mkNo) RN FROM k_tour_headquarter.markersgps) A
+    WHERE RN = 1;
+
+-- ----------------------------------------SEARCH BY USERS TEST------------------------------------------
+SELECT * FROM k_tour_headquarter.placeinfo;
+SELECT * FROM k_tour_headquarter.markersgps;
+SELECT * FROM k_tour_headquarter.categorycode;
+
+SELECT kpi.pNo, kpi.title, kpi.addr1, kpi.addr2, kpi.tel, kpi.overview, kpi.firstimage2, kcc.lclsSystm3Nm, ST_Distance_Sphere(
+				POINT(kmg.mapx, kmg.mapy), -- DB에 저장된 장소의 좌표
+				POINT(127.0, 37.5)          -- API로 전달받은 사용자의 현재 좌표
+				) AS distance
+	FROM k_tour_headquarter.placeinfo kpi
+    JOIN k_tour_headquarter.markersgps kmg
+    USING (pNo)
+    LEFT OUTER JOIN k_tour_headquarter.categorycode kcc
+    USING (ccNo)
+    WHERE kpi.title LIKE '%서울%'
+    OR kpi.addr1 LIKE '%서울%'
+    OR kpi.addr2 LIKE '%서울%'
+    OR kpi.overview LIKE '%서울%'
+    ORDER BY distance;
+
+SELECT kpi.*, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm FROM k_tour_headquarter.placeinfo kpi LEFT OUTER JOIN k_tour_headquarter.categorycode kcc USING (ccNo) WHERE kpi.pno = 26592;

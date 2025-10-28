@@ -46,18 +46,4 @@ public class MarkersGPSController {
         // 3. 좌표를 Service에게 전달하여 값 반환하기
         return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLatLng(markersGPSDto));
     } // func end
-
-    /**
-     * [MG-02] 시군구 기준 마커조회
-     * [법정동코드]를 입력받아, 해당하는 법정동코드No에 속하는 마커를 조회한다.
-     *
-     * @param ldNo 선택된 법정동코드
-     * @return 해당 법정동코드No에 속한 마커 리스트
-     * @author AhnJH
-     */
-    @GetMapping("/getbycurrentldong")
-    public ResponseEntity<?> getMarkersGpsByCurrentLDong(@RequestParam int ldNo){
-        // 3. 코드를 Service에게 전달하여 값 반환하기
-        return ResponseEntity.ok(markersGPSService.getMarkersGpsByCurrentLDong(ldNo));
-    } // func end
 } // class end

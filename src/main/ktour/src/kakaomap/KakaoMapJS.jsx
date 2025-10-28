@@ -10,12 +10,12 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
     'food.png': food,
-    'cultural_facilities.png': cultural_facilities,
+    'culturalFacilities.png': cultural_facilities,
     'festival.png': festival,
     'leports.png': leports,
     'shopping.png': shopping,
@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, LdongName } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -51,8 +51,7 @@ export default function KakaoMap(props) {
     const infoWindowRef = useRef(null);     // 생성된 인포윈도우 객체
     const timeoutRef = useRef(null);        // idle 이벤트가 과도하게 발생하는 것을 방지
 
-    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
-    useEffect(() => {
+    const getCurrentPositionFunc = () => {
         // =================== geolocation으로 현재 위치 가져오기 ===================
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((location) => {    // 현재 위치를 가져오는데 성공했을 때
@@ -64,6 +63,10 @@ export default function KakaoMap(props) {
                     },
                     isLoading: false
                 }));
+                dispatch(setCurrentPosition({
+                    lat: location.coords.latitude,
+                    lng: location.coords.longitude
+                }))
             }, (error) => {     // 현재 위치를 가져오는데 실패했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
@@ -78,6 +81,11 @@ export default function KakaoMap(props) {
                 isLoading: false
             })); // SetCurrentLocation end
         } // if end
+    } // func end
+
+    // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
+    useEffect(() => {
+        getCurrentPositionFunc();
     }, []); // useEffect end
 
     // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
@@ -93,6 +101,18 @@ export default function KakaoMap(props) {
         mapRef.current.panTo(newCoords);
     }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
 
+    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
+    useEffect(() => {
+        // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
+        if (!searchLatLng || !window.kakao || !mapRef.current) return;
+        // 카카오 지도용 좌표 객체를 생성
+        const newCoords = new window.kakao.maps.LatLng(
+            searchLatLng.lat, // selectedGps의 mapy
+            searchLatLng.lng  // selectedGps의 mapx
+        );
+        // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
+        mapRef.current.panTo(newCoords);
+    }, [searchLatLng]); // selectedGps 변경될 때마다 이 효과를 실행
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
         if (selectedLdNo == null) return;
@@ -104,21 +124,9 @@ export default function KakaoMap(props) {
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== ldNoMarkers Axios GET ===================
-    const getLdNoMarkersByAxios = async () => {
-        if (selectedLdNo == null) return;
-        try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, axiosOption);
-            dispatch(renderedMarker(response.data));
-        } catch (error) {
-            console.log('getLdNoMarkersByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
     // =================== useEffect - [selectedCity] : 시군구 좌표 가져오기 ===================
     useEffect(() => {
         getLDongCodeByAxios();
-        getLdNoMarkersByAxios();
     }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================
@@ -176,6 +184,7 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
+        map.setMaxLevel(8);
 
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();
@@ -223,7 +232,7 @@ export default function KakaoMap(props) {
         // 지도에 원 표시 로직
         let circle1 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 2000,              // 반경 2KM 표시
+            radius: 1000,              // 반경 1KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
@@ -236,7 +245,7 @@ export default function KakaoMap(props) {
         // 지도에 현재 위치 표시 로직
         let circle2 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 50,                  // 반경 5KM 표시
+            radius: 50,                  // 반경 표시(m 단위)
             strokeWeight: 3,             // 선의 두께
             strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
@@ -305,8 +314,8 @@ export default function KakaoMap(props) {
             if (marker.ctNo == category) {
                 position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             }
-            // 이미지 소스 선택
-            const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
+            // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)
+            const src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
             const kakaoMarker = new kakao.maps.Marker({
