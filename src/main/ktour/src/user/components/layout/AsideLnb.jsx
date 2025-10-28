@@ -84,12 +84,11 @@ export default function AsideLnb(props) {
                         className={activeLnbMenu === 'regionSelect' ? 'active' : ''}
                         onClick={() => handleGnbClick('regionSelect')}
                     >
-                        <FontAwesomeIcon icon={faCompass} />지역 선택
+                        <FontAwesomeIcon icon={faMagnifyingGlassLocation} />지역선택(전국)
                     </li>
-                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li><FontAwesomeIcon icon={faCompass} />추천플레이스</li>
                     <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
-                    <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>
+                    <li onClick={() => alert("준비중입니다.")}><FontAwesomeIcon icon={faDog} />반려동물동반</li>
                 </ul>
             </div>
 
@@ -98,7 +97,7 @@ export default function AsideLnb(props) {
                 <div className="lnb">
                     <h2>
                         <FontAwesomeIcon icon={faStreetView} />내 주변
-                        <div className="comment">주제별 다양한 장소를 확인하세요</div>
+                        <div className="comment">주제별 다양한 장소를 검색하세요</div>
                     </h2>
                     <ul className="subMenuList" id="lnbMap">
                         {
@@ -127,11 +126,11 @@ export default function AsideLnb(props) {
             {activeLnbMenu === 'regionSelect' && (
                 <div className="lnb">
                     <h2>
-                        <FontAwesomeIcon icon={faCompass} />지역 선택
+                        <FontAwesomeIcon icon={faMagnifyingGlassLocation} />지역선택(전국)
                         <div className="comment">
                             {regionSignguList.length > 0
-                                ? '시군구를 선택하세요.'
-                                : '상단 헤더에서 시도를 먼저 선택하세요.'
+                                ? '시/군/구를 선택하세요.'
+                                : '상단에서 원하는 지역을 선택하세요.'
                             }
                         </div>
                     </h2>
