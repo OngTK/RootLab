@@ -14,14 +14,12 @@ import FestivalIntro2 from "./FestivalIntro2";
 import { useEffect, useState, useMemo } from "react";
 
 export default function DetailSection({ detail, loading, error, ...rest }) {
+    console.log(detail)
 
     // 안전한 디폴트 (신규 등록/상세 없음일 때도 빈 값으로 동작)
     const placeInfo = detail?.placeInfo ?? {};
     const markers = detail?.MarkersGPSDto ?? null;
     const images = detail?.PlaceImageDetail ?? [];
-    const tourIntro = detail?.TourIntro ?? null;
-    const restaurantIntro = detail?.RestaurantIntroDto ?? null;
-    const festivalIntro = detail?.FestivalIntroDto ?? null;
     const placeInfoDtoList = detail?.PlaceInfoDtoList ?? [];
 
     // - 조회된 detail이 바뀌면 placeInfo.ctNo를 반영
@@ -30,21 +28,14 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
         setContentType(String(placeInfo?.ctNo ?? "")); // 조회/교체될 때만 동기화
     }, [placeInfo?.ctNo]);
 
-    // 4) 실제로 사용할 타입 (우선순위: 사용자가 선택한 값 → 조회값 → 기본 1=Tour)
+    // 최종 사용할 콘텐츠 타입(문자열로 통일)
     const effectiveCt = useMemo(() => {
         const fromUser = String(contentType || "");
         const fromData = String(placeInfo?.ctNo ?? "");
-        return fromUser || fromData || "1"; // 기본 TourIntro
+        return fromUser || fromData || "1"; // 기본 1=관광지(Tour)
     }, [contentType, placeInfo?.ctNo]);
 
-    // 5) 타입별로 단 하나만 렌더 (데이터도 타입에 맞는 것만 전달)
-    const activeIntro = useMemo(() => {
-        if (effectiveCt === "1") return <TourIntro2 intro={tourIntro} />;
-        if (effectiveCt === "3") return <FestivalIntro2 intro={festivalIntro} />;
-        if (effectiveCt === "8") return <RestaurantIntro2 intro={restaurantIntro} />;
-        return <TourIntro2 intro={tourIntro} />; // 방어적 기본
-    }, [effectiveCt, tourIntro, festivalIntro, restaurantIntro]);
-    
+
     /** ============================ [본문 우측]플레이스 상세정보(CRUD) ============================== */
     return (
         <>
@@ -75,7 +66,16 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                         onChangeContentType={setContentType}
                     />
                     <hr />
-                    {activeIntro}
+                    {/* 타입별 섹션 : effectiveCt만 사용 */}
+                    {(!effectiveCt || effectiveCt === "1") && (
+                        <TourIntro2 data={detail?.TourIntro ?? null} />
+                    )}
+                    {effectiveCt === "3" && (
+                        <FestivalIntro2 data={detail?.FestivalIntro ?? null} />
+                    )}
+                    {effectiveCt === "8" && (
+                        <RestaurantIntro2 data={detail?.RestaurantIntro ?? null} />
+                    )}
                     <hr />
                     <DetailRepeat3 items={placeInfoDtoList} />
                 </div>
