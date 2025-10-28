@@ -15,7 +15,7 @@ import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
     'food.png': food,
-    'cultural_facilities.png': cultural_facilities,
+    'culturalFacilities.png': cultural_facilities,
     'festival.png': festival,
     'leports.png': leports,
     'shopping.png': shopping,
@@ -223,7 +223,7 @@ export default function KakaoMap(props) {
         // 지도에 원 표시 로직
         let circle1 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 2000,              // 반경 2KM 표시
+            radius: 1000,              // 반경 1KM 표시
             strokeWeight: 3,           // 선의 두께
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
@@ -236,7 +236,7 @@ export default function KakaoMap(props) {
         // 지도에 현재 위치 표시 로직
         let circle2 = new kakao.maps.Circle({
             center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 50,                  // 반경 5KM 표시
+            radius: 50,                  // 반경 표시(m 단위)
             strokeWeight: 3,             // 선의 두께
             strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
@@ -305,8 +305,8 @@ export default function KakaoMap(props) {
             if (marker.ctNo == category) {
                 position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             }
-            // 이미지 소스 선택
-            const src = markerImages[marker.defaultMarker] || markerImages['travelCourse.png'];
+            // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)
+            const src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
             const kakaoMarker = new kakao.maps.Marker({
