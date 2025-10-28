@@ -5,7 +5,7 @@
  * @version 0.1.0
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function ListSection(props) {
@@ -103,6 +103,11 @@ export default function ListSection(props) {
       setLoading(false);
     }
   };
+
+    useEffect(() => {
+    pushsearch();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, pageSize]);
 
   /** ========================= 관리자단 > 사이트관리 > 푸시/팝업관리(PushPopup) .jsx영역 ================================== */
   return (

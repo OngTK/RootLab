@@ -2,6 +2,7 @@ package rootLab.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import rootLab.model.dto.PushPopupDto;
 import rootLab.model.mapper.PushPopupMapper;
@@ -36,15 +37,20 @@ public class PushPopupService {
         );
     }
 
+
     //2. 등록
+    @Transactional // 등록과 이미지 등록이 모두 성공이면.. 트랜잭션
     public int addPush(PushPopupDto pushPopupDto) {
         pushPopupMapper.addPush(pushPopupDto);
         if(pushPopupDto.getPpNo() > 0){
-        return pushPopupDto.getPpNo();
-    }else{
-        return 0;
+            String upload = uploadFile( pushPopupDto.getFile() , "ppImg"  );
+            if( upload != null ) pushPopupDto.setPpImg( upload ); // 업로드 성공이면 업로드할 이미지명 변경
+            pushPopupMapper.updatePushImg( pushPopupDto );
+            return pushPopupDto.getPpNo();
+        }else{
+            return 0;
+        }
     }
-}
 
     //3. 삭제
     public boolean deletePush(int ppNo){
@@ -65,6 +71,16 @@ public class PushPopupService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    //6.
+    public String findByPlaceNo(String pNo) {
+        return pushPopupMapper.findByPlaceNo(pNo);
+    }
+
+    //7. 배너 출력
+    public List<PushPopupDto> bannerPush(){
+        return pushPopupMapper.bannerPush();
     }
 
 }

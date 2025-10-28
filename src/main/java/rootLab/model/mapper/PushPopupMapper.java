@@ -1,9 +1,6 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.dto.PushPopupDto;
 
 import java.util.List;
@@ -13,7 +10,7 @@ public interface PushPopupMapper {
 
     /**
      * 1. 검색
-     * @author juju95
+     * @author juju9595
      */
     List<PushPopupDto> searchPush(
             @Param("ppUse") String ppUse,
@@ -28,23 +25,52 @@ public interface PushPopupMapper {
      */
     @Insert("""
     INSERT INTO pushPopup
-    (pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated)
+    (pNo, mgNo, ppTitle, ppContent, ppUse, ppType, ppStart, ppEnd, ppIterated)
     VALUES
-    (#{pNo}, #{mgNo}, #{ppTitle}, #{ppContent}, #{ppImg},
+    (#{pNo}, #{mgNo}, #{ppTitle}, #{ppContent},
     #{ppUse}, #{ppType}, #{ppStart}, #{ppEnd}, #{ppIterated})
     """)
     @Options(useGeneratedKeys = true, keyProperty = "ppNo") // AUTO_INCREMENT ppNo 주입
     int addPush(PushPopupDto pushPopupDto);
 
+
     /**
      * 3. 삭제
-     * @author juju95
+     * @author juju9595
      */
     int deletePush (@Param("ppNo") int ppNo);
 
     /**
      * 4. 수정
-     * @author juju95
+     * @author juju9595
      */
     int updatePush(PushPopupDto dto);
+
+    /**
+     * 5. 첨부파일명 등록/수정
+     * @author juju95
+     */
+    @Update("""
+    UPDATE pushPopup
+    SET ppImg = #{ppImg}
+    WHERE ppNo = #{ppNo}
+    """)
+    int updatePushImg(PushPopupDto pushPopupDto);
+
+    /**
+     * 6.
+     * @author juju95
+     */
+    @Select("""
+    SELECT title FROM placeinfo
+    WHERE pNo = #{pNo}
+    """)
+    String findByPlaceNo(String pNo);
+
+    /**
+     * 7.
+     * @author juju95
+     */
+    List<PushPopupDto> bannerPush();
+
 }

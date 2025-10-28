@@ -23,6 +23,8 @@ const normalizeUse = (v) => {
 };
 
 export default function DetailSection(props) {
+
+    console.log( props );
     
          const {
             selected = null,     // 부모에서 내려주는 선택 데이터(목록에서 클릭)
@@ -50,6 +52,7 @@ export default function DetailSection(props) {
         const [updatedAt, setUpdatedAt] = useState("");
 
         const [uploadFile, setUploadFile] = useState(null);
+        const [privewUrl, setprivelwUrl] = useState(""); // 로컬 미리보기 전용 URL
         const fileRef = useRef(null);
 
         //!! (두 개의 느낌표)는 Boolean 강제 변환 연산자 true/false
@@ -71,17 +74,32 @@ export default function DetailSection(props) {
             setCreatedAt("");
             setUpdatedAt("");
             setUploadFile(null);
-            if (fileRef.current) fileRef.current.value = "";
+           
+            //미리보기 초기화
+            if(privewUrl) URL.revokeObjectURL(privewUrl);
+            setprivelwUrl("");
+            setUploadFile(null);
+
+            setTitle("");
+            if(fileRef.current) fileRef.current.value = "";
         };
 
         // [2] selected 바인딩
         useEffect(() => {
+          // 선택 변경시 이전 미리보기 정리
+          if(privewUrl){
+            URL.revokeObjectURL(privewUrl);
+            setprivelwUrl("");
+          }
+
+          if(fileRef.current) fileRef.current.value("");
+          
             if (!selected) {
             resetForm();
             return;
             }
             setppNo(selected.ppNo ?? null);
-            setpNo(selected.pNo ?? "");
+            setpNo(selected.pno ?? "");
             setmgNo(selected.mgNo ?? "");
             setppTitle(selected.ppTitle ?? "");
             setppContent(selected.ppContent ?? "");
@@ -94,13 +112,14 @@ export default function DetailSection(props) {
             setCreatedAt(selected.createdAt ?? "");
             setUpdatedAt(selected.updatedAt ?? "");
             setUploadFile(null);
+            setTitle("");
             if (fileRef.current) fileRef.current.value = "";
         }, [selected]);
 
   // 수정용 JSON 페이로드
   const buildPayload = () => ({
     ...(ppNo ? { ppNo } : {}),
-    pNo: pNo === "" ? null : Number(pNo),
+    pNo: pNo || null,
     mgNo: mgNo || null,
     ppTitle: ppTitle || null,
     ppContent: ppContent || null,
@@ -117,6 +136,7 @@ export default function DetailSection(props) {
     try {
       if (isEdit) {
         // --- 수정(@RequestBody)
+        console.log( pNo );
         const obj = buildPayload();
         const res = await axios.put("http://localhost:8080/push/update", obj, {
           withCredentials: true,
@@ -127,11 +147,28 @@ export default function DetailSection(props) {
         alert("수정되었습니다.");
       } else {
         // --- 등록(@RequestPart("dto"), file)
+                console.log( pNo );
         const dto = buildPayload();
-        delete dto.ppNo;
+
         const fd = new FormData();
-        fd.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+
+        console.log( dto );
+
+        //fd.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+        fd.append("mgNo", dto.mgNo);
+        fd.append("pNo", dto.pNo);
+        fd.append("ppContent", dto.ppContent);
+        fd.append("ppEnd", dto.ppEnd);
+        fd.append("ppImg", dto.ppImg);
+        fd.append("ppIterated", dto.ppIterated);
+        fd.append("ppStart", dto.ppStart);
+        fd.append("ppTitle", dto.ppTitle);
+        fd.append("ppType", dto.ppType);
+        fd.append("ppUse", dto.ppUse);
         if (uploadFile) fd.append("file", uploadFile);
+
+        console.log( uploadFile )
+        console.log( fd )
 
         const res = await axios.post("http://localhost:8080/push/add", fd, {
           withCredentials: true,
@@ -174,6 +211,22 @@ export default function DetailSection(props) {
 
   const makeNew = () => resetForm();
 
+
+  // 검색 버튼 클릭 시 호출될 함수
+  const [ title , setTitle ] = useState("");
+  const handleSearch = async () => {
+    try {
+      // pNo를 Spring 컨트롤러로 GET 요청
+      const response = await axios.get(`http://localhost:8080/push/searchPlace`, {
+        params: { pNo: pNo }
+      });
+      console.log("검색 결과:", response.data);
+      setTitle(response.data);
+    } catch (err) {
+      console.error("검색 오류:", err);
+      alert("검색 실패!");
+    }
+  };
 
     /** =================== 관리자단 > 사이트관리 > 푸시/팝업관리(PushPopup) 상세 섹션 컴포넌트.jsx영역 ======================= */
     return (
@@ -234,11 +287,12 @@ export default function DetailSection(props) {
                                 </label>
                             </span>
                             <br />
-                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={() => alert("플레이스 검색 모달 예정")}>검색</button><input className="nameInput" type="text"
-                                placeholder="플레이스No"  value={pNo} readOnly />
+                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch }>검색</button><input className="nameInput" type="text"
+                                placeholder="플레이스No"  value={ pNo} onChange={(e) => setpNo(e.target.value)}  />
                             </label>
                             <label for="nameInput"><b>플레이스명</b><input className="nameInput" type="text"
-                                placeholder="불러온 플레이스 명을 노출"  value={selected?.pTitle ?? ""} readOnly /></label><button type="button" onClick={() => alert("플레이스 정보 보기 예정")}>정보보기</button>
+                                placeholder="불러온 플레이스 명을 노출" value= { title }  />
+                                </label><button type="button" onClick={() => alert("플레이스 정보 보기 예정")}>정보보기</button>
                             <br />
                             <label for="nameInput"><b>제목</b><input className="nameInput" type="text" value={ppTitle}
                             onChange={(e) => setppTitle(e.target.value)}
@@ -260,11 +314,10 @@ export default function DetailSection(props) {
                                 }}/></label>
                             <div className="info_date">*이미지 사이즈: 800px(가로) * 600px(세로) 권장, 이미지 파일확장자 : jpg/png/gif </div>
                             <img
-                                src={ppImg || "https://placehold.co/800x600/EEE/31343C"}
+                                src={ encodeURI("http://localhost:5173/uploads/1/ppImg/"+ppImg ) }
                                 onError={(e) => { e.currentTarget.src = "https://placehold.co/800x600/EEE/31343C"; }}
                                 alt="preview"
                                 style={{ width: "100%" }} /><br />
-
 
                         </fieldset>
                     </form>

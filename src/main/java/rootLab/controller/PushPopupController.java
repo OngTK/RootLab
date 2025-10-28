@@ -44,10 +44,16 @@ public class PushPopupController {
      * @author juju9595
      */
     @PostMapping("/add")
-    public ResponseEntity<?> addPush(@RequestPart("dto") PushPopupDto pushPopupDto, @RequestPart(value = "file", required = false)MultipartFile file
-    ){
+    public ResponseEntity<?> addPush(  PushPopupDto pushPopupDto , @CookieValue( value = "loginUser" , required = false ) String token ) {
+
+        // 만약에 로그인 상태가 아니면 // **임시** 로 1번 회원으로 등록중
+        if( token == null ){ pushPopupDto.setMgNo("1");  }
+
+
         System.out.println("pushPopupDto = " + pushPopupDto);
         int result = pushPopupService.addPush(pushPopupDto);
+
+
         return ResponseEntity.ok(result);
     }
 
@@ -75,5 +81,20 @@ public class PushPopupController {
     }
 
 
+   /**
+        * 🔍 플레이스번호로 검색
+     * @param pNo 플레이스번호
+     */
+    @GetMapping("/searchPlace")
+    public ResponseEntity<?> searchPushByPlace(@RequestParam String pNo) {
+        System.out.println("검색된 플레이스번호: " + pNo);
+        // 서비스에서 pNo 기반 검색 수행
+        return ResponseEntity.ok(pushPopupService.findByPlaceNo(pNo));
+    }
 
+
+    @GetMapping("/banner")
+    public ResponseEntity<?> bannerPush(){
+        return ResponseEntity.ok(pushPopupService.bannerPush());
+    }
 }

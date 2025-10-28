@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * PUSH 와 배너 정보
@@ -30,5 +32,6 @@ public class PushPopupDto {
     private String ppStart;     // 노출 시작일
     private String ppEnd;       // 노출 종료일
     private String ppIterated;  // 푸시알림 시간(*09~20시 사이 분단위)
+    private MultipartFile file; // 첨부파일
 
 } // class end

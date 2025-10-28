@@ -48,5 +48,16 @@
     <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
         UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppImg = #{ppImg} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
     </update>
+    
+    <!-- 5. 배너 출력 -->
+    <select id="bannerPush" resultType="rootLab.model.dto.PushPopupDto">
+        SELECT pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated
+        FROM pushPopup
+        WHERE ppUse IN ('1', '3')
+        AND ppStart &lt;= NOW()
+        AND ppEnd &gt;= NOW()
+        LIMIT 3
+    </select>
+
 
 </mapper>
