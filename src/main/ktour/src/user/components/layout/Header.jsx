@@ -68,6 +68,7 @@ export default function Header(props) {
     const changeLdNo = (e) => {
         SetSelectedLdNo(e.target.value);
         dispatch(selectedSigngu(e.target.value));
+        console.log(e.target.value);
         dispatch(setActiveLnbMenu('regionSelect'))
     } // func end
 

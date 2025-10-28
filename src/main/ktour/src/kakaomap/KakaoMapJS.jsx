@@ -164,6 +164,7 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
+        map.setMaxLevel(7);
 
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();
@@ -290,7 +291,7 @@ export default function KakaoMap(props) {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
             let position = null
-            if (marker.ctNo == category) {
+            if (marker.ctNo == category){
                 position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             }
             // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)

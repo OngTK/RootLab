@@ -19,7 +19,7 @@ export default function AsideLnb(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
-    const { firstLDong, LdongName, axiosOption, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
+    const { firstLDong, LdongName, axiosOption, selectedLdNo, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);
     const [activeLdNo, setActiveLdNo] = useState(null);
@@ -35,6 +35,10 @@ export default function AsideLnb(props) {
     const handleGnbClick = (menuName) => {
         dispatch(setActiveLnbMenu(menuName));
     } // func end
+
+    useEffect(() => {
+        setActiveLdNo(selectedLdNo);
+    }, [selectedLdNo])
 
     // =================== LDongSignguCd Axios GET ===================
     const getLDongSignguCdByAxios = async (ldongregncd) => {
