@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -63,6 +63,10 @@ export default function KakaoMap(props) {
                     },
                     isLoading: false
                 }));
+                dispatch(setCurrentPosition({
+                    lat: location.coords.latitude,
+                    lng: location.coords.longitude
+                }))
             }, (error) => {     // 현재 위치를 가져오는데 실패했을 때
                 SetCurrentLocation((prev) => ({
                     ...prev,
@@ -78,7 +82,7 @@ export default function KakaoMap(props) {
             })); // SetCurrentLocation end
         } // if end
     } // func end
-    
+
     // =================== useEffect - [] : 마운트될 때 1번만 실행 ===================
     useEffect(() => {
         getCurrentPositionFunc();

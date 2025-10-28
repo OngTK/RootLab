@@ -1,5 +1,5 @@
 /* 모달 레이어 */
-.user-scope .modalSearchHeader{ position:fixed; top: 118px; left: 0;  width:279px;  height: 100%; z-index:9999999; display: flex;  }
+.user-scope .modalSearchHeader{ position:fixed; top: 180px; left: 0;  width:279px;  height: 100%; z-index:9999999;   }
 
 .user-scope .modalSearchHeader .modal_box{ position: relative;  height: 100%; background: #fff;  font-size: 13px;  display: flex; flex-direction: column; overflow-y: auto; border-top: solid 1px rgba(0,0,0,.1); padding-bottom: 340px; }
 

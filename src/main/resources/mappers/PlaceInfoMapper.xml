@@ -197,6 +197,7 @@
         OR kpi.addr1 LIKE CONCAT('%', #{keyword}, '%')
         OR kpi.addr2 LIKE CONCAT('%', #{keyword}, '%')
         OR kpi.overview LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY distance;
+        ORDER BY distance
+        LIMIT 10;
     </select>
 </mapper>

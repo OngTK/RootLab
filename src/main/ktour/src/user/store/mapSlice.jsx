@@ -15,6 +15,11 @@ const initialState = {
     activeLnbMenu: 'mySurroundings',    // 활성화된 Lnb 메뉴
     regionSignguList: [],               // '지역 선택'의 시군구 목록
     activeSearchBox: null,              // 검색결과 활성화 여부
+    currentPosition: {                  // 사용자 위치
+        lat: null,
+        lng: null
+    },
+    searchResult: [],                   // 검색결과
 };
 
 // 2. Slice 함수 정의
@@ -58,9 +63,15 @@ const mapSlice = createSlice({
         setActiveSearchBox: (state, action) => {
             state.activeSearchBox = action.payload;
         }, // setActiveSearchBox end
+        setCurrentPosition: (state, action) => {
+            state.currentPosition = action.payload;
+        }, // setCurrentPosition end
+        setSearchResult: (state, action) => {
+            state.searchResult = action.payload;
+        }, // setSearchResult end
     } // reducers end
 }); // createSlice end
 
 // 3. export
 export default mapSlice.reducer;
-export const { setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
