@@ -56,7 +56,7 @@
         WHERE ppUse IN ('1', '3')
         AND ppStart &lt;= NOW()
         AND ppEnd &gt;= NOW()
-        LIMIT 3
+        LIMIT 11
     </select>
 
 
