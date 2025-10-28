@@ -37,8 +37,8 @@ export default function DetailSection(props) {
                         <fieldset>
 
                             <div className="form-group">
-                                <label htmlFor="mgAuth"><b>회원유형</b></label>
-                                <select id="mgAuth" name="memberTypeInput">
+                                <label htmlFor="mType"><b>회원유형</b></label>
+                                <select id="mType" name="memberTypeInput">
                                     <option value="1">일반회원</option>
                                     <option value="2">사업자회원</option>
                                     <option value="3">단체/모임회원</option>
@@ -70,7 +70,7 @@ export default function DetailSection(props) {
                             <div>
                                 <span className="form-group">
                                     <label htmlFor="mId"><b>관리자ID</b></label>
-                                    <input type="text" id="mId" className="loginIdInput" placeholder="admin" disabled />
+                                    <input id="mId" name="mId" className="loginIdInput" type="text" placeholder="admin" autoComplete="username" disabled />
                                 </span>
 
                                 <span className="form-group">
@@ -83,7 +83,7 @@ export default function DetailSection(props) {
                             </div>
                             <span className="form-group">
                                 <label htmlFor="mPwd"><b>비밀번호</b></label>
-                                <input type="password" id="mPwd" placeholder="*******" disabled />
+                                <input type="password" id="mPwd" placeholder="*******" autoComplete="current-password" disabled />
 
                                 {/* 비밀번호 수정 버튼/레이어 시작 */}
                                 <UpdatePwd />

@@ -1,5 +1,8 @@
 import React from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight, faAngleLeft, faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
+
 export default function Pagination({
     currentPage = 1,
     size = 10,
@@ -19,8 +22,8 @@ export default function Pagination({
 
     return (
         <div className="pagination-controls" style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 12 }}>
-            <button disabled={currentPage === 1} onClick={() => onPageChange(1)}>{"<<"}</button>
-            <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>{"<"}</button>
+            <button disabled={currentPage === 1} onClick={() => onPageChange(1)}><FontAwesomeIcon icon={faAnglesLeft} /></button>
+            <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}><FontAwesomeIcon icon={faAngleLeft} /></button>
             {pages.map(p => (
                 <button key={p}
                     onClick={() => onPageChange(p)}
@@ -29,8 +32,8 @@ export default function Pagination({
                     {p}
                 </button>
             ))}
-            <button disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)}>{">"}</button>
-            <button disabled={currentPage >= totalPages} onClick={() => onPageChange(totalPages)}>{">>"}</button>
+            <button disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)}><FontAwesomeIcon icon={faAngleRight} /></button>
+            <button disabled={currentPage >= totalPages} onClick={() => onPageChange(totalPages)}><FontAwesomeIcon icon={faAnglesRight} /></button>
         </div>
     );
 }

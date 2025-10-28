@@ -1,10 +1,11 @@
 /**
  * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 좌측]플레이스 목록(PlaceList) 컴포넌트
  *
- * @author kimJS
+ * @author
  * @since 2025.10.20
  * @version 0.1.2
  */
+import ResizableTable from "@admin/components/common/ResizableTable";
 import ResizableTable from "../../../components/admin/place/ResizableTableAtplace";
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
 import CategorySelect from "../../../components/admin/place/CategorySelect";

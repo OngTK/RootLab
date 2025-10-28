@@ -1,10 +1,14 @@
 package rootLab.model.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 import rootLab.model.criteria.MemberCriteria;
 import rootLab.model.dto.MemberDto;
+import rootLab.model.dto.PlaceInfoDto;
+import rootLab.model.repository.CommonRepository;
+import rootLab.util.pagenation.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface MemberMapper {

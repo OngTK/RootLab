@@ -56,9 +56,9 @@ public class PlaceInfoController {
             @RequestParam(required = false) String ccName,
             @RequestParam(required = false) String ldName,
 
-            @RequestParam(required = false) Integer ctNo,     // int -> Integer
-            @RequestParam(defaultValue = "true") boolean showflag, // boolean -> Boolean
-            @RequestParam(required = false) Integer pNo       // int -> Integer
+            @RequestParam(required = false) Integer ctNo,            // int -> Integer
+            @RequestParam(defaultValue = "true") boolean showflag,      // boolean -> Boolean
+            @RequestParam(required = false) Integer pNo              // int -> Integer
     ) {
         System.out.println("page = " + page
                 + ", size = " + size

@@ -1,7 +1,7 @@
 /**
  * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 상세정보(CRUD) 컴포넌트
  *
- * @author kimJS
+ * @author 
  * @since 2025.10.20
  * @version 0.1.1
  */

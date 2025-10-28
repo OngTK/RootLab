@@ -18,7 +18,7 @@
         END AS status
         FROM pushPopup
         <where>
-            <if test="ppUse != null and ppUse != ''">      <!-- ✅ 빈문자열도 제외 -->
+            <if test="ppUse != null and ppUse != ''">      <!-- 빈문자열도 제외 -->
                 AND ppUse = #{ppUse}
             </if>
             <if test="ppType != null and ppType != ''">

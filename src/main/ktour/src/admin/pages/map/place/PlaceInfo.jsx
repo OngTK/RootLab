@@ -1,7 +1,7 @@
 /**
  * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) 페이지 컴포넌트
  *
- * @author kimJS
+ * @author 
  * @since 2025.10.19
  * @version 0.1.3
  */

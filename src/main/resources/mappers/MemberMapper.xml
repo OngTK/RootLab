@@ -20,6 +20,5 @@
                 AND mPhone LIKE CONCAT('%', #{mPhone}, '%')
             </if>
         </where>
-        LIMIT #{startRow}, #{pageSize}
     </select>
 </mapper>
