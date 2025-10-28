@@ -68,7 +68,6 @@ export default function Header(props) {
     const changeLdNo = (e) => {
         SetSelectedLdNo(e.target.value);
         dispatch(selectedSigngu(e.target.value));
-        console.log(e.target.value);
         dispatch(setActiveLnbMenu('regionSelect'))
     } // func end
 
@@ -101,7 +100,7 @@ export default function Header(props) {
                 <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">
                     <select onChange={changeRegnCd} value={selectedRegnCd}>
-                        <option value="" disabled> 도/광역시 선택</option>
+                        <option value="" selected> 도/광역시 선택</option>
                         {
                             lDongRegnCd.map((regn) => {
                                 return <option key={regn.ldongregncd} value={regn.ldongregncd}>
@@ -111,7 +110,7 @@ export default function Header(props) {
                         }
                     </select>
                     <select onChange={changeLdNo} value={selectedLdNo}>
-                        <option value="" disabled> 시/군/구 선택</option>
+                        <option value="" selected> 시/군/구 선택</option>
                         {
                             lDongSignguCd.map((signgu) => {
                                 return <option key={signgu.ldNo} value={signgu.ldNo}>
