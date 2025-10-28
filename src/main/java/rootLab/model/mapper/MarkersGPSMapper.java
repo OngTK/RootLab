@@ -38,30 +38,6 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
     List<Map<String, Object>> getMarkersGpsByCurrentLatLng(MarkersGPSDto markersGPSDto);
 
     /**
-     * [MG-02] 시군구 기준 마커조회
-     * [법정동코드]를 입력받아, 해당하는 법정동코드No에 속하는 마커를 조회한다.
-     *
-     * @param ldNo 선택된 법정동코드
-     * @return 해당 법정동코드No에 속한 마커 리스트
-     * @author AhnJH
-     */
-    @Select("SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, " +
-            "        kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1, " +
-            "        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo " +
-            "FROM k_tour_headquarter.placeinfo kpi " +
-            "JOIN k_tour_headquarter.ldongcode klc " +
-            "USING (ldNo) " +
-            "JOIN k_tour_headquarter.markersgps kmg " +
-            "USING (pNo) " +
-            "JOIN k_tour_headquarter.contenttype kct " +
-            "USING (ctNo) " +
-            "JOIN k_tour_headquarter.categorycode kcc " +
-            "USING (ccNo) " +
-            "WHERE klc.ldNo = #{ldNo}")
-    List<Map<String, Object>> getMarkersGpsByCurrentLDong(int ldNo);
-
-
-    /**
      * 신규 마커정보 저장
      */
     @Insert("""

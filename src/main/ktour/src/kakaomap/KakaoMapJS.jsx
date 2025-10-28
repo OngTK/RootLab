@@ -104,21 +104,9 @@ export default function KakaoMap(props) {
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== ldNoMarkers Axios GET ===================
-    const getLdNoMarkersByAxios = async () => {
-        if (selectedLdNo == null) return;
-        try {
-            const response = await axios.get(`http://localhost:8080/markersgps/getbycurrentldong?ldNo=${selectedLdNo}`, axiosOption);
-            dispatch(renderedMarker(response.data));
-        } catch (error) {
-            console.log('getLdNoMarkersByAxios 오류 발생');
-            console.log(error);
-        } // try-catch end
-    } // func end
     // =================== useEffect - [selectedCity] : 시군구 좌표 가져오기 ===================
     useEffect(() => {
         getLDongCodeByAxios();
-        getLdNoMarkersByAxios();
     }, [selectedLdNo]);
 
     // =================== bounds Axios GET ===================

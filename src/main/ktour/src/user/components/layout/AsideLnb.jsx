@@ -69,8 +69,6 @@ export default function AsideLnb(props) {
         <div className="gnbWrap">
             <div className="gnb">
                 <ul>
-                    <li className="active"><FontAwesomeIcon icon={faStreetView} />내 주변</li>
-                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li
                         className={activeLnbMenu === 'mySurroundings' ? 'active' : ''}
                         onClick={() => handleGnbClick('mySurroundings')}
@@ -83,6 +81,7 @@ export default function AsideLnb(props) {
                     >
                         <FontAwesomeIcon icon={faCompass} />지역 선택
                     </li>
+                    <li><FontAwesomeIcon icon={faMagnifyingGlassLocation} />전국지역검색</li>
                     <li><FontAwesomeIcon icon={faCompass} />추천플레이스</li>
                     <li><FontAwesomeIcon icon={faMusic} />축제/행사/공연</li>
                     <li><FontAwesomeIcon icon={faDog} />반려동물동반</li>
