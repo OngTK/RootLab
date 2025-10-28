@@ -3,7 +3,7 @@ package rootLab.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rootLab.model.criteria.MemberCriteria;
-import rootLab.model.dto.MemberDto;
+import rootLab.model.dto.*;
 import rootLab.model.mapper.MemberMapper;
 import rootLab.util.pagenation.Page;
 
@@ -19,16 +19,9 @@ public class MemberService {
      * @return 페이징처리된 검색 결과
      * @author KimJS
      */
-    public Page<MemberDto> searchMembers(MemberCriteria MemberCriteria){
+    public List<MemberDto> searchMembers(MemberCriteria MemberCriteria){
         // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
-        List<MemberDto> searchedMembers = memberMapper.searchMembers(MemberCriteria);
-        // 2. 검색결과를 토대로 Page 구성하여 반환하기
-        return new Page<>(
-                searchedMembers,
-                searchedMembers.size(),
-                MemberCriteria.getPage(),
-                MemberCriteria.getPageSize()
-        );
+        return memberMapper.searchMembers(MemberCriteria);
     } // func end
-    
+
 }//class end
