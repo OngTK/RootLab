@@ -6,23 +6,27 @@
  * @version 0.1.0
  */
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 
 function asRow(v) {
-    // 서버에서 내려오는 PlaceInfoDtoList 예: { pirNo, fldgubun, infoName, infoText, ... }
-    if (!v) return { pirNo: null, infoName: "", infoText: "" };
-    return {
-        pirNo: v.pirNo ?? null,
-        infoName: v.infoName ?? "",
-        infoText: v.infoText ?? "",
-        updatedAt: v.updatedAt ?? null,
-        createdAt: v.createdAt ?? null,
-    };
+  // 서버 PlaceInfoDtoList 항목 예: { pirNo, pNo, fldgubun, infoName, infoText, serialNum, updatedAt, createdAt }
+  if (!v) {
+    return { pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null };
+  }
+  return {
+    pirNo: v.pirNo ?? null,
+    pNo: v.pNo ?? null,
+    fldgubun: v.fldgubun ?? 0,
+    infoName: v.infoName ?? "",
+    infoText: v.infoText ?? "",
+    serialNum: v.serialNum ?? 0,
+    updatedAt: v.updatedAt ?? null,
+    createdAt: v.createdAt ?? null,
+  };
 }
 
-function blankRow() {
-    return { pirNo: null, infoName: "", infoText: "", updatedAt: null , createdAt: null };
-}
+const blankRow = () => ({ pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null });
+
 
 // 문자열 "YYYY-MM-DD HH:mm:ss" → Date 안전 변환
 function parseKstLike(dateStr) {
