@@ -5,7 +5,7 @@
 import { useRef } from "react";
 import axios from "axios";
 
-export default function FestivalIntro2Form({ data, pNo }) {
+export default function FestivalIntro2({ data, pNo }) {
   const t = data ?? {};
   const fmt = (s) => (s ?? "");
   const formRef = useRef(null);

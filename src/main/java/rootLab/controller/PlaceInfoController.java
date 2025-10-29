@@ -183,7 +183,7 @@ public class PlaceInfoController {
 
     /**
      * [PI-05] 플레이스 기본정보 삭제
-     *
+     * pNo를 받아 해당 pNo의 showflag를 0으로 수정
      * @author OngTK
      */
     @DeleteMapping("/basic")

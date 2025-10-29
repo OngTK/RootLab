@@ -35,7 +35,7 @@ function latestDisplay(rows) {
   return cr ? (rows.find(r => parseKst(r.createdAt)?.getTime() === cr.getTime())?.createdAt ?? '-') : '-';
 }
 
-export default function DetailRepeat3Form({ items = [], pNo, onChange }) {
+export default function DetailRepeat3({ items = [], pNo, onChange }) {
   const [rows, setRows] = useState(() => (Array.isArray(items) && items.length ? items.map(asRow) : [blankRow()]));
   const originalRef = useRef([]);
   const [deleted, setDeleted] = useState([]);

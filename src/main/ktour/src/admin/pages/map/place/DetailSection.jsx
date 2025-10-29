@@ -3,13 +3,13 @@
  * [본문 우측] 상세 영역 (기본/상세/반복)
  */
 import DetailCommon1 from "@admin/pages/map/place/DetailCommon1";
-import TourIntro2 from "@admin/pages/map/place/TourIntro2Form";
-import FestivalIntro2 from "@admin/pages/map/place/FestivalIntro2Form";
-import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3Form";
-import RestaurantIntro2 from "./RestaurantIntro2Form";
+import TourIntro2 from "@admin/pages/map/place/TourIntro2";
+import FestivalIntro2 from "@admin/pages/map/place/FestivalIntro2";
+import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3";
+import RestaurantIntro2 from "./RestaurantIntro2";
 import { useEffect, useMemo, useState } from "react";
 
-export default function DetailSectionUTF8({ detail, onNew }) {
+export default function DetailSection({ detail, ...rest }) {
   const EMPTY_DETAIL = {
     placeInfo: {},
     MarkersGPSDto: null,
@@ -40,13 +40,12 @@ export default function DetailSectionUTF8({ detail, onNew }) {
   const handleNew = () => {
     setLocalDetail(EMPTY_DETAIL);
     setContentType("1");
-    if (typeof onNew === "function") onNew();
   };
 
   const pNo = placeInfo?.pNo ?? placeInfo?.pno ?? null;
 
   return (
-    <section className="registWrap">
+    <section className="registWrap" {...rest}>
       <div className="titleBox">
         <ul className="tabtitle">
           <li className="active">기본정보</li>
@@ -88,3 +87,4 @@ export default function DetailSectionUTF8({ detail, onNew }) {
     </section>
   );
 }
+

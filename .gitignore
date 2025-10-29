@@ -44,4 +44,4 @@ bin/
 ### InteliJ ###
 application.properties
 
-.editorconfig
+src/main/resources/.editorconfig

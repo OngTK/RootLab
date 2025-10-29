@@ -162,40 +162,10 @@ export default function ListSection(props) {
                         </span>
                         {/* 3. 카테고리 (다중 Select) */}
                         <div className="form-group category-group">
-                            {/* <label htmlFor="category-large">카테고리</label> */}
-                            {/* 대분류 */}
-                            {/* <select id="category-large" name="categoryLarge">
-                                <option value="">대분류</option>
-                            </select> */}
-                            {/* 중분류*/}
-                            {/* <select aria-label="카테고리 중분류" name="categoryMedium">
-                                <option value="">중분류</option>
-                            </select> */}
-                            {/* 소분류 */}
-                            {/* <select aria-label="카테고리 소분류" name="categorySmall">
-                                <option value="">소분류</option>
-                            </select> */}
                             <CategorySelect value={category} onChange={setCategory} />
                         </div>
                         <span>
-                            {/* 4. 1차 지역 */}
-                            {/* <span className="form-group">
-                                <label htmlFor="region-primary">1차 지역</label>
-                                <select id="region-primary" name="regionPrimary">
-                                    <option value="">전체</option>
-                                    <option value="seoul">서울</option>
-                                    <option value="gyeonggi">경기도</option>
-                                </select>
-                            </span> */}
-                            {/* 5. 2차 지역 */}
-                            {/* `<span className="form-group">
-                                <label htmlFor="region-secondary">2차 지역</label>
-                                <select id="region-secondary" name="regionSecondary">
-                                    <option value="">전체</option>
-                                    <option value="gangnam">강남구</option>
-                                    <option value="dongjak">동작구</option>
-                                </select>
-                            </span>` */}
+
                             <RegionSelect value={region} onChange={onRegionChange} />
                         </span>
                         {/* 6. 대표전화 */}

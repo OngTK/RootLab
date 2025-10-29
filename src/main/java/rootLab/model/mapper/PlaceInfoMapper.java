@@ -24,8 +24,8 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
             title , showflag ,firstimage,firstimage2,addr1 , addr2,
             zipcode,homepage,tel,telname,overview)
             values
-            ( #{ctNo}, #{ldNo}, #{ccNo}, #{contentid}, #{title}, 
-            #{showflag}, #{firstimage}, #{firstimage2}, #{addr1}, #{addr2}, 
+            ( #{ctNo}, #{ldNo}, #{ccNo}, #{contentid}, #{title},
+            #{showflag}, #{firstimage}, #{firstimage2}, #{addr1}, #{addr2},
             #{zipcode}, #{homepage}, #{tel}, #{telname}, #{overview})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "pNo")
@@ -54,7 +54,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
                 WHERE kpi.pno = #{pno};
             """)
     Optional<PlaceInfoDto> read(Integer pno);
-    
+
     /**
      * [4] 수정
      */
@@ -85,7 +85,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     List<PlaceInfoDto> findAllPaged(@Param("pageRequest") PageRequest pageRequest);
-    
+
     /**
      * [3.3] 검색결과 레코드를 반환
      */

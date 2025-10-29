@@ -5,8 +5,7 @@
 import { useRef, useEffect } from "react";
 import axios from "axios";
 
-export default function TourIntro2Save({ data, pNo }) {
-  // 기준 데이터(서버 응답)를 보관해서 변경 여부와 표시값에 사용
+export default function TourIntro2FormUTF8({ data, pNo }) {
   const baseRef = useRef(data ?? {});
   useEffect(() => { baseRef.current = data ?? {}; }, [data]);
 
@@ -55,35 +54,43 @@ export default function TourIntro2Save({ data, pNo }) {
 
     const dto = {
       tiNo: tiNo ?? 0,
-      pno: Number(resolvedPno),
+      pNo: Number(resolvedPno),
       ...curr,
       tiStatus: tiNo ? (isChanged(curr) ? 2 : 0) : 1,
     };
 
     try {
-      const resp = await axios.post("http://localhost:8080/placeinfo/tourIntro", dto);
-      const saved = resp?.data;
-      // 응답이 오면 바로 기준/폼 갱신, 없으면 재조회
-      if (saved && typeof saved === "object") {
-        baseRef.current = saved;
-        // 입력 폼도 최신값으로 맞춤
+      const { data: saved } = await axios.post("http://localhost:8080/placeinfo/tourIntro", dto);
+      let next = saved;
+      if (!next || typeof next !== "object") {
+        const r2 = await axios.get("http://localhost:8080/placeinfo/tourIntro", { params: { pNo: Number(resolvedPno) } });
+        next = r2?.data;
+      }
+      if (next && formRef.current) {
+        baseRef.current = next;
         const f = formRef.current;
         const keys = Object.keys(curr);
-        keys.forEach((k) => { if (f?.elements?.[k]) f.elements[k].value = fmt(saved[k]); });
-      } else {
-        const { data: fetched } = await axios.get("http://localhost:8080/placeinfo/tourIntro", { params: { pno: Number(resolvedPno) } });
-        if (fetched && typeof fetched === "object") {
-          baseRef.current = fetched;
-          const f = formRef.current;
-          const keys = Object.keys(curr);
-          keys.forEach((k) => { if (f?.elements?.[k]) f.elements[k].value = fmt(fetched[k]); });
-        }
+        keys.forEach(k => { if (f.elements[k]) f.elements[k].value = fmt(next[k]); });
       }
       alert("저장되었습니다.");
     } catch (e) {
       console.error(e);
       alert("저장 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleReset = () => {
+    const form = formRef.current;
+    if (!form) return;
+    const skip = new Set(["tiNo","pNo","pno","createdAt","updatedAt"]);
+    Array.from(form.elements).forEach((el)=>{
+      if(!el||!el.name||skip.has(el.name)) return;
+      const tag=(el.tagName||"").toLowerCase();
+      const type=(el.type||"").toLowerCase();
+      if(tag==='input'||tag==='textarea'){
+        if(type==='checkbox'||type==='radio'){ el.checked=false; } else { el.value=''; }
+      }
+    });
   };
 
   const b = baseRef.current || {};
@@ -141,7 +148,7 @@ export default function TourIntro2Save({ data, pNo }) {
             <input id="parking" name="parking" type="text" defaultValue={fmt(b.parking)} />
           </div>
           <div className="form-group">
-            <label htmlFor="restDate">쉬는날</label>
+            <label htmlFor="restDate">쉬는 날</label>
             <input id="restDate" name="restDate" type="text" defaultValue={fmt(b.restDate)} />
           </div>
           <div className="form-group">
@@ -158,7 +165,7 @@ export default function TourIntro2Save({ data, pNo }) {
           </div>
           <div className="form-actions">
             <button type="button" onClick={handleSave}>저장</button>
-            <button type="button">취소</button>
+            <button type="button" onClick={handleReset}>초기화</button>
           </div>
         </fieldset>
       </form>

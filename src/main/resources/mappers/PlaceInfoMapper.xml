@@ -34,7 +34,7 @@
                     OR
                     (CHAR_LENGTH(#{catCode}) = 4 AND cc.lclsSystm2Cd = #{catCode})
                     OR
-                    (CHAR_LENGTH(#{catCode}) &gt;= 6 AND cc.lclsSystm3Cd LIKE CONCAT(#{catCode}, '%'))
+                    (CHAR_LENGTH(#{catCode}) = 6 AND cc.lclsSystm3Cd LIKE CONCAT(#{catCode}, '%'))
                     )
                 </if>
 
