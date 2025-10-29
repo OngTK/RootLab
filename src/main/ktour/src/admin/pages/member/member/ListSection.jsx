@@ -3,10 +3,10 @@
  *
  * @author kimJS
  * @since 2025.10.27
- * @version 0.1.3
+ * @version 0.1.4
  */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Pagination from "@admin/components/admin/place/Pagination";
 import ResizableTable from "@admin/components/common/ResizableTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,14 +24,13 @@ export default function ListSection(props) {
     const [totalElements, setTotalElements] = useState(0);  // 검색결과 레코드 수
     const EMPTY_FLAG = [{ __empty: true }];                 // 검색결과 빈 행(row) 처리
 
-    const [searched, setSearched] = useState(false);         // 검색 실행 여부
+    const [searched, setSearched] = useState(false);        // 테이블 행 선택(선택된 회원 상태)
+    const [selectedMid, setSelectedMid] = useState(null);
+    const [activeMember, setActiveMember] = useState(null);
+
     const typeLabelMap = { 0: "관리자", 1: "일반회원", 2: "사업자", 3: "단체/모임" }; // 회원유형 int = 문자열 매칭 변환
 
-    // const EMPTY_ROW = [{
-    //     no: "", mType: "", mName: "검색결과 없습니다.", mNick: "", mId: "", mid: "", mGender: "", mPhone: "", createdAt: "", updatedAt: ""
-    // }];
-
-    // 스프링 서버로부터 데이터 요청 > 검색 실행 핸들러
+    //** [1] 스프링 서버로부터 데이터 요청 > 검색 실행 핸들러  */
     const onSearch = async (e) => {
         try {
             e?.preventDefault?.(); // 이벤트 객체 e가 존재할 때만 preventDefault() 를 실행하는 안전 호출(safe call) 문법
@@ -57,16 +56,17 @@ export default function ListSection(props) {
 
             // 검색결과가 없는 경우처리
             if (pageSlice.length === 0) {
-                setRows(EMPTY_ROW);
+                setRows(EMPTY_FLAG);
+                setSelectedMid(null);
                 setSearched(true);
                 return;
             }
             const rowsMapped = pageSlice.map((r, idx) => ({
                 no: offset + idx + 1,
-                mType: typeLabelMap[Number(r.mtype)] ?? "미지정",
-                mName: r.mname,
+                mType: typeLabelMap[Number(r.mtype)] ?? "-",
+                mName: <strong>{r.mname}</strong>,
                 mNick: r.mnick,
-                mId: r.mid,
+                mId:  r.mid,
                 mid: r.mid, // onRowClick(row.mid) 때문에 추가
                 mGender: r.mgender,
                 mPhone: r.mphone,
@@ -75,6 +75,10 @@ export default function ListSection(props) {
             })); // console.log("rowsMapped:", rowsMapped); 
             setRows(rowsMapped);
             setSearched(true);
+
+            setSelectedMid(rowsMapped[0].mid);
+            handleRowClick(rowsMapped[0].mid); // 선택된 회원 상세까지 자동 조회
+
         } catch (error) {
             console.error("[onSearch] 검색 실패!");
             setRows(EMPTY_FLAG);     // 실패 시에도 한 줄 메시지 보이기
@@ -83,17 +87,40 @@ export default function ListSection(props) {
         }
     };
 
-    // 검색조건 초기화 핸들러
-    const onReset = () => {
-        setMType("");
-        setMName("");
-        setMId("");
-        setMPhone("");
+    //** [2] 검색결과 테이블 선택된 행(setActiveMember) 데이터 호출 */
+    const handleRowClick = async (mid) => {
+        try {
+            setSelectedMid(mid);
+            const { data } = await axios.get("http://localhost:8080/member/search", {
+                params: { mId: mid },
+            });
+
+            const item = Array.isArray(data) ? (data[0] ?? null) : data;
+            setActiveMember(item);
+
+        } catch (err) {
+            console.error("[detail] 실패:", err);
+            setActiveMember(null);
+        }
     };
+
+    useEffect(() => {
+        console.log("activeMember:", activeMember); //! 선택된 회원 데이터 행 확인
+    }, [activeMember]);
+
+    // 추가: selectedMid가 바뀌면 항상 반영되는 화면용 rows
+    const viewRows = useMemo(() => {
+        // 빈행(“검색결과 없음”)은 그대로 통과
+        if (rows.length === 1 && rows[0]?.__empty) return rows;
+        return rows.map(r => ({ ...r, _active: selectedMid === r.mid }));
+    }, [rows, selectedMid]);
+
+    //** [3] 검색조건 초기화 핸들러 */
+    const onReset = () => { setMType(""); setMName(""); setMId(""); setMPhone(""); };
 
     // 테이블 해더 컬럼명
     const columns = [
-        { id: "no", title: "No", width: 40 },
+        { id: "no", title: "No", width: 30 },
         { id: "mType", title: "회원유형", width: 80 },
         { id: "mName", title: "회원명", width: 100 },
         { id: "mNick", title: "닉네임", width: 100 },
@@ -111,14 +138,8 @@ export default function ListSection(props) {
     // useEffect로 페이지 전환 시 자동 재조회
     useEffect(() => { onSearch(); }, [page, size]);
 
-    const handleRowClick = (mid) => {
-        axios.get(`http://localhost:8080/member/basic?mId=${mid}`)
-            .then(res => {
-                setDetail(res.data);     // PlaceInfo 상세 전체 데이터 저장
-                setSelectedPno(mid);     // 선택한 플레이스 번호 저장
-            })
-            .catch(err => console.error(err));
-    };
+    // 전체 비우기(*주의 : 개발 중일 때만 사용할 것)
+    // localStorage.clear();
 
     /** =========================================== 회원현황(member) > 검색리스트단 ListSection.jsx ====================================== */
     return (
@@ -179,17 +200,16 @@ export default function ListSection(props) {
                         {/* <button className="btn full" >레이어1</button> */}
                     </li>
                 </ul>
-                {/* === ResizableTable(리사이징/드래그  테이블) 시작 === */}
+                {/* === ResizableTable(리사이징/드래그 테이블) 시작 === */}
                 <div className="tableWrap">
                     <ResizableTable
                         columns={columns}
-                        data={rows}
+                        data={viewRows}
                         rememberKey="Member.columns"
-                        minColWidth={30}
+                        minColWidth={50}
                         stickyFirst={false}
                         sortable={true}
-                        //rows={rows}
-                        onRowClick={(row) => !row.__empty && row.mid && handleRowClick(row.mid)} // 빈행이 아니고 mid 존재한다면 상세조회 실행
+                        onRowClick={(row) => !row.__empty && row.mid && handleRowClick(row.mid)}// 빈행이 아니고 mid 존재한다면 상세조회 실행
                     />
                 </div>
                 {/* === ResizableTable(리사이징/드래그  테이블) 끝 ===== */}

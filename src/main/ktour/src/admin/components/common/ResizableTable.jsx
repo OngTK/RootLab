@@ -5,24 +5,69 @@
  * 
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.1
+ * @version 0.1.2
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import "@assets/admin/css/resizableTable.css"; // ResizableTable.css
+
+// ① 내부 훅을 파일 상단에 붙여넣기 (export 필요 없음)
+function useColWidths({ rememberKey, columns, minColWidth = 30 }) {
+  const initial = useMemo(
+    () => columns.map(c => Math.max(minColWidth, c.width ?? 80)),
+    [columns, minColWidth]
+  );
+  const fp = useMemo(
+    () => columns.map(c => `${c.id}:${c.width ?? ""}`).join("|"),
+    [columns]
+  );
+  const storageKey = useMemo(
+    () => (rememberKey ? `${rememberKey}@v3` : null),
+    [rememberKey]
+  );
+  const [widths, setWidths] = useState(initial);
+
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) { setWidths(initial); return; }
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) { setWidths(initial); return; }      // 레거시 무효화
+      if (parsed && parsed.fp === fp &&
+          Array.isArray(parsed.widths) &&
+          parsed.widths.length === columns.length) {
+        setWidths(parsed.widths);
+      } else {
+        setWidths(initial);
+      }
+    } catch {
+      setWidths(initial);
+    }
+  }, [storageKey, fp, initial, columns.length]);
+
+  const persist = useCallback((next) => {
+    setWidths(next);
+    if (!storageKey) return;
+    try { localStorage.setItem(storageKey, JSON.stringify({ fp, widths: next })); } catch {}
+  }, [storageKey, fp]);
+
+  return { widths, setWidths, persist, initial };
+}
 
 export default function ResizableTable({
   columns = [],                // [{ id, title, width? }]
   data = [],                   // [{ [id]: value }]
-  minColWidth = 20,
+  minColWidth = 30,
   rememberKey,                 // 예: "PlaceInfo.columns"
   stickyFirst = true,
   sortable = true,
-  resizeGrab = 6,              // 보더 감지 폭(px)
+  resizeGrab = 10,              // 보더 감지 폭(px)
   showGuide = false,           // 드래그 가이드선 표시 여부(옵션)
+  onRowClick
 }) {
   // 초기 폭
   const initial = useMemo(
-    () => columns.map(c => Math.max(minColWidth, c.width ?? 120)),
+    () => columns.map(c => Math.max(minColWidth, c.width ?? 80)),
     [columns, minColWidth]
   );
   const [widths, setWidths] = useState(initial);
@@ -236,7 +281,10 @@ const storageKey = useMemo(
               </tr>
             ) : (
               sorted.map((row, rIdx) => (
-                <tr key={rIdx} className={row._active ? "active" : undefined} >
+                <tr key={rIdx} 
+                    className={row._active ? "active" : undefined} 
+                    onClick={() => onRowClick?.(row)}
+                >
                   {columns.map((c, i) => (
                     <td key={c.id} className={i === 0 && stickyFirst ? "sticky-first" : ""}>
                       {row[c.id]}
