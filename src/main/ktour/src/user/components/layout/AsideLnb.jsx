@@ -13,7 +13,7 @@ import '@assets/user/css/asideLnb.css' // 좌측메뉴 asideLnb.css
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectedSigngu, setActiveLnbMenu, setRecommendLatLng, selectCategory } from "../../store/mapSlice";
+import { selectedSigngu, setActiveLnbMenu, setRecommendLatLng, selectCategory, setSearchLatLng } from "../../store/mapSlice";
 
 const recommendCourses = {
     ldNo: 247,
@@ -97,7 +97,7 @@ export default function AsideLnb(props) {
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useSelector ===================
-    const { firstLDong, LdongName, axiosOption, selectedLdNo, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
+    const { firstLDong, LdongName, axiosOption, selectedLdNo, activeLnbMenu, regionSignguList, currentPosition } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [surroundingPlace, SetSurroundingPlace] = useState([]);   // 내 주변 시군구 정보
     const [activeLdNo, setActiveLdNo] = useState(null);             // 활성화된 시군구 표시를 위한 active
@@ -124,7 +124,10 @@ export default function AsideLnb(props) {
     const handleGnbClick = (menuName) => {
         dispatch(setActiveLnbMenu(menuName));
         if (menuName == 'mySurroundings') {
-            location.href = '/';
+            dispatch(setSearchLatLng({
+                lat: currentPosition.lat,
+                lng: currentPosition.lng
+            }))
         } else if (menuName == 'recommendPlace') {
             dispatch(setRecommendLatLng({
                 lat: 38.3806388889,
