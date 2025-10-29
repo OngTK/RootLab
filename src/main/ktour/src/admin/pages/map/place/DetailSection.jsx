@@ -14,6 +14,8 @@ import FestivalIntro2 from "./FestivalIntro2";
 import { useEffect, useState, useMemo } from "react";
 
 export default function DetailSection({ detail, loading, error, ...rest }) {
+    const ctNo = detail?.placeInfo?.ctNo ?? null;
+
     // 신규등록 초기화를 위한 "빈 상세" 템플릿
     const EMPTY_DETAIL = {
         placeInfo: {},
@@ -86,27 +88,32 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
 
                 {/* <!-- 상세정보 1.2.3.입/출력 시작 --> */}
                 <div className="formWrap">
-                    <DetailCommon1
-                        key={`dc1-${resetSeq}`}
-                        placeInfo={placeInfo}
-                        markers={markers}
-                        images={images}
-                        contentType={contentType}
-                        onChangeContentType={setContentType}
+                    <DetailCommon1 key={"common-" + (detail?.placeInfo?.pno ?? "new")} data={detail} />
+
+                    <hr />
+                    {(!ctNo || ctNo === 1) && (
+                        <TourIntro2
+                            key={"tour-" + (detail?.placeInfo?.pno ?? "new")}
+                            data={detail?.TourIntro}
+                        />
+                    )}
+                    {ctNo === 3 && (
+                        <FestivalIntro2
+                            key={"fest-" + (detail?.placeInfo?.pno ?? "new")}
+                            data={detail?.FestivalIntro}
+                        />
+                    )}
+                    {ctNo === 8 && (
+                        <RestaurantIntro2
+                            key={"rest-" + (detail?.placeInfo?.pno ?? "new")}
+                            data={detail?.RestaurantIntro}
+                        />
+                    )}
+                    <hr />
+                    <DetailRepeat3
+                        key={"repeat-" + (detail?.placeInfo?.pno ?? "new")}
+                        data={detail?.PlaceInfoDtoList || []}
                     />
-                    <hr />
-                    {/* 타입별 섹션 : effectiveCt만 사용 */}
-                    {(!effectiveCt || effectiveCt === "1") && (
-                        <TourIntro2 key={`tour-${resetSeq}`} data={localDetail?.TourIntro ?? null} />
-                    )}
-                    {effectiveCt === "3" && (
-                        <FestivalIntro2 key={`fest-${resetSeq}`} data={localDetail?.FestivalIntro ?? null} />
-                    )}
-                    {effectiveCt === "8" && (
-                        <RestaurantIntro2 key={`rest-${resetSeq}`} data={localDetail?.RestaurantIntro ?? null} />
-                    )}
-                    <hr />
-                    <DetailRepeat3 key={`rep-${resetSeq}`} items={placeInfoDtoList} />
                 </div>
                 {/* <!-- 상세정보 1.2.3.입/출력 끝 --> */}
             </section>
