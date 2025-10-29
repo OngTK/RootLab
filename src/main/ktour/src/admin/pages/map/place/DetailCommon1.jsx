@@ -11,7 +11,7 @@ import CategorySelect from "../../../components/admin/place/CategorySelect";
 import axios from "axios";
 
 export default function DetailCommon1({
-    placeInfo: placeInfoProp,markers, contentType, onChangeContentType, ...rest }) {
+    placeInfo: placeInfoProp,markers, images, contentType, onChangeContentType, ...rest }) {
     
     // Detail 전용 로컬 상태 (검색 폼과 분리) ============================================================
     const [category, setCategory] = useState({
@@ -26,7 +26,8 @@ export default function DetailCommon1({
         setContentTypeLocal(String(contentType ?? ""));
     }, [contentType]);
     const placeInfo = placeInfoProp;
-    const markerInfo = markers;
+    const markerInfo = markers;     // 마커 정보
+    const imageInfo = images;       // 이미지 정보
 
     // 파일 & 설명 입력 ref====================================================
     const markerImgRef = useRef(null);
@@ -47,10 +48,15 @@ export default function DetailCommon1({
 
     // 상세 조회로 들어온 값을 초기값으로 반영(있을 때만) =========================================
     useEffect(() => {
+        console.log(placeInfo)
+        console.log(imageInfo)
+        console.log(markerInfo)
         if (!placeInfo) return;
+
         // 상세 진입 시 기존 주소값을 미리 채우고 싶다면:
         setZipCode(placeInfo.zipcode ?? "");
         setRoadAddr(placeInfo.addr1 ?? "");
+
         // 노출 여부 기본값: 값이 없거나 null이면 '노출'을 기본 선택으로 유지
         const sf = placeInfo?.showflag;
         setShowFlag(sf == null ? true : (Number(sf) === 1 || sf === true));
@@ -60,6 +66,17 @@ export default function DetailCommon1({
         setHomepage(placeInfo.homepage ?? "");
         setOverview(placeInfo.overview ?? "");
         setPlaceNo(placeInfo.pNo ?? placeInfo.pno ?? "");
+
+        // 카테고리 동기화: ccNo 또는 명칭/코드 기반으로 CategorySelect 값 반영
+        setCategory({
+            ccNo: placeInfo?.ccNo ?? null,
+            l1Cd: placeInfo?.lclsSystm1Cd ?? null,
+            l2Cd: placeInfo?.lclsSystm2Cd ?? null,
+            l3Cd: placeInfo?.lclsSystm3Cd ?? null,
+            l1Nm: placeInfo?.lclsSystm1Nm ?? null,
+            l2Nm: placeInfo?.lclsSystm2Nm ?? null,
+            l3Nm: placeInfo?.lclsSystm3Nm ?? null,
+        });
     }, [placeInfo]);
 
     // 우편번호/주소 상태 ===================================================================
@@ -378,7 +395,6 @@ export default function DetailCommon1({
                         <div className="form-group">
                             <label htmlFor="marker-img">마커 이미지</label>
                             <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
-                            <button>미리보기</button>
                         </div>
 
                         {/* 12. 대표 이미지 */}
