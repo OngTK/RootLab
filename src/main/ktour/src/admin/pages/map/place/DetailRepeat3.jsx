@@ -5,6 +5,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 
+/**
+ * 반복정보(제목/내용) 편집 컴포넌트 설명
+ * - 좌측 리스트(Place 리스트)에서 행 클릭 → 우측 상세로 place pNo 및 기존 반복정보가 전달됩니다.
+ * - 사용자는 행 추가/삭제 및 제목/내용 수정이 가능하며, 저장 시 상태값에 따라 서버에 일괄 반영합니다.
+ * - pirStatus 규칙: 변경없음(0), 신규(C=1), 수정(U=2), 삭제(D=3)
+ * - 본 컴포넌트는 화면 편집을 위한 로컬 상태(rows, deleted)와 원본 스냅샷(originalRef)을 함께 관리합니다.
+ */
+
+// 서버 DTO(PlaceInfoRepeatDto) → 화면 편집용 행으로 표준화
+// - pNo 키 표기가 pNo/pno/PNO 등으로 올 수 있어 보정하여 보관합니다.
 function asRow(v) {
   if (!v) return { pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null };
   return {
@@ -19,14 +29,17 @@ function asRow(v) {
   };
 }
 
+// 신규 입력용 기본 행(빈값)
 const blankRow = () => ({ pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null });
 
+// 'YYYY-MM-DD HH:mm:ss' → Date 객체로 변환(파싱 실패 시 null)
 function parseKst(dateStr) {
   if (!dateStr || typeof dateStr !== "string") return null;
   const d = new Date(dateStr.replace(" ", "T"));
   return isNaN(d.getTime()) ? null : d;
 }
 
+// rows 내에서 가장 최근(updatedAt 우선, 없으면 createdAt) 일시를 문자열로 반환
 function latestDisplay(rows) {
   const pick = (f) => rows.map(r => parseKst(r[f])).filter(Boolean).sort((a,b)=>b-a)[0];
   const up = pick('updatedAt');
@@ -36,10 +49,14 @@ function latestDisplay(rows) {
 }
 
 export default function DetailRepeat3({ items = [], pNo, onChange }) {
+  // rows: 화면에 표시/편집되는 반복정보 행 리스트
   const [rows, setRows] = useState(() => (Array.isArray(items) && items.length ? items.map(asRow) : [blankRow()]));
+  // originalRef: 최초 로딩한 서버값을 보관 → 변경 여부 판단에 사용
   const originalRef = useRef([]);
+  // deleted: 삭제 버튼을 눌러 제거 표시된 행 보관(저장 시 pirStatus=3)
   const [deleted, setDeleted] = useState([]);
 
+  // items(서버값)가 변경되면 편집행/원본/삭제리스트를 초기화
   useEffect(() => {
     const init = Array.isArray(items) && items.length ? items.map(asRow) : [blankRow()];
     setRows(init);
@@ -47,7 +64,9 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     setDeleted([]);
   }, [items]);
 
+  // 행 상태 변경을 외부로 통지(onChange)하고 로컬 rows 갱신
   const emit = (next) => { setRows(next); if (typeof onChange === 'function') onChange(next); };
+  // 행 추가
   const addRow = () => emit([...rows, blankRow()]);
   const markRemoveRow = (idx) => {
     const target = rows[idx];
@@ -56,10 +75,12 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     if (!next.length) next.push(blankRow());
     emit(next);
   };
+  // 단일 필드 변경(infoName/infoText)
   const updateRow = (idx, field, value) => emit(rows.map((r,i) => i===idx ? { ...r, [field]: value } : r));
 
   const latest = useMemo(() => latestDisplay(rows), [rows]);
 
+  // 원본 대비 행 수정 여부 판단(제목/내용 비교)
   const isModified = (r) => {
     if (!r?.pirNo) return false;
     const orig = originalRef.current.find(o => o.pirNo === r.pirNo);
@@ -67,6 +88,7 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     return String(orig.infoName ?? '') !== String(r.infoName ?? '') || String(orig.infoText ?? '') !== String(r.infoText ?? '');
   };
 
+  // 저장: 삭제(D) → 신규(C) → 수정/변경없음(U/0) 순으로 payload 생성 후 POST
   const handleSave = async () => {
     try {
       const newRows = rows.filter(r => !r.pirNo);
@@ -132,4 +154,3 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     </div>
   );
 }
-
