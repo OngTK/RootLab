@@ -125,6 +125,11 @@ export default function ListSection(props) {
         props?.onPick?.(row);
     };
 
+    // 엔터키 반응 함수
+    const activeEnter = (e) => {
+        if (e.key === "Enter") onSearch();
+    } // func end
+
     /** ============================ [본문 좌측] 플레이스 목록(PlaceList) ================================= */
     return (
         <>
@@ -206,18 +211,18 @@ export default function ListSection(props) {
                         {/* 7. 주소명 */}
                         <span className="form-group">
                             <label htmlFor="address-keyword">주소명</label>
-                            <input type="text" id="address-keyword" name="addressKeyword" value={addressInput} onChange={(e) => setAddressInput(e.target.value)} />
+                            <input type="text" id="address-keyword" name="addressKeyword" value={addressInput} onChange={(e) => setAddressInput(e.target.value)} onKeyDown={(e) => activeEnter(e)} />
                         </span>
                         <br />
                         {/* 8. 플레이스명 */}
                         <span className="form-group">
                             <label htmlFor="place-name">플레이스명</label>
-                            <input type="text" id="place-name" name="placeName" value={title} onChange={(e) => setTitle(e.target.value)} />
+                            <input type="text" id="place-name" name="placeName" value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => activeEnter(e)} />
                         </span>
                         {/* 9. 플레이스번호 */}
                         <span className="form-group">
                             <label htmlFor="place-number">플레이스 번호</label>
-                            <input type="number" id="place-number" name="placeNumber" value={pNo} onChange={(e) => setPNo(e.target.value)} />
+                            <input type="number" id="place-number" name="placeNumber" value={pNo} onChange={(e) => setPNo(e.target.value)} onKeyDown={(e) => activeEnter(e)} />
                         </span>
                         {/* 10. 검색 버튼*/}
                         <span className="form-actions">

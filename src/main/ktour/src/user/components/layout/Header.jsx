@@ -75,14 +75,6 @@ export default function Header(props) {
         if (e.key === "Enter") searchingPlace();
     } // func end
 
-    let fisrtName = null;
-    let secondName = null;
-    useEffect(() => {
-        if (!centeredLDong) return;
-        fisrtName = centeredLDong.split(" ")[0];
-        secondName = centeredLDong.split(" ")[1];
-    }, [centeredLDong])
-
     // =================== Search Axios GET ===================
     const searchingPlace = async () => {
         if (!searchBoxInput || !currentPosition) return;
