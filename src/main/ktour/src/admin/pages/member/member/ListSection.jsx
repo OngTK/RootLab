@@ -96,10 +96,8 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
             const { data } = await axios.get("http://localhost:8080/member/search", {
                 params: { mId: mid },
             });
-
             const item = Array.isArray(data) ? (data[0] ?? null) : data;
             setActiveMember(item);
-
         } catch (err) {
             console.error("[detail] 실패:", err);
             setActiveMember(null);
@@ -112,8 +110,7 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
 
     // 추가: selectedMid가 바뀌면 항상 반영되는 화면용 rows
     const viewRows = useMemo(() => {
-        // 빈행(“검색결과 없음”)은 그대로 통과
-        if (rows.length === 1 && rows[0]?.__empty) return rows;
+        if (rows.length === 1 && rows[0]?.__empty) return rows;  // 빈행(“검색결과 없음”)은 그대로 통과
         return rows.map(r => ({ ...r, _active: selectedMid === r.mid }));
     }, [rows, selectedMid]);
 
@@ -124,13 +121,13 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
     const columns = [
         { id: "no", title: "No", width: 30 },
         { id: "mType", title: "회원유형", width: 80 },
-        { id: "mName", title: "회원명", width: 100 },
+        { id: "mName", title: "회원명", width: 80 },
         { id: "mNick", title: "닉네임", width: 100 },
         { id: "mId", title: "회원ID", width: 100 },
-        { id: "mGender", title: "성별", width: 50 },
-        { id: "mPhone", title: "휴대전화", width: 120 },
-        { id: "createdAt", title: "가입일", width: 110 },
-        { id: "updatedAt", title: "최종로그인", width: 110 },
+        { id: "mGender", title: "성별", width: 60 },
+        { id: "mPhone", title: "휴대전화", width: 110 },
+        { id: "createdAt", title: "가입일", width: 120 },
+        { id: "updatedAt", title: "최종로그인", width: 120 },
     ];
 
     // 페이지 변경/개수 변경 시
@@ -141,7 +138,7 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
     useEffect(() => { onSearch(); }, [page, size]);
 
     // 전체 비우기(*주의 : 개발 중일 때만 사용할 것)
-    // localStorage.clear();
+    //localStorage.clear();
 
     /** ========================= 회원현황(member) > 검색/리스트 ListSection.jsx =============================== */
     return (

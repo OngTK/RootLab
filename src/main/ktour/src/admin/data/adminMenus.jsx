@@ -31,7 +31,7 @@ export const adminMenus = [
     icon: faGear,
     path: "/admin/site/site_info",
     children: [
-      { label: "사이트정보", path: "/admin/site/site_info" },
+      { label: "사이트현황", path: "/admin/site/site_info" },
       { label: "푸시/팝업관리", path: "/admin/site/push_popup" },
     ],
   },

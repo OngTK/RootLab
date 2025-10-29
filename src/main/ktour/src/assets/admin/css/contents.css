@@ -74,7 +74,7 @@
 .admin-scope .tableWrap table tbody tr:hover{ background: rgb(221, 251, 255); }
 .admin-scope .tableWrap table tbody tr.active{ background:  rgba(23, 238, 134, 0.3); }
 .admin-scope .tableWrap table tbody tr.active td{ color: rgba(0,0,0,.7); font-weight: 700; }
-.admin-scope .tableWrap table tbody tr.active td strong{ color: rgb(18, 105, 235); }
+.admin-scope .tableWrap table tbody tr.active td strong{ color:rgb(0, 175, 44); }
 
 
 .admin-scope .registWrap{  flex: 1 1 auto; min-width: 320px; overflow: auto;   }
@@ -130,7 +130,7 @@
 .admin-scope .detailSearch.member .form-group label{ min-width: 50px; }
 .admin-scope .formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 0px 3px 1px; opacity: .6; }
 .admin-scope .formWrap p{ padding: 10px 0; }
-.admin-scope .form-group strong input{  color: rgb(18, 105, 235); font-size: 13px; font:700 12px "Noto-Sans"}
+.admin-scope .form-group strong input{  color:rgb(5, 163, 87); font-size: 14px; font:700 12px "Noto-Sans"}
 .admin-scope .form-group > button{ margin: 2px;  display: inline-flex;
   
   align-items: center; font-size:11px; 
