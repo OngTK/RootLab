@@ -1,19 +1,38 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트
- * 
- * @author 
- * @since 2025.10.20
- * @version 0.1.1
+ * DetailCommon1: PlaceInfo 공통 기본 정보 폼
+*
+ * 역할
+ * - 장소 기본 메타 입력/수정: 노출 여부, 제목, 주소/좌표, 연락처, 홈페이지, 개요, 카테고리, 콘텐츠 유형
+ * - 이미지 업로드: 마커 이미지, 대표 이미지, 상세 이미지들 + 이미지 설명 메타
+ * - 좌표 획득: Daum 우편번호로 주소 선택 → Kakao 지도 지오코딩으로 좌표 설정, 마커 드래그로 미세 조정
+ *
+ * 데이터 흐름
+ * - props.placeInfo로부터 초기값을 로컬 상태에 반영
+ * - 저장 시 FormData(placeInfo/marker/imagesMeta/markerImage/mainImage/detailImages)로 saveBasic thunk 전송
+ * - 콘텐츠 유형 변경 시 onChangeContentType 콜백으로 상위/스토어 contentType 동기화
+ *
+ * 외부 스크립트
+ * - Daum Postcode: 우편번호/기본주소 선택 UI 로더
+ * - Kakao Maps SDK(services 포함): 지도 표시, 지오코딩, 마커 드래그 이벤트 처리
  */
-
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
-import axios from "axios";
+import { saveBasic } from "@admin/store/placeSlice";
 
 export default function DetailCommon1({
-    placeInfo: placeInfoProp,markers, images, contentType, onChangeContentType, ...rest }) {
-    
-    // Detail 전용 로컬 상태 (검색 폼과 분리) ============================================================
+    placeInfo: placeInfoProp,
+    markers,
+    images,
+    contentType,
+    onChangeContentType,
+    ...rest
+}) {
+    const dispatch = useDispatch();
+
+    // 입력 폼 로컬 상태
+    // - category: 분류 1/2/3단계 + ccNo
+    // - region: 행정 구역(시/군/구) 선택 결과  // 遺꾨쪟/吏??  const [category, setCategory] = useState({
     const [category, setCategory] = useState({
         ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null,
         l1Nm: null, l2Nm: null, l3Nm: null,
@@ -21,181 +40,162 @@ export default function DetailCommon1({
     const [region, setRegion] = useState({
         ldNo: null, regnCd: null, signguCd: null, regnNm: null, signguNm: null,
     });
-    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType ?? ""));
-    useEffect(() => {
-        setContentTypeLocal(String(contentType ?? ""));
-    }, [contentType]);
-    const placeInfo = placeInfoProp;
-    const markerInfo = markers;     // 마커 정보
-    const imageInfo = images;       // 이미지 정보
 
-    // 파일 & 설명 입력 ref====================================================
-    const markerImgRef = useRef(null);
-    const mainImgRef = useRef(null);
-    const detailImgsRef = useRef(null);  // multiple
-    const imageDescRef = useRef(null);
-    const detailAddrRef = useRef(null);
-    const [showFlag, setShowFlag] = useState(true);        // 노출 여부
-    const [title, setTitle] = useState("");                 // 플레이스명
-    const [phone, setPhone] = useState("");                 // 대표전화
-    const [phoneDesc, setPhoneDesc] = useState("");         // 대표전화 설명
+    // 콘텐츠 타입(상위 탭과 동기화)
+    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType ?? ""));
+    useEffect(() => { setContentTypeLocal(String(contentType ?? "")); }, [contentType]);
+
+    const placeInfo = placeInfoProp || {};
+
+    // 입력값
+    const [showFlag, setShowFlag] = useState(true);         // 노출 여부
+    const [title, setTitle] = useState("");                 // 장소명
+    const [phone, setPhone] = useState("");                 // 전화번호
+    const [phoneDesc, setPhoneDesc] = useState("");         // 전화 설명
     const [homepage, setHomepage] = useState("");           // 홈페이지
     const [overview, setOverview] = useState("");           // 개요
-    const [placeNo, setPlaceNo] = useState("");             // 플레이스 번호(표시용)
+    const [placeNo, setPlaceNo] = useState("");             // 장소번호
+
     const createdAt = placeInfo?.createdAt || "";
     const updatedAt = placeInfo?.updatedAt || "";
-    const displayUpdated = updatedAt || createdAt; // 수정일 없으면 생성일로 대체
+    const displayUpdated = updatedAt || createdAt;
 
-    // 상세 조회로 들어온 값을 초기값으로 반영(있을 때만) =========================================
+    // 주소/좌표
+    const [zipCode, setZipCode] = useState("");
+    const [roadAddr, setRoadAddr] = useState("");
+    const [detailAddr, setDetailAddr] = useState("");
+    const [coord, setCoord] = useState({ x: null, y: null }); // x:경도, y:위도
+
+    // 파일/참고 ref
+    const markerImgRef = useRef(null);
+    const mainImgRef = useRef(null);
+    const detailImgsRef = useRef(null);
+    const imageDescRef = useRef(null);
+    const detailAddrRef = useRef(null);
+
+    // Kakao Map
+    const mapRef = useRef(null);
+    const markerRef = useRef(null);
+    const geocoderRef = useRef(null);
+    const [mapObj, setMapObj] = useState(null);
+
+    // 상세 진입 시 placeInfo 값을 입력에 반영
     useEffect(() => {
-        console.log(placeInfo)
-        console.log(imageInfo)
-        console.log(markerInfo)
-        if (!placeInfo) return;
-
-        // 상세 진입 시 기존 주소값을 미리 채우고 싶다면:
-        setZipCode(placeInfo.zipcode ?? "");
-        setRoadAddr(placeInfo.addr1 ?? "");
-
-        // 노출 여부 기본값: 값이 없거나 null이면 '노출'을 기본 선택으로 유지
-        const sf = placeInfo?.showflag;
+        const p = placeInfo || {};
+        setZipCode(p.zipcode ?? "");
+        setRoadAddr(p.addr1 ?? "");
+        const sf = p?.showflag;
         setShowFlag(sf == null ? true : (Number(sf) === 1 || sf === true));
-        setTitle(placeInfo.title ?? "");
-        setPhone(placeInfo.tel ?? "");
-        setPhoneDesc(placeInfo.telname ?? "");
-        setHomepage(placeInfo.homepage ?? "");
-        setOverview(placeInfo.overview ?? "");
-        setPlaceNo(placeInfo.pNo ?? placeInfo.pno ?? "");
-
-        // 카테고리 동기화: ccNo 또는 명칭/코드 기반으로 CategorySelect 값 반영
+        setTitle(p.title ?? "");
+        setPhone(p.tel ?? "");
+        setPhoneDesc(p.telname ?? "");
+        setHomepage(p.homepage ?? "");
+        setOverview(p.overview ?? "");
+        setPlaceNo(p.pNo ?? p.pno ?? "");
         setCategory({
-            ccNo: placeInfo?.ccNo ?? null,
-            l1Cd: placeInfo?.lclsSystm1Cd ?? null,
-            l2Cd: placeInfo?.lclsSystm2Cd ?? null,
-            l3Cd: placeInfo?.lclsSystm3Cd ?? null,
-            l1Nm: placeInfo?.lclsSystm1Nm ?? null,
-            l2Nm: placeInfo?.lclsSystm2Nm ?? null,
-            l3Nm: placeInfo?.lclsSystm3Nm ?? null,
+            ccNo: p?.ccNo ?? null,
+            l1Cd: p?.lclsSystm1Cd ?? null,
+            l2Cd: p?.lclsSystm2Cd ?? null,
+            l3Cd: p?.lclsSystm3Cd ?? null,
+            l1Nm: p?.lclsSystm1Nm ?? null,
+            l2Nm: p?.lclsSystm2Nm ?? null,
+            l3Nm: p?.lclsSystm3Nm ?? null,
         });
-    }, [placeInfo]);
+    }, [placeInfoProp]);
 
-    // 우편번호/주소 상태 ===================================================================
-    const [zipCode, setZipCode] = useState("");     // 우편번호 (라인 94)
-    const [roadAddr, setRoadAddr] = useState("");   // 도로명 주소 (라인 95)
-    const [detailAddr, setDetailAddr] = useState(""); // 상세주소(라인 7단계에서 이미 존재)
-
-    // daum 우편번호 스크립트 로드 (최초 1회) ==============================
+    // Daum 우편번호 스크립트 로드
     useEffect(() => {
-        if (window.daum?.Postcode) return; // 이미 로드됨
+        if (window.daum?.Postcode) return;
         const script = document.createElement("script");
         script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
         script.async = true;
         document.body.appendChild(script);
-        return () => {
-            // 제거는 보통 불필요. 페이지 단위 앱이면 생략 가능
-        };
     }, []);
 
-    // 우편번호 팝업 열기 ==============================
+    /**
+   * 우편번호 검색창 열기
+   * - 선택 완료 시 zonecode/주소 반영 후 상세주소 입력으로 포커스 이동
+   */
     const openPostcode = () => {
         if (!window.daum?.Postcode) {
-            alert("우편번호 스크립트가 아직 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
+            alert("우편번호 스크립트가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.");
             return;
         }
         new window.daum.Postcode({
             oncomplete: (data) => {
-                // data.userSelectedType: 'R' = 도로명, 'J' = 지번
-                const zonecode = data.zonecode || "";
+                const zone = data.zonecode || "";
                 const addr = data.userSelectedType === "R" ? (data.roadAddress || "") : (data.jibunAddress || "");
-                setZipCode(zonecode);
-                setRoadAddr(addr);       // 요구사항: 라인 95는 도로명 주소
-                // 상세주소 포커스 UX
-                setTimeout(() => {
-                    detailAddrRef.current?.focus();
-                }, 0);
-            }
+                setZipCode(zone);
+                setRoadAddr(addr);
+                setTimeout(() => detailAddrRef.current?.focus(), 0);
+            },
         }).open();
     };
 
-    // 지도 DOM 참조 ==============================
-    const mapRef = useRef(null);
-    const markerRef = useRef(null);
-    const geocoderRef = useRef(null);
-    // 지도/좌표 상태 (저장용) ==============================
-    const [mapObj, setMapObj] = useState(null);
-    const [coord, setCoord] = useState({ x: null, y: null }); // x=경도(lng), y=위도(lat)
-
-    // Kakao 지도 로드 ==============================
+    // Kakao 지도 초기화
+    // - SDK 로드 여부에 따라 maps.load 또는 스크립트 추가
+    // - services 라이브러리를 포함해 geocoder 사용
+    // - 마커 드래그 종료 시 좌표(coord) 갱신
     useEffect(() => {
         const initMap = () => {
             const container = mapRef.current;
             if (!container || !window.kakao?.maps) return;
             const center = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
-
-            // 초기 마커 객체 보관(처음 한 번만 생성)
-            const marker = new window.kakao.maps.Marker({ position: center });
-
-            markerRef.current = marker;
-            markerRef.current.setMap(map);
-            // 지오코더 준비
-            geocoderRef.current = new window.kakao.maps.services.Geocoder();
             setMapObj(map);
-            marker.setDraggable(true);
-            kakao.maps.event.addListener(marker, 'dragend', function () {
-                const markerCenter = map.getCenter();
-                setCoord({
-                    x: markerCenter.La,
-                    y: markerCenter.Ma
-                })
+            const marker = new window.kakao.maps.Marker({ position: center, draggable: true });
+            markerRef.current = marker;
+            marker.setMap(map);
+            geocoderRef.current = new window.kakao.maps.services.Geocoder();
+            window.kakao.maps.event.addListener(marker, 'dragend', function () {
+                const pos = marker.getPosition();
+                setCoord({ x: String(pos.getLng()), y: String(pos.getLat()) });
             });
         };
-
-        // 이미 로드된 경우 ==============================
         if (window.kakao?.maps) {
             window.kakao.maps.load(initMap);
             return;
         }
-        // 동적 로드 (autoload=false 필수) ==============================
         const script = document.createElement("script");
         script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=29ac2fc1e2229c89c0cdf197740abcb5&autoload=false&libraries=services";
         script.async = true;
-        script.onload = () => window.kakao.maps.load(initMap); // SDK 로드 후 수동 초기화
-        document.head.appendChild(script);
+        script.onload = () => window.kakao.maps.load(initMap);
+        document.body.appendChild(script);
     }, []);
 
-    // 도로명주소가 변경되면 좌표 검색 ==============================
+    // 주소 변경 → geocoder.addressSearch로 좌표 갱신
+    // - 성공 시 마커/지도 중심 이동, coord(x:경도, y:위도) 업데이트    const addr = (roadAddr || "").trim();
     useEffect(() => {
         const addr = (roadAddr || "").trim();
-        if (!addr) return;
-        if (!mapObj || !geocoderRef.current) return;
-
+        if (!addr || !mapObj || !geocoderRef.current) return;
         geocoderRef.current.addressSearch(addr, (result, status) => {
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
-            const { x, y } = result[0]; // x: 경도, y: 위도
+            const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            // 마커 이동/표시
             if (!markerRef.current) {
                 markerRef.current = new window.kakao.maps.Marker({ position: latlng });
             } else {
                 markerRef.current.setPosition(latlng);
             }
             markerRef.current.setMap(mapObj);
-            // 지도 중심 이동
             mapObj.setCenter(latlng);
-            // 저장용 좌표 상태 업데이트
             setCoord({ x, y });
         });
     }, [roadAddr, mapObj]);
 
-    // 저장 (멀티파트: JSON 파트 + 파일 파트) ==============================
+    /**
+     * 저장 핸들러
+     * - 필수값 검증: 콘텐츠 유형, 카테고리, 주소
+     * - 페이로드 구성:
+     *   - placeInfo(JSON Blob), marker(JSON Blob), imagesMeta(JSON Blob, 옵션),
+     *     markerImage/mainImage/detailImages(파일)
+     */
     const handleSave = async () => {
         try {
-            if (!contentTypeLocal) { alert("콘텐츠 타입을 선택해 주세요."); return; }
-            if (!category?.ccNo) { alert("카테고리는 소분류까지 선택해 주세요."); return; }
-            if (!roadAddr) { alert("주소를 입력해주세요"); return }
+            if (!contentTypeLocal) { alert("콘텐츠 유형을 선택해 주세요."); return; }
+            if (!category?.ccNo) { alert("카테고리를 (최소 1단계) 선택해 주세요."); return; }
+            if (!roadAddr) { alert("주소를 입력해 주세요."); return; }
 
-            // 1) 화면 값 수집
             const pNoFromDetail = placeInfo?.pno ?? placeInfo?.pNo ?? null;
             const ctNoVal = Number(contentTypeLocal);
             const ccNoVal = category.ccNo;
@@ -206,21 +206,19 @@ export default function DetailCommon1({
             const telNameVal = phoneDesc.trim() || null;
             const overviewVal = overview.trim() || null;
 
-
-            // 2) DTO 구성 (서버 필드와 동일하게)
             const placeInfoDto = {
                 pno: pNoFromDetail ?? 0,
                 ctNo: ctNoVal,
-                ldNo: region?.ldNo ?? null,    // (없으면 백에서 주소 기반 처리)
+                ldNo: region?.ldNo ?? null,
                 ccNo: ccNoVal,
                 editable: true,
                 contentid: null,
                 title: titleVal,
                 showflag,
-                firtimage: null,               // 파일로 전송 → 백에서 경로 세팅
-                firstimage2: null,             // 파일로 전송 → 백에서 경로 세팅
-                addr1: roadAddr || null,       // 도로명 주소
-                addr2: detailAddr || null,     // 상세 주소
+                firtimage: null,
+                firstimage2: null,
+                addr1: roadAddr || null,
+                addr2: detailAddr || null,
                 zipcode: zipCode || null,
                 homepage: homepageVal,
                 tel: telVal,
@@ -231,36 +229,24 @@ export default function DetailCommon1({
             const markerDto = {
                 mkNo: 0,
                 pNo: pNoFromDetail ?? 0,
-                mkURL: null,                   // 파일 처리 후 백에서 경로 입력
-                mapx: coord.x ? Number(coord.x) : null, // 경도
-                mapy: coord.y ? Number(coord.y) : null, // 위도
+                mkURL: null,
+                mapx: coord.x ? Number(coord.x) : null,
+                mapy: coord.y ? Number(coord.y) : null,
             };
 
-            // 상세 이미지 메타(이미지 설명 1개만 받는 스펙)
             const imagesMeta = [];
             const imgDesc1 = imageDescRef.current?.value?.trim();
             if (imgDesc1) imagesMeta.push({ imgname: imgDesc1 });
 
-            // 3) FormData 조립 (@RequestPart 명과 일치)
             const fd = new FormData();
             fd.append("placeInfo", new Blob([JSON.stringify(placeInfoDto)], { type: "application/json" }));
             fd.append("marker", new Blob([JSON.stringify(markerDto)], { type: "application/json" }));
-            if (imagesMeta.length) {
-                fd.append("imagesMeta", new Blob([JSON.stringify(imagesMeta)], { type: "application/json" }));
-            }
-            // 파일 파트
-            if (markerImgRef.current?.files?.[0]) {
-                fd.append("markerImage", markerImgRef.current.files[0]);
-            }
-            if (mainImgRef.current?.files?.[0]) {
-                fd.append("mainImage", mainImgRef.current.files[0]);
-            }
-            if (detailImgsRef.current?.files?.length) {
-                [...detailImgsRef.current.files].forEach((f) => fd.append("detailImages", f));
-            }
+            if (imagesMeta.length) fd.append("imagesMeta", new Blob([JSON.stringify(imagesMeta)], { type: "application/json" }));
+            if (markerImgRef.current?.files?.[0]) fd.append("markerImage", markerImgRef.current.files[0]);
+            if (mainImgRef.current?.files?.[0]) fd.append("mainImage", mainImgRef.current.files[0]);
+            if (detailImgsRef.current?.files?.length) [...detailImgsRef.current.files].forEach((f) => fd.append("detailImages", f));
 
-            // 4) 전송
-            await axios.post("http://localhost:8080/placeinfo/basic", fd, { headers: { "Content-Type": "multipart/form-data" } });
+            await dispatch(saveBasic(fd)).unwrap();
             alert("저장되었습니다.");
         } catch (err) {
             console.error(err);
@@ -268,177 +254,122 @@ export default function DetailCommon1({
         }
     };
 
-    /** ====================== [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트 =========================== */
     return (
-        <>
-            <div className="placeCommonWrap">
-                <form aria-label="기본정보 입력">
-                    <fieldset>
-                        <legend>{title}</legend>
+        <div className="placeCommonWrap" {...rest}>
+            <form aria-label="기본정보 입력">
+                <fieldset>
+                    <legend>{title || "기본정보"}</legend>
 
-                        {/* 1. 지도 미리보기 영역 */}
-                        <div ref={mapRef}
-                            className="previewMap"
-                            id="previewMap"
-                            aria-hidden="true"></div>
+                    {/* 1. 지도 미리보기 */}
+                    <div ref={mapRef} className="previewMap" id="previewMap" aria-hidden="true" />
 
-                        {/* 1. 콘텐츠 타입 (선택 필드) */}
-                        <div className="form-group">
-                            <div className="form-group">
-                                <label htmlFor="content-type-detail">콘텐츠 타입</label>
-                                <select
-                                    id="content-type-detail"
-                                    name="contentTypeDetail"
-                                    value={contentTypeLocal}
-                                    onChange={(e) => {
-                                        const v = e.target.value;
-                                        setContentTypeLocal(v);
-                                        onChangeContentType?.(v);
-                                    }} >
-                                    <option value="1">관광지</option>
-                                    <option value="3">행사/공연/축제</option>
-                                    <option value="8">음식점</option>
-                                </select>
-                                {/* 2. 노출 여부 (라디오 버튼 그룹) - fieldset과 legend로 그룹화 필수 */}
-                                <span className="form-group">
-                                    <span>노출 여부</span>
-                                    <span className="radio-group">
-                                        <input type="radio" id="exposure-on" name="exposure" value="Y"
-                                            checked={showFlag} onChange={() => setShowFlag(true)} />
-                                        <label htmlFor="exposure-on">노출</label>
-                                        <input type="radio" id="exposure-off" name="exposure" value="N"
-                                            checked={!showFlag} onChange={() => setShowFlag(false)} />
-                                        <label htmlFor="exposure-off">비노출</label>
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                        {/* 3. 카테고리 (다중 Select 필드) */}
-                        <div className="form-group category-group">
-                            <CategorySelect
-                                idSuffix="detail"           // 좌측 검색과 ID 충돌 방지
-                                namePrefix="detail"         // 좌측 검색과 name 충돌 방지
-                                value={category}
-                                onChange={setCategory}
-                            />
-                        </div>
+                    {/* 2. 콘텐츠 유형 */}
+                    <div className="form-group">
+                        <label htmlFor="content-type-detail">콘텐츠 유형</label>
+                        <select
+                            id="content-type-detail"
+                            name="contentTypeDetail"
+                            value={contentTypeLocal}
+                            onChange={(e) => { const v = e.target.value; setContentTypeLocal(v); onChangeContentType?.(v); }}
+                        >
+                            <option value="1">관광지</option>
+                            <option value="3">행사/공연/축제</option>
+                            <option value="8">음식점</option>
+                        </select>
+                    </div>
 
-                        {/* 4. 플레이스명 */}
-                        <div className="form-group">
-                            <label htmlFor="place-name">플레이스명</label>
-                            <input type="text" id="place-name" name="placeName" required aria-required="true"
-                                value={title} onChange={(e) => setTitle(e.target.value)} />
-                            {/* 5. 플레이스 번호 */}
-                            <span className="form-group">
-                                <label htmlFor="place-number">플레이스 번호</label>
-                                <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly placeholder="자동 발급" />
-                            </span>
-                        </div>
-                        {/* 6. 기본 주소 */}
-                        <div className="form-group">
-                            <label htmlFor="zip-code">기본 주소</label>
-                            <button
-                                type="button"
-                                aria-label="우편번호 검색"
-                                onClick={openPostcode}
-                            >
-                                우편번호
-                            </button>
-                            {/* ✅ 전송을 고려하여 disabled 대신 readOnly 사용 권장 */}
-                            <input
-                                type="text"
-                                id="zip-code"
-                                name="zipCodeInput"
-                                placeholder="우편번호"
-                                aria-label="우편번호"
-                                value={zipCode}
-                                readOnly
-                            />
-                            <input
-                                type="text"
-                                id="base-addr"
-                                name="addrInput"
-                                placeholder="도로명 주소"
-                                aria-label="기본 주소"
-                                value={roadAddr}
-                                readOnly
-                            />
-                        </div>
+                    {/* 3. 노출 여부 */}
+                    <div className="form-group">
+                        <span>노출 여부</span>
+                        <span className="radio-group">
+                            <input type="radio" id="exposure-on" name="exposure" value="Y" checked={showFlag} onChange={() => setShowFlag(true)} />
+                            <label htmlFor="exposure-on">노출</label>
+                            <input type="radio" id="exposure-off" name="exposure" value="N" checked={!showFlag} onChange={() => setShowFlag(false)} />
+                            <label htmlFor="exposure-off">비노출</label>
+                        </span>
+                    </div>
 
-                        {/* 7. 상세 주소 */}
-                        <div className="form-group">
-                            <label htmlFor="detail-addr">상세 주소</label>
-                            <input
-                                type="text"
-                                id="detail-addr"
-                                ref={detailAddrRef}
-                                value={detailAddr}
-                                onChange={(e) => setDetailAddr(e.target.value)}
-                            />
-                        </div>
-                        <input type="hidden" name="mapx" value={coord.x ?? ""} />
-                        <input type="hidden" name="mapy" value={coord.y ?? ""} />
+                    {/* 4. 카테고리 */}
+                    <div className="form-group category-group">
+                        <CategorySelect idSuffix="detail" namePrefix="detail" value={category} onChange={setCategory} />
+                    </div>
 
-                        {/* 8. 대표 전화 및 설명 */}
-                        <div className="form-group phone-group">
-                            <label htmlFor="main-phone">대표전화</label>
-                            <input type="text" id="main-phone" name="mainPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                            <label htmlFor="phone-desc" className="sr-only">대표전화 설명</label> {/* 시각적으로는 숨기고 스크린 리더에게만 제공 */}
-                            <input type="text" id="phone-desc" name="phoneDesc" placeholder="전화 설명 (예: 9시~18시)"
-                                value={phoneDesc} onChange={(e) => setPhoneDesc(e.target.value)} />
-                        </div>
+                    {/* 5. 장소명/번호 */}
+                    <div className="form-group">
+                        <label htmlFor="place-name">장소명</label>
+                        <input type="text" id="place-name" name="placeName" required value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <span className="form-group">
+                            <label htmlFor="place-number">장소 번호</label>
+                            <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly placeholder="자동 발급" />
+                        </span>
+                    </div>
 
-                        {/* 9. 홈페이지 */}
-                        <div className="form-group">
-                            <label htmlFor="homepage">홈페이지</label>
-                            <input type="text" id="homepage" name="homepage" value={homepage} onChange={(e) => setHomepage(e.target.value)} />
-                        </div>
+                    {/* 6. 기본 주소 */}
+                    <div className="form-group">
+                        <label htmlFor="zip-code">기본 주소</label>
+                        <button type="button" aria-label="우편번호 검색" onClick={openPostcode}>우편번호</button>
+                        <input type="text" id="zip-code" name="zipCodeInput" placeholder="우편번호" aria-label="우편번호" value={zipCode} readOnly />
+                        <input type="text" id="base-addr" name="addrInput" placeholder="도로명주소" aria-label="도로명주소" value={roadAddr} readOnly />
+                    </div>
 
-                        {/* 10. 개요 설명 */}
-                        <div className="form-group">
-                            <label htmlFor="summary-desc">개요 설명</label>
-                            <textarea id="summary-desc" name="summaryDesc" className="memoInput"
-                                placeholder="상세소개를 입력하세요." rows="5"
-                                value={overview} onChange={(e) => setOverview(e.target.value)} ></textarea>
-                        </div>
-                        {/* 11. 마커 이미지 */}
-                        <div className="form-group">
-                            <label htmlFor="marker-img">마커 이미지</label>
-                            <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
-                        </div>
+                    {/* 7. 상세 주소 */}
+                    <div className="form-group">
+                        <label htmlFor="detail-addr">상세 주소</label>
+                        <input type="text" id="detail-addr" ref={detailAddrRef} value={detailAddr} onChange={(e) => setDetailAddr(e.target.value)} />
+                    </div>
 
-                        {/* 12. 대표 이미지 */}
-                        <div className="form-group">
-                            <label htmlFor="main-img">대표 이미지</label>
-                            <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
-                            <button>미리보기</button>
-                            <span className="info-text" id="main-img-hint">*이미지 사이즈: 800px(가로) * 600px(세로) 권장</span>
-                        </div>
+                    {/* 8. 좌표(hidden) */}
+                    <input type="hidden" name="mapx" value={coord.x ?? ""} />
+                    <input type="hidden" name="mapy" value={coord.y ?? ""} />
 
-                        {/* 13. 상세 이미지 1 */}
-                        <div className="form-group">
-                            <label htmlFor="detail-img-1">상세 이미지 1</label>
-                            <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
-                            <button>미리보기</button>
-                            <span className="info-text" id="detail-img-hint">*멀티업로드(~최대 10개/ 이미지별 용량제한 ~2MB)</span>
-                        </div>
+                    {/* 9. 연락처 */}
+                    <div className="form-group phone-group">
+                        <label htmlFor="main-phone">전화번호</label>
+                        <input type="text" id="main-phone" name="mainPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                        <label htmlFor="phone-desc" className="sr-only">전화 설명</label>
+                        <input type="text" id="phone-desc" name="phoneDesc" placeholder="전화 설명" value={phoneDesc} onChange={(e) => setPhoneDesc(e.target.value)} />
+                    </div>
 
-                        {/* 14. 이미지 설명 1 */}
-                        <div className="form-group">
-                            <label htmlFor="img-desc-1">이미지 설명</label>
-                            <input type="text" id="img-desc-1" name="imageDesc1" ref={imageDescRef} />
-                        </div>
+                    {/* 10. 홈페이지 */}
+                    <div className="form-group">
+                        <label htmlFor="homepage">홈페이지</label>
+                        <input type="text" id="homepage" name="homepage" value={homepage} onChange={(e) => setHomepage(e.target.value)} />
+                    </div>
 
-                        <div className="info_date">
-                            <b>등록일:</b> {createdAt || "-"} &nbsp;
-                            <b>수정일:</b> {displayUpdated || "-"}
-                        </div>
-                        <div className="form-actions">
-                            <button type="button" onClick={handleSave}>저장</button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </>
-    )
-}// DetailCommon1.jsx end
+                    {/* 11. 개요 */}
+                    <div className="form-group">
+                        <label htmlFor="summary-desc">개요 설명</label>
+                        <textarea id="summary-desc" name="summaryDesc" className="memoInput" placeholder="개요를 입력해 주세요" rows="5" value={overview} onChange={(e) => setOverview(e.target.value)} />
+                    </div>
+
+                    {/* 12. 이미지 */}
+                    <div className="form-group">
+                        <label htmlFor="marker-img">마커 이미지</label>
+                        <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="main-img">대표 이미지</label>
+                        <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="detail-img-1">상세 이미지</label>
+                        <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="img-desc-1">이미지 설명</label>
+                        <input type="text" id="img-desc-1" name="imageDesc1" ref={imageDescRef} />
+                    </div>
+
+                    <div className="info_date">
+                        <b>등록일</b> {createdAt || "-"} &nbsp; <b>수정일</b> {displayUpdated || "-"}
+                    </div>
+
+                    <div className="form-actions">
+                        <button type="button" onClick={handleSave}>저장</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    );
+}
+

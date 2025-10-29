@@ -1,25 +1,32 @@
 /**
- * 관리자 > 관광정보 > 플레이스 현황(PlaceInfo)
- * [본문 우측] 플레이스 반복정보(3.info2)
+ * DetailRepeat3: 반복 정보(제목/내용) 편집 섹션
+ *
+ * 역할
+ * - 자유 형식 반복 정보 행(제목/내용)을 추가/수정/삭제하고 저장합니다.
+ * - 저장 시 상태를 부여하여 서버로 일괄 전송합니다.
+ *
+ * 데이터/상태 흐름
+ * - props.items: 서버로부터 내려온 기존 반복 정보 목록
+ * - rows: 화면 편집용 로컬 행 목록
+ * - originalRef: 최초 로딩 스냅샷(변경 여부 판단용)
+ * - deleted: 삭제 표시된 기존 행 목록(pirNo 있는 항목)
+ *
+ * 상태 규칙(pirStatus)
+ * - 신규: 1, 수정: 2, 변경없음: 0, 삭제: 3
+ * - 서버 payload에는 키를 pno로 통일합니다(pNo/pno/PNO 혼재 보정).
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { saveRepeatInfo } from "@admin/store/placeSlice";
 
 /**
- * 반복정보(제목/내용) 편집 컴포넌트 설명
- * - 좌측 리스트(Place 리스트)에서 행 클릭 → 우측 상세로 place pNo 및 기존 반복정보가 전달됩니다.
- * - 사용자는 행 추가/삭제 및 제목/내용 수정이 가능하며, 저장 시 상태값에 따라 서버에 일괄 반영합니다.
- * - pirStatus 규칙: 변경없음(0), 신규(C=1), 수정(U=2), 삭제(D=3)
- * - 본 컴포넌트는 화면 편집을 위한 로컬 상태(rows, deleted)와 원본 스냅샷(originalRef)을 함께 관리합니다.
+ * 서버 행을 화면 편집용 로우로 정규화
  */
-
-// 서버 DTO(PlaceInfoRepeatDto) → 화면 편집용 행으로 표준화
-// - pNo 키 표기가 pNo/pno/PNO 등으로 올 수 있어 보정하여 보관합니다.
 function asRow(v) {
   if (!v) return { pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null };
   return {
     pirNo: v.pirNo ?? null,
-    pno: v.pNo ?? v.pno ?? v.PNO ?? null,
+    pNo: v.pNo ?? v.pno ?? v.PNO ?? null,
     fldgubun: v.fldgubun ?? 0,
     infoName: v.infoName ?? "",
     infoText: v.infoText ?? "",
@@ -29,17 +36,17 @@ function asRow(v) {
   };
 }
 
-// 신규 입력용 기본 행(빈값)
+/** 신규 입력 기본행 팩토리 */
 const blankRow = () => ({ pirNo: null, pNo: null, fldgubun: 0, infoName: "", infoText: "", serialNum: 0, updatedAt: null, createdAt: null });
 
-// 'YYYY-MM-DD HH:mm:ss' → Date 객체로 변환(파싱 실패 시 null)
+/** 'YYYY-MM-DD HH:mm:ss' → Date 변환(실패 시 null) */
 function parseKst(dateStr) {
   if (!dateStr || typeof dateStr !== "string") return null;
   const d = new Date(dateStr.replace(" ", "T"));
   return isNaN(d.getTime()) ? null : d;
 }
 
-// rows 내에서 가장 최근(updatedAt 우선, 없으면 createdAt) 일시를 문자열로 반환
+/** rows에서 최신 일시(업데이트 우선, 없으면 생성)를 구해 표시 문자열로 반환 */
 function latestDisplay(rows) {
   const pick = (f) => rows.map(r => parseKst(r[f])).filter(Boolean).sort((a, b) => b - a)[0];
   const up = pick('updatedAt');
@@ -49,23 +56,33 @@ function latestDisplay(rows) {
 }
 
 export default function DetailRepeat3({ items = [], pNo, onChange }) {
-  // rows: 화면에 표시/편집되는 반복정보 행 리스트
+  const dispatch = useDispatch();
+
+  // 편집 가능한 로컬 행 목록
   const [rows, setRows] = useState(() => (Array.isArray(items) && items.length ? items.map(asRow) : [blankRow()]));
-  // originalRef: 최초 로딩한 서버값을 보관 → 변경 여부 판단에 사용
+  // 최초 스냅샷(변경 여부 판단에 사용)
   const originalRef = useRef([]);
-  // deleted: 삭제 버튼을 눌러 제거 표시된 행 보관(저장 시 pirStatus=3)
+  // 삭제 표시된 기존 행들(pirNo 존재). 저장 시 pirStatus=3으로 전송
   const [deleted, setDeleted] = useState([]);
 
-  // 2) 부모 detail 교체 시 동기화
+  // items/pNo 변경 시 폼 초기화 + 스냅샷/삭제 목록 리셋
   useEffect(() => {
     const init = Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()];
     setRows(init);
-  }, []);
+    originalRef.current = (Array.isArray(items) ? items.map(asRow) : []).filter(r => r.pirNo);
+    setDeleted([]);
+  }, [items, pNo]);
 
-  // 행 상태 변경을 외부로 통지(onChange)하고 로컬 rows 갱신
-  const emit = (next) => { setRows(next); if (typeof onChange === 'function') onChange(next); };
-  // 행 추가
+  // 외부 변경 알림(onChange)과 로컬 갱신을 함께 수행
+  const emit = (next) => {
+    setRows(next);
+    if (typeof onChange === 'function') onChange(next);
+  };
+
+  /** 행 추가 */
   const addRow = () => emit([...rows, blankRow()]);
+
+  /** 행 삭제 표시(기존 행은 deleted에 보관) */
   const markRemoveRow = (idx) => {
     const target = rows[idx];
     if (target?.pirNo) setDeleted((prev) => [...prev, target]);
@@ -73,12 +90,13 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     if (!next.length) next.push(blankRow());
     emit(next);
   };
-  // 단일 필드 변경(infoName/infoText)
+
+  /** 단일 필드 값 변경 */
   const updateRow = (idx, field, value) => emit(rows.map((r, i) => i === idx ? { ...r, [field]: value } : r));
 
   const latest = useMemo(() => latestDisplay(rows), [rows]);
 
-  // 원본 대비 행 수정 여부 판단(제목/내용 비교)
+  /** 원본 대비 변경 여부 판단(infoName/infoText만 비교) */
   const isModified = (r) => {
     if (!r?.pirNo) return false;
     const orig = originalRef.current.find(o => o.pirNo === r.pirNo);
@@ -86,33 +104,64 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     return String(orig.infoName ?? '') !== String(r.infoName ?? '') || String(orig.infoText ?? '') !== String(r.infoText ?? '');
   };
 
-  // 저장: 삭제(D) → 신규(C) → 수정/변경없음(U/0) 순으로 payload 생성 후 POST
+  /**
+   * 저장: 삭제(D)/신규(C)/수정(U)/무변경(0) 상태별 payload 구성 후 저장 thunk 호출
+   * - 신규 행이 있고 pNo가 없으면 저장 중단(장소 미선택)
+   * - 중복 전송 방지: 삭제된 항목은 rows 루프에서 제외
+   */
   const handleSave = async () => {
     try {
       const newRows = rows.filter(r => !r.pirNo);
-      if (newRows.length > 0 && !pNo) { alert('플레이스가 선택되지 않았습니다.'); return; }
+      if (newRows.length > 0 && !pNo) { alert("장소가 선택되지 않았습니다."); return; }
 
       const payload = [];
-      // 삭제
+      // 삭제 대상
       deleted.forEach(r => {
         if (!r?.pirNo) return;
-        payload.push({ pirNo: r.pirNo, pNo: Number(r.pNo ?? pNo), fldgubun: r.fldgubun, infoName: r.infoName, infoText: r.infoText, serialNum: r.serialNum, pirStatus: 3 });
+        payload.push({
+          pirNo: r.pirNo,
+          pno: Number(r.pNo ?? pNo),
+          fldgubun: r.fldgubun ?? 0,
+          infoName: r.infoName ?? '',
+          infoText: r.infoText ?? '',
+          serialNum: r.serialNum ?? 0,
+          pirStatus: 3
+        });
       });
-      // 신규/수정
+
+      // 신규/기존(삭제 표시된 기존 행은 제외)
       rows.forEach(r => {
+        // 삭제표시된 기존 행은 rows에서 제외하여 중복 방지
+        if (r?.pirNo && deleted.some(d => d.pirNo === r.pirNo)) return;
+
         if (!r?.pirNo) {
-          payload.push({ pirNo: null, pno: Number(pNo), fldgubun: 0, infoName: r.infoName ?? '', infoText: r.infoText ?? '', serialNum: 0, pirStatus: 1 });
+          payload.push({
+            pirNo: null,
+            pno: Number(pNo),
+            fldgubun: 0,
+            infoName: r.infoName ?? '',
+            infoText: r.infoText ?? '',
+            serialNum: 0,
+            pirStatus: 1
+          });
         } else {
           const orig = originalRef.current.find(o => o.pirNo === r.pirNo) ?? r;
-          const status = deleted.some(d => d.pirNo === r.pirNo) ? 3 : (isModified(r) ? 2 : 0);
-          payload.push({ pirNo: r.pirNo, pno: Number(orig.pNo ?? pNo), fldgubun: orig.fldgubun, infoName: r.infoName ?? '', infoText: r.infoText ?? '', serialNum: orig.serialNum, pirStatus: status });
+          const status = isModified(r) ? 2 : 0;
+          payload.push({
+            pirNo: r.pirNo,
+            pno: Number(orig.pNo ?? pNo),
+            fldgubun: orig.fldgubun ?? 0,
+            infoName: r.infoName ?? '',
+            infoText: r.infoText ?? '',
+            serialNum: orig.serialNum ?? 0,
+            pirStatus: status
+          });
         }
       });
 
-      await axios.post('http://localhost:8080/placeinfo/repeatinfo', payload);
+      await dispatch(saveRepeatInfo({ pNo: Number(pNo), rows: payload })).unwrap();
       alert('저장되었습니다.');
-      // 저장 후 원본 기준 갱신
-      originalRef.current = rows.map(asRow);
+      originalRef.current = rows.map(asRow).filter(r => r.pirNo);
       setDeleted([]);
     } catch (e) {
       console.error(e);
@@ -122,18 +171,32 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
 
   return (
     <div className="placeRepeatWrap">
-      <form aria-label="반복정보 입력">
+      <form aria-label="반복 정보 입력">
         <fieldset>
-          <legend>반복정보</legend>
+          <legend>반복 정보</legend>
           {rows.map((r, idx) => (
             <div key={r.pirNo ?? `new-${idx}`} className="form-group" style={{ display: 'flex' }}>
               <div>
                 <label htmlFor={`repeat-title-${idx}`} className="sr-only">제목</label>
-                <input type="text" id={`repeat-title-${idx}`} name={`repeat[${idx}].infoName`} placeholder="제목" value={r.infoName} onChange={(e) => updateRow(idx, 'infoName', e.target.value)} />
+                <input
+                  type="text"
+                  id={`repeat-title-${idx}`}
+                  name={`repeat[${idx}].infoName`}
+                  placeholder="제목"
+                  value={r.infoName}
+                  onChange={(e) => updateRow(idx, 'infoName', e.target.value)}
+                />
               </div>
               <div>
                 <label htmlFor={`repeat-content-${idx}`} className="sr-only">내용</label>
-                <input type="text" id={`repeat-content-${idx}`} name={`repeat[${idx}].infoText`} placeholder="내용" value={r.infoText} onChange={(e) => updateRow(idx, 'infoText', e.target.value)} />
+                <input
+                  type="text"
+                  id={`repeat-content-${idx}`}
+                  name={`repeat[${idx}].infoText`}
+                  placeholder="내용"
+                  value={r.infoText}
+                  onChange={(e) => updateRow(idx, 'infoText', e.target.value)}
+                />
               </div>
               <div>
                 <button type="button" className="btn line" onClick={() => markRemoveRow(idx)}>삭제</button>
@@ -145,7 +208,7 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
           </div>
           <div className="form-actions">
             <button type="button" onClick={handleSave}>저장</button>
-            <button type="button" onClick={addRow}>행추가</button>
+            <button type="button" onClick={addRow}>행 추가</button>
           </div>
         </fieldset>
       </form>
