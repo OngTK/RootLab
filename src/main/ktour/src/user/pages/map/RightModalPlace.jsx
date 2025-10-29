@@ -10,7 +10,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectRigthMarker } from "../../store/mapSlice";
+import { selectRightMarker } from "../../store/mapSlice";
 
 // tourIntro 속성명
 const tourIntroLabels = {
@@ -92,7 +92,7 @@ export default function RightModalPlace(props) {
     }, [props.pNo])
 
     const handleCloseModal = () => {
-        dispatch(selectRigthMarker(null));
+        dispatch(selectRightMarker(null));
     } // func end
     // axios 처리가 안 됐으면, 종료
     if (!placeInfo) return;

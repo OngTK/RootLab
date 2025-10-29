@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRightMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -216,7 +216,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
-                dispatch(selectRigthMarker(null));
+                dispatch(selectRightMarker(null));
             } // if end
         }) // addListener end
         // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
@@ -224,7 +224,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
-                dispatch(selectRigthMarker(null));
+                dispatch(selectRightMarker(null));
             } // if end
         }) // addListener end
 
@@ -339,7 +339,6 @@ export default function KakaoMap(props) {
                 infowindow.setContent(iwContent);
                 infowindow.open(map, kakaoMarker);
             }) // addListener end
-
             return kakaoMarker;
         }); // map end
 

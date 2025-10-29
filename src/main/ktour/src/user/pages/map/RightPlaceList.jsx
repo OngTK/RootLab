@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
-import { selectRigthMarker } from "../../store/mapSlice";
+import { selectRightMarker, setSearchLatLng } from "../../store/mapSlice";
 
 // 미리 카테고리 정의해놓기
 const PLACE_GROUPS_TEMPLATE = [
@@ -63,9 +63,14 @@ export default function PlaceGroups(props) {
         return Array.from(groupsMap.values());
     }, [markers, props.selectedCategory]);
 
-    const detailMapInfo = (pNo) => {
-        dispatch(selectRigthMarker(pNo));
-    };
+    const handleClickRightPlace = (marker) => {
+        dispatch(selectRightMarker(marker.pNo));
+        dispatch(setSearchLatLng({
+            lat: marker.mapy,
+            lng: marker.mapx
+        }));
+        console.log(marker);
+    } // func end
 
     return (
         <>
@@ -86,10 +91,11 @@ export default function PlaceGroups(props) {
                     <dd className="body" id={`mapInfoBody_${i}`}>
                         <div className="cardList">
                             {group.places.map((place) => (
+                                
                                 <div
                                     key={place.pNo}
                                     className="summaryCard"
-                                    onClick={() => detailMapInfo(place.pNo)}
+                                    onClick={() => handleClickRightPlace(place)}
                                 >
                                     <div className="thumb">
                                         {

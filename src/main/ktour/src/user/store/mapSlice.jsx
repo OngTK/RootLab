@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     selectedLdNo: null,                 // 선택한 법정동코드
     selectedLeftMarker: null,           // 클릭한 마커
-    selectedRigthMarker: null,
+    selectedRightMarker: null,
     markers: [],
     selectedCategory: "all",            // 선택한 카테고리
     centeredLDong: null,                // 중심좌표 기준 법정동
@@ -37,9 +37,9 @@ const mapSlice = createSlice({
         selectLeftMarker: (state, action) => {
             state.selectedLeftMarker = action.payload;
         }, // selectLeftMarker end
-        selectRigthMarker: (state, action) => {
-            state.selectedRigthMarker = action.payload;
-        }, // selectRigthMarker end
+        selectRightMarker: (state, action) => {
+            state.selectedRightMarker = action.payload;
+        }, // selectRightMarker end
         renderedMarker: (state, action) => {
             state.markers = action.payload;
         }, // renderedMarker end
@@ -81,4 +81,4 @@ const mapSlice = createSlice({
 
 // 3. export
 export default mapSlice.reducer;
-export const { setSearchLatLng, setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRigthMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setSearchLatLng, setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRightMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
