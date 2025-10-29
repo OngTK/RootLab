@@ -45,7 +45,7 @@ select * from push;
 -- ---------------------------------------------------------
 select * from ldongcode;
 
-select * from ldongcode where ldongregnnm like '%경기%' and ldongsigngunm like '%수원%' limit 1;
+select * from ldongcode where ldongregnnm like '%강원%' and ldongsigngunm like '%고성%';
 
 
 -- ---------------------------------------------------------
@@ -53,8 +53,9 @@ select * from ldongcode where ldongregnnm like '%경기%' and ldongsigngunm like
 -- 관광, 플레이스 관련 기본 공통 정보
 -- ---------------------------------------------------------
 
-select * from placeInfo where pno = 65538;
+select * from placeInfo where ldNo = 247;
 select * from placeInfo order by pno desc;
+-- select * from placeInfo where ;
 
 select count(*) from placeinfo;
 SELECT pi.* FROM placeInfo pi ORDER BY pi.pNo DESC LIMIT 10 OFFSET 2;
@@ -73,6 +74,12 @@ SELECT
         OFFSET 0;
         
 SELECT pi.* FROM placeInfo pi LIMIT 10 OFFSET 2;
+
+            SELECT kpi.*, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
+            	FROM k_tour_headquarter.placeinfo kpi
+                JOIN k_tour_headquarter.categorycode kcc
+                USING (ccNo)
+                WHERE kpi.pno = 6881;
 
 -- ---------------------------------------------------------
 -- TourIntro

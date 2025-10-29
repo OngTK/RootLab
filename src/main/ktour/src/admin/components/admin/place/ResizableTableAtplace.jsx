@@ -8,7 +8,6 @@
  * @author kimJS
  * @since 2025.10.20
  * @version 0.1.1
- * 
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import "@assets/admin/css/resizableTable.css"; // ResizableTable.css
