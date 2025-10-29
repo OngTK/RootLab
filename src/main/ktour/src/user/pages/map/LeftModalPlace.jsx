@@ -108,7 +108,18 @@ export default function LeftModalPlace(props) {
                     <button className="modalClose" onClick={handleCloseModal} ><FontAwesomeIcon icon={faXmark} /></button>
 
                     <div className="modal_img_box">
-                        <img src={placeInfo.placeInfo.firstimage || "/user/img/no_img.jpg"} alt="타이틀" />
+                        {
+                            placeInfo.placeInfo.firstimage != null ?
+                                (<img
+                                    src={placeInfo.placeInfo.firstimage.indexOf('http') != -1 ?
+                                        placeInfo.placeInfo.firstimage :
+                                        '..../public/uploads/1/firstImage/' + place.firstimage
+                                    }
+                                    alt="타이틀"
+                                />)
+                                :
+                                (<img src="/user/img/no_img.jpg" alt="타이틀" />)
+                        }
                         <div className="modalContentOutline">
                             <h3>{placeInfo.placeInfo.title}</h3>
                             <div className="category">{placeInfo.placeInfo.lclsSystm2Nm}&nbsp; {placeInfo.placeInfo.lclsSystm3Nm}</div>
@@ -147,7 +158,12 @@ export default function LeftModalPlace(props) {
                         <ul className="additionImgWrap">
                             {
                                 placeInfo.PlaceImageDetail.map((image) => {
-                                    return <li key={image.pidNo}><img src={image.originimgurl || "/user/img/no_img.jpg"} alt="" /></li>
+                                    return <li key={image.pidNo}>
+                                        <img src={image.originimgurl.indexOf != -1 ?
+                                            image.originimgurl :
+                                            '..../public/uploads/1/originImgUrl/' + place.originimgurl
+                                        } alt="" />
+                                    </li>
                                 })
                             }
                         </ul>

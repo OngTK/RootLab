@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng, selectedRightMarker } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -393,7 +393,7 @@ export default function KakaoMap(props) {
         // 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
 
-    }, [markers, props.selectedCategory]); // 'markers' state가 변경될 때마다 실행
+    }, [markers, props.selectedCategory, selectRightMarker]); // 'markers' state가 변경될 때마다 실행
 
     // =================== return ===================
     if (currentLocation.isLoading) {

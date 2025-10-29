@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { selectRightMarker, setSearchLatLng } from "../../store/mapSlice";
 
 // 미리 카테고리 정의해놓기
@@ -103,7 +103,7 @@ export default function PlaceGroups(props) {
                                                     loading="lazy"
                                                     decoding="async"
                                                     onError={(e) => { e.target.src = "/user/img/no_img.jpg" }}
-                                                    src={place.firstimage2}
+                                                    src={place.firstimage2.indexOf('http') != -1 ? place.firstimage2 : '..../public/uploads/1/firstImage/' + place.firstimage2}
                                                     alt={place.name}
                                                     width="150"
                                                     height="100"

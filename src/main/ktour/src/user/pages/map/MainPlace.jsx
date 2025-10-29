@@ -11,17 +11,18 @@ import KakaoMap from "@/kakaomap/KakaoMapJS";                       // 카카오
 import RightCategory from "@user/pages/map/RightCategory";        // 우측 플레이스 목록 
 import LeftModalPlace from "@user/pages/map/LeftModalPlace";      // 좌측 모달 레이어(지도 마커 클릭시, 플레이스 상세정보)
 import RightModalPlace from "@user/pages/map/RightModalPlace";    // 우측 모달 레이어(우측 플레이스 목록 클릭시, 플레이스 상세정보)
-import "@assets/user/css/modal.css"; 
+import "@assets/user/css/modal.css";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 
 export default function MainPlace(props) {
-    const { selectedLeftMarker, selectedRigthMarker, selectedCategory } = useSelector((state) => state.relatedMap);
+    const { selectedLeftMarker, selectedCategory } = useSelector((state) => state.relatedMap);
 
-    return <>
+    return (<>
         <div id="map"><KakaoMap selectedCategory={selectedCategory} /></div>
-        {selectedRigthMarker && <RightModalPlace pNo={selectedRigthMarker} />}
+        <RightModalPlace />
         {selectedLeftMarker && <LeftModalPlace pNo={selectedLeftMarker} />}
         <RightCategory />
-    </>
+    </>)
 }//MainPlace.jsx end
