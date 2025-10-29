@@ -15,8 +15,6 @@ export default function PlaceInfo() {
 
   const [picked, setPicked] = useState(null);   // 목록에서 클릭한 행
   const [detail, setDetail] = useState(null);   // 서버 상세 응답
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [detailKey, setDetailKey] = useState(0);   // 우측 패널 리셋용 키
 
   useEffect(() => {

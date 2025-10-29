@@ -57,7 +57,13 @@ export default function ListSection(props) {
         try {
             // 서버 응답: { content: [...], totalElements: 62591, size: 10, currentPage: 1, ... }
             const { data } = await axios.get("http://localhost:8080/placeinfo/search", { params });
-            setRows(data?.content || []);
+            // No 컬럼을 위해 각 행에 순번을 부여합니다.
+            const __size = Number(data?.size ?? size);
+            const __page = Number(data?.currentPage ?? page);
+            const __offset = (__page - 1) * __size;
+            const __content = Array.isArray(data?.content) ? data.content : [];
+            const __mapped = __content.map((r, i) => ({ ...r, no: __offset + i + 1 }));
+            setRows(__mapped);
             setTotalElements(data?.totalElements ?? 0);
             // 서버가 현재 page/size를 되돌려 주면 동기화
             if (data?.size) setSize(data.size);
