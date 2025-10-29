@@ -36,7 +36,7 @@ public interface LDongCodeMapper {
      * @author AhnJH
      */
     @Select("SELECT ldNo, ldongsigngucd, ldongsigngunm " +
-            "FROM k_tour_headquarter.ldongcode " +
+            "FROM ldongcode " +
             "WHERE lDongRegnCd = #{lDongRegnCd}")
     List<Map<String, Object>> getLDongSignguByRegnCd(int lDongRegnCd);
 

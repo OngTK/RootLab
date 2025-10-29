@@ -14,12 +14,12 @@
         PARTITION BY kmg.mapx, kmg.mapy
         ORDER BY kpi.pNo ASC
         ) AS rn
-        FROM k_tour_headquarter.placeinfo kpi
-        JOIN k_tour_headquarter.contenttype kct
+        FROM placeinfo kpi
+        JOIN contenttype kct
         ON kpi.ctNo = kct.ctNo
-        JOIN k_tour_headquarter.markersgps kmg
+        JOIN markersgps kmg
         ON kpi.pNo = kmg.pNo
-        JOIN k_tour_headquarter.categorycode kcc
+        JOIN categorycode kcc
         ON kpi.ccNo = kcc.ccNo) t
         <where>
             <if test="east != null">

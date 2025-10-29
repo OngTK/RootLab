@@ -188,10 +188,10 @@
                ST_Distance_Sphere(POINT(kmg.mapx, kmg.mapy), -- DB에 저장된 장소의 좌표
                                   POINT(#{lng}, #{lat})         -- API로 전달받은 사용자의 현재 좌표
                                   ) AS distance
-        FROM k_tour_headquarter.placeinfo kpi
-        JOIN k_tour_headquarter.markersgps kmg
+        FROM placeinfo kpi
+        JOIN markersgps kmg
         USING (pNo)
-        JOIN k_tour_headquarter.categorycode kcc
+        JOIN categorycode kcc
         USING (ccNo)
         WHERE kpi.title LIKE CONCAT('%', #{keyword}, '%')
         OR kpi.addr1 LIKE CONCAT('%', #{keyword}, '%')
