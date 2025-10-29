@@ -13,6 +13,8 @@ import axios from "axios";
 const toDate = (v) => (v ? String(v).slice(0, 10) : "");
 const toDateTimeStart = (yyyyMMdd) => (yyyyMMdd ? `${yyyyMMdd} 00:00:00` : null);
 const toDateTimeEnd = (yyyyMMdd) => (yyyyMMdd ? `${yyyyMMdd} 23:59:59` : null);
+const serverImgUrl = (ppImg) =>
+  ppImg ? `http://localhost:5173/uploads/1/ppImg/${encodeURIComponent(ppImg)}` : "";
 
 // 서버 기대값(예: 1/2/3)과 UI값(0/1/2) 매핑
 const normalizeUse = (v) => {
@@ -21,6 +23,7 @@ const normalizeUse = (v) => {
   if (v === "2") return "3";
   return v ?? "";
 };
+
 
 export default function DetailSection(props) {
 
@@ -52,7 +55,8 @@ export default function DetailSection(props) {
         const [updatedAt, setUpdatedAt] = useState("");
 
         const [uploadFile, setUploadFile] = useState(null);
-        const [privewUrl, setprivelwUrl] = useState(""); // 로컬 미리보기 전용 URL
+        const [previewUrl, setPreviewUrl] = useState(""); // ← 미리보기 전용(URL)
+        const [fileKey, setFileKey] = useState(0);        // ← 파일 input 리셋용 key
         const fileRef = useRef(null);
 
         //!! (두 개의 느낌표)는 Boolean 강제 변환 연산자 true/false
@@ -76,30 +80,33 @@ export default function DetailSection(props) {
             setUploadFile(null);
            
             //미리보기 초기화
-            if(privewUrl) URL.revokeObjectURL(privewUrl);
-            setprivelwUrl("");
             setUploadFile(null);
-
+            setPreviewUrl("");     // ← 미리보기 초기화
             setTitle("");
-            if(fileRef.current) fileRef.current.value = "";
+            if (fileRef.current) fileRef.current.value = "";
+            setFileKey(k => k + 1); // ← 파일 input 리셋
         };
 
         // [2] selected 바인딩
         useEffect(() => {
           // 선택 변경시 이전 미리보기 정리
-          if(privewUrl){
-            URL.revokeObjectURL(privewUrl);
-            setprivelwUrl("");
+          if(previewUrl){
+            URL.revokeObjectURL(previewUrl);
+            setPreviewUrl("");
           }
 
-          if(fileRef.current) fileRef.current.value("");
+          if (fileRef.current) fileRef.current.value = "";
+          setFileKey(k => k + 1);                 // ← 파일 input 리셋
+
+
+          if(fileRef.current) fileRef.current.value = "";
           
             if (!selected) {
             resetForm();
             return;
             }
             setppNo(selected.ppNo ?? null);
-            setpNo(selected.pno ?? "");
+            setpNo(selected.pNo ?? "");
             setmgNo(selected.mgNo ?? "");
             setppTitle(selected.ppTitle ?? "");
             setppContent(selected.ppContent ?? "");
@@ -114,6 +121,8 @@ export default function DetailSection(props) {
             setUploadFile(null);
             setTitle("");
             if (fileRef.current) fileRef.current.value = "";
+            // ★ 선택 항목의 서버 이미지로 미리보기 세팅
+            setPreviewUrl(serverImgUrl(selected.ppImg));
         }, [selected]);
 
   // 수정용 JSON 페이로드
@@ -304,17 +313,20 @@ export default function DetailSection(props) {
                             <label for="nameInput"><b>링크연결(url)</b><input className="nameInput" type="text"
                                 placeholder="링크연결주소(url)" /></label><br />
                             <label for=""><b>팝업이미지</b><input className=""
+                                key={fileKey} //<- 파일 input 리셋 핵심
+                                ref={fileRef}
                                 type="file" 
+                                accept="image/*"
                                 onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
                                     setUploadFile(file);
-                                    setppImg(URL.createObjectURL(file));
-                                    setppImg(url);
+                                    setppImg("");                      // 새 파일 올릴 것이므로 서버 파일명 무효화
+                                    setPreviewUrl(URL.createObjectURL(file)); // ← 미리보기는 blob URL만 사용
                                 }}/></label>
                             <div className="info_date">*이미지 사이즈: 800px(가로) * 600px(세로) 권장, 이미지 파일확장자 : jpg/png/gif </div>
                             <img
-                                src={ encodeURI("http://localhost:5173/uploads/1/ppImg/"+ppImg ) }
+                                src={ previewUrl || serverImgUrl(ppImg) || "https://placehold.co/800x600/EEE/31343C" }
                                 onError={(e) => { e.currentTarget.src = "https://placehold.co/800x600/EEE/31343C"; }}
                                 alt="preview"
                                 style={{ width: "100%" }} /><br />

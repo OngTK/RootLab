@@ -68,7 +68,7 @@ public interface PushPopupMapper {
     String findByPlaceNo(String pNo);
 
     /**
-     * 7.
+     * 7. 배너 출력
      * @author juju95
      */
     List<PushPopupDto> bannerPush();

@@ -48,8 +48,18 @@ export default function PopupBanner(props) {
 
   // 데이터 없으면 아무것도 렌더하지 않음
   if (loading) return null;
-  if (!items.length) return null;
-
+  if (!items.length) {
+  setItems([
+    {
+      ppNo: 0,
+      ppTitle: "기본 배너",
+      ppContent: "현재 등록된 배너가 없습니다.",
+      ppImg: "/user/img/popup_sample3.jpg", // 기본 이미지 경로
+      ppType: "3",
+    },
+  ]);
+  return null; // 첫 렌더 한 번 끊어주기
+}
     
 console.log("팝업");
 /** =========================== PopupBanner.jsx ===================================== */
