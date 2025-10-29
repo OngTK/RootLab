@@ -304,18 +304,26 @@ export default function KakaoMap(props) {
         const infowindow = infoWindowRef.current;
         if (!infowindow) return;
 
-        const imageSize = new kakao.maps.Size(33, 50);
+        let imageSize = null;
 
-        // 마커 객체 배열 생성
-        const kakaoMarkers = markers.map(marker => {
+        const firstFilteredMarkers = markers.filter((marker) => {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
-            let position = null
-            if (marker.ctNo == category) {
-                position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
-            }
-            // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)
-            const src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
+            return marker.ctNo == category
+        });
+
+        // 마커 객체 배열 생성
+        const kakaoMarkers = firstFilteredMarkers.map(marker => {
+            const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
+            let src = null;
+            if (marker.mkURL) {
+                // 추후 회원이 생긴다면, uploads/siNo/marker로 변경
+                src = '../public/uploads/1/marker/' + marker.mkURL;
+                imageSize = new kakao.maps.Size(150, 90);
+            } else {
+                src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
+                imageSize = new kakao.maps.Size(33, 50);
+            } // if end            
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
             const kakaoMarker = new kakao.maps.Marker({
