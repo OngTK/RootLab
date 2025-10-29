@@ -111,7 +111,7 @@ export default function Header(props) {
                 </header>
                 <div className="placeSearch">
                     <button onClick={searchingPlace}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                    <input type="text" placeholder="관광지/상호명 검색" autoFocus="" value={searchBoxInput} onChange={(e) => { SetSearchBoxInput(e.target.value) }} onKeyDown={(e) => activeEnter(e)} />
+                    <input type="search" placeholder="관광지/상호명 검색" autoFocus="" value={searchBoxInput} onChange={(e) => { SetSearchBoxInput(e.target.value) }} onKeyDown={(e) => activeEnter(e)} />
                 </div>
                 <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">

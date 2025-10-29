@@ -14,7 +14,7 @@
 /* 페이지 검색창 */
 .user-scope .placeSearch{  width:90%; margin: 0 auto; overflow: hidden;  border:solid 1px rgba(0,0,0,.7); border-width:2px; border-radius: 7px; }
 .user-scope .placeSearch svg{ width: 17px; height: 17px; padding:0; color:#009900; }
-.user-scope .placeSearch input[type=text]{ caret-color: black; width:85%; font:600 14px/32px 'Noto Sans KR',Sans-serif; margin: 0; padding:0 5px 2px 2px;  color:#000; border:none; outline: 0; }
+.user-scope .placeSearch input[type=search]{ caret-color: black; width:85%; font:600 14px/32px 'Noto Sans KR',Sans-serif; margin: 0; padding:0 5px 2px 2px;  color:#000; border:none; outline: 0; }
 .user-scope .placeSearch input::placeholder{ color:rgba(0,0,0,.3); font-size: 14px; }
 .user-scope .placeSearch button{ background: none; color: #009900; border: 0; width: 30px; }
 
