@@ -245,7 +245,7 @@ export default function DetailCommon1({
             <div className="placeCommonWrap">
                 <form aria-label="기본정보 입력">
                     <fieldset>
-                        <legend>새해 맞이 불꽃쇼 & 소원 풍선 날리기 축제{/* 기본정보 */}</legend>
+                        <legend>{title}</legend>
 
                         {/* 1. 지도 미리보기 영역 */}
                         <div ref={mapRef}
@@ -302,7 +302,7 @@ export default function DetailCommon1({
                             {/* 5. 플레이스 번호 */}
                             <span className="form-group">
                                 <label htmlFor="place-number">플레이스 번호</label>
-                                <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly />
+                                <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly placeholder="자동 발급"/>
                             </span>
                         </div>
                         {/* 6. 기본 주소 */}

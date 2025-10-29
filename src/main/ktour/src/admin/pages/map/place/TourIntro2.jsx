@@ -1,90 +1,90 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측]플레이스 Intro상세정보(2.인트로) 컴포넌트
+ * 관리자??> 관광정보�?�?> ?�레?�스?�황(PlaceInfo) > [본문 ?�측]?�레?�스 Intro?�세?�보(2.?�트�? 컴포?�트
  *
  * @author 
  * @since 2025.10.20
  * @version 0.1.1
  */
 
-export default function TourIntro2({ data }) {
-    const t = data ?? {}; // 안전 가드
+import { useRef } from "react";\nimport axios from "axios";\n\nexport default function TourIntro2({ data, pNo }) {
+    const t = data ?? {};\n\n    const fmt = (s) => (s ?? "");\n    const dateLabel = fmt(t.updatedAt) || fmt(t.createdAt);\n\n    const formRef = useRef(null);\n\n    const collect = () => {\n        const fd = new FormData(formRef.current);\n        const get = (k) => (fd.get(k) ?? "").toString();\n        return {\n            accomcount: get("accomcount"),\n            chkBabyCarriage: get("chkBabyCarriage"),\n            chkCreditCard: get("chkCreditCard"),\n            chkPet: get("chkPet"),\n            expAgeRange: get("expAgeRange"),\n            expGuide: get("expGuide"),\n            heritage1: get("heritage1"),\n            heritage2: get("heritage2"),\n            heritage3: get("heritage3"),\n            infoCenter: get("infoCenter"),\n            openDate: get("openDate"),\n            parking: get("parking"),\n            restDate: get("restDate"),\n            useSeason: get("useSeason"),\n            useTime: get("useTime"),\n        };\n    };\n\n    const isChanged = (curr) => {\n        const same = (a, b) => String(a ?? "") === String(b ?? "");\n        return !(\n            same(curr.accomcount, t.accomcount) &&\n            same(curr.chkBabyCarriage, t.chkBabyCarriage) &&\n            same(curr.chkCreditCard, t.chkCreditCard) &&\n            same(curr.chkPet, t.chkPet) &&\n            same(curr.expAgeRange, t.expAgeRange) &&\n            same(curr.expGuide, t.expGuide) &&\n            same(curr.heritage1, t.heritage1) &&\n            same(curr.heritage2, t.heritage2) &&\n            same(curr.heritage3, t.heritage3) &&\n            same(curr.infoCenter, t.infoCenter) &&\n            same(curr.openDate, t.openDate) &&\n            same(curr.parking, t.parking) &&\n            same(curr.restDate, t.restDate) &&\n            same(curr.useSeason, t.useSeason) &&\n            same(curr.useTime, t.useTime)\n        );\n    };\n\n    const handleSave = async () => {\n        const curr = collect();\n        const tiNo = t.tiNo ?? null;\n        const hasPno = pNo ?? t.pNo ?? t.pno ?? null;\n        if (!hasPno) { alert("�÷��̽��� ���õ��� �ʾҽ��ϴ�."); return; }\n\n        const dto = {\n            tiNo: tiNo ?? 0,\n            pNo: Number(hasPno),\n            ...curr,\n            tiStatus: tiNo ? (isChanged(curr) ? 2 : 0) : 1,\n        };\n\n        try {\n            await axios.post("http://localhost:8080/placeinfo/tourIntro", dto);\n            alert("����Ǿ����ϴ�.");\n        } catch (e) {\n            console.error(e);\n            alert("���� �� ������ �߻��߽��ϴ�.");\n        }\n    };
 
-    const fmt = (s) => (s ?? ""); // null/undefined 방지
+    const fmt = (s) => (s ?? ""); // null/undefined 방�?
     const dateLabel = fmt(t.updatedAt) || fmt(t.createdAt);
 
     return (
         <div className="TourIntroWrap">
-            <form aria-label="관광지 상세 정보 입력">
+            <form ref={formRef} aria-label="������ �� ���� �Է�">
                 <fieldset>
-                    <legend>관광지 상세 정보</legend>
+                    <legend>������ �� ����</legend>
 
-                    {/* 수용인원 */}
+                    {/* ?�용?�원 */}
                     <div className="form-group">
-                        <label htmlFor="accomcount">수용인원</label>
+                        <label htmlFor="accomcount">?�용?�원</label>
                         <input id="accomcount" name="accomcount" type="text" defaultValue={fmt(t.accomcount)} />
                     </div>
 
-                    {/* 유모차/신용카드/반려동물 */}
+                    {/* ?�모�??�용카드/반려?�물 */}
                     <div className="form-group">
-                        <label htmlFor="chkBabyCarriage">유모차 대여정보</label>
+                        <label htmlFor="chkBabyCarriage">?�모�??�?�정�?/label>
                         <input id="chkBabyCarriage" name="chkBabyCarriage" type="text" defaultValue={fmt(t.chkBabyCarriage)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="chkCreditCard">신용카드 가능정보</label>
+                        <label htmlFor="chkCreditCard">?�용카드 가?�정�?/label>
                         <input id="chkCreditCard" name="chkCreditCard" type="text" defaultValue={fmt(t.chkCreditCard)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="chkPet">애완동물 동반 가능정보</label>
+                        <label htmlFor="chkPet">?�완?�물 ?�반 가?�정�?/label>
                         <input id="chkPet" name="chkPet" type="text" defaultValue={fmt(t.chkPet)} />
                     </div>
 
-                    {/* 체험/유산 */}
+                    {/* 체험/?�산 */}
                     <div className="form-group">
-                        <label htmlFor="expAgeRange">체험 가능 연령</label>
+                        <label htmlFor="expAgeRange">체험 가???�령</label>
                         <input id="expAgeRange" name="expAgeRange" type="text" defaultValue={fmt(t.expAgeRange)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="expGuide">체험 안내</label>
+                        <label htmlFor="expGuide">체험 ?�내</label>
                         <textarea id="expGuide" name="expGuide" rows={4} defaultValue={fmt(t.expGuide)} />
                     </div>
                     <div className="form-group">
-                        <label>세계문화유산 유무</label>
-                        <input aria-label="문화유산1" name="heritage1" type="text" defaultValue={fmt(t.heritage1)} />
-                        <input aria-label="문화유산2" name="heritage2" type="text" defaultValue={fmt(t.heritage2)} />
-                        <input aria-label="문화유산3" name="heritage3" type="text" defaultValue={fmt(t.heritage3)} />
+                        <label>?�계문화?�산 ?�무</label>
+                        <input aria-label="문화?�산1" name="heritage1" type="text" defaultValue={fmt(t.heritage1)} />
+                        <input aria-label="문화?�산2" name="heritage2" type="text" defaultValue={fmt(t.heritage2)} />
+                        <input aria-label="문화?�산3" name="heritage3" type="text" defaultValue={fmt(t.heritage3)} />
                     </div>
 
-                    {/* 안내/일정/주차/휴무/이용 */}
+                    {/* ?�내/?�정/주차/?�무/?�용 */}
                     <div className="form-group">
-                        <label htmlFor="infoCenter">문의 및 안내</label>
+                        <label htmlFor="infoCenter">문의 �??�내</label>
                         <input id="infoCenter" name="infoCenter" type="text" defaultValue={fmt(t.infoCenter)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="openDate">개장일</label>
+                        <label htmlFor="openDate">개장??/label>
                         <input id="openDate" name="openDate" type="text" defaultValue={fmt(t.openDate)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="parking">주차시설</label>
+                        <label htmlFor="parking">주차?�설</label>
                         <input id="parking" name="parking" type="text" defaultValue={fmt(t.parking)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="restDate">쉬는 날</label>
+                        <label htmlFor="restDate">?�는 ??/label>
                         <input id="restDate" name="restDate" type="text" defaultValue={fmt(t.restDate)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="useSeason">이용 시기</label>
+                        <label htmlFor="useSeason">?�용 ?�기</label>
                         <input id="useSeason" name="useSeason" type="text" defaultValue={fmt(t.useSeason)} />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="useTime">이용 시간</label>
+                        <label htmlFor="useTime">?�용 ?�간</label>
                         <input id="useTime" name="useTime" type="text" defaultValue={fmt(t.useTime)} />
                     </div>
 
                     <div className="info_date">
-                        <b>최종 수정일:</b> {dateLabel || "-"}
+                        <b>최종 ?�정??</b> {dateLabel || "-"}
                     </div>
                     <div className="form-actions">
-                        <button type="button">저장</button> <button type="button">삭제</button>
+                        <button type="button">?�??/button> <button type="button">??��</button>
                     </div>
                 </fieldset>
             </form>

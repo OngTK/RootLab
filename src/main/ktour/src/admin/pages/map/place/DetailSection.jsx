@@ -7,8 +7,8 @@
  */
 
 import DetailCommon1 from "@admin/pages/map/place/DetailCommon1";  //* (본문 우측)플레이스 공통정보(1.기본) 컴포넌트 */
-import TourIntro2 from "@admin/pages/map/place/TourIntro2";    //* (본문 우측)플레이스 상세정보(2.인트로) 컴포넌트 */
-import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3";  //* (본문 우측)플레이스 반복정보(3.info2) 컴포넌트 */
+import TourIntro2 from "@admin/pages/map/place/TourIntro2New";    //* (본문 우측)플레이스 상세정보(2.인트로) 컴포넌트 */
+import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3New";  //* (본문 우측)플레이스 반복정보(3.info2) 컴포넌트 */
 import RestaurantIntro2 from "./RestaurantIntro2";
 import FestivalIntro2 from "./FestivalIntro2";
 import { useEffect, useState, useMemo } from "react";
@@ -97,7 +97,7 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                     <hr />
                     {/* 타입별 섹션 : effectiveCt만 사용 */}
                     {(!effectiveCt || effectiveCt === "1") && (
-                        <TourIntro2 key={`tour-${resetSeq}`} data={localDetail?.TourIntro ?? null} />
+                        <TourIntro2 key={`tour-${resetSeq}`} data={localDetail?.TourIntro ?? null} pNo={placeInfo?.pNo ?? placeInfo?.pno ?? null} />
                     )}
                     {effectiveCt === "3" && (
                         <FestivalIntro2 key={`fest-${resetSeq}`} data={localDetail?.FestivalIntro ?? null} />
@@ -106,7 +106,7 @@ export default function DetailSection({ detail, loading, error, ...rest }) {
                         <RestaurantIntro2 key={`rest-${resetSeq}`} data={localDetail?.RestaurantIntro ?? null} />
                     )}
                     <hr />
-                    <DetailRepeat3 key={`rep-${resetSeq}`} items={placeInfoDtoList} />
+                    <DetailRepeat3 key={`rep-${resetSeq}`} items={placeInfoDtoList} pNo={placeInfo?.pNo ?? placeInfo?.pno ?? null} />
                 </div>
                 {/* <!-- 상세정보 1.2.3.입/출력 끝 --> */}
             </section>
