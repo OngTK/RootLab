@@ -304,26 +304,51 @@ export default function KakaoMap(props) {
         const infowindow = infoWindowRef.current;
         if (!infowindow) return;
 
-        let imageSize = null;
+        const customMarkers = markers.filter((marker) => {
+            return marker.mkURL;
+        });
+        customMarkers.map((marker) => {
+            const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
+            const src = '../public/uploads/1/marker/' + marker.mkURL;
+            const imageSize = new kakao.maps.Size(150, 90);
+
+            const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+            const kakaoMarker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage,
+                zIndex: 4
+            });
+            kakaoMarker.setMap(map);
+            // 마커 클릭 이벤트 생성
+            kakao.maps.event.addListener(kakaoMarker, 'click', () => {
+                SetSelectedGps(marker);
+                dispatch(selectLeftMarker(marker.pNo));
+                // 인포윈도우 내용 설정
+                const html = `<div class="iw-container">
+                                <p class="iw-header">
+                                    <span class="iw-title">${marker.title || '장소 정보'}</span>
+                                    <span class="iw-category">${marker.contenttypename || '카테고리'}</span>
+                                </p>
+                                <span class="iw-address">${marker.addr1 || '주소 정보 없음'}</span>
+                              </div>`
+                const iwContent = html;
+                infowindow.setContent(iwContent);
+                infowindow.open(map, kakaoMarker);
+            }) // addListener end
+        });
 
         const firstFilteredMarkers = markers.filter((marker) => {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
-            return marker.ctNo == category
+            return marker.ctNo == category && !marker.mkURL;
         });
 
         // 마커 객체 배열 생성
         const kakaoMarkers = firstFilteredMarkers.map(marker => {
             const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
-            let src = null;
-            if (marker.mkURL) {
-                // 추후 회원이 생긴다면, uploads/siNo/marker로 변경
-                src = '../public/uploads/1/marker/' + marker.mkURL;
-                imageSize = new kakao.maps.Size(150, 90);
-            } else {
-                src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
-                imageSize = new kakao.maps.Size(33, 50);
-            } // if end            
+            const src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
+            const imageSize = new kakao.maps.Size(33, 50);
+
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
             const kakaoMarker = new kakao.maps.Marker({
