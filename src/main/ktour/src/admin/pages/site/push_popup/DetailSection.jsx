@@ -13,6 +13,8 @@ import axios from "axios";
 const toDate = (v) => (v ? String(v).slice(0, 10) : "");
 const toDateTimeStart = (yyyyMMdd) => (yyyyMMdd ? `${yyyyMMdd} 00:00:00` : null);
 const toDateTimeEnd = (yyyyMMdd) => (yyyyMMdd ? `${yyyyMMdd} 23:59:59` : null);
+const serverImgUrl = (ppImg) =>
+  ppImg ? `http://localhost:5173/uploads/1/ppImg/${encodeURIComponent(ppImg)}` : "";
 
 // 서버 기대값(예: 1/2/3)과 UI값(0/1/2) 매핑
 const normalizeUse = (v) => {
@@ -21,6 +23,7 @@ const normalizeUse = (v) => {
   if (v === "2") return "3";
   return v ?? "";
 };
+
 
 export default function DetailSection(props) {
 
@@ -52,11 +55,13 @@ export default function DetailSection(props) {
         const [updatedAt, setUpdatedAt] = useState("");
 
         const [uploadFile, setUploadFile] = useState(null);
-        const [privewUrl, setprivelwUrl] = useState(""); // 로컬 미리보기 전용 URL
+        const [previewUrl, setPreviewUrl] = useState(""); // ← 미리보기 전용(URL)
+        const [fileKey, setFileKey] = useState(0);        // ← 파일 input 리셋용 key
         const fileRef = useRef(null);
 
         //!! (두 개의 느낌표)는 Boolean 강제 변환 연산자 true/false
         const isEdit = useMemo(() => !!ppNo, [ppNo])
+        
 
         // [1-1] 폼 초기화 함수 (세터 이름 정확히!)
         const resetForm = () => {
@@ -76,30 +81,34 @@ export default function DetailSection(props) {
             setUploadFile(null);
            
             //미리보기 초기화
-            if(privewUrl) URL.revokeObjectURL(privewUrl);
-            setprivelwUrl("");
             setUploadFile(null);
-
+            setPreviewUrl("");     // ← 미리보기 초기화
             setTitle("");
-            if(fileRef.current) fileRef.current.value = "";
+            if (fileRef.current) fileRef.current.value = "";
+            setFileKey(k => k + 1); // ← 파일 input 리셋
         };
 
         // [2] selected 바인딩
         useEffect(() => {
           // 선택 변경시 이전 미리보기 정리
-          if(privewUrl){
-            URL.revokeObjectURL(privewUrl);
-            setprivelwUrl("");
+          if(previewUrl){
+            URL.revokeObjectURL(previewUrl);
+            setPreviewUrl("");
           }
 
-          if(fileRef.current) fileRef.current.value("");
+          if (fileRef.current) fileRef.current.value = "";
+          setFileKey(k => k + 1);                 // ← 파일 input 리셋
+
+
+          if(fileRef.current) fileRef.current.value = "";
           
             if (!selected) {
             resetForm();
             return;
             }
             setppNo(selected.ppNo ?? null);
-            setpNo(selected.pno ?? "");
+            setpNo(selected?.pNo != null ? String(selected.pNo) : "");   // [FIX]
+            console.log("[DEBUG] pNo:", pNo, "selected.pNo:", selected?.pNo);
             setmgNo(selected.mgNo ?? "");
             setppTitle(selected.ppTitle ?? "");
             setppContent(selected.ppContent ?? "");
@@ -108,19 +117,46 @@ export default function DetailSection(props) {
             setppType(selected.ppType ?? "");
             setppStartDate(toDate(selected.ppStart));
             setppEndDate(toDate(selected.ppEnd));
-            setppIteratedDate(selected.ppIterated ?? "");
+            setppIteratedDate(                                     // [FIX] "HH:mm:ss" → "HH:mm"
+            selected.ppIterated ? String(selected.ppIterated).slice(0, 5) : "")
             setCreatedAt(selected.createdAt ?? "");
             setUpdatedAt(selected.updatedAt ?? "");
             setUploadFile(null);
             setTitle("");
             if (fileRef.current) fileRef.current.value = "";
+            // ★ 선택 항목의 서버 이미지로 미리보기 세팅
+            setPreviewUrl(serverImgUrl(selected.ppImg));
         }, [selected]);
+
+      useEffect(() => {
+        if (ppNo && selected) {       // 수정 모드일 때만 실행
+          setpNo(selected.pNo ?? ""); // 기존 등록된 place 번호 자동 표시
+          setTitle(selected.placeTitle ?? selected.title ?? ""); // DTO에 따라 필드명 조정
+        }
+      }, [ppNo, selected]);
+
+      const normalizePnoForSend = () => {
+        // 1) 입력칸 값 우선
+        const raw = (pNo ?? "").toString().trim();
+        if (raw !== "" && /^\d+$/.test(raw)) return raw;          // 숫자만 허용
+        // 2) 선택행(selected)의 pNo도 "숫자일 때만" 채택
+        const sel = selected?.pNo;
+        if (sel !== null && sel !== undefined) {
+          const selStr = String(sel).trim();
+          if (selStr !== "" && /^\d+$/.test(selStr)) return selStr;
+        }
+
+        // 3) 정말 없으면 null (이 경우는 등록에서만 허용, 수정이면 에러 가이드)
+        return null;
+      };
+
+
 
   // 수정용 JSON 페이로드
   const buildPayload = () => ({
     ...(ppNo ? { ppNo } : {}),
-    pNo: pNo || null,
-    mgNo: mgNo || null,
+    pNo: normalizePnoForSend(),                                // [FIX] "null"이 append되지 않게 사전 보정
+    mgNo: mgNo || loginMgNo || null,
     ppTitle: ppTitle || null,
     ppContent: ppContent || null,
     ppImg: ppImg || null,
@@ -128,19 +164,37 @@ export default function DetailSection(props) {
     ppType: ppType || null,
     ppStart: toDateTimeStart(ppStartDate),
     ppEnd: toDateTimeEnd(ppEndDate),
-    ppIterated: ppIteratedDate || null,
+    ppIterated: ppIteratedDate                               // [FIX] "HH:mm" → "HH:mm:ss"
+    ? (ppIteratedDate.length === 5 ? `${ppIteratedDate}:00` : ppIteratedDate)
+    : null,
   });
 
   // 저장(등록/수정)
   const save = async () => {
     try {
       if (isEdit) {
-        // --- 수정(@RequestBody)
-        console.log( pNo );
-        const obj = buildPayload();
-        const res = await axios.put("http://localhost:8080/push/update", obj, {
+        // --- 수정(@RequestPart("dto"), file)
+        const dto = buildPayload();
+        const fd = new FormData();
+        fd.append("ppNo", ppNo);
+        fd.append("mgNo", dto.mgNo);
+        fd.append("pNo", dto.pNo);
+        fd.append("ppContent", dto.ppContent);
+        fd.append("ppEnd", dto.ppEnd);
+        fd.append("ppImg", dto.ppImg);
+        fd.append("ppIterated", dto.ppIterated);
+        fd.append("ppStart", dto.ppStart);
+        fd.append("ppTitle", dto.ppTitle);
+        fd.append("ppType", dto.ppType);
+        fd.append("ppUse", dto.ppUse);
+        if (uploadFile) fd.append("file", uploadFile);
+
+        console.log(uploadFile);
+        console.log(fd);
+
+        const res = await axios.put("http://localhost:8080/push/update", fd, {
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("[수정 결과]", res.data);
         onSaved?.();
@@ -239,7 +293,7 @@ export default function DetailSection(props) {
                         <li className="active">기본정보</li>
                     </ul>
                     <span className="btnBox">
-                        <button onClick={save} type="button" className="btn full" >저장</button>
+                        <button type="button" className="btn full" onClick={save} disabled={!isEdit && !(pNo && /^\d+$/.test(String(pNo)))}>저장</button>
                         <button onClick={remove} type="button" className="btn line" >삭제</button>
                         <button onClick={makeNew} type="button" className="btn line" >신규등록</button>
                     </span>
@@ -282,16 +336,24 @@ export default function DetailSection(props) {
                                 name="birthInput" placeholder="노출 종료일" /></label>
                             <span><br />
                                 <label for="genderMaleInput"><b>푸시알림시간</b>
-                                    <input className="genderInput" type="time" value={ppIteratedDate}
-                            onChange={(e) => setppIteratedDate(e.target.value)} />
+                                  <input className="genderInput" type="time" step="3600"      // [FIX] 1시간 단위
+                                  value={ppIteratedDate}                                    // 항상 "HH:mm"
+                                  onChange={(e) => {
+                                    const [hour] = String(e.target.value || "").split(":");
+                                    setppIteratedDate(`${String(hour ?? "00").padStart(2,"0")}:00`); // "HH:00"
+                                  }} />
                                 </label>
-                            </span>
+                            </span> 
                             <br />
-                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch }>검색</button><input className="nameInput" type="text"
-                                placeholder="플레이스No"  value={ pNo} onChange={(e) => setpNo(e.target.value)}  />
+                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch } disabled={!!ppNo} >검색</button><input className="nameInput" type="text"
+                                placeholder="플레이스No"  value={pNo} onChange={(e) => setpNo(e.target.value)} readOnly={!!ppNo} style={{
+                                backgroundColor: isEdit ? "#f6f6f6" : "white", // 수정모드일 때 회색 처리
+                                
+                              }}  />
                             </label>
                             <label for="nameInput"><b>플레이스명</b><input className="nameInput" type="text"
-                                placeholder="불러온 플레이스 명을 노출" value= { title }  />
+                                placeholder="불러온 플레이스 명을 노출" value= { title } readOnly={true} style={{
+                                backgroundColor: isEdit ? "#f6f6f6" : "white"}} />
                                 </label><button type="button" onClick={() => alert("플레이스 정보 보기 예정")}>정보보기</button>
                             <br />
                             <label for="nameInput"><b>제목</b><input className="nameInput" type="text" value={ppTitle}
@@ -304,17 +366,20 @@ export default function DetailSection(props) {
                             <label for="nameInput"><b>링크연결(url)</b><input className="nameInput" type="text"
                                 placeholder="링크연결주소(url)" /></label><br />
                             <label for=""><b>팝업이미지</b><input className=""
+                                key={fileKey} //<- 파일 input 리셋 핵심
+                                ref={fileRef}
                                 type="file" 
+                                accept="image/*"
                                 onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
                                     setUploadFile(file);
-                                    setppImg(URL.createObjectURL(file));
-                                    setppImg(url);
+                                    setppImg("");                      // 새 파일 올릴 것이므로 서버 파일명 무효화
+                                    setPreviewUrl(URL.createObjectURL(file)); // ← 미리보기는 blob URL만 사용
                                 }}/></label>
                             <div className="info_date">*이미지 사이즈: 800px(가로) * 600px(세로) 권장, 이미지 파일확장자 : jpg/png/gif </div>
                             <img
-                                src={ encodeURI("http://localhost:5173/uploads/1/ppImg/"+ppImg ) }
+                                src={ previewUrl || serverImgUrl(ppImg) || "https://placehold.co/800x600/EEE/31343C" }
                                 onError={(e) => { e.currentTarget.src = "https://placehold.co/800x600/EEE/31343C"; }}
                                 alt="preview"
                                 style={{ width: "100%" }} /><br />

@@ -74,7 +74,7 @@ public class PushPopupController {
      * @author juju9595
      */
     @PutMapping("/update")
-    public ResponseEntity<Boolean> updatePush(@RequestBody PushPopupDto dto){
+    public ResponseEntity<Boolean> updatePush(PushPopupDto dto){ // 처음에 json RequestBody 로 받음 첨부파일이 있어 json 받기 어려움
         System.out.println("dto = " + dto);
         boolean result = pushPopupService.updatePush(dto);
         return ResponseEntity.ok(result);

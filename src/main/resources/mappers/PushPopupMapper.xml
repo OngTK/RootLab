@@ -46,16 +46,17 @@
 
     <!-- 4. 수정 -->
     <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
-        UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppImg = #{ppImg} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
+        UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
     </update>
     
     <!-- 5. 배너 출력 -->
     <select id="bannerPush" resultType="rootLab.model.dto.PushPopupDto">
-        SELECT pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated
+        SELECT ppNo, pNo, mgNo, ppTitle, ppContent, ppImg, ppUse, ppType, ppStart, ppEnd, ppIterated
         FROM pushPopup
         WHERE ppUse IN ('1', '3')
-        AND ppStart &lt;= NOW()
-        AND ppEnd &gt;= NOW()
+        AND ( ppStart IS NULL OR ppStart &lt;= NOW())
+        AND ( ppEnd IS NULL OR ppEnd &gt;= NOW())
+        ORDER BY COALESCE(ppStart, createdAt) DESC, ppNo DESC
         LIMIT 11
     </select>
 

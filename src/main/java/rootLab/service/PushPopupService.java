@@ -43,9 +43,10 @@ public class PushPopupService {
     public int addPush(PushPopupDto pushPopupDto) {
         pushPopupMapper.addPush(pushPopupDto);
         if(pushPopupDto.getPpNo() > 0){
+            if(pushPopupDto.getFile() != null && !pushPopupDto.getFile().isEmpty()){// 가져온 파일이 null 아니고 비어있지 않으면 유효성 검사
             String upload = uploadFile( pushPopupDto.getFile() , "ppImg"  );
             if( upload != null ) pushPopupDto.setPpImg( upload ); // 업로드 성공이면 업로드할 이미지명 변경
-            pushPopupMapper.updatePushImg( pushPopupDto );
+            pushPopupMapper.updatePushImg( pushPopupDto );}
             return pushPopupDto.getPpNo();
         }else{
             return 0;
@@ -60,7 +61,16 @@ public class PushPopupService {
     //4. 수정
     public boolean updatePush(PushPopupDto dto){
         if(dto.getPpNo() == 0) return false; // 키 누락 방지
-        return pushPopupMapper.updatePush(dto) > 0;
+        // 만약에 수정시 새로운 첨부파일이 없으면 기존 파일 사용
+        int result = pushPopupMapper.updatePush(dto);
+
+        if(dto.getFile() != null&&!dto.getFile().isEmpty()){// 새로운 첨부파일이 있으면
+            String upload = uploadFile(dto.getFile(), "ppImg");
+            if(upload != null){
+                pushPopupMapper.updatePpImg(dto.getPpNo(), upload);
+            }
+        }
+        return result > 0;
     }
 
     //5. 파일 등록
