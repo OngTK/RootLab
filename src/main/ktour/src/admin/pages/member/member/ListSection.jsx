@@ -10,13 +10,13 @@ import { useEffect, useState, useMemo } from "react";
 import Pagination from "@admin/components/admin/place/Pagination";
 import ResizableTable from "@admin/components/common/ResizableTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-export default function ListSection(props) {
-    const [mType, setMType] = useState("");                 // 검색 필터(회원유형)
-    const [mName, setMName] = useState("");                 // 검색 필터(회원명)
-    const [mId, setMId] = useState("");                     // 검색 필터(회원ID)
-    const [mPhone, setMPhone] = useState("");               // 검색 필터(휴대폰번호)
+export default function ListSection({ activeMember, setActiveMember, selectedMid, setSelectedMid }) {
+    const [mType, setMType] = useState("");                 // 검색 필터 상태(회원유형)
+    const [mName, setMName] = useState("");                 // 검색 필터 상태(회원명)
+    const [mId, setMId] = useState("");                     // 검색 필터 상태(회원ID)
+    const [mPhone, setMPhone] = useState("");               // 검색 필터 상태(휴대폰번호)
 
     const [rows, setRows] = useState([]);                   // 검색 결과 테이블 데이터
     const [size, setSize] = useState(10);                   // 페이지네이션 / 기본 10
@@ -24,11 +24,12 @@ export default function ListSection(props) {
     const [totalElements, setTotalElements] = useState(0);  // 검색결과 레코드 수
     const EMPTY_FLAG = [{ __empty: true }];                 // 검색결과 빈 행(row) 처리
 
-    const [searched, setSearched] = useState(false);        // 테이블 행 선택(선택된 회원 상태)
-    const [selectedMid, setSelectedMid] = useState(null);
-    const [activeMember, setActiveMember] = useState(null);
-
-    const typeLabelMap = { 0: "관리자", 1: "일반회원", 2: "사업자", 3: "단체/모임" }; // 회원유형 int = 문자열 매칭 변환
+    const [searched, setSearched] = useState(false);        // 검색 상태
+// const [selectedMid, setSelectedMid] = useState(null);    // 테이블에서 어떤 행이 선택되었는지 표시상태 (active 클래스)
+// const [activeMember, setActiveMember] = useState(null);  // 우측(Detail) > 상세 폼에 입력값 채울 선택된 회원정보 데이터
+   
+    const typeLabelMap = { 0: "관리자", 1: "일반회원", 2: "사업자", 3: "단체/모임" }; // 회원유형(int) = 문자열 데이터 변환
+    const genderLabelMap = { "남": "남성", "여": "여성" };          // 성별(enum) = 문자열 데이터 변환
 
     //** [1] 스프링 서버로부터 데이터 요청 > 검색 실행 핸들러  */
     const onSearch = async (e) => {
@@ -66,19 +67,20 @@ export default function ListSection(props) {
                 mType: typeLabelMap[Number(r.mtype)] ?? "-",
                 mName: <strong>{r.mname}</strong>,
                 mNick: r.mnick,
-                mId:  r.mid,
+                mId: r.mid,
                 mid: r.mid, // onRowClick(row.mid) 때문에 추가
-                mGender: r.mgender,
+                //mGender: r.mgender,
+                mGender: genderLabelMap[r.mgender] ?? "-",
                 mPhone: r.mphone,
                 createdAt: r.createdAt,
                 updatedAt: r.updatedAt,
             })); // console.log("rowsMapped:", rowsMapped); 
             setRows(rowsMapped);
             setSearched(true);
-
-            setSelectedMid(rowsMapped[0].mid);
-            handleRowClick(rowsMapped[0].mid); // 선택된 회원 상세까지 자동 조회
-
+            if (rowsMapped.length > 0) {
+                setSelectedMid(rowsMapped[0].mid);
+                handleRowClick(rowsMapped[0].mid); // 선택된 회원 상세까지 자동 조회
+            }
         } catch (error) {
             console.error("[onSearch] 검색 실패!");
             setRows(EMPTY_FLAG);     // 실패 시에도 한 줄 메시지 보이기
@@ -105,7 +107,7 @@ export default function ListSection(props) {
     };
 
     useEffect(() => {
-        console.log("activeMember:", activeMember); //! 선택된 회원 데이터 행 확인
+        // console.log("activeMember:", activeMember); // !선택된 회원 데이터 행 확인용!
     }, [activeMember]);
 
     // 추가: selectedMid가 바뀌면 항상 반영되는 화면용 rows
@@ -118,7 +120,7 @@ export default function ListSection(props) {
     //** [3] 검색조건 초기화 핸들러 */
     const onReset = () => { setMType(""); setMName(""); setMId(""); setMPhone(""); };
 
-    // 테이블 해더 컬럼명
+    //** [3] 테이블 해더 컬럼명  */
     const columns = [
         { id: "no", title: "No", width: 30 },
         { id: "mType", title: "회원유형", width: 80 },
@@ -141,7 +143,7 @@ export default function ListSection(props) {
     // 전체 비우기(*주의 : 개발 중일 때만 사용할 것)
     // localStorage.clear();
 
-    /** =========================================== 회원현황(member) > 검색리스트단 ListSection.jsx ====================================== */
+    /** ========================= 회원현황(member) > 검색/리스트 ListSection.jsx =============================== */
     return (
         <>
             {/* <!-- [좌측] 검색/리스트 시작 --> */}
@@ -182,11 +184,11 @@ export default function ListSection(props) {
                         </span>
                     </form>
                 </div>
-                {/* <!-- 관리자현황 조건검색창 끝 --> */}
+                {/* <!-- 회원현황 조건검색창 끝 --> */}
 
                 {/* <!-- 목록(리스트) 테이블 시작 --> */}
                 <ul className="titleBox">
-                    <li className="result"> <FontAwesomeIcon icon={faMagnifyingGlass} />검색결과: {totalElements} 건</li>
+                    <li className="result"> <FontAwesomeIcon icon={faMagnifyingGlass} />검색결과 : {totalElements} 건</li>
                     <li className="btnBox">
                         <select className="baseDateInput"
                             value={size}
@@ -222,7 +224,6 @@ export default function ListSection(props) {
                 />
             </section>
             {/* <!-- [좌측] 검색/리스트 끝 --> */}
-
 
         </>
     );
