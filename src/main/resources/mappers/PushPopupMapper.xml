@@ -46,7 +46,7 @@
 
     <!-- 4. 수정 -->
     <update id="updatePush" parameterType="rootLab.model.dto.PushPopupDto">
-        UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppImg = #{ppImg} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
+        UPDATE pushPopup SET pNo = #{pNo} , mgNo = #{mgNo} , ppTitle = #{ppTitle} , ppContent = #{ppContent} , ppUse = #{ppUse} , ppType =  #{ppType} , ppStart = #{ppStart} , ppEnd = #{ppEnd} , ppIterated = #{ppIterated} WHERE ppNo = #{ppNo};
     </update>
     
     <!-- 5. 배너 출력 -->

@@ -61,6 +61,7 @@ export default function DetailSection(props) {
 
         //!! (두 개의 느낌표)는 Boolean 강제 변환 연산자 true/false
         const isEdit = useMemo(() => !!ppNo, [ppNo])
+        
 
         // [1-1] 폼 초기화 함수 (세터 이름 정확히!)
         const resetForm = () => {
@@ -106,7 +107,8 @@ export default function DetailSection(props) {
             return;
             }
             setppNo(selected.ppNo ?? null);
-            setpNo(selected.pNo ?? "");
+            setpNo(selected?.pNo != null ? String(selected.pNo) : "");   // [FIX]
+            console.log("[DEBUG] pNo:", pNo, "selected.pNo:", selected?.pNo);
             setmgNo(selected.mgNo ?? "");
             setppTitle(selected.ppTitle ?? "");
             setppContent(selected.ppContent ?? "");
@@ -115,7 +117,8 @@ export default function DetailSection(props) {
             setppType(selected.ppType ?? "");
             setppStartDate(toDate(selected.ppStart));
             setppEndDate(toDate(selected.ppEnd));
-            setppIteratedDate(selected.ppIterated ?? "");
+            setppIteratedDate(                                     // [FIX] "HH:mm:ss" → "HH:mm"
+            selected.ppIterated ? String(selected.ppIterated).slice(0, 5) : "")
             setCreatedAt(selected.createdAt ?? "");
             setUpdatedAt(selected.updatedAt ?? "");
             setUploadFile(null);
@@ -125,11 +128,35 @@ export default function DetailSection(props) {
             setPreviewUrl(serverImgUrl(selected.ppImg));
         }, [selected]);
 
+      useEffect(() => {
+        if (ppNo && selected) {       // 수정 모드일 때만 실행
+          setpNo(selected.pNo ?? ""); // 기존 등록된 place 번호 자동 표시
+          setTitle(selected.placeTitle ?? selected.title ?? ""); // DTO에 따라 필드명 조정
+        }
+      }, [ppNo, selected]);
+
+      const normalizePnoForSend = () => {
+        // 1) 입력칸 값 우선
+        const raw = (pNo ?? "").toString().trim();
+        if (raw !== "" && /^\d+$/.test(raw)) return raw;          // 숫자만 허용
+        // 2) 선택행(selected)의 pNo도 "숫자일 때만" 채택
+        const sel = selected?.pNo;
+        if (sel !== null && sel !== undefined) {
+          const selStr = String(sel).trim();
+          if (selStr !== "" && /^\d+$/.test(selStr)) return selStr;
+        }
+
+        // 3) 정말 없으면 null (이 경우는 등록에서만 허용, 수정이면 에러 가이드)
+        return null;
+      };
+
+
+
   // 수정용 JSON 페이로드
   const buildPayload = () => ({
     ...(ppNo ? { ppNo } : {}),
-    pNo: pNo || null,
-    mgNo: mgNo || null,
+    pNo: normalizePnoForSend(),                                // [FIX] "null"이 append되지 않게 사전 보정
+    mgNo: mgNo || loginMgNo || null,
     ppTitle: ppTitle || null,
     ppContent: ppContent || null,
     ppImg: ppImg || null,
@@ -137,19 +164,37 @@ export default function DetailSection(props) {
     ppType: ppType || null,
     ppStart: toDateTimeStart(ppStartDate),
     ppEnd: toDateTimeEnd(ppEndDate),
-    ppIterated: ppIteratedDate || null,
+    ppIterated: ppIteratedDate                               // [FIX] "HH:mm" → "HH:mm:ss"
+    ? (ppIteratedDate.length === 5 ? `${ppIteratedDate}:00` : ppIteratedDate)
+    : null,
   });
 
   // 저장(등록/수정)
   const save = async () => {
     try {
       if (isEdit) {
-        // --- 수정(@RequestBody)
-        console.log( pNo );
-        const obj = buildPayload();
-        const res = await axios.put("http://localhost:8080/push/update", obj, {
+        // --- 수정(@RequestPart("dto"), file)
+        const dto = buildPayload();
+        const fd = new FormData();
+        fd.append("ppNo", ppNo);
+        fd.append("mgNo", dto.mgNo);
+        fd.append("pNo", dto.pNo);
+        fd.append("ppContent", dto.ppContent);
+        fd.append("ppEnd", dto.ppEnd);
+        fd.append("ppImg", dto.ppImg);
+        fd.append("ppIterated", dto.ppIterated);
+        fd.append("ppStart", dto.ppStart);
+        fd.append("ppTitle", dto.ppTitle);
+        fd.append("ppType", dto.ppType);
+        fd.append("ppUse", dto.ppUse);
+        if (uploadFile) fd.append("file", uploadFile);
+
+        console.log(uploadFile);
+        console.log(fd);
+
+        const res = await axios.put("http://localhost:8080/push/update", fd, {
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("[수정 결과]", res.data);
         onSaved?.();
@@ -248,7 +293,7 @@ export default function DetailSection(props) {
                         <li className="active">기본정보</li>
                     </ul>
                     <span className="btnBox">
-                        <button onClick={save} type="button" className="btn full" >저장</button>
+                        <button type="button" className="btn full" onClick={save} disabled={!isEdit && !(pNo && /^\d+$/.test(String(pNo)))}>저장</button>
                         <button onClick={remove} type="button" className="btn line" >삭제</button>
                         <button onClick={makeNew} type="button" className="btn line" >신규등록</button>
                     </span>
@@ -291,16 +336,24 @@ export default function DetailSection(props) {
                                 name="birthInput" placeholder="노출 종료일" /></label>
                             <span><br />
                                 <label for="genderMaleInput"><b>푸시알림시간</b>
-                                    <input className="genderInput" type="time" value={ppIteratedDate}
-                            onChange={(e) => setppIteratedDate(e.target.value)} />
+                                  <input className="genderInput" type="time" step="3600"      // [FIX] 1시간 단위
+                                  value={ppIteratedDate}                                    // 항상 "HH:mm"
+                                  onChange={(e) => {
+                                    const [hour] = String(e.target.value || "").split(":");
+                                    setppIteratedDate(`${String(hour ?? "00").padStart(2,"0")}:00`); // "HH:00"
+                                  }} />
                                 </label>
-                            </span>
+                            </span> 
                             <br />
-                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch }>검색</button><input className="nameInput" type="text"
-                                placeholder="플레이스No"  value={ pNo} onChange={(e) => setpNo(e.target.value)}  />
+                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch } disabled={!!ppNo} >검색</button><input className="nameInput" type="text"
+                                placeholder="플레이스No"  value={pNo} onChange={(e) => setpNo(e.target.value)} readOnly={!!ppNo} style={{
+                                backgroundColor: isEdit ? "#f6f6f6" : "white", // 수정모드일 때 회색 처리
+                                
+                              }}  />
                             </label>
                             <label for="nameInput"><b>플레이스명</b><input className="nameInput" type="text"
-                                placeholder="불러온 플레이스 명을 노출" value= { title }  />
+                                placeholder="불러온 플레이스 명을 노출" value= { title } readOnly={true} style={{
+                                backgroundColor: isEdit ? "#f6f6f6" : "white"}} />
                                 </label><button type="button" onClick={() => alert("플레이스 정보 보기 예정")}>정보보기</button>
                             <br />
                             <label for="nameInput"><b>제목</b><input className="nameInput" type="text" value={ppTitle}

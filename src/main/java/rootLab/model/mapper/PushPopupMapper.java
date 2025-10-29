@@ -73,4 +73,14 @@ public interface PushPopupMapper {
      */
     List<PushPopupDto> bannerPush();
 
+    /**
+     * 8. 배너 출력
+     * @author juju95
+     */
+    @Update("""
+            UPDATE pushPopup SET ppImg = #{ppImg}
+            WHERE ppNo = #{ppNo}
+            """)
+    int updatePpImg(int ppNo, String ppImg);
+
 }
