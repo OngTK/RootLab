@@ -23,13 +23,11 @@ export default function ModalSearchHeader(props) {
     } // func end
 
     const clickSearchPlace = (place) => {
-        console.log(place);
         dispatch(setSearchLatLng({
             lat: place.mapy,
             lng: place.mapx
         }))
         dispatch(selectCategory(place.ctNo));
-
         dispatch(selectLeftMarker(place.pNo));
     } // func end
 

@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PlaceInfo Table과 관련된 Service
+ * @author AhnJH OngTK
+ */
+
 @Service
 @RequiredArgsConstructor
 public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, PlaceInfoCriteria> {

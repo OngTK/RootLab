@@ -2,6 +2,12 @@ package rootLab.model.criteria;
 
 import lombok.*;
 
+/**
+ * SiteInfo Table에 대한 검색을 위한 검색 조건
+ *
+ * @author AhnJH
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -8,6 +8,12 @@ import rootLab.model.mapper.LDongCodeMapper;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * LDongCode Table과 관련된 Service
+ *
+ * @author AhnJH OngTK
+ */
+
 @Service
 @RequiredArgsConstructor
 public class LDongCodeService {

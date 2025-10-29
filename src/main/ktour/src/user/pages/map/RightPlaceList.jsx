@@ -69,7 +69,6 @@ export default function PlaceGroups(props) {
             lat: marker.mapy,
             lng: marker.mapx
         }));
-        console.log(marker);
     } // func end
 
     return (

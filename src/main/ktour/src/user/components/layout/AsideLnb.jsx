@@ -1,7 +1,7 @@
 /**
- * 사용자단(비회원) > 공통레이아웃 > 좌측메뉴 컴포넌트
+ * 사용자단(비회원) > 공통레이아웃 > 좌측 하단메뉴 컴포넌트
  *
- * @author 
+ * @author kimJS, AhnJH
  * @since 2025.10.17
  * @version 0.1.2
  */
@@ -21,22 +21,37 @@ export default function AsideLnb(props) {
     // =================== useSelector ===================
     const { firstLDong, LdongName, axiosOption, selectedLdNo, activeLnbMenu, regionSignguList } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
-    const [surroundingPlace, SetSurroundingPlace] = useState([]);
-    const [activeLdNo, setActiveLdNo] = useState(null);
-    // =================== useEffect ===================
+    const [surroundingPlace, SetSurroundingPlace] = useState([]);   // 내 주변 시군구 정보
+    const [activeLdNo, setActiveLdNo] = useState(null);             // 활성화된 시군구 표시를 위한 active
+    /**
+     * firstLDong이 변경되었을 때, 해당하는 시구의 시군구 정보를 얻기 위해 일치하는 시구를 찾아서 시군구 정보를 얻습니다.
+     * 
+     * @author AhnJH
+     */
     useEffect(() => {
         LdongName.map((name) => {
             if (name.ldongregnnm == firstLDong.split(" ")[0]) {
                 getLDongSignguCdByAxios(name.ldongregncd);
             } // if end
         }) // map end
-    }, [firstLDong])
+    }, [firstLDong]);
 
+    /**
+     * 좌측메뉴 선택을 관리하는 메소드
+     * <p>
+     * 내 주변을 선택하면, 현재 위치로 가기 위해 재접속을 진행한다.
+     * @param {string} menuName 선택된 메뉴의 영문명
+     * @author AhnJH
+     */
     const handleGnbClick = (menuName) => {
         dispatch(setActiveLnbMenu(menuName));
         if (menuName == 'mySurroundings') location.href='/';
     } // func end
 
+    /**
+     * selectedLdNo가 변경되었을 때, activeLdNo에 반영하기 위해 useState를 사용하는 useEffect
+     * @author AhnJH
+     */
     useEffect(() => {
         setActiveLdNo(selectedLdNo);
     }, [selectedLdNo])

@@ -4,6 +4,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 각종 SQL을 자동으로 매핑하여 생성해주는 클래스
+ * <p>
+ * 추후 자동화를 하기위해 존재
+ * @author AhnJH
+ */
+
 @Component
 public class SqlCreator {
     /**

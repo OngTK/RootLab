@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import rootLab.model.criteria.ManagerCriteria;
 import rootLab.service.ManagerService;
 
+/**
+ * Manager Table과 관련된 Controller
+ * @author AhnJH
+ */
+
 @RestController
 @RequestMapping("/manager")
 @RequiredArgsConstructor

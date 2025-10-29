@@ -11,6 +11,13 @@ import rootLab.util.sql.SqlCreator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * API TABLE을 자동으로 생성 및 INSERT 하는 클래스
+ * <p>
+ * API 복구가 된다면, 추후 자동화 예정
+ * @author AhnJH
+ */
+
 @Component  // 스프링 컨테이너에 빈 등록
 @Log4j2     // 로그 처리를 위한 어노테이션 추가
 @RequiredArgsConstructor    // final에 대한 생성자 자동 생성(DI)

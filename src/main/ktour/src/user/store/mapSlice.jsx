@@ -3,15 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 // 1. 초기값 설정
 const initialState = {
     selectedLdNo: null,                 // 선택한 법정동코드
-    selectedLeftMarker: null,           // 클릭한 마커
-    selectedRightMarker: null,
-    markers: [],
+    selectedLeftMarker: null,           // 클릭한 마커 pNo + 검색결과에서 클릭한 마커 pNo
+    selectedRightMarker: null,          // 우측 리스트에서 클릭한 플레이스 pNo
+    markers: [],                        // 렌더링된 마커 배열
     selectedCategory: "all",            // 선택한 카테고리
     centeredLDong: null,                // 중심좌표 기준 법정동
     firstLDong: null,                   // 최초 렌더링된 법정동
-    selectedLDong: null,
-    axiosOption: { withCredentials: true },
-    LdongName: [],
+    axiosOption: { withCredentials: true }, // Axios를 위한 공통 Cors Option
+    LdongName: [],                      // 법정 시구 배열
     activeLnbMenu: 'mySurroundings',    // 활성화된 Lnb 메뉴
     regionSignguList: [],               // '지역 선택'의 시군구 목록
     activeSearchBox: null,              // 검색결과 활성화 여부
@@ -55,9 +54,6 @@ const mapSlice = createSlice({
         firstLDongRegn: (state, action) => {
             state.firstLDong = action.payload;
         }, // firstLDongRegn end
-        selectLDong: (state, action) => {
-            state.selectedLDong = action.payload;
-        }, // selectLDong end
         setActiveLnbMenu: (state, action) => {
             state.activeLnbMenu = action.payload;
         }, // setActiveLnbMenu end
@@ -81,4 +77,4 @@ const mapSlice = createSlice({
 
 // 3. export
 export default mapSlice.reducer;
-export const { setSearchLatLng, setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, selectLDong, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRightMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;
+export const { setSearchLatLng, setSearchResult, setCurrentPosition, setActiveSearchBox, setRegionSignguList, setActiveLnbMenu, firstLDongRegn, ByLdongCode, selectedSigngu, selectLeftMarker, selectRightMarker, renderedMarker, selectCategory, centerLDong } = mapSlice.actions;

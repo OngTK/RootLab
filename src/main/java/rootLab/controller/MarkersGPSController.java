@@ -12,6 +12,11 @@ import rootLab.service.MarkersGPSService;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * MarkersGPS Table과 관련된 Controller
+ * @author AhnJH
+ */
+
 @RestController
 @RequestMapping("/markersgps")
 @RequiredArgsConstructor

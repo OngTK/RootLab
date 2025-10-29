@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Manager Table에 대한 검색을 위한 검색 조건
+ *
+ * @author AhnJH
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

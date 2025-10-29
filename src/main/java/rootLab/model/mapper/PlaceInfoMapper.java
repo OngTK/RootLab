@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PlaceInfo Table을 관리하는 Mapper
+ * @author AhnJH OngTK
+ */
+
 @Mapper
 public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer, PlaceInfoCriteria> {
 

@@ -8,6 +8,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * 파일과 관련된 Util 클래스
+ * <p>
+ * 업로드, 삭제 등의 기능 수행
+ * @author AhnJH
+ */
+
 @Component
 @Log4j2
 public class FileUtil {
