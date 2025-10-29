@@ -41,7 +41,7 @@ function parseKst(dateStr) {
 
 // rows 내에서 가장 최근(updatedAt 우선, 없으면 createdAt) 일시를 문자열로 반환
 function latestDisplay(rows) {
-  const pick = (f) => rows.map(r => parseKst(r[f])).filter(Boolean).sort((a,b)=>b-a)[0];
+  const pick = (f) => rows.map(r => parseKst(r[f])).filter(Boolean).sort((a, b) => b - a)[0];
   const up = pick('updatedAt');
   if (up) return rows.find(r => parseKst(r.updatedAt)?.getTime() === up.getTime())?.updatedAt ?? '-';
   const cr = pick('createdAt');
@@ -56,17 +56,11 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
   // deleted: 삭제 버튼을 눌러 제거 표시된 행 보관(저장 시 pirStatus=3)
   const [deleted, setDeleted] = useState([]);
 
-export default function DetailRepeat3({ items = [], onChange }) {
-    // 1) 초기 동기화: null/빈 배열이면 1줄 생성
-    const [rows, setRows] = useState(() =>
-        Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()]
-    );
-
-    // 2) 부모 detail 교체 시 동기화
-    useEffect(() => {
-        const init = Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()];
-        setRows(init);
-    }, []);
+  // 2) 부모 detail 교체 시 동기화
+  useEffect(() => {
+    const init = Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()];
+    setRows(init);
+  }, []);
 
   // 행 상태 변경을 외부로 통지(onChange)하고 로컬 rows 갱신
   const emit = (next) => { setRows(next); if (typeof onChange === 'function') onChange(next); };
@@ -80,7 +74,7 @@ export default function DetailRepeat3({ items = [], onChange }) {
     emit(next);
   };
   // 단일 필드 변경(infoName/infoText)
-  const updateRow = (idx, field, value) => emit(rows.map((r,i) => i===idx ? { ...r, [field]: value } : r));
+  const updateRow = (idx, field, value) => emit(rows.map((r, i) => i === idx ? { ...r, [field]: value } : r));
 
   const latest = useMemo(() => latestDisplay(rows), [rows]);
 
