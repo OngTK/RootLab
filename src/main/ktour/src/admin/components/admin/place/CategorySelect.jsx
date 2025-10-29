@@ -5,7 +5,7 @@ import axios from "axios";
  * props.onChange({ ccNo, l1Cd, l2Cd, l3Cd })
  * labels는 화면표시(…Nm), values는 코드와 ccNo를 상태로 보관
  */
-export default function CategorySelect({ value, onChange }) {
+export default function CategorySelect({ value, onChange, idSuffix = "", namePrefix = "" }) {
   const [rows, setRows] = useState([]);            // 원본 API rows
   const [l1, setL1] = useState("");                // 선택된 l1Cd
   const [l2, setL2] = useState("");                // 선택된 l2Cd
@@ -85,9 +85,35 @@ export default function CategorySelect({ value, onChange }) {
     onChange?.({ ccNo: nextCcNo, l1Cd: l1 || null, l2Cd: l2 || null, l3Cd: v || null, l1Nm, l2Nm, l3Nm });
   };
 
+  // 외부 value 변경 시(또는 rows 로딩 후) 초기 선택 동기화
+  useEffect(() => {
+    if (!rows || rows.length === 0) return;
+    const v = value || {};
+    let nextL1 = l1, nextL2 = l2, nextL3 = l3, nextCc = ccNo;
+
+    const byCcNo = (cc) => rows.find(r => String(r.ccNo) === String(cc));
+    const byCodes = (c1, c2, c3) => rows.find(r => String(r.lclsSystm1Cd) === String(c1)
+      && String(r.lclsSystm2Cd) === String(c2) && String(r.lclsSystm3Cd) === String(c3));
+    const byNames = (n1, n2, n3) => rows.find(r => String(r.lclsSystm1Nm) === String(n1)
+      && String(r.lclsSystm2Nm) === String(n2) && String(r.lclsSystm3Nm) === String(n3));
+
+    let hit = null;
+    if (v.ccNo) hit = byCcNo(v.ccNo);
+    if (!hit && (v.l1Cd && v.l2Cd && v.l3Cd)) hit = byCodes(v.l1Cd, v.l2Cd, v.l3Cd);
+    if (!hit && (v.l1Nm && v.l2Nm && v.l3Nm)) hit = byNames(v.l1Nm, v.l2Nm, v.l3Nm);
+
+    if (hit) {
+      nextL1 = hit.lclsSystm1Cd; nextL2 = hit.lclsSystm2Cd; nextL3 = hit.lclsSystm3Cd; nextCc = hit.ccNo;
+      setL1(nextL1); setL2(nextL2); setL3(nextL3); setCcNo(nextCc);
+      const l1Nm = hit.lclsSystm1Nm, l2Nm = hit.lclsSystm2Nm, l3Nm = hit.lclsSystm3Nm;
+      onChange?.({ ccNo: nextCc, l1Cd: nextL1, l2Cd: nextL2, l3Cd: nextL3, l1Nm, l2Nm, l3Nm });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, value?.ccNo, value?.l1Cd, value?.l2Cd, value?.l3Cd, value?.l1Nm, value?.l2Nm, value?.l3Nm]);
+
   return (
     <div className="form-group category-group">
-      <label htmlFor="category-large">카테고리</label>
+      <label htmlFor="category-large{ idSuffix ? ('-' + idSuffix) : '' }">카테고리</label>
 
       {/* 대분류: 라벨은 lclsSystm1Nm, value는 lclsSystm1Cd */}
       <select id="category-large" name="categoryLarge" value={l1} onChange={onChangeL1}>

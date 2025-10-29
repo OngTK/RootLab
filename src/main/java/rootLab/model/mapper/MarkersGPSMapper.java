@@ -54,7 +54,7 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
         UPDATE markersGPS
            SET mkURL = #{mkURL},
                mapx  = #{mapx},
-               mapy  = #{mapy},
+               mapy  = #{mapy}
          WHERE mkNo = #{mkNo}
     """)
     boolean update(MarkersGPSDto dto);

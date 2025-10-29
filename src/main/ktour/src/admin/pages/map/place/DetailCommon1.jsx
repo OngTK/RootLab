@@ -1,6 +1,6 @@
 /**
  * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) > [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트
- *
+ * 
  * @author 
  * @since 2025.10.20
  * @version 0.1.1
@@ -179,7 +179,7 @@ export default function DetailCommon1({
 
             // 2) DTO 구성 (서버 필드와 동일하게)
             const placeInfoDto = {
-                pNo: pNoFromDetail ?? 0,
+                pno: pNoFromDetail ?? 0,
                 ctNo: ctNoVal,
                 ldNo: region?.ldNo ?? null,    // (없으면 백에서 주소 기반 처리)
                 ccNo: ccNoVal,
@@ -302,7 +302,7 @@ export default function DetailCommon1({
                             {/* 5. 플레이스 번호 */}
                             <span className="form-group">
                                 <label htmlFor="place-number">플레이스 번호</label>
-                                <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly placeholder="자동 발급"/>
+                                <input type="text" id="place-number" name="placeNumber" value={placeNo} readOnly placeholder="자동 발급" />
                             </span>
                         </div>
                         {/* 6. 기본 주소 */}
@@ -376,12 +376,14 @@ export default function DetailCommon1({
                         <div className="form-group">
                             <label htmlFor="marker-img">마커 이미지</label>
                             <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
+                            <button>미리보기</button>
                         </div>
 
                         {/* 12. 대표 이미지 */}
                         <div className="form-group">
                             <label htmlFor="main-img">대표 이미지</label>
                             <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
+                            <button>미리보기</button>
                             <span className="info-text" id="main-img-hint">*이미지 사이즈: 800px(가로) * 600px(세로) 권장</span>
                         </div>
 
@@ -389,6 +391,7 @@ export default function DetailCommon1({
                         <div className="form-group">
                             <label htmlFor="detail-img-1">상세 이미지 1</label>
                             <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
+                            <button>미리보기</button>
                             <span className="info-text" id="detail-img-hint">*멀티업로드(~최대 10개/ 이미지별 용량제한 ~2MB)</span>
                         </div>
 

@@ -11,15 +11,14 @@ import rootLab.model.dto.PlaceImageDetailDto;
 import rootLab.model.dto.PlaceInfoDto;
 import rootLab.util.file.FileUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringTokenizer;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 /**
  * [ PlaceAggregate ]
  * PlaceInfo 처리에 대하여
  * 복합 DTO + 복합 파일 업로드에 따라서 이를 관리하기 위한 별도의 도메인
+ *
  * @author OngTK
  */
 @Service
@@ -50,61 +49,111 @@ public class PlaceAggregateService {
      * 5) 상세이미지 bulk insert (pNo별 serialnum = MAX+1 ~)
      * <p>
      * 6) (선택) 커밋 후 파일 승격
+     *
      * @author OngTK
      */
     public boolean savePlaceBasicInfo(
-            PlaceInfoDto placeInfo,
-            MarkersGPSDto marker,
-            List<PlaceImageDetailDto> imagesMeta,
-            MultipartFile markerImage,
-            MultipartFile mainImage,
-            List<MultipartFile> detailImages
+        PlaceInfoDto placeInfo,
+        MarkersGPSDto marker,
+        List<PlaceImageDetailDto> imagesMeta,
+        MultipartFile markerImage,
+        MultipartFile mainImage,
+        List<MultipartFile> detailImages
     ) {
         // ---- [0] 유효성 ----
         if (placeInfo == null) return false;
         if (detailImages != null && detailImages.size() > 10) return false;
 
-        // ---- [1] 파일 임시저장 (기존 FileUtil 사용) ----
-        // FileUtil은 "컬럼명/분류" 기반으로 하위폴더를 나누는 스타일이므로, 의미있는 이름을 넘겨줍니다.
-        String tmpMarkerFile = uploadNullable(markerImage, "marker");
-        String tmpMainFile   = uploadNullable(mainImage,   "firstImage");
-        List<String> tmpDetailFiles = uploadAllNullable(detailImages, "originImgUrl");
+        // pno가 0 이면 신규 등록
+        if (placeInfo.getPNo() == 0) {
 
-        // ---- [2] 파일명을 placeInfo에 삽입
-        if(!tmpDetailFiles.isEmpty()){
-            placeInfo.setFirstimage(tmpMainFile);
-            placeInfo.setFirstimage2(tmpDetailFiles.get(0));
+            // ---- [1] 파일 임시저장 (기존 FileUtil 사용) ----
+            // FileUtil은 "컬럼명/분류" 기반으로 하위폴더를 나누는 스타일이므로, 의미있는 이름을 넘겨줍니다.
+            String tmpMarkerFile = uploadNullable(markerImage, "marker");
+            String tmpMainFile = uploadNullable(mainImage, "firstImage");
+            List<String> tmpDetailFiles = uploadAllNullable(detailImages, "originImgUrl");
+
+            // ---- [2] 파일명을 placeInfo에 삽입
+            if (!tmpDetailFiles.isEmpty()) {
+                placeInfo.setFirstimage(tmpMainFile);
+                placeInfo.setFirstimage2(tmpDetailFiles.get(0));
+            }
+            // ---- [2.1] ldNo 처리
+            StringTokenizer st = new StringTokenizer(placeInfo.getAddr1(), " ");
+            String lDongRegnNm = st.nextToken();
+            String lDongSignguNm = st.nextToken();
+            LDongCodeDto lDongCodeDto = lDongCodeService.lookforLdNo(lDongRegnNm, lDongSignguNm);
+            placeInfo.setLdNo(lDongCodeDto.getLdNo());
+
+            // ---- [3] PlaceInfo upsert → pNo 확보 ----
+            System.out.println(placeInfo);
+            Integer pNo = upsertPlaceInfoAndGetPno(placeInfo);
+            System.out.println(pNo);
+
+            // ---- [4] Marker upsert ----
+            if (tmpMarkerFile != null) marker.setMkURL(tmpMarkerFile);
+            marker.setPNo(pNo);
+            markersGPSServiceUpsert(marker);
+
+            // ---- [5] 상세이미지 Bulk Insert ----
+            // imagesMeta가 null이면 파일명만 저장
+            List<PlaceImageDetailDto> rows = buildImageRows(pNo, imagesMeta, tmpDetailFiles);
+            if (!rows.isEmpty()) placeImageDetailServiceBulkInsert(rows);
+
+            return true;
+        } else {
+            // pno가 0이 아니면 업데이트
+            int searchPno = placeInfo.getPNo();
+
+            // [1] 기존 placeInfo를 가져오고 이미지를 제외한 정보를 삽입 > update
+            Optional<PlaceInfoDto> getPlaceDto = placeInfoService.read(searchPno);
+            PlaceInfoDto newPlaceDto = getPlaceDto.get();
+            System.out.println(newPlaceDto);
+
+            // [1.1] ldNo 확인
+            StringTokenizer st = new StringTokenizer(placeInfo.getAddr1(), " ");
+            String lDongRegnNm = st.nextToken();
+            String lDongSignguNm = st.nextToken();
+            LDongCodeDto lDongCodeDto = lDongCodeService.lookforLdNo(lDongRegnNm, lDongSignguNm);
+            System.out.println(lDongCodeDto);
+
+            // [1.2] 조회한 placeDto에 신규 데이터 삽입
+            newPlaceDto.setLdNo(lDongCodeDto.getLdNo());
+            newPlaceDto.setCtNo(placeInfo.getCtNo());
+            newPlaceDto.setCcNo(placeInfo.getCcNo());
+            newPlaceDto.setEditable(placeInfo.isEditable());
+            newPlaceDto.setTitle(placeInfo.getTitle());
+            newPlaceDto.setShowflag(placeInfo.getShowflag());
+            newPlaceDto.setAddr1(placeInfo.getAddr1());
+            newPlaceDto.setAddr2(placeInfo.getAddr2());
+            newPlaceDto.setZipcode(placeInfo.getZipcode());
+            newPlaceDto.setHomepage(placeInfo.getHomepage());
+            newPlaceDto.setTel(placeInfo.getTel());
+            newPlaceDto.setTelname(placeInfo.getTelname());
+            newPlaceDto.setOverview(placeInfo.getOverview());
+            newPlaceDto.setCreatedAt(placeInfo.getCreatedAt());
+
+            boolean result1 = placeInfoService.update(newPlaceDto);
+
+            // [2] 기본 markerGPS 정보를 가져오고 이미지를 제외한 정보를 삽입 > update
+            Optional<MarkersGPSDto> getMarkerDto = markersGPSService.read(searchPno);
+            MarkersGPSDto newMarkerDto = getMarkerDto.get();
+            newMarkerDto.setMapy(marker.getMapy());
+            newMarkerDto.setMapx(marker.getMapx());
+            boolean result2 = markersGPSService.update(newMarkerDto);
+
+            if (result1 && result2) {
+                return true;
+            }
+            return false;
         }
-        // ---- [2.1] ldNo 처리
-        StringTokenizer st = new StringTokenizer(placeInfo.getAddr1(), " " );
-        String lDongRegnNm = st.nextToken();
-        String lDongSignguNm = st.nextToken();
-        LDongCodeDto lDongCodeDto =lDongCodeService.lookforLdNo(lDongRegnNm, lDongSignguNm);
-        placeInfo.setLdNo(lDongCodeDto.getLdNo());
-
-        // ---- [3] PlaceInfo upsert → pNo 확보 ----
-        System.out.println(placeInfo);
-        Integer pNo = upsertPlaceInfoAndGetPno(placeInfo);
-        System.out.println(pNo);
-
-        // ---- [4] Marker upsert ----
-        if (tmpMarkerFile != null) marker.setMkURL(tmpMarkerFile);
-        marker.setPNo(pNo);
-        markersGPSServiceUpsert(marker);
-
-        // ---- [5] 상세이미지 Bulk Insert ----
-        // imagesMeta가 null이면 파일명만 저장
-        List<PlaceImageDetailDto> rows = buildImageRows(pNo, imagesMeta, tmpDetailFiles);
-        if (!rows.isEmpty()) placeImageDetailServiceBulkInsert(rows);
-
-        return true;
-    }
+    } // func end
 
     // ===== 내부 헬퍼 =====
 
     /**
      * 단일 파일 저장 처리
-     * */
+     */
     private String uploadNullable(MultipartFile file, String columnName) {
         try {
             if (file == null || file.isEmpty()) return null;
@@ -113,7 +162,7 @@ public class PlaceAggregateService {
             return null;
         }
     }
-    
+
     /**
      * 복수 파일 저장 처리 > 상기의 단일 파일 저장 처리를 활용
      */
@@ -155,7 +204,7 @@ public class PlaceAggregateService {
 
     /**
      * 상세 이미지 DTO - LIST 생성
-     * */
+     */
     private List<PlaceImageDetailDto> buildImageRows(Integer pNo, List<PlaceImageDetailDto> metas, List<String> files) {
         List<PlaceImageDetailDto> rows = new ArrayList<>();
         if (files == null || files.isEmpty()) return rows;
@@ -182,5 +231,5 @@ public class PlaceAggregateService {
     private void placeImageDetailServiceBulkInsert(List<PlaceImageDetailDto> rows) {
         placeImageDetailService.bulkInsertWithSerial(rows);
     }
-    
+
 } // class end

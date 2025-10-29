@@ -9,7 +9,7 @@ import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3Form";
 import RestaurantIntro2 from "./RestaurantIntro2Form";
 import { useEffect, useMemo, useState } from "react";
 
-export default function DetailSectionUTF8({ detail, ...rest }) {
+export default function DetailSectionUTF8({ detail, onNew }) {
   const EMPTY_DETAIL = {
     placeInfo: {},
     MarkersGPSDto: null,
@@ -40,12 +40,13 @@ export default function DetailSectionUTF8({ detail, ...rest }) {
   const handleNew = () => {
     setLocalDetail(EMPTY_DETAIL);
     setContentType("1");
+    if (typeof onNew === "function") onNew();
   };
 
   const pNo = placeInfo?.pNo ?? placeInfo?.pno ?? null;
 
   return (
-    <section className="registWrap" {...rest}>
+    <section className="registWrap">
       <div className="titleBox">
         <ul className="tabtitle">
           <li className="active">기본정보</li>
@@ -87,4 +88,3 @@ export default function DetailSectionUTF8({ detail, ...rest }) {
     </section>
   );
 }
-
