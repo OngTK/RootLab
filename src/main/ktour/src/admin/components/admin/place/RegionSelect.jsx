@@ -109,6 +109,45 @@ export default function RegionSelect({ value, onChange, idSuffix = "", namePrefi
     const nmR1 = `${namePrefix ? namePrefix + "-" : ""}region1`;
     const nmR2 = `${namePrefix ? namePrefix + "-" : ""}region2`;
 
+    // 외부 value 동기화: rows 로딩 후 또는 value 변경 시 내부 선택을 동기화
+    useEffect(() => {
+        if (!rows || rows.length === 0) return;
+        const v = value || {};
+
+        // 값이 모두 비어있으면 내부도 초기화
+        const isCleared = !v.ldNo && !v.regnCd && !v.signguCd && !v.regnNm && !v.signguNm;
+        if (isCleared) {
+            if (regnCd !== "" || signguCd !== "" || ldNo != null) {
+                setRegnCd("");
+                setSignguCd("");
+                setLdNo(null);
+            }
+            return;
+        }
+
+        // 외부 값으로 역매핑하여 내부 상태 갱신
+        const byLdNo = (ld) => rows.find(r => String(r.ldNo ?? r.ldno) === String(ld));
+        const byCodes = (c1, c2) => rows.find(r => String(r.lDongRegnCd ?? r.ldongRegnCd) === String(c1)
+            && String(r.lDongSignguCd ?? r.ldongSignguCd) === String(c2));
+        const byNames = (n1, n2) => rows.find(r => String(r.lDongRegnNm ?? r.ldongRegnNm) === String(n1)
+            && String(r.lDongSignguNm ?? r.ldongSignguNm) === String(n2));
+
+        let hit = null;
+        if (v.ldNo) hit = byLdNo(v.ldNo);
+        if (!hit && (v.regnCd && v.signguCd)) hit = byCodes(v.regnCd, v.signguCd);
+        if (!hit && (v.regnNm && v.signguNm)) hit = byNames(v.regnNm, v.signguNm);
+
+        if (hit) {
+            const nextRegn = hit.lDongRegnCd ?? hit.ldongRegnCd ?? "";
+            const nextSign = hit.lDongSignguCd ?? hit.ldongSignguCd ?? "";
+            const nextLd = hit.ldNo ?? hit.ldno ?? null;
+            if (regnCd !== nextRegn) setRegnCd(nextRegn);
+            if (signguCd !== nextSign) setSignguCd(nextSign);
+            if (ldNo !== nextLd) setLdNo(nextLd);
+        }
+        // 이름 채우기 등의 상향 동기화는 부모 onChange가 이미 처리 중이므로 생략
+    }, [rows, value?.ldNo, value?.regnCd, value?.signguCd, value?.regnNm, value?.signguNm]);
+
     return (
         <span className="form-group">
             <label htmlFor={idR1}>1차 지역</label>
