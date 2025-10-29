@@ -5,45 +5,98 @@
  * 
  * @author kimJS
  * @since 2025.10.20
- * @version 0.1.1
+ * @version 0.1.2
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import "@assets/admin/css/resizableTable.css"; // ResizableTable.css
+
+// ① 내부 훅을 파일 상단에 붙여넣기 (export 필요 없음)
+function useColWidths({ rememberKey, columns, minColWidth = 30 }) {
+  const initial = useMemo(
+    () => columns.map(c => Math.max(minColWidth, c.width ?? 80)),
+    [columns, minColWidth]
+  );
+  const fp = useMemo(
+    () => columns.map(c => `${c.id}:${c.width ?? ""}`).join("|"),
+    [columns]
+  );
+  const storageKey = useMemo(
+    () => (rememberKey ? `${rememberKey}@v3` : null),
+    [rememberKey]
+  );
+  const [widths, setWidths] = useState(initial);
+
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) { setWidths(initial); return; }
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) { setWidths(initial); return; }      // 레거시 무효화
+      if (parsed && parsed.fp === fp &&
+          Array.isArray(parsed.widths) &&
+          parsed.widths.length === columns.length) {
+        setWidths(parsed.widths);
+      } else {
+        setWidths(initial);
+      }
+    } catch {
+      setWidths(initial);
+    }
+  }, [storageKey, fp, initial, columns.length]);
+
+  const persist = useCallback((next) => {
+    setWidths(next);
+    if (!storageKey) return;
+    try { localStorage.setItem(storageKey, JSON.stringify({ fp, widths: next })); } catch {}
+  }, [storageKey, fp]);
+
+  return { widths, setWidths, persist, initial };
+}
 
 export default function ResizableTable({
   columns = [],                // [{ id, title, width? }]
   data = [],                   // [{ [id]: value }]
-  minColWidth = 20,
+  minColWidth = 30,
   rememberKey,                 // 예: "PlaceInfo.columns"
   stickyFirst = true,
   sortable = true,
-  resizeGrab = 6,              // 보더 감지 폭(px)
+  resizeGrab = 10,              // 보더 감지 폭(px)
   showGuide = false,           // 드래그 가이드선 표시 여부(옵션)
+  onRowClick
 }) {
   // 초기 폭
   const initial = useMemo(
-    () => columns.map(c => Math.max(minColWidth, c.width ?? 120)),
+    () => columns.map(c => Math.max(minColWidth, c.width ?? 80)),
     [columns, minColWidth]
   );
   const [widths, setWidths] = useState(initial);
+
+// 저장 복원 키를 컬럼 지문 포함으로
+const storageKey = useMemo(
+   () => rememberKey ? `${rememberKey}@v1:${columns.map(c => c.id).join('|')}` : null,
+   [rememberKey, columns]
+ );
+
+
   const [sort, setSort] = useState({ key: null, dir: "asc" });
 
   // 저장 복원
   useEffect(() => {
-    if (!rememberKey) return;
+    if (!storageKey) return;
     try {
-      const saved = JSON.parse(localStorage.getItem(rememberKey) || "null");
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
       if (Array.isArray(saved) && saved.length === columns.length) {
-        setWidths(saved.map((w, i) => Math.max(minColWidth, +w || initial[i])));
-      }
+      setWidths(saved);
+    }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rememberKey]);
+  }, [storageKey]);
 
   const persist = (next) => {
     setWidths(next);
-    if (!rememberKey) return;
-    try { localStorage.setItem(rememberKey, JSON.stringify(next)); } catch {}
+    if (!storageKey) return;
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
   };
 
   // 정렬
@@ -218,19 +271,31 @@ export default function ResizableTable({
               ))}
             </tr>
           </thead>
-
           <tbody>
-            {sorted.map((row, rIdx) => (
-              <tr key={rIdx} className={row._active ? "active" : undefined} >
-                {columns.map((c, i) => (
-                  <td key={c.id} className={i===0 && stickyFirst ? "sticky-first" : ""}>
-                    {row[c.id]}
-                    <span className="rz-border-visual" />
-                  </td>
-                ))}
+            {sorted.length === 1 && sorted[0]?.__empty ? (
+              <tr key="no-data">
+                <td colSpan={columns.length}
+                  style={{ textAlign: "center", color: "#666", padding: "20px 0" }}>
+                  검색결과가 없습니다.
+                </td>
               </tr>
-            ))}
+            ) : (
+              sorted.map((row, rIdx) => (
+                <tr key={rIdx} 
+                    className={row._active ? "active" : undefined} 
+                    onClick={() => onRowClick?.(row)}
+                >
+                  {columns.map((c, i) => (
+                    <td key={c.id} className={i === 0 && stickyFirst ? "sticky-first" : ""}>
+                      {row[c.id]}
+                      <span className="rz-border-visual" />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
+
         </table>
       </div>
     </div>

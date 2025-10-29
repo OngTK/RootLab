@@ -3,10 +3,15 @@
  *
  * @author kimJS
  * @since 2025.10.27
- * @version 0.1.0
+ * @version 0.1.1
  */
 
+import axios from "axios";
+import { useEffect, useState, useMemo } from "react";
+import Pagination from "@admin/components/admin/place/Pagination";
 import ResizableTable from "@admin/components/common/ResizableTable";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListSection(props) {
 

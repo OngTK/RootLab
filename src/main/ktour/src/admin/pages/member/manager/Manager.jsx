@@ -3,7 +3,7 @@
  *
  * @author kimJS
  * @since 2025.10.19
- * @version 0.1.2
+ * @version 0.1.3
  */
 import SplitPaneResponsive from "@admin/components/common/SplitPaneResponsive"; // 반응형 스플리터
 import ListSection from "@admin/pages/member/manager/ListSection";              // 좌측: 목록

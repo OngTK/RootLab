@@ -25,7 +25,7 @@
 .admin-scope .rzTable.has-sticky-first td.sticky-first { position:sticky; left:0; z-index:6; background:#fff;  }
 
 /* 보더 시각 가이드 (hover 표시) */
-.admin-scope .rz-border-visual { position:absolute; right:-20px; top:0; width:6px; height:100%; pointer-events:none; }
+.admin-scope .rz-border-visual { position:absolute; right:-20px; top:0; width:6px; height:100%; pointer-events:none; cursor: col-resize; }
 .admin-scope .rzTable th:hover .rz-border-visual, .rzTable td:hover .rz-border-visual { background-color: rgba(0,0,0,.08); }
 
 /* 드래그용 임시 가이드선 */
@@ -39,7 +39,13 @@
 .admin-scope .rzTable tbody tr:nth-child(odd){ background: rgba(0,0,0,.03); }
 .admin-scope .rzTable tbody tr:hover{ background: rgb(235,255,245); }
 .admin-scope .rzTable tbody tr.active{ background: hsla(145,100%,65%,.2); }
-.admin-scope .rzTable tbody tr.active td{ color:#000; }
+.admin-scope .rzTable tbody tr.active td{ color:#000; cursor: pointer;  }
+
+
+.rzTable tr.no-data td { height: auto !important; line-height: 1.6 !important; white-space: normal !important; padding: 20px 0 !important; }
+
+/* 호버/커서 비활성화(선택) */
+.rzTable tr.no-data:hover { background: inherit; cursor: default; }
 
 
 /* 반응형 */
