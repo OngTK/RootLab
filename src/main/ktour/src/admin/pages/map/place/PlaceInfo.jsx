@@ -61,16 +61,16 @@ export default function PlaceInfo() {
         minRightPx={320}              // 우측 최소(px) 
         left={<ListSection onPick={handlePick} />}// 좌측 콘텐츠
         right={
-       <DetailSection
-         key={detailKey}        // ← 우측 통째로 리마운트(초기화)
-         detail={detail}        // ← 상세 데이터 전달(없으면 비어있는 폼)
-         onNew={() => {         // “신규등록” 버튼용 초기화
-           setDetail(null);
-           setDetailKey((k) => k + 1);
-         }}
-       />
-     }
-    />
+          <DetailSection
+            key={detailKey}        // ← 우측 통째로 리마운트(초기화)
+            detail={detail}        // ← 상세 데이터 전달(없으면 비어있는 폼)
+            onNew={() => {         // “신규등록” 버튼용 초기화
+              setDetail(null);
+              setDetailKey((k) => k + 1);
+            }}
+          />
+        }
+      />
     </>
   );
 }
