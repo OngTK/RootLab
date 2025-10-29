@@ -184,7 +184,7 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
-        map.setMaxLevel(8);
+        map.setMaxLevel(13);
 
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();

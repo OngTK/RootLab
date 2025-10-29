@@ -5,32 +5,40 @@
 
 <mapper namespace="rootLab.model.mapper.MarkersGPSMapper">
     <select id="getMarkersGpsByCurrentLatLng" parameterType="rootLab.model.dto.MarkersGPSDto">
-        SELECT
+        SELECT *
+        FROM (SELECT
         kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
         kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
-        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo,
+        ROW_NUMBER() OVER (
+        PARTITION BY kmg.mapx, kmg.mapy
+        ORDER BY kpi.pNo ASC
+        ) AS rn
         FROM k_tour_headquarter.placeinfo kpi
         JOIN k_tour_headquarter.contenttype kct
         ON kpi.ctNo = kct.ctNo
         JOIN k_tour_headquarter.markersgps kmg
         ON kpi.pNo = kmg.pNo
         JOIN k_tour_headquarter.categorycode kcc
-        ON kpi.ccNo = kcc.ccNo
+        ON kpi.ccNo = kcc.ccNo) t
         <where>
             <if test="east != null">
-                AND kmg.mapx &lt; #{east}
+                AND t.mapx &lt; #{east}
             </if>
             <if test="west != null">
-                AND kmg.mapx &gt; #{west}
+                AND t.mapx &gt; #{west}
             </if>
             <if test="north != null">
-                AND kmg.mapy &lt; #{north}
+                AND t.mapy &lt; #{north}
             </if>
             <if test="south != null">
-                AND kmg.mapy &gt; #{south}
+                AND t.mapy &gt; #{south}
             </if>
             <if test="ctNo != null">
-                AND kct.ctNo = #{ctNo}
+                AND t.ctNo = #{ctNo}
+            </if>
+            <if test="1 == 1">
+                AND t.rn = 1
             </if>
         </where>
     </select>
