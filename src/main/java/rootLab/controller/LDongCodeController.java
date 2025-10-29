@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rootLab.service.LDongCodeService;
 
+/**
+ * LDongCode Table과 관련된 Controller
+ * @author AhnJH
+ */
+
 @RestController
 @RequestMapping("/ldongcode")
 @RequiredArgsConstructor

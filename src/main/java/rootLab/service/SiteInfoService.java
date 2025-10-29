@@ -9,6 +9,11 @@ import rootLab.util.pagenation.Page;
 
 import java.util.List;
 
+/**
+ * SiteInfo Table을 관리하는 Service
+ * @author AhnJH
+ */
+
 @Service
 @RequiredArgsConstructor
 public class SiteInfoService {

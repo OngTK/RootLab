@@ -7,6 +7,11 @@ import rootLab.model.dto.LDongCodeDto;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * LDongCode Table을 관리하는 Mapper
+ * @author AhnJH OngTK
+ */
+
 @Mapper
 public interface LDongCodeMapper {
 

@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import rootLab.model.criteria.SiteInfoCriteria;
 import rootLab.service.SiteInfoService;
 
+/**
+ * SiteInfo Table을 관리하는 Controller
+ * @author AhnJH
+ */
+
 @RestController
 @RequestMapping("/siteinfo")
 @RequiredArgsConstructor

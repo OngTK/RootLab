@@ -10,7 +10,7 @@ import stay from '../assets/contentTypeMarker/stay.png'
 import tourSpot from '../assets/contentTypeMarker/tourSpot.png'
 import travelCourse from '../assets/contentTypeMarker/travelCourse.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLeftMarker, selectRigthMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
+import { selectLeftMarker, selectRightMarker, renderedMarker, firstLDongRegn, centerLDong, setCurrentPosition } from '../user/store/mapSlice';
 import '../assets/user/css/InfoWindow.css';
 
 const markerImages = {      // 마커 이미지를 미리 정의
@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, searchLatLng } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng, selectedRightMarker } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -101,7 +101,21 @@ export default function KakaoMap(props) {
         mapRef.current.panTo(newCoords);
     }, [selectedGps]); // selectedGps 변경될 때마다 이 효과를 실행
 
-    // =================== useEffect - [selectedGps] : 중심 좌표 이동 ===================
+    // =================== useEffect - [recommendLatLng] :  ===================
+    useEffect(() => {
+        // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
+        if (!recommendLatLng || !window.kakao || !mapRef.current) return;
+        // 카카오 지도용 좌표 객체를 생성
+        const newCoords = new window.kakao.maps.LatLng(
+            recommendLatLng.lat, // selectedGps의 mapy
+            recommendLatLng.lng  // selectedGps의 mapx
+        );
+        // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
+        mapRef.current.setLevel(9);
+        mapRef.current.panTo(newCoords);
+    }, [recommendLatLng]); // selectedGps 변경될 때마다 이 효과를 실행
+
+    // =================== useEffect - [searchLatLng] :  ===================
     useEffect(() => {
         // 선택된 좌표(selectedGps)가 없거나 kakao 객체, map 인스턴스가 없으면 종료
         if (!searchLatLng || !window.kakao || !mapRef.current) return;
@@ -113,6 +127,7 @@ export default function KakaoMap(props) {
         // mapRef에 저장해 둔 지도의 panTo() 함수를 호출하여 지도를 부드럽게 이동
         mapRef.current.panTo(newCoords);
     }, [searchLatLng]); // selectedGps 변경될 때마다 이 효과를 실행
+
     // =================== LDongCode Axios GET ===================
     const getLDongCodeByAxios = async () => {
         if (selectedLdNo == null) return;
@@ -184,7 +199,7 @@ export default function KakaoMap(props) {
         // 지도 인스턴스 생성
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;   // 나중에 map 객체를 다른 곳에서 사용하기 위해서 저장
-        map.setMaxLevel(8);
+        map.setMaxLevel(13);
 
         const geoCoder = new kakao.maps.services.Geocoder();
         const coords = map.getCenter();
@@ -216,7 +231,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
-                dispatch(selectRigthMarker(null));
+                dispatch(selectRightMarker(null));
             } // if end
         }) // addListener end
         // 지도 드래그 시, 인포윈도우 + 좌측 모달 종료
@@ -224,7 +239,7 @@ export default function KakaoMap(props) {
             if (infoWindowRef.current) {
                 infoWindowRef.current.close();
                 dispatch(selectLeftMarker(null));
-                dispatch(selectRigthMarker(null));
+                dispatch(selectRightMarker(null));
             } // if end
         }) // addListener end
 
@@ -304,18 +319,51 @@ export default function KakaoMap(props) {
         const infowindow = infoWindowRef.current;
         if (!infowindow) return;
 
-        const imageSize = new kakao.maps.Size(33, 50);
+        const customMarkers = markers.filter((marker) => {
+            return marker.mkURL;
+        });
+        customMarkers.map((marker) => {
+            const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
+            const src = '../public/uploads/1/marker/' + marker.mkURL;
+            const imageSize = new kakao.maps.Size(150, 90);
 
-        // 마커 객체 배열 생성
-        const kakaoMarkers = markers.map(marker => {
+            const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+            const kakaoMarker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage,
+                zIndex: 4
+            });
+            kakaoMarker.setMap(map);
+            // 마커 클릭 이벤트 생성
+            kakao.maps.event.addListener(kakaoMarker, 'click', () => {
+                SetSelectedGps(marker);
+                dispatch(selectLeftMarker(marker.pNo));
+                // 인포윈도우 내용 설정
+                const html = `<div class="iw-container">
+                                <p class="iw-header">
+                                    <span class="iw-title">${marker.title || '장소 정보'}</span>
+                                    <span class="iw-category">${marker.contenttypename || '카테고리'}</span>
+                                </p>
+                                <span class="iw-address">${marker.addr1 || '주소 정보 없음'}</span>
+                              </div>`
+                const iwContent = html;
+                infowindow.setContent(iwContent);
+                infowindow.open(map, kakaoMarker);
+            }) // addListener end
+        });
+
+        const firstFilteredMarkers = markers.filter((marker) => {
             let category = props.selectedCategory;
             if (props.selectedCategory == 'all') category = 3;
-            let position = null
-            if (marker.ctNo == category) {
-                position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
-            }
-            // 추후 마커 업로드 테스트 후, 경로 수정 필요!!! (정확한 업로드 경로를 모르기 때문에, 테스트 어려움)
+            return marker.ctNo == category && !marker.mkURL;
+        });
+
+        // 마커 객체 배열 생성
+        const kakaoMarkers = firstFilteredMarkers.map(marker => {
+            const position = new kakao.maps.LatLng(marker.mapy, marker.mapx);
             const src = markerImages[marker.defaultMarker] || "/user/img/no_img.jpg";
+            const imageSize = new kakao.maps.Size(33, 50);
+
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
             // 마커 생성하기
             const kakaoMarker = new kakao.maps.Marker({
@@ -339,14 +387,13 @@ export default function KakaoMap(props) {
                 infowindow.setContent(iwContent);
                 infowindow.open(map, kakaoMarker);
             }) // addListener end
-
             return kakaoMarker;
         }); // map end
 
         // 클러스터러에 새 마커 추가
         clusterer.addMarkers(kakaoMarkers);
 
-    }, [markers, props.selectedCategory]); // 'markers' state가 변경될 때마다 실행
+    }, [markers, props.selectedCategory, selectRightMarker]); // 'markers' state가 변경될 때마다 실행
 
     // =================== return ===================
     if (currentLocation.isLoading) {

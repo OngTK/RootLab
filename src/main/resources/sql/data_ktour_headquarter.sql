@@ -348,11 +348,13 @@ INSERT INTO k_tour_headquarter.tourintro
 INSERT INTO k_tour_headquarter.festivalIntro
 		(pNo, eventstartdate, eventenddate, progresstype, festivaltype, agelimit, bookingplace, discountinfofestival, eventhomepage, eventplace,
 		 festivalgrade, placeinfo, playtime, program, spendtimefestival, sponsor1, sponsor1tel, sponsor2, sponsor2tel, subevent, usetimefestival)
-	SELECT kpi.pNo, tdi15.eventstartdate, tdi15.eventenddate, tdi15.progresstype, tdi15.festivaltype, tdi15.agelimit, tdi15.bookingplace, tdi15.discountinfofestival, tdi15.eventhomepage, tdi15.eventplace,
+	SELECT kpi.pNo, tsf.eventstartdate, tsf.eventenddate, tsf.progresstype, tsf.festivaltype, tdi15.agelimit, tdi15.bookingplace, tdi15.discountinfofestival, tdi15.eventhomepage, tdi15.eventplace,
 		   tdi15.festivalgrade, tdi15.placeinfo, tdi15.playtime, tdi15.program, tdi15.spendtimefestival, tdi15.sponsor1, tdi15.sponsor1tel, tdi15.sponsor2, tdi15.sponsor2tel, tdi15.subevent, tdi15.usetimefestival
 		FROM k_tour_headquarter.placeinfo kpi
-		JOIN tour_api_origin.detailintro2_15 tdi15
-		USING (contentid);
+		LEFT OUTER JOIN tour_api_origin.detailintro2_15 tdi15
+		USING (contentid)
+        JOIN tour_api_origin.searchfestival2 tsf
+        USING (contentid);
 -- [9] 음식점 상세정보 동기화 =========================================================
 INSERT INTO k_tour_headquarter.restaurantintro
 		(pNo, chkcreditcardfood, discountinfofood, firstmenu, infocenterfood, kidsfacility, lcnsno, opendatefood,

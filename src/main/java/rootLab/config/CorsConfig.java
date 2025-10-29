@@ -4,6 +4,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * CORS를 관리하기 위한 클래스
+ * <p>
+ * 리액트 서버를 5174까지 허용
+ * * @author AhnJH
+ */
+
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     @Override

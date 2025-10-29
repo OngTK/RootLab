@@ -1,7 +1,7 @@
 /**
- * 사용자단(비회원) > 공통레이아웃 > 헤더 컴포넌트
+ * 사용자단(비회원) > 공통레이아웃 > 헤더(좌측 상단) 컴포넌트
  *
- * @author kimJS
+ * @author kimJS, AhnJH
  * @since 2025.10.17
  * @version 0.1.3
  */
@@ -75,14 +75,6 @@ export default function Header(props) {
         if (e.key === "Enter") searchingPlace();
     } // func end
 
-    let fisrtName = null;
-    let secondName = null;
-    useEffect(() => {
-        if (!centeredLDong) return;
-        fisrtName = centeredLDong.split(" ")[0];
-        secondName = centeredLDong.split(" ")[1];
-    }, [centeredLDong])
-
     // =================== Search Axios GET ===================
     const searchingPlace = async () => {
         if (!searchBoxInput || !currentPosition) return;
@@ -111,7 +103,7 @@ export default function Header(props) {
                 </header>
                 <div className="placeSearch">
                     <button onClick={searchingPlace}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                    <input type="text" placeholder="관광지/상호명 검색" autoFocus="" value={searchBoxInput} onChange={(e) => { SetSearchBoxInput(e.target.value) }} onKeyDown={(e) => activeEnter(e)} />
+                    <input type="search" placeholder="관광지/상호명 검색" autoFocus="" value={searchBoxInput} onChange={(e) => { SetSearchBoxInput(e.target.value) }} onKeyDown={(e) => activeEnter(e)} />
                 </div>
                 <div className="promotionText">우리동네 <b>AI추천</b> 플레이스</div>
                 <div className="ldongSelect">

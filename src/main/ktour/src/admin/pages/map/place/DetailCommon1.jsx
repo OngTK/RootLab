@@ -134,11 +134,21 @@ export default function DetailCommon1({
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
 
             // 초기 마커 객체 보관(처음 한 번만 생성)
-            markerRef.current = new window.kakao.maps.Marker({ position: center });
+            const marker = new window.kakao.maps.Marker({ position: center });
+
+            markerRef.current = marker;
             markerRef.current.setMap(map);
             // 지오코더 준비
             geocoderRef.current = new window.kakao.maps.services.Geocoder();
             setMapObj(map);
+            marker.setDraggable(true);
+            kakao.maps.event.addListener(marker, 'dragend', function () {
+                const markerCenter = map.getCenter();
+                setCoord({
+                    x: markerCenter.La,
+                    y: markerCenter.Ma
+                })
+            });
         };
 
         // 이미 로드된 경우 ==============================

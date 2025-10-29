@@ -56,13 +56,17 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
   // deleted: 삭제 버튼을 눌러 제거 표시된 행 보관(저장 시 pirStatus=3)
   const [deleted, setDeleted] = useState([]);
 
-  // items(서버값)가 변경되면 편집행/원본/삭제리스트를 초기화
-  useEffect(() => {
-    const init = Array.isArray(items) && items.length ? items.map(asRow) : [blankRow()];
-    setRows(init);
-    originalRef.current = Array.isArray(items) ? items.map(asRow) : [];
-    setDeleted([]);
-  }, [items]);
+export default function DetailRepeat3({ items = [], onChange }) {
+    // 1) 초기 동기화: null/빈 배열이면 1줄 생성
+    const [rows, setRows] = useState(() =>
+        Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()]
+    );
+
+    // 2) 부모 detail 교체 시 동기화
+    useEffect(() => {
+        const init = Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()];
+        setRows(init);
+    }, []);
 
   // 행 상태 변경을 외부로 통지(onChange)하고 로컬 rows 갱신
   const emit = (next) => { setRows(next); if (typeof onChange === 'function') onChange(next); };

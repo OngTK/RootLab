@@ -10,6 +10,11 @@ import rootLab.model.repository.CommonRepository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * MarkersGPS Table과 관련된 Service
+ * @author AhnJH
+ */
+
 @Service
 @RequiredArgsConstructor
 public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, PlaceInfoCriteria>{

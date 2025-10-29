@@ -5,6 +5,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Map;
 
+/**
+ * API 관련 자동화를 위한 Mapper
+ *
+ * @author AhnJH
+ */
+
 @Mapper
 public interface ApiMapper {
     /**

@@ -9,6 +9,11 @@ import rootLab.util.pagenation.Page;
 
 import java.util.List;
 
+/**
+ * Manager Table과 관련된 Service
+ * @author AhnJH
+ */
+
 @Service
 @RequiredArgsConstructor
 public class ManagerService {

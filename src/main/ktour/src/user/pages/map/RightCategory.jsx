@@ -29,7 +29,6 @@ const categories = [
 export default function RightCategory(props) {
     // =================== useSelector ===================
     const { centeredLDong, selectedCategory } = useSelector((state) => state.relatedMap);
-    console.log("리렌더링! 현재 selectedCategory:", selectedCategory);
     // =================== useState ===================
     const [activeLDong, setActiveLDOng] = useState(null);
     // =================== useDispatch ===================

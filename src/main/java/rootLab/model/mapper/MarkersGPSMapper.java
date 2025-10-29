@@ -13,7 +13,7 @@ import java.util.Optional;
  * [ MarkersGPS ]
  * <p>
  * 마커GPS 위도, 경도, 마커이미지를 관리
- * @author OngTK
+ * @author OngTK AhnJH
  */
 @Mapper
 public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Integer, PlaceInfoCriteria> {

@@ -10,7 +10,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { selectRigthMarker } from "../../store/mapSlice";
+import { selectRightMarker } from "../../store/mapSlice";
 
 // tourIntro 속성명
 const tourIntroLabels = {
@@ -70,32 +70,32 @@ const festivalIntroLabels = {
 };
 
 export default function RightModalPlace(props) {
-    const { axiosOption } = useSelector((state) => state.relatedMap);
+    const { axiosOption, selectedRightMarker } = useSelector((state) => state.relatedMap);
     // =================== useState 선언부 ===================
     const [placeInfo, SetPlaceInfo] = useState(null);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
 
     const getplaceInfoByAxios = async () => {
-        if (!props.pNo) return;
+        if (!selectedRightMarker) return;
         try {
-            const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${props.pNo}`, axiosOption);
+            const response = await axios.get(`http://localhost:8080/placeinfo/basic?pno=${selectedRightMarker}`, axiosOption);
             SetPlaceInfo(response.data);
         } catch (error) {
             console.log('getplaceInfoByAxios 오류 발생');
             console.log(error);
         } // try-catch end
     } // func end
-    // =================== useEffect - [props.pNo] : 상세정보 GET ===================
+    // =================== useEffect - [selectedRightMarker] : 상세정보 GET ===================
     useEffect(() => {
         getplaceInfoByAxios();
-    }, [props.pNo])
+    }, [selectedRightMarker])
 
     const handleCloseModal = () => {
-        dispatch(selectRigthMarker(null));
+        dispatch(selectRightMarker(null));
     } // func end
     // axios 처리가 안 됐으면, 종료
-    if (!placeInfo) return;
+    if (!placeInfo || !selectedRightMarker) return;
     /** =========================== ★우측모달★ LeftModalPlace.jsx ===================================== */
     return (
         <>
@@ -106,7 +106,18 @@ export default function RightModalPlace(props) {
                     <button className="modalClose" onClick={handleCloseModal} ><FontAwesomeIcon icon={faXmark} /></button>
 
                     <div className="modal_img_box">
-                        {placeInfo.placeInfo.firstimage && <img src={placeInfo.placeInfo.firstimage} alt="타이틀" />}
+                        {
+                            placeInfo.placeInfo.firstimage ?
+                                (<img
+                                    src={placeInfo.placeInfo.firstimage.indexOf('http') != -1 ?
+                                        placeInfo.placeInfo.firstimage :
+                                        '..../public/uploads/1/firstImage/' + placeInfo.placeInfo.firstimage
+                                    }
+                                    alt="타이틀"
+                                />)
+                                :
+                                (<img src="/user/img/no_img.jpg" alt="타이틀" />)
+                        }
                         <div className="modalContentOutline">
                             <h3>{placeInfo.placeInfo.title}</h3>
                             <div className="category">{placeInfo.placeInfo.lclsSystm2Nm}&nbsp; {placeInfo.placeInfo.lclsSystm3Nm}</div>
@@ -145,7 +156,12 @@ export default function RightModalPlace(props) {
                         <ul className="additionImgWrap">
                             {
                                 placeInfo.PlaceImageDetail.map((image) => {
-                                    return <li key={image.pidNo}><img src={image.originimgurl} alt="" /></li>
+                                    return <li key={image.pidNo}>
+                                        <img src={image.originimgurl.indexOf != -1 ?
+                                            image.originimgurl :
+                                            '..../public/uploads/1/originImgUrl/' + place.originimgurl
+                                        } alt="" />
+                                    </li>
                                 })
                             }
                         </ul>
@@ -159,7 +175,6 @@ export default function RightModalPlace(props) {
                                     } else {
                                         return null;
                                     }
-
                                 })
                             }
                             {placeInfo.TourIntro &&
