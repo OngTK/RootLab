@@ -18,7 +18,7 @@ export default function ListSection(props) {
     const [category, setCategory] = useState({ ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null, l1Nm: null, l2Nm: null, l3Nm: null });
     const [region, setRegion] = useState({ ldNo: null, regnCd: null, signguCd: null, regnNm: null, signguNm: null });
     const [ctNo, setCtNo] = useState("");      // 콘텐츠 타입 value
-    const [showVal, setShowVal] = useState("");      // "전체|1|0" → 1:true, 0:false
+    const [showVal, setShowVal] = useState("1");      // 기본값: 노출(1)
     const [title, setTitle] = useState("");      // 플레이스명
     const [phone, setPhone] = useState("");      // 대표전화(선택)
     const [pNo, setPNo] = useState("");      // 플레이스 번호
@@ -48,7 +48,7 @@ export default function ListSection(props) {
                 : (addressInput?.trim() || null),
             ccName: category.l3Nm || category.l2Nm || category.l1Nm || null,
             ctNo: ctNo || null,
-            showflag: showVal ? 1 : 0,
+            showflag: showVal === "" ? null : Number(showVal),
             pNo: pNo || null,
             page, size,
         };
@@ -80,7 +80,7 @@ export default function ListSection(props) {
             address: ldName || (addressInput?.trim() || null),
             ccName,
             ctNo: ctNo || null,
-            showflag: showVal ? 1 : 0,
+            showflag: showVal === "" ? null : Number(showVal),
             pNo: pNo || null,
 
         };

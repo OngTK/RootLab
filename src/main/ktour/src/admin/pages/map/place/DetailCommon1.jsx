@@ -11,8 +11,8 @@ import CategorySelect from "../../../components/admin/place/CategorySelect";
 import axios from "axios";
 
 export default function DetailCommon1({
-    placeInfo: placeInfoProp, contentType, onChangeContentType, ...rest }) {
-
+    placeInfo: placeInfoProp,markers, contentType, onChangeContentType, ...rest }) {
+    
     // Detail 전용 로컬 상태 (검색 폼과 분리) ============================================================
     const [category, setCategory] = useState({
         ccNo: null, l1Cd: null, l2Cd: null, l3Cd: null,
@@ -26,6 +26,7 @@ export default function DetailCommon1({
         setContentTypeLocal(String(contentType ?? ""));
     }, [contentType]);
     const placeInfo = placeInfoProp;
+    const markerInfo = markers;
 
     // 파일 & 설명 입력 ref====================================================
     const markerImgRef = useRef(null);
@@ -50,7 +51,9 @@ export default function DetailCommon1({
         // 상세 진입 시 기존 주소값을 미리 채우고 싶다면:
         setZipCode(placeInfo.zipcode ?? "");
         setRoadAddr(placeInfo.addr1 ?? "");
-        setShowFlag(placeInfo.showflag === 1);
+        // 노출 여부 기본값: 값이 없거나 null이면 '노출'을 기본 선택으로 유지
+        const sf = placeInfo?.showflag;
+        setShowFlag(sf == null ? true : (Number(sf) === 1 || sf === true));
         setTitle(placeInfo.title ?? "");
         setPhone(placeInfo.tel ?? "");
         setPhoneDesc(placeInfo.telname ?? "");
@@ -110,7 +113,7 @@ export default function DetailCommon1({
         const initMap = () => {
             const container = mapRef.current;
             if (!container || !window.kakao?.maps) return;
-            const center = new window.kakao.maps.LatLng(37.5665, 126.9780); // TODO: placeInfo의 mapy/mapx로 치환
+            const center = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
 
             // 초기 마커 객체 보관(처음 한 번만 생성)
@@ -237,7 +240,6 @@ export default function DetailCommon1({
             alert("저장 중 오류가 발생했습니다.");
         }
     };
-
 
     /** ====================== [본문 우측] 플레이스 공통정보(1.기본) 컴포넌트 =========================== */
     return (
