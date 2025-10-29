@@ -5,13 +5,15 @@
  * @since 2025.10.20
  * @version 0.1.2
  */
-import ResizableTable from "../../../components/admin/place/ResizableTableAtplace";
+import ResizableTable from "@admin/components/admin/place/ResizableTableAtplace";
 import "@assets/admin/css/resizableTable.css"; // resizableTable.css
-import CategorySelect from "../../../components/admin/place/CategorySelect";
-import RegionSelect from "../../../components/admin/place/RegionSelect";
-import Pagination from "../../../components/admin/place/Pagination";
+import CategorySelect from "@admin/components/admin/place/CategorySelect";
+import RegionSelect from "@admin/components/admin/place/RegionSelect";
+import Pagination from "@admin/components/admin/place/Pagination";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListSection(props) {
 
@@ -99,18 +101,15 @@ export default function ListSection(props) {
         setTitle("");
         setPhone("");
         setPNo("");
-        setAddressInput("");
-        setRows([]);
-        setPage(1);
     };
 
     // 테이블 컬럼 정의
     const columns = [
-        { id: "no", title: "No", width: 70 },
-        { id: "pno", title: "플레이스번호", width: 110 },
-        { id: "title", title: "플레이스명", width: 220 },
-        { id: "contentTypeName", title: "콘텐츠타입", width: 120 },
-        { id: "lclsSystm3Nm", title: "카테고리", width: 140 },
+        { id: "no", title: "No", width: 30 },
+        { id: "pno", title: "플레이스번호", width: 90 },
+        { id: "title", title: "플레이스명", width: 150 },
+        { id: "contentTypeName", title: "콘텐츠타입", width: 100 },
+        { id: "lclsSystm3Nm", title: "카테고리", width: 120 },
         { id: "addr1", title: "주소", width: 260 },
         { id: "tel", title: "전화번호", width: 120 },
     ];
@@ -202,8 +201,8 @@ export default function ListSection(props) {
                         </span>
                         {/* 10. 검색 버튼*/}
                         <span className="form-actions">
-                            <button type="button" className="searchBtn" onClick={onSearch}>검색</button>
-                            <button type="button" className="btn line" onClick={onReset}>초기화</button>
+                            <button type="submit" className="searchBtn" onClick={onSearch}>검색</button>
+                            <button type="button" className="btn line" onClick={onReset}>검색조건 초기화</button>
                         </span>
                     </form>
                 </div>
@@ -211,7 +210,7 @@ export default function ListSection(props) {
 
                 {/* <!-- 목록(리스트) 테이블 시작 --> */}
                 <ul className="titleBox">
-                    <li className="result">검색결과 : {totalElements}개</li>
+                    <li className="result"><FontAwesomeIcon icon={faMagnifyingGlass} />검색결과 : {totalElements} 건</li>
                     <li className="btnBox">
                         <select
                             className="baseDateInput"
@@ -230,7 +229,7 @@ export default function ListSection(props) {
                         columns={columns}
                         data={rows}
                         rememberKey="PlaceInfo.columns"
-                        minColWidth={80}
+                        minColWidth={50}
                         stickyFirst={false}
                         sortable={true}
                         onRowClick={(row) => props?.onPick?.(row)} // 부모(PlaceInfo)로 row 전달
