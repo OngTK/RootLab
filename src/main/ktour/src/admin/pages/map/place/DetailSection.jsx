@@ -53,13 +53,13 @@ export default function DetailSection({ detail, ...rest }) {
           <li>반복정보</li>
         </ul>
         <span className="btnBox">
-          <button type="button" className="btn full">저장</button>
-          <button type="button" className="btn line">삭제</button>
           <button type="button" className="btn line" onClick={handleNew}>신규등록</button>
+          <button type="button" className="btn line">삭제</button>
+          <button type="button" className="btn full">저장</button>
         </span>
       </div>
 
-      <div className="formWrap">
+      <div className="formWrap place">
         <DetailCommon1
           key={`dc1-${pNo ?? 'new'}`}
           placeInfo={placeInfo}

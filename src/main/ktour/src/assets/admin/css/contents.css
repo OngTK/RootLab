@@ -133,6 +133,7 @@
 .admin-scope .formWrap.site .form-group{ display: block; }
 .admin-scope .formWrap.site .form-group label b{ min-width: 90px; }
 .admin-scope .formWrap.site .form-group span.info_date{ display: inline-block;}
+.admin-scope .formWrap.place .form-group{ display: block; }
 
 .admin-scope .formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 0px 3px 1px; opacity: .6; }
 .admin-scope .formWrap p{ padding: 10px 0; }
