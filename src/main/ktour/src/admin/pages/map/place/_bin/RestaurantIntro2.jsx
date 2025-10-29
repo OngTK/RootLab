@@ -92,7 +92,7 @@ export default function RestaurantIntro2({ data }) {
                         <b>최종 수정일:</b> {dateLabel || "-"}
                     </div>
                     <div className="form-actions">
-                        <button type="button">저장</button> <button type="button">삭제</button>
+                        <button type="button">저장</button> <button type="button">초기화</button>
                     </div>
                 </fieldset>
             </form>

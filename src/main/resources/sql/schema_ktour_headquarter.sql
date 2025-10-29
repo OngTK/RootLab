@@ -66,7 +66,7 @@ CREATE TABLE k_tour_headquarter.placeInfo (
     ldNo SMALLINT UNSIGNED,									-- 법정동코드번호[FK] *첫글자 주의! L의 소문자 l 임.
     ccNo SMALLINT UNSIGNED,									-- 분류체계번호[FK]
     isEditable BOOLEAN DEFAULT TRUE,						-- 수정 가능 여부
-    contentid INT UNIQUE,									-- 콘텐츠ID(#TourAPI 연동컬럼)
+    contentid INT,									        -- 콘텐츠ID(#TourAPI 연동컬럼)
     title VARCHAR(255) NOT NULL,							-- 콘텐츠명/제목 (#TourAPI 연동컬럼)
     showflag TINYINT DEFAULT 0,								-- 콘텐츠 표출여부(#TourAPI 연동컬럼)
     firstimage VARCHAR(255),								-- 대표원본이미지(#TourAPI 연동컬럼)

@@ -7,7 +7,7 @@
  */
 import SplitPaneResponsive from "@admin/components/common/SplitPaneResponsive"; // 반응형 스플리터
 import ListSection from "@admin/pages/map/place/ListSection.jsx";               // 좌측: 목록
-import DetailSection from "@admin/pages/map/place/DetailSection.jsx";           // 우측: 상세(CRUD)
+import DetailSection from "@admin/pages/map/place/DetailSectionUTF8.jsx";           // 우측: 상세(CRUD)
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 

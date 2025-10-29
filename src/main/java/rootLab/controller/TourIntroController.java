@@ -47,7 +47,10 @@ public class TourIntroController {
      * @author OngTK
      */
     @GetMapping
-    public ResponseEntity<?> updateTourIntro(@RequestParam int pNo) {
+    public ResponseEntity<?> updateTourIntro(@RequestParam Integer pNo) {
+        if (pNo == null) {
+            return ResponseEntity.badRequest().body("pNo가 없습니다.");
+        }
         if (pNo == 0) {
             return ResponseEntity.status(460).body("입력된 정보가 올바르지 못함");
         }

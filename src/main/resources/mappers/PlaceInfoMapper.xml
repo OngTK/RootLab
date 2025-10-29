@@ -6,9 +6,9 @@
 <mapper namespace="rootLab.model.mapper.PlaceInfoMapper">
 
     <!-- ========================================================= -->
-    <!-- 공통 WHERE: PlaceInfoCriteria 기반 동적 조건               -->
-    <!--  - 주소: addr1 만 LIKE                                   -->
-    <!--  - 카테고리: categoryCode(레벨1/2/3) 한 개로 하위 포함    -->
+    <!-- 공통 WHERE: PlaceInfoCriteria 기반 동적 조건                -->
+    <!--  - 주소: addr1 만 LIKE                                     -->
+    <!--  - 카테고리: categoryCode(레벨1/2/3) 한 개로 하위 포함        -->
     <!-- ========================================================= -->
     <sql id="PlaceInfoCriteriaWhere">
         <where>

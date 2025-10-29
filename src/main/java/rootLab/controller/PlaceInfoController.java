@@ -134,9 +134,10 @@ public class PlaceInfoController {
 
     /**
      * [PI-03] 플레이스 기본정보 등록
+     * <p>
      * 복수 DTO(PlaceInfo, MarkersGPS, PlaceImageDetail) + 복수 파일(마커1, 대표1, 상세N)을
+     * <p>
      * 단일 multipart/form-data 요청으로 받아 트랜잭션으로 처리합니다.
-     *
      * @author OngTK
      */
     @PostMapping(value = "/basic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -172,8 +173,13 @@ public class PlaceInfoController {
      */
     @PutMapping("/basic")
     public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto) {
+        if(placeInfoDto.getPNo() == 0){
+            return ResponseEntity.badRequest().body("pNo가 존재하지 않습니다.");
+        }
+        boolean result = placeInfoService.update(placeInfoDto);
+
         return ResponseEntity.ok(0);
-    } // func end todo
+    } // func end
 
     /**
      * [PI-05] 플레이스 기본정보 삭제

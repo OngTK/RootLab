@@ -71,8 +71,10 @@ public class PlaceAggregateService {
         List<String> tmpDetailFiles = uploadAllNullable(detailImages, "originImgUrl");
 
         // ---- [2] 파일명을 placeInfo에 삽입
-        placeInfo.setFirstimage(tmpMainFile);
-        placeInfo.setFirstimage2(tmpDetailFiles.get(0));
+        if(!tmpDetailFiles.isEmpty()){
+            placeInfo.setFirstimage(tmpMainFile);
+            placeInfo.setFirstimage2(tmpDetailFiles.get(0));
+        }
         // ---- [2.1] ldNo 처리
         StringTokenizer st = new StringTokenizer(placeInfo.getAddr1(), " " );
         String lDongRegnNm = st.nextToken();

@@ -404,7 +404,6 @@ export default function DetailCommon1({
                         </div>
                         <div className="form-actions">
                             <button type="button" onClick={handleSave}>저장</button>
-                            <button>삭제</button>
                         </div>
                     </fieldset>
                 </form>
