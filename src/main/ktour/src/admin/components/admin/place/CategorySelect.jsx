@@ -170,6 +170,14 @@ useEffect(() => {
     // 상위에도 현재 선택 사항을 즉시 통지
     const l1Nm = hit.lclsSystm1Nm, l2Nm = hit.lclsSystm2Nm, l3Nm = hit.lclsSystm3Nm;
     onChange?.({ ccNo: nextCc, l1Cd: nextL1, l2Cd: nextL2, l3Cd: nextL3, l1Nm, l2Nm, l3Nm });
+  } else {
+    // 외부 값이 모두 비워졌거나 매칭이 없을 때 내부 선택 초기화
+    const cleared = !v.ccNo && !v.l1Cd && !v.l2Cd && !v.l3Cd && !v.l1Nm && !v.l2Nm && !v.l3Nm;
+    if (cleared) {
+      if (l1 !== "" || l2 !== "" || l3 !== "" || ccNo != null) {
+        setL1(""); setL2(""); setL3(""); setCcNo(null);
+      }
+    }
   }
   // value.*나 rows가 바뀔 때만 실행 (불필요한 재실행 방지)
   // eslint-disable-next-line react-hooks/exhaustive-deps
