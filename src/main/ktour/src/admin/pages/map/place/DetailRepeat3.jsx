@@ -68,7 +68,7 @@ export default function DetailRepeat3({ items = [], onChange }) {
     useEffect(() => {
         const init = Array.isArray(items) && items.length > 0 ? items.map(asRow) : [blankRow()];
         setRows(init);
-    }, [items]);
+    }, []);
 
     // 3) 최종 수정일(메모)
     const latestUpdated = useMemo(() => getLatestDisplay(rows), [rows]);
