@@ -150,7 +150,7 @@ export default function DetailSection({ activeMember }) {
                             </div>
                             <div className="info_date">
                                 <FontAwesomeIcon icon={faCircleInfo} />
-                                <b>가입일:</b> {m.createdAt}
+                                <b>가입일:</b> {m.createdAt?? "--"}
                                 <b>수정일:</b> {m.updatedAt ?? "--"}
                             </div>
                         </fieldset>

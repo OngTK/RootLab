@@ -43,10 +43,9 @@ public class SiteInfoController {
         if (siIsPublic != null) siteInfoCriteria.setSiIsPublic(siIsPublic);
         if (siDomain != null) siteInfoCriteria.setSiDomain(siDomain);
         if (siName != null) siteInfoCriteria.setSiName(siName);
-//        siteInfoCriteria.setPage(page);
-//        siteInfoCriteria.setPageSize(pageSize);
-//        siteInfoCriteria.setStartRow((page - 1) * pageSize);
-        // 2. Service로부터 결과를 받아 반환하기
+        siteInfoCriteria.setPage(page);
+        siteInfoCriteria.setPageSize(pageSize);
+        siteInfoCriteria.setStartRow((page - 1) * pageSize);
         return ResponseEntity.ok(siteInfoService.searchSites(siteInfoCriteria));
     } // func end
 } // class end
