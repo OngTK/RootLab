@@ -26,24 +26,32 @@ export default function ResizableTable({
     [columns, minColWidth]
   );
   const [widths, setWidths] = useState(initial);
+
+// 저장 복원 키를 컬럼 지문 포함으로
+const storageKey = useMemo(
+   () => rememberKey ? `${rememberKey}@v1:${columns.map(c => c.id).join('|')}` : null,
+   [rememberKey, columns]
+ );
+
+
   const [sort, setSort] = useState({ key: null, dir: "asc" });
 
   // 저장 복원
   useEffect(() => {
-    if (!rememberKey) return;
+    if (!storageKey) return;
     try {
-      const saved = JSON.parse(localStorage.getItem(rememberKey) || "null");
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
       if (Array.isArray(saved) && saved.length === columns.length) {
-        setWidths(saved.map((w, i) => Math.max(minColWidth, +w || initial[i])));
-      }
+      setWidths(saved);
+    }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rememberKey]);
+  }, [storageKey]);
 
   const persist = (next) => {
     setWidths(next);
-    if (!rememberKey) return;
-    try { localStorage.setItem(rememberKey, JSON.stringify(next)); } catch {}
+    if (!storageKey) return;
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
   };
 
   // 정렬
@@ -218,19 +226,28 @@ export default function ResizableTable({
               ))}
             </tr>
           </thead>
-
           <tbody>
-            {sorted.map((row, rIdx) => (
-              <tr key={rIdx} className={row._active ? "active" : undefined} >
-                {columns.map((c, i) => (
-                  <td key={c.id} className={i===0 && stickyFirst ? "sticky-first" : ""}>
-                    {row[c.id]}
-                    <span className="rz-border-visual" />
-                  </td>
-                ))}
+            {sorted.length === 1 && sorted[0]?.__empty ? (
+              <tr key="no-data">
+                <td colSpan={columns.length}
+                  style={{ textAlign: "center", color: "#666", padding: "20px 0" }}>
+                  검색결과가 없습니다.
+                </td>
               </tr>
-            ))}
+            ) : (
+              sorted.map((row, rIdx) => (
+                <tr key={rIdx} className={row._active ? "active" : undefined} >
+                  {columns.map((c, i) => (
+                    <td key={c.id} className={i === 0 && stickyFirst ? "sticky-first" : ""}>
+                      {row[c.id]}
+                      <span className="rz-border-visual" />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
+
         </table>
       </div>
     </div>

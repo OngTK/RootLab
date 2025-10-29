@@ -53,7 +53,7 @@
 }
 
 /* 2.2.1. 페이지 타이틀 */
-.admin-scope .detailSearch{ display: flex; justify-content: space-between; align-items: center; padding: 10px 0; background: rgb(235, 255, 245); padding: 10px; font-size: 12px; line-height: 120%; border-radius: 10px; }
+.admin-scope .detailSearch{ display: flex; justify-content: space-between; align-items: center; padding: 10px 0; background: rgb(235, 255, 245); padding: 10px; font-size: 12px; line-height: 120%; border-radius: 5px; border:solid 1px rgba(0, 191, 99, .15); }
 .admin-scope .detailSearch > form > label{ display:inline-block; padding:  0 5px; font-weight: 600; color: rgba(0,0,0,.7); margin: 2px 3px 2px 0;}
 .admin-scope .detailSearch > form > label > b{ display:inline-block;  min-width: 60px; padding: 0 5px; font-size: 11px; }
 
@@ -69,14 +69,15 @@
 .admin-scope .tableWrap table td.sticky{ position: sticky; left: 0; z-index: 1; background: rgba(255,255,255,1); }       
 .admin-scope .tableWrap table tfoot th{ border: 0; }
 .admin-scope .tableWrap table tbody tr td a{ color:  rgba(0, 191, 99, 1); }
-.admin-scope .tableWrap table tbody tr:hover{ background: rgb(235, 255, 245); }
+.admin-scope .tableWrap table tbody tr:hover{ background: rgb(221, 251, 255); }
 .admin-scope .tableWrap table tbody tr.active{ background: hsla(145, 100%, 65%, 0.2); }
 .admin-scope .tableWrap table tbody tr.active td{ color: #000; }
 
-.admin-scope .tableWrap table tbody tr td b{ color: rgba(0, 191, 99, 1);}
+.admin-scope .tableWrap table tbody tr td b{ color: rgba(0, 191, 99, 1); }
 
 .admin-scope .registWrap{  flex: 1 1 auto; min-width: 320px; overflow: auto;   }
-.admin-scope .titleBox{ display: flex; justify-content: space-between; align-items:top; font-size: 13px; padding: 10px 0 8px 3px;  }
+.admin-scope .titleBox{ display: flex; justify-content: space-between; align-items:center; font-size: 12px; padding: 10px 0 8px 3px; color: rgba(0,0,0,.9); }
+.admin-scope .titleBox svg{ color:rgba(0, 191, 99, 1);padding-right: 3px; }
 .admin-scope .tabtitle{ display: flex;   }
 .admin-scope .registWrap .titleBox{ padding:0; display: flex; }
 .admin-scope .tabtitle li{ padding:5px 10px; border: solid 1px rgba(0,0,0,.3); border-width:1px 1px 0px 1px; background: #eee;  margin-left: -3px; min-width: 80px; text-align: center; }
@@ -121,7 +122,9 @@
 
 .admin-scope .formWrap h2{ padding: 0 0 10px; font-size:14px; letter-spacing:-0.7px; opacity:.8 }
 .admin-scope .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
+.admin-scope .form-group{ display: inline-block; }
 .admin-scope .form-group label { display: inline-block; margin: 3px 0; vertical-align: top; min-width: 75px; padding: 1px 3px 0 5px; }
+.admin-scope .detailSearch.member .form-group label{ min-width: 50px; }
 .admin-scope .formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 2px 3px 0; opacity: .6; }
 .admin-scope .formWrap p{ padding: 10px 0; }
  
