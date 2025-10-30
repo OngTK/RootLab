@@ -143,7 +143,10 @@ export default function DetailCommon1({
             const center = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
             setMapObj(map);
-            const marker = new window.kakao.maps.Marker({ position: center, draggable: true });
+            const marker = new window.kakao.maps.Marker({
+                position: center,
+                draggable: true
+            });
             markerRef.current = marker;
             marker.setMap(map);
             geocoderRef.current = new window.kakao.maps.services.Geocoder();
@@ -172,11 +175,21 @@ export default function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            if (!markerRef.current) {
-                markerRef.current = new window.kakao.maps.Marker({ position: latlng });
-            } else {
-                markerRef.current.setPosition(latlng);
-            }
+            console.log(markers);
+            const src = markers.mkURL ?
+                '/public/uploads/1/marker/' + markers.mkURL
+                :
+                markers.defaultMarker || "/user/img/no_img.jpg";
+            console.log(src)
+            const imageSize = new kakao.maps.Size(120, 90);
+            const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+            console.log(markerRef.current);
+            markerRef.current = new window.kakao.maps.Marker({
+                position: latlng,
+                draggable: true,
+                image: markerImage,
+                zIndex: 50
+            });
             markerRef.current.setMap(mapObj);
             mapObj.setCenter(latlng);
             setCoord({ x, y });
