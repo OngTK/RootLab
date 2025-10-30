@@ -1,6 +1,13 @@
+// 장소(Place) 관련 상태/비동기 로직을 관리하는 Redux Toolkit 슬라이스
+// - 목록 조회, 상세 조회, 저장 관련 thunk와 리듀서를 포함합니다.
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from './axios';
 
+/**
+ * 상세 조회
+ * @param pno 상세를 조회할 장소 고유번호
+ * @returns 서버에서 내려준 상세 데이터
+ */
 export const fetchPlaceDetail = createAsyncThunk(
   'place/fetchDetail',
   async (pno: number) => {
@@ -9,6 +16,11 @@ export const fetchPlaceDetail = createAsyncThunk(
   }
 );
 
+/**
+ * 목록 조회
+ * - 전달된 `params`가 없으면 현재 상태의 `filters`, `page`, `size`를 사용합니다.
+ * - 서버 응답을 테이블/페이지네이션에 필요한 형태로 가공합니다.
+ */
 export const fetchPlaceList = createAsyncThunk(
   'place/fetchList',
   async (params: any | undefined, thunkAPI) => {
@@ -26,6 +38,11 @@ export const fetchPlaceList = createAsyncThunk(
   }
 );
 
+/**
+ * 기본 정보 저장
+ * - 멀티파트(FormData) 업로드를 수행합니다.
+ * - 저장 성공 후, 상태에 보관된 `selectedPno`가 있으면 상세 재조회 합니다.
+ */
 export const saveBasic = createAsyncThunk(
   'place/saveBasic',
   async (fd: FormData, thunkAPI) => {
@@ -39,6 +56,11 @@ export const saveBasic = createAsyncThunk(
   }
 );
 
+/**
+ * 관광지 소개 저장
+ * - DTO를 그대로 POST 전송합니다.
+ * - `pNo/pno`를 추출해 성공 시 상세를 재조회합니다.
+ */
 export const saveTourIntro = createAsyncThunk(
   'place/saveTourIntro',
   async (dto: any, thunkAPI) => {
@@ -51,6 +73,9 @@ export const saveTourIntro = createAsyncThunk(
   }
 );
 
+/**
+ * 축제 소개 저장
+ */
 export const saveFestivalIntro = createAsyncThunk(
   'place/saveFestivalIntro',
   async (dto: any, thunkAPI) => {
@@ -63,6 +88,9 @@ export const saveFestivalIntro = createAsyncThunk(
   }
 );
 
+/**
+ * 음식점 소개 저장
+ */
 export const saveRestaurantIntro = createAsyncThunk(
   'place/saveRestaurantIntro',
   async (dto: any, thunkAPI) => {
@@ -75,6 +103,11 @@ export const saveRestaurantIntro = createAsyncThunk(
   }
 );
 
+/**
+ * 반복 정보 저장
+ * @param payload { pNo, rows } 형태로 전달되며 rows 배열을 서버에 저장합니다.
+ * - 저장 성공 시 해당 pNo로 상세를 재조회합니다.
+ */
 export const saveRepeatInfo = createAsyncThunk(
   'place/saveRepeatInfo',
   async (payload: { pNo: number, rows: any[] }, thunkAPI) => {
@@ -87,22 +120,24 @@ export const saveRepeatInfo = createAsyncThunk(
   }
 );
 
+// 슬라이스 상태 구조
 type PlaceState = {
-  rows: any[];
-  total: number;
-  listRaw: any | null;
-  filters: any | null;
-  page: number;
-  size: number;
+  rows: any[];           // 목록 데이터 (표에 표시되는 행들)
+  total: number;         // 목록 총 개수 (페이지네이션)
+  listRaw: any | null;   // 목록 API의 원본 응답(필요 시 디버깅/추가 정보)
+  filters: any | null;   // 목록 검색/필터 조건
+  page: number;          // 현재 페이지
+  size: number;          // 페이지 당 행 수
 
-  detail: any | null;
-  loading: boolean;
-  error: string | null;
+  detail: any | null;    // 선택된 장소 상세 데이터
+  loading: boolean;      // 비동기 처리 중 여부
+  error: string | null;  // 에러 메시지(있을 경우)
 
-  contentType: string | null;
-  selectedPno: number | null;
+  contentType: string | null; // 현재 상세 콘텐츠 유형(예: TOUR/FESTIVAL/RESTAURANT 등)
+  selectedPno: number | null; // 현재 선택된 장소 번호
 };
 
+// 상태 초기값
 const initialState: PlaceState = {
   rows: [],
   total: 0,
@@ -123,21 +158,24 @@ const placeSlice = createSlice({
   name: 'place',
   initialState,
   reducers: {
-    setContentType: (s, a) => { s.contentType = (a.payload ?? null) && String(a.payload); },
-    clearDetail: (s) => { s.detail = null; s.contentType = null; s.error = null; },
-    setListFilters: (s, a) => { s.filters = a.payload || null; },
-    setPage: (s, a) => { s.page = Number(a.payload) || 1; },
-    setSize: (s, a) => { s.size = Number(a.payload) || 10; },
+    setContentType: (s, a) => { s.contentType = (a.payload ?? null) && String(a.payload); }, // 상세 표시 콘텐츠 유형 설정
+    clearDetail: (s) => { s.detail = null; s.contentType = null; s.error = null; }, // 상세 및 오류 초기화
+    setListFilters: (s, a) => { s.filters = a.payload || null; }, // 목록 검색/필터 조건 설정
+    setPage: (s, a) => { s.page = Number(a.payload) || 1; }, // 현재 페이지 설정
+    setSize: (s, a) => { s.size = Number(a.payload) || 10; }, // 페이지 사이즈 설정
   },
   extraReducers: (b) => {
+    // 목록 조회
     b.addCase(fetchPlaceList.pending,  (s)=>{ s.loading = true; s.error = null; })
      .addCase(fetchPlaceList.fulfilled,(s,a)=>{ s.loading=false; s.rows=a.payload.rows; s.total=a.payload.total; s.listRaw=a.payload.raw; s.page = a.payload.page; s.size = a.payload.size; s.filters = a.payload.filters; })
-      .addCase(fetchPlaceList.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'list error'); });
+     .addCase(fetchPlaceList.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'list error'); });
 
+    // 상세 조회
     b.addCase(fetchPlaceDetail.pending,  (s,a)=>{ s.loading = true; s.error = null; s.selectedPno = Number((a as any).meta?.arg ?? 0) || null; })
      .addCase(fetchPlaceDetail.fulfilled,(s,a)=>{ s.loading=false; s.detail=a.payload; })
      .addCase(fetchPlaceDetail.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'detail error'); });
 
+    // 저장 액션들 (성공 시 별도 상태 변경은 없고, 관련 thunk에서 상세 재조회 처리)
     b.addCase(saveBasic.pending, (s)=>{ s.loading=true; s.error=null; })
      .addCase(saveBasic.fulfilled,(s)=>{ s.loading=false; })
      .addCase(saveBasic.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save basic error'); });
