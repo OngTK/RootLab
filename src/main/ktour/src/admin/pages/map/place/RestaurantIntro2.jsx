@@ -1,15 +1,30 @@
 /**
- * 관리자 > 관광정보 > 플레이스 현황(PlaceInfo)
- * [본문 우측] 음식점 상세 정보 저장 + 저장 후 재조회
+ * RestaurantIntro2: 음식점 상세 입력 폼
+ *
+ * 역할
+ * - 음식점 관련 세부 항목 입력 및 저장
+ * - 저장 시 saveRestaurantIntro thunk로 DTO 전달(riNo/pno/riStatus 포함)
+ *
+ * 데이터 흐름
+ * - props.data를 초기 표시값으로 사용
+ * - 수집: form(FormData) → collect() → dto 조립
+ * - 변경 판단: isChanged()로 기존 값 대비 일부 키 비교
+ * - 상태 값: riStatus = 신규 1, 수정 2, 변경없음 0
  */
 import { useRef } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { saveRestaurantIntro } from "@admin/store/placeSlice";
 
-export default function RestaurantIntro2Form({ data, pNo }) {
+export default function RestaurantIntro2({ data, pNo }) {
+  const dispatch = useDispatch();
   const base = data ?? {};
   const fmt = (s) => (s ?? "");
   const formRef = useRef(null);
 
+  /**
+   * 폼 입력값 수집
+   * - FormData에서 문자열/숫자를 수집하여 DTO 기초 객체 반환
+   */
   const collect = () => {
     const fd = new FormData(formRef.current);
     const get = (k) => (fd.get(k) ?? "").toString();
@@ -38,6 +53,10 @@ export default function RestaurantIntro2Form({ data, pNo }) {
     };
   };
 
+  /**
+   * 변경 여부 판단
+   * - 지정된 키 목록에 대해 기존 값(base)과 현재 값(curr) 문자열 비교
+   */
   const isChanged = (curr) => {
     const same = (a, b) => String(a ?? "") === String(b ?? "");
     const keys = [
@@ -48,32 +67,20 @@ export default function RestaurantIntro2Form({ data, pNo }) {
     return keys.some((k) => !same(curr[k], base[k]));
   };
 
+  /**
+   * 저장
+   * - riNo 존재: 변경 시 2, 무변경 0
+   * - riNo 없음: 신규 1
+   * - pNo/pno 혼재 대비 resolvedPno 보정
+   */
   const handleSave = async () => {
     const curr = collect();
     const riNo = base?.riNo ?? null;
     const resolvedPno = pNo ?? base?.pNo ?? base?.pno ?? null;
-    if (!resolvedPno) { alert("플레이스가 선택되지 않았습니다."); return; }
-
-    const dto = {
-      riNo: riNo ?? 0,
-      pNo: Number(resolvedPno),
-      ...curr,
-      riStatus: riNo ? (isChanged(curr) ? 2 : 0) : 1,
-    };
-
+    if (!resolvedPno) { alert("장소가 선택되지 않았습니다."); return; }
+    const dto = { riNo: riNo ?? 0, pno: Number(resolvedPno), ...curr, riStatus: riNo ? (isChanged(curr) ? 2 : 0) : 1 };
     try {
-      const { data: saved } = await axios.post("http://localhost:8080/placeinfo/restaurant", dto);
-      // 저장 후 재조회(응답이 없거나 일부 필드가 누락될 수 있어 보강)
-      let next = saved;
-      if (!next || typeof next !== "object") {
-        const r2 = await axios.get("http://localhost:8080/placeinfo/restaurant", { params: { pNo: Number(resolvedPno) } });
-        next = r2?.data;
-      }
-      if (next && formRef.current) {
-        const f = formRef.current;
-        const keys = Object.keys(curr);
-        keys.forEach((k) => { if (f.elements[k]) f.elements[k].value = fmt(next[k]); });
-      }
+      await dispatch(saveRestaurantIntro(dto)).unwrap();
       alert("저장되었습니다.");
     } catch (e) {
       console.error(e);
@@ -81,6 +88,10 @@ export default function RestaurantIntro2Form({ data, pNo }) {
     }
   };
 
+  /**
+   * 초기화
+   * - 특정 필드(riNo/pNo/pno/createdAt/updatedAt)는 건너뜀
+   */
   const handleReset = () => {
     const form = formRef.current;
     if (!form) return;
@@ -99,84 +110,95 @@ export default function RestaurantIntro2Form({ data, pNo }) {
     });
   };
 
+  const b = base || {};
+
   return (
     <div className="RestaurantIntroWrap">
       <form ref={formRef} aria-label="음식점 상세 정보 입력">
         <fieldset>
           <legend>음식점 상세 정보</legend>
 
+          {/* 메뉴 / 결제 */}
           <h4 className="section-title">메뉴 / 결제</h4>
           <div className="form-group">
             <label htmlFor="chkCreditCardFood">신용카드</label>
-            <input id="chkCreditCardFood" name="chkCreditCardFood" type="text" defaultValue={fmt(base.chkCreditCardFood)} />
+            <input id="chkCreditCardFood" name="chkCreditCardFood" type="text" defaultValue={fmt(b.chkCreditCardFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="discountInfoFood">할인정보</label>
-            <input id="discountInfoFood" name="discountInfoFood" type="text" defaultValue={fmt(base.discountInfoFood)} />
+            <label htmlFor="discountInfoFood">할인 정보</label>
+            <input id="discountInfoFood" name="discountInfoFood" type="text" defaultValue={fmt(b.discountInfoFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="firstMenu">대표메뉴</label>
-            <input id="firstMenu" name="firstMenu" type="text" defaultValue={fmt(base.firstMenu)} />
+            <label htmlFor="firstMenu">대표 메뉴</label>
+            <input id="firstMenu" name="firstMenu" type="text" defaultValue={fmt(b.firstMenu)} />
           </div>
           <div className="form-group">
-            <label htmlFor="treatMenu">취급메뉴</label>
-            <input id="treatMenu" name="treatMenu" type="text" defaultValue={fmt(base.treatMenu)} />
+            <label htmlFor="treatMenu">취급 메뉴</label>
+            <input id="treatMenu" name="treatMenu" type="text" defaultValue={fmt(b.treatMenu)} />
           </div>
 
-          <h4 className="section-title">안내 / 편의</h4>
+          {/* 안내 / 문의 */}
+          <h4 className="section-title">안내 / 문의</h4>
           <div className="form-group">
             <label htmlFor="infoCenterFood">문의 및 안내</label>
-            <input id="infoCenterFood" name="infoCenterFood" type="text" defaultValue={fmt(base.infoCenterFood)} />
+            <input id="infoCenterFood" name="infoCenterFood" type="text" defaultValue={fmt(b.infoCenterFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="kidsFacility">어린이 놀이방 여부(0/1)</label>
-            <input id="kidsFacility" name="kidsFacility" type="number" defaultValue={fmt(base.kidsFacility)} />
+            <label htmlFor="kidsFacility">어린이 놀이방 유무(0/1)</label>
+            <input id="kidsFacility" name="kidsFacility" type="number" defaultValue={fmt(b.kidsFacility)} />
           </div>
           <div className="form-group">
             <label htmlFor="smoking">금연/흡연 여부</label>
-            <input id="smoking" name="smoking" type="text" defaultValue={fmt(base.smoking)} />
+            <input id="smoking" name="smoking" type="text" defaultValue={fmt(b.smoking)} />
           </div>
 
-          <h4 className="section-title">인허가/규모/좌석</h4>
+          {/* 인허가 / 규모 / 좌석 */}
+          <h4 className="section-title">인허가 / 규모 / 좌석</h4>
           <div className="form-group">
             <label htmlFor="lcnsNo">인허가 번호</label>
-            <input id="lcnsNo" name="lcnsNo" type="text" defaultValue={fmt(base.lcnsNo)} />
+            <input id="lcnsNo" name="lcnsNo" type="text" defaultValue={fmt(b.lcnsNo)} />
           </div>
           <div className="form-group">
             <label htmlFor="scaleFood">규모</label>
-            <input id="scaleFood" name="scaleFood" type="text" defaultValue={fmt(base.scaleFood)} />
+            <input id="scaleFood" name="scaleFood" type="text" defaultValue={fmt(b.scaleFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="seat">좌석수</label>
-            <input id="seat" name="seat" type="text" defaultValue={fmt(base.seat)} />
+            <label htmlFor="seat">좌석 수</label>
+            <input id="seat" name="seat" type="text" defaultValue={fmt(b.seat)} />
           </div>
 
+          {/* 영업 */}
           <h4 className="section-title">영업</h4>
           <div className="form-group">
             <label htmlFor="openDateFood">개업일</label>
-            <input id="openDateFood" name="openDateFood" type="text" defaultValue={fmt(base.openDateFood)} />
+            <input id="openDateFood" name="openDateFood" type="text" defaultValue={fmt(b.openDateFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="openTimeFood">영업시간</label>
-            <input id="openTimeFood" name="openTimeFood" type="text" defaultValue={fmt(base.openTimeFood)} />
+            <label htmlFor="openTimeFood">영업 시간</label>
+            <input id="openTimeFood" name="openTimeFood" type="text" defaultValue={fmt(b.openTimeFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="reservationFood">예약안내</label>
-            <input id="reservationFood" name="reservationFood" type="text" defaultValue={fmt(base.reservationFood)} />
+            <label htmlFor="reservationFood">예약 안내</label>
+            <input id="reservationFood" name="reservationFood" type="text" defaultValue={fmt(b.reservationFood)} />
           </div>
           <div className="form-group">
             <label htmlFor="restDateFood">쉬는 날</label>
-            <input id="restDateFood" name="restDateFood" type="text" defaultValue={fmt(base.restDateFood)} />
+            <input id="restDateFood" name="restDateFood" type="text" defaultValue={fmt(b.restDateFood)} />
           </div>
           <div className="form-group">
-            <label htmlFor="packing">포장가능</label>
-            <input id="packing" name="packing" type="text" defaultValue={fmt(base.packing)} />
+            <label htmlFor="packing">포장 가능</label>
+            <input id="packing" name="packing" type="text" defaultValue={fmt(b.packing)} />
           </div>
 
+          {/* 주차 */}
           <h4 className="section-title">주차</h4>
           <div className="form-group">
             <label htmlFor="parkingFood">주차시설</label>
-            <input id="parkingFood" name="parkingFood" type="text" defaultValue={fmt(base.parkingFood)} />
+            <input id="parkingFood" name="parkingFood" type="text" defaultValue={fmt(b.parkingFood)} />
+          </div>
+
+          <div className="info_date">
+            <b>최종 수정일</b> {fmt(b.updatedAt) || fmt(b.createdAt) || "-"}
           </div>
 
           <div className="form-actions">

@@ -1,71 +1,78 @@
 /**
- * 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) 페이지 컴포넌트
+ * 관리자 > 관광정보 > 장소정보(PlaceInfo) 페이지 컴포넌트
  *
- * @author 
- * @since 2025.10.19
- * @version 0.1.3
+ * 역할 개요
+ * - 좌측: 장소 목록(ListSection)
+ * - 우측: 선택된 장소의 상세 편집(DetailSection)
+ *
+ * 상태/데이터 흐름
+ * - 전역 스토어(placeSlice)에서 선택된 장소의 식별자(pno)와 상세데이터(detail)를 관리합니다.
+ * - 좌측 목록 행 클릭 시, 해당 pno로 상세를 조회하는 thunk(fetchPlaceDetail)를 디스패치합니다.
+ * - 우측 상세 영역은 스토어의 detail을 읽어 렌더링합니다.
+ *
+ * 우측 패널 초기화 전략
+ * - 다른 항목을 선택할 때 우측 폼의 로컬 상태를 깨끗하게 리셋하기 위해 key(detailKey)를 증가시켜 강제 재마운트를 유도합니다.
+ * - 또한 로컬 detail 상태를 null로 설정해, 자식 컴포넌트가 초기값을 재수립하도록 돕습니다.
  */
-import SplitPaneResponsive from "@admin/components/common/SplitPaneResponsive"; // 반응형 스플리터
-import ListSection from "@admin/pages/map/place/ListSection.jsx";               // 좌측: 목록
-import DetailSection from "@admin/pages/map/place/DetailSection.jsx";           // 우측: 상세(CRUD)
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+
+// 반응형 좌우 분할 레이아웃 컴포넌트
+import SplitPaneResponsive from "@admin/components/common/SplitPaneResponsive";
+// 좌측 목록 영역: 검색/페이징/행선택을 담당
+import ListSection from "@admin/pages/map/place/ListSection.jsx";
+// 우측 상세 영역: 기본/Intro/반복정보 탭 편집을 담당
+import DetailSection from "@admin/pages/map/place/DetailSection.jsx";
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPlaceDetail } from '@admin/store/placeSlice';
 
 export default function PlaceInfo() {
+  const dispatch = useDispatch();
 
-  const [picked, setPicked] = useState(null);   // 목록에서 클릭한 행
-  const [detail, setDetail] = useState(null);   // 서버 상세 응답
-  const [detailKey, setDetailKey] = useState(0);   // 우측 패널 리셋용 키
+  // 우측 패널(DetailSection) 리셋을 위한 로컬 상태
+  // - detail: 과거 호환을 위한 자리(현재 상세는 스토어에서 읽음). null로 유지해 초기화 용도로만 사용
+  // - detailKey: key를 증가시켜 DetailSection을 강제 재마운트하여 폼 내부 로컬 상태를 초기화
+  const [detail, setDetail] = useState(null);
+  const [detailKey, setDetailKey] = useState(0);
 
+  // 전역 스토어에 기록된 현재 선택된 pno(행 선택 시 fetchPlaceDetail.pending에서 세팅됨)
+  const selectedPno = useSelector((s) => s.place?.selectedPno ?? null);
+
+  // 선택 pno가 바뀌면 우측 패널을 초기화하여 이전 폼 상태 잔존을 방지
   useEffect(() => {
-    const pno = picked?.pNo ?? picked?.pno ?? picked?.PNO;
-    if (!pno) { setDetail(null); return; }
-
-    setLoading(true);
-    setError(null);
-    axios.get(`http://localhost:8080/placeinfo/basic`, { params: { pno } })
-      .then(({ data }) => {
-        setDetail(data)
-      })
-      .catch((e) => setError(e?.message || '상세 조회 실패'))
-      .finally(() => setLoading(false));
-  }, [picked]);
-
-  const handlePick = async (row) => {
-    // 1) 우측 전체 초기화(리마운트) : 이전 값이 남지 않도록 먼저 비움
-    setDetail(null);
-    setDetailKey((k) => k + 1);
-
-    try {
-      // 2) 상세 조회
-      const { data } = await axios.get(
-        "http://localhost:8080/placeinfo/basic",
-        { params: { pno: row.pno } }
-      );
-      // 3) 상세 반영
-      setDetail(data);
-      // 필요하다면 key를 한 번 더 증가시켜도 되지만 일반적으로는 불필요
-    } catch (e) {
-      console.error(e);
+    if (selectedPno != null) {
+      setDetail(null);
+      setDetailKey((k) => k + 1);
     }
+  }, [selectedPno]);
+
+  /**
+   * 좌측 목록에서 행을 클릭했을 때 호출됩니다.
+   * - 다양한 키 조합(pno/pNo/PNO)을 받아 숫자로 변환하여 상세 조회를 디스패치합니다.
+   * @param {object} row - 목록의 한 행(서버 검색 결과)
+   */
+  const handlePick = (row) => {
+    const pno = row?.pno ?? row?.pNo ?? row?.PNO;
+    if (pno) dispatch(fetchPlaceDetail(Number(pno)));
   };
 
-  /** ========================= 관리자단 > 관광정보관리 > 플레이스현황(PlaceInfo) .jsx영역 ================================== */
   return (
     <>
       <SplitPaneResponsive
-        initLeftPct={50}              // 초기 좌측 폭(%)
-        minLeftPx={240}               // 좌측 최소(px)
-        minRightPx={320}              // 우측 최소(px) 
-        left={<ListSection onPick={handlePick} />}// 좌측 콘텐츠
+        // 최초 로드 시 좌측 50% 비율. 창 크기에 따라 반응형으로 조정됨
+        initLeftPct={50}
+        // 좌/우 최소 픽셀(너무 좁아져 UI가 깨지는 것 방지)
+        minLeftPx={240}
+        minRightPx={320}
+        // 좌측: 목록. 행 클릭 시 handlePick 호출
+        left={<ListSection onPick={handlePick} />}
+        // 우측: 상세 편집. key 변경으로 강제 재마운트하여 폼 초기화 보장
         right={
           <DetailSection
-            key={detailKey}        // ← 우측 통째로 리마운트(초기화)
-            detail={detail}        // ← 상세 데이터 전달(없으면 비어있는 폼)
-            onNew={() => {         // “신규등록” 버튼용 초기화
-              setDetail(null);
-              setDetailKey((k) => k + 1);
-            }}
+            key={detailKey}
+            // 과거 호환을 위해 남겨둔 prop. 현재 상세 데이터는 스토어에서 직접 구독
+            detail={detail}
+            // 새로운 항목 작성 등으로 초기화가 필요할 때 호출
+            onNew={() => { setDetail(null); setDetailKey((k) => k + 1); }}
           />
         }
       />
