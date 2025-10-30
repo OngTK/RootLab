@@ -61,7 +61,7 @@ public class PlaceAggregateService {
      *
      * @author OngTK
      */
-    public boolean savePlaceBasicInfo(
+    public Integer savePlaceBasicInfo(
         PlaceInfoDto placeInfo,
         MarkersGPSDto marker,
         List<PlaceImageDetailDto> imagesMeta,
@@ -70,8 +70,8 @@ public class PlaceAggregateService {
         List<MultipartFile> detailImages
     ) {
         // ---- [0] 유효성 ----
-        if (placeInfo == null) return false;
-        if (detailImages != null && detailImages.size() > 10) return false;
+        if (placeInfo == null) return null;
+        if (detailImages != null && detailImages.size() > 10) return null;
 
         // pno가 0 이면 신규 등록
         if (placeInfo.getPNo() == 0) {
@@ -109,9 +109,9 @@ public class PlaceAggregateService {
             List<PlaceImageDetailDto> rows = buildImageRows(pNo, imagesMeta, tmpDetailFiles);
             if (!rows.isEmpty()) placeImageDetailServiceBulkInsert(rows);
 
-            return true;
+            return pNo;
         } else {
-            // pno가 0이 아니면 업데이트 todo
+            // pno가 0이 아니면 업데이트
             int searchPno = placeInfo.getPNo();
 
             // [1] 기존 placeInfo를 가져오고 이미지를 제외한 정보를 삽입 > update
@@ -209,12 +209,11 @@ public class PlaceAggregateService {
             boolean result2 = markersGPSService.update(newMarkerDto);
 
             if (result1 && result2) {
-                return true;
+                return searchPno;
             }
-            return false;
+            return null;
         }
     } // func end
-
 
     /**
      * [PI-06] 플레이스 + 상세 + 반복 일괄 등록(신규)
@@ -226,7 +225,7 @@ public class PlaceAggregateService {
      * 3) null 입력은 저장 생략
      * @author OngTK
      */
-    public boolean saveAllPlaceAndDetailInfo(
+    public Integer saveAllPlaceAndDetailInfo(
             PlaceInfoDto placeInfo,
             MarkersGPSDto marker,
             List<PlaceImageDetailDto> imagesMeta,
@@ -239,28 +238,28 @@ public class PlaceAggregateService {
             List<PlaceInfoRepeatDto> placeInfoRepeat
     ) {
         // [1] 기본정보 + 파일 저장
-        boolean basicOk = savePlaceBasicInfo(placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages);
-        if (!basicOk) return false;
+        Integer basicPno = savePlaceBasicInfo(placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages);
+        if (basicPno == null || basicPno == 0) return null;
 
         // 생성된 pNo 확보(MyBatis useGeneratedKeys true)
         int pNo = placeInfo.getPNo();
-        if (pNo == 0) return false;
+        if (pNo == 0) return null;
 
         // [2] 상세 정보 저장 - null 시 생략, pNo 주입
         if (tourIntro != null) {
             tourIntro.setPNo(pNo);
             boolean ok = tourIntroService.saveTourIntro(tourIntro);
-            if (!ok) return false;
+            if (!ok) return null;
         }
         if (festivalIntro != null) {
             festivalIntro.setPNo(pNo);
             boolean ok = festivalIntroService.saveFestivalIntro(festivalIntro);
-            if (!ok) return false;
+            if (!ok) return null;
         }
         if (restaurantIntro != null) {
             restaurantIntro.setPNo(pNo);
             boolean ok = restaurantIntroService.saveRestaurantIntro(restaurantIntro);
-            if (!ok) return false;
+            if (!ok) return null;
         }
 
         // [3] 반복 정보 저장 - null 시 생략, 각 항목에 pNo 주입
@@ -269,10 +268,10 @@ public class PlaceAggregateService {
                 dto.setPNo(pNo);
             }
             boolean ok = placeInfoRepeatService.savePlaceRepeatInfo(placeInfoRepeat);
-            if (!ok) return false;
+            if (!ok) return null;
         }
 
-        return true;
+        return pNo;
     }
 
 

@@ -46,13 +46,12 @@ export const fetchPlaceList = createAsyncThunk(
 export const saveBasic = createAsyncThunk(
   'place/saveBasic',
   async (fd: FormData, thunkAPI) => {
-    await api.post('/placeinfo/basic', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    const { data } = await api.post('/placeinfo/basic', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     try {
-      // @ts-ignore
-      const pno = (thunkAPI.getState()?.place?.selectedPno) as number | null;
-      if (pno) thunkAPI.dispatch(fetchPlaceDetail(Number(pno)));
+      const pno = Number(data ?? 0);
+      if (pno) thunkAPI.dispatch(fetchPlaceDetail(pno));
     } catch {}
-    return true;
+    return data;
   }
 );
 
@@ -128,7 +127,11 @@ export const saveRepeatInfo = createAsyncThunk(
 export const saveAllNew = createAsyncThunk(
   'place/saveAllNew',
   async (fd: FormData, thunkAPI) => {
-    await api.post('/placeinfo/all', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    const { data } = await api.post('/placeinfo/all', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    try {
+      const pno = Number(data ?? 0);
+      if (pno) thunkAPI.dispatch(fetchPlaceDetail(pno));
+    } catch {}
     // 신규는 서버 응답에 pNo가 없어 상세 갱신 생략(필요시 목록 재조회 권장)
     return true;
   }

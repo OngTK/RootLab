@@ -18,8 +18,8 @@ import rootLab.service.PlaceInfoService;
 import rootLab.util.pagenation.Page;
 import rootLab.util.pagenation.PageRequest;
 
-import java.util.List;
-import java.util.Map;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 /**
  * PlaceInfo
@@ -142,13 +142,14 @@ public class PlaceInfoController {
      * 복수 DTO(PlaceInfo, MarkersGPS, PlaceImageDetail) + 복수 파일(마커1, 대표1, 상세N)을
      * <p>
      * 단일 multipart/form-data 요청으로 받아 트랜잭션으로 처리합니다.
+     *
      * @author OngTK
      */
     @PostMapping(value = "/basic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> savePlaceBasicInfo(
             // JSON 파트
             @RequestPart("placeInfo") PlaceInfoDto placeInfo,
-            @RequestPart("marker" ) MarkersGPSDto marker,
+            @RequestPart("marker") MarkersGPSDto marker,
             @RequestPart(value = "imagesMeta", required = false) List<PlaceImageDetailDto> imagesMeta,
 
             // 파일 파트 (JSX 필드명 기준: markerImage / mainImage / detailImage…)
@@ -156,18 +157,19 @@ public class PlaceInfoController {
             @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
             @RequestPart(value = "detailImages", required = false) List<MultipartFile> detailImages // multiple
     ) {
-        System.out.println("placeInfo = " + placeInfo + "\n"+
-                ", marker = " + marker + "\n"+
-                ", imagesMeta = " + imagesMeta +"\n"+
-                ", markerImage = " + markerImage + "\n"+
-                ", mainImage = " + mainImage +"\n"+
+        System.out.println("placeInfo = " + placeInfo + "\n" +
+                ", marker = " + marker + "\n" +
+                ", imagesMeta = " + imagesMeta + "\n" +
+                ", markerImage = " + markerImage + "\n" +
+                ", mainImage = " + mainImage + "\n" +
                 ", detailImages = " + detailImages);
 
-        boolean ok = placeAggregateService.savePlaceBasicInfo(
+        Integer pNo = placeAggregateService.savePlaceBasicInfo(
                 placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages
         );
+        boolean ok = (pNo != null && pNo != 0);
         if (!ok) return ResponseEntity.status(460).body("저장 실패");
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(pNo);
     } // func end
 
     /**
@@ -177,7 +179,7 @@ public class PlaceInfoController {
      */
     @PutMapping("/basic")
     public ResponseEntity<?> updatePlaceBasicInfo(@RequestBody PlaceInfoDto placeInfoDto) {
-        if(placeInfoDto.getPNo() == 0){
+        if (placeInfoDto.getPNo() == 0) {
             return ResponseEntity.badRequest().body("pNo가 존재하지 않습니다.");
         }
         boolean result = placeInfoService.update(placeInfoDto);
@@ -187,7 +189,9 @@ public class PlaceInfoController {
 
     /**
      * [PI-05] 플레이스 기본정보 삭제
+     * <p>
      * pNo를 받아 해당 pNo의 showflag를 0으로 수정
+     *
      * @author OngTK
      */
     @DeleteMapping("/basic")
@@ -200,11 +204,15 @@ public class PlaceInfoController {
 
     /**
      * [PI-06] 플레이스 일괄 등록(신규)
-     *
+     * <p>
      * DetailSection 내 모든 컴포넌트(공통/상세/반복)의 데이터를 한 번에 받아 저장합니다.
+     * <p>
      * - multipart/form-data 요청을 통해 JSON 파트 + 파일 파트를 함께 전송합니다.
+     * <p>
      * - 상세 정보 DTO(Festival/Restaurant/Tour)와 반복 정보(List<PlaceInfoRepeatDto>)는 null 가능하며, null 시 해당 저장은 패스합니다.
+     * <p>
      * - 신규 등록이므로 상세 DTO에는 pNo가 비어 있을 수 있으며, 서버에서 생성된 pNo를 주입하여 저장합니다.
+     *
      * @author OngTK
      */
     @PostMapping(value = "/all", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -239,13 +247,15 @@ public class PlaceInfoController {
                 "\n, restaurantIntro = " + restaurantIntro +
                 "\n, placeInfoRepeat = " + placeInfoRepeat);
 
-        boolean ok = placeAggregateService.saveAllPlaceAndDetailInfo(
+        Integer pNo2 = placeAggregateService.saveAllPlaceAndDetailInfo(
                 placeInfo, marker, imagesMeta,
                 markerImage, mainImage, detailImages,
                 tourIntro, festivalIntro, restaurantIntro,
                 placeInfoRepeat
         );
+        boolean ok = (pNo2 != null && pNo2 != 0);
         if (!ok) return ResponseEntity.status(460).body("일괄 등록에 실패했습니다.");
+        if (ok) return ResponseEntity.ok(pNo2);
         return ResponseEntity.ok(true);
     } // func end
 
@@ -292,12 +302,13 @@ public class PlaceInfoController {
             return ResponseEntity.badRequest().body("pNo가 존재하지 않습니다.");
         }
 
-        boolean ok = placeAggregateService.saveAllPlaceAndDetailInfo(
+        Integer pNo3 = placeAggregateService.saveAllPlaceAndDetailInfo(
                 placeInfo, marker, imagesMeta,
                 markerImage, mainImage, detailImages,
                 tourIntro, festivalIntro, restaurantIntro,
                 placeInfoRepeat
         );
+        boolean ok = (pNo3 != null && pNo3 != 0);
         if (!ok) return ResponseEntity.status(460).body("일괄 수정에 실패했습니다.");
         return ResponseEntity.ok(true);
     } // func end
@@ -308,15 +319,15 @@ public class PlaceInfoController {
      * [키워드, 사용자위치]를 입력받아, 해당하는 플레이스 정보들을 조회한다.
      *
      * @param keyword 검색한 키워드
-     * @param lat 사용자 위치 기준 위도
-     * @param lng 사용자 위치 기준 경도
+     * @param lat     사용자 위치 기준 위도
+     * @param lng     사용자 위치 기준 경도
      * @return 키워드에 의한 검색 결과
      * @author AhnJH
      */
     @GetMapping("/searchbyusers")
     public ResponseEntity<?> searchPlacesByUsers(@RequestParam String keyword,
                                                  @RequestParam double lat,
-                                                 @RequestParam double lng){
+                                                 @RequestParam double lng) {
         return ResponseEntity.ok(placeInfoService.searchPlacesByUsers(keyword, lat, lng));
     } // func end
 } // class end

@@ -254,6 +254,8 @@ const DetailCommon1 = forwardRef(function DetailCommon1({
             if (!contentTypeLocal) { alert("콘텐츠 유형을 선택해 주세요."); return; }
             if (!category?.ccNo) { alert("카테고리를 (최소 1단계) 선택해 주세요."); return; }
             if (!roadAddr) { alert("주소를 입력해 주세요."); return; }
+            if (!zipCode) {alert("우편번호를 입력해 주세요."); return;}
+            if (!title) {alert("제목을 입력해주세요."); return;}
 
             const pNoFromDetail = (placeInfo?.pno ?? placeInfo?.pNo ?? (placeNo ? Number(placeNo) : null));
             const ctNoVal = Number(String(contentTypeLocal || "1"));

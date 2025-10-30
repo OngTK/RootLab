@@ -171,7 +171,7 @@ export default function DetailSection({ detail, ...rest }) {
       </div>
 
       <div className="formWrap place">
-          {/* 1) 기본 정보(공통) */}
+        {/* 1) 기본 정보(공통) */}
         <DetailCommon1
           ref={commonRef}
           key={`dc1-${pNo ?? 'new'}`}
