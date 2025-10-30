@@ -72,6 +72,7 @@ export default function DetailCommon1({
     const detailImgsRef = useRef(null);
     const imageDescRef = useRef(null);
     const detailAddrRef = useRef(null);
+    const markerTempUrlRef = useRef(null);
 
     // Kakao Map
     const mapRef = useRef(null);
@@ -175,15 +176,12 @@ export default function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            console.log(markers);
             const src = markers.mkURL ?
                 '/public/uploads/1/marker/' + markers.mkURL
                 :
                 markers.defaultMarker || "/user/img/no_img.jpg";
-            console.log(src)
             const imageSize = new kakao.maps.Size(120, 90);
             const markerImage = new kakao.maps.MarkerImage(src, imageSize);
-            console.log(markerRef.current);
             markerRef.current = new window.kakao.maps.Marker({
                 position: latlng,
                 draggable: true,
@@ -194,7 +192,30 @@ export default function DetailCommon1({
             mapObj.setCenter(latlng);
             setCoord({ x, y });
         });
+        // 주소가 바뀔 때, 임시 URL 해제
+        URL.revokeObjectURL(markerTempUrlRef.current);
     }, [roadAddr, mapObj]);
+
+    const handleMarkerImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // URL.createObjectURL()로 임시 파일경로 생성하기
+            const tempUrl = URL.createObjectURL(file);
+            // '미리보기'에서 사용하기 위해 저장
+            markerTempUrlRef.current = tempUrl;
+            // 마커이미지 만들기
+            const image = new kakao.maps.MarkerImage(
+                tempUrl,
+                new kakao.maps.Size(120, 90)
+            );
+            // 마커에 적용하기
+            markerRef.current.setImage(image);
+        } // if end
+    } // func end
+
+    // const handleMarkerPreview = () => {
+
+    // } // func end
 
     /**
      * 저장 핸들러
@@ -358,7 +379,8 @@ export default function DetailCommon1({
                     {/* 12. 이미지 */}
                     <div className="form-group">
                         <label htmlFor="marker-img">마커 이미지</label>
-                        <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
+                        <input type="file" id="marker-img" name="markerImage" onChange={handleMarkerImage} ref={markerImgRef} />
+                        <button onClick={handleMarkerPreview}>미리보기</button>
                     </div>
                     <div className="form-group">
                         <label htmlFor="main-img">대표 이미지</label>
