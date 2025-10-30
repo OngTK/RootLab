@@ -25,15 +25,7 @@ public class ManagerService {
      * @return 페이징처리된 검색 결과
      * @author AhnJH
      */
-    public Page<ManagerDto> searchManagers(ManagerCriteria managerCriteria){
-        // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
-        List<ManagerDto> searchedManagers = managerMapper.searchManagers(managerCriteria);
-        // 2. 검색결과를 토대로 Page 구성하여 반환하기
-        return new Page<>(
-                searchedManagers,
-                searchedManagers.size(),
-                managerCriteria.getPage(),
-                managerCriteria.getPageSize()
-        );
+    public List<ManagerDto> searchManagers(ManagerCriteria managerCriteria){
+        return managerMapper.searchManagers(managerCriteria);
     } // func end
 } // class end

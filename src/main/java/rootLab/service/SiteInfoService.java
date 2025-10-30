@@ -28,19 +28,5 @@ public class SiteInfoService {
     public List<SiteInfoDto> searchSites(SiteInfoCriteria siteInfoCriteria){
         // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
         return siteInfoMapper.searchSites(siteInfoCriteria);
-
-    /*
-    public Page<SiteInfoDto> searchSites(SiteInfoCriteria siteInfoCriteria){
-        // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
-        List<SiteInfoDto> searchedSites = siteInfoMapper.searchSites(siteInfoCriteria);
-        // 2. 검색결과를 토대로 Page 구성하여 반환하기
-        return new Page<>(
-                searchedSites,
-                searchedSites.size(),
-                siteInfoCriteria.getPage(),
-                siteInfoCriteria.getPageSize()
-        );
-
-     */
     } // func end
 } // class end

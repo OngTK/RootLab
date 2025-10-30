@@ -28,8 +28,6 @@ public class ManagerController {
      * @param mName    회원명
      * @param mId      관리자ID == 회원ID
      * @param mPhone   휴대전화
-     * @param page     조회할 페이지
-     * @param pageSize 페이지당 개수
      * @return 검색결과
      * @author AhnJH
      */
@@ -37,18 +35,13 @@ public class ManagerController {
     public ResponseEntity<?> searchManagers(@RequestParam(required = false) Integer mgAuth,
                                             @RequestParam(required = false) String mName,
                                             @RequestParam(required = false) String mId,
-                                            @RequestParam(required = false) String mPhone,
-                                            @RequestParam(defaultValue = "1") int page,
-                                            @RequestParam(defaultValue = "10") int pageSize){
+                                            @RequestParam(required = false) String mPhone){
         // 1. 입력받은 매개변수를 통해 검색기준 구성하기
         ManagerCriteria managerCriteria = new ManagerCriteria();
         if (mgAuth != null) managerCriteria.setMgAuth(mgAuth);
         if (mName != null) managerCriteria.setMName(mName);
         if (mId != null) managerCriteria.setMId(mId);
         if (mPhone != null) managerCriteria.setMPhone(mPhone);
-        managerCriteria.setPage(page);
-        managerCriteria.setPageSize(pageSize);
-        managerCriteria.setStartRow((page - 1) * pageSize);
         // 2. Service로부터 결과를 받아 반환하기
         return ResponseEntity.ok(managerService.searchManagers(managerCriteria));
     } // func end
