@@ -3,17 +3,31 @@
  *
  * @author 
  * @since 2025.10.24
- * @version 0.1.1
+ * @version 0.1.0
+ * @note 내부 로직: 부트스트랩 → Embla Carousel로 교체 (전역 CSS 영향 없음)
  */
+
 import "@assets/user/css/popupBanner.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
+
+// Embla (헤드리스 캐러셀)
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 
 export default function PopupBanner(props) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const carouselId = useMemo(() => `popupCarousel-${Math.random().toString(36).slice(2, 9)}`, []);
+
+   // Embla 세팅: 자동재생(4초), 마우스오버 시 일시정지
+  const autoplayRef = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, align: "start", skipSnaps: false },
+    [autoplayRef.current]
+  );
 
   // 서버에 저장된 파일명(ppImg) → 이미지 URL 조립
   const imgUrl = (ppImg) =>
@@ -22,8 +36,6 @@ export default function PopupBanner(props) {
       : "/user/img/popup_sample3.jpg"; // 기본 샘플
 
   const typeLabel = (t) => (String(t) === "1" ? "공지" : String(t) === "2" ? "이벤트" : "알림");
-  const fmtDate = (v) => (v ? String(v).replace("T", " ").slice(0, 16) : "-");
-  
 
   useEffect(() => {
     let mounted = true;
@@ -44,10 +56,12 @@ export default function PopupBanner(props) {
     return () => { mounted = false; };
   }, []);
 
-  // 데이터 없으면 아무것도 렌더하지 않음
   if (loading) return null;
-  if (!items.length) {
-  setItems([
+
+ // 데이터 없을 때의 “표시용” 배열 (렌더 중 setState 금지 → 파생값으로 해결)
+  const displayItems = items.length
+    ? items
+    :[
     {
       ppNo: 0,
       ppTitle: "기본 배너",
@@ -55,100 +69,59 @@ export default function PopupBanner(props) {
       ppImg: "/user/img/popup_sample3.jpg", // 기본 이미지 경로
       ppType: "3",
     },
-  ]);
-  return null; // 첫 렌더 한 번 끊어주기
-}
+  ];
     
 console.log("팝업");
+
+  /** ====== Embla 레이아웃용 최소 inline 스타일 (전역 CSS 불변) ====== */
+  const emblaWrapStyle = { overflow: "hidden" }; // 뷰포트
+  const emblaContainerStyle = {
+    display: "flex",
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    msUserSelect: "none",
+  }; // 트랙
+  const emblaSlideStyle = {
+    position: "relative",
+    flex: "0 0 100%", // 한 번에 한 장
+    minWidth: 0,
+  };
+
 /** =========================== PopupBanner.jsx ===================================== */
-    return <>
-        {/* 배너 로테이션 1,2,3 시작 */}
-        return (
-  <>
-    {/* 기존 래퍼 유지 */}
-    <div className="popupBannerWrap">
-      {/* 부트스트랩 캐러셀 래퍼 추가 */}
-      <div
-        id={carouselId}                       // ← useMemo로 만든 고유 id
-        className="carousel slide"
-        data-bs-ride="carousel"
-        data-bs-interval="4000"
-        aria-roledescription="carousel"
-      >
-        {/* 인디케이터(선택사항) */}
-        <div className="carousel-indicators">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              data-bs-target={`#${carouselId}`}
-              data-bs-slide-to={i}
-              className={i === 0 ? "active" : ""}
-              aria-current={i === 0 ? "true" : undefined}
-              aria-label={`Slide ${i + 1}`}
-            />
-          ))}
+  return (
+    <>
+      <div className="popupBannerWrap">
+        {/* Embla Viewport */}
+        <div ref={emblaRef} style={emblaWrapStyle} aria-roledescription="carousel">
+          {/* Embla Container */}
+          <div style={emblaContainerStyle}>
+            {displayItems.map((it, i) => (
+              <div style={emblaSlideStyle} key={it.ppNo ?? i} role="group" aria-label={`${i + 1} / ${displayItems.length}`}>
+                {/* 기존 dl 구조 유지 */}
+                <dl className="popupBanne position-relative m-0">
+                  <dt>
+                    <img
+                      src={imgUrl(it.ppImg)}
+                      className="d-block w-100"
+                      onError={(e) => (e.currentTarget.src = "/user/img/popup_sample3.jpg")}
+                      alt={it.ppTitle ?? "배너"}
+                    />
+                    {/* 타입 뱃지 (좌상단) */}
+                    <span className="position-absolute top-0 start-0 m-2 badge bg-primary">
+                      {typeLabel(it.ppType)}
+                    </span>
+                  </dt>
+                  {/* 캡션 */}
+                  <div className="carousel-caption d-none d-md-block">
+                    <dd className="h5 mb-1">{it.ppTitle ?? ""}</dd>
+                    <dd className="mb-0">{it.ppContent ?? ""}</dd>
+                  </div>
+                </dl>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {/* 기존 dl 구조를 '슬라이드 아이템'으로 감싸기 */}
-        <div className="carousel-inner">
-          {items.map((it, i) => (
-            <div className={`carousel-item ${i === 0 ? "active" : ""}`} key={it.ppNo ?? i}>
-              {/* 기존 dl 유지 */}
-              <dl className="popupBanne position-relative m-0">
-                <dt>
-                  <img
-                    src={imgUrl(it.ppImg)}
-                    className="d-block w-100"
-                    onError={(e) => (e.currentTarget.src = "/user/img/popup_sample3.jpg")}
-                  />
-                  {/* 타입 뱃지는 좌상단에 */}
-                  <span className="position-absolute top-0 start-0 m-2 badge bg-primary">
-                    {typeLabel(it.ppType)}
-                  </span>
-                </dt>
-
-                {/* 캡션은 부트스트랩 오버레이 영역에 넣어 연출 */}
-                <div className="carousel-caption d-none d-md-block">
-                  <dd className="h5 mb-1"></dd>
-                  <dd className="mb-0">
-                  </dd>
-                  {/* 장소 필드 필요하면 여기서 추가 */}
-                  {/* <dd className="mb-0">장소: {it.placeName ?? "-"}</dd> */}
-                </div>
-              </dl>
-            </div>
-          ))}
-        </div>
-
-        {/* 이전/다음 버튼 — 아이템 2개 이상일 때만 */}
-        {items.length > 1 && (
-          <>
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target={`#${carouselId}`}
-              data-bs-slide="prev"
-            >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target={`#${carouselId}`}
-              data-bs-slide="next"
-            >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Next</span>
-            </button>
-          </>
-        )}
       </div>
-    </div>
-  </>
-);
-        {/* 배너 로테이션 1,2,3 끝 */}
-
     </>
+  );
 }//MainPlace.jsx end

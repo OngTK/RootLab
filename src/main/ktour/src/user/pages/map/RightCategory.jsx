@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from "../../store/mapSlice";
 import PlaceGroups from "@user/pages/map/RightPlaceList"; // 우측 플레이스 목록 영역
+import PushNotification from "@user/components/common/PushNotification.jsx";
 
 const categories = [
     { name: "전체", icon: faList, value: "all" }, // value는 API 요청 시 사용할 값 (예시)
@@ -50,7 +51,9 @@ export default function RightCategory(props) {
                 {/* <!-- 03-1.우측 본문 영역 시작 --> */}
                 <div className="rightContents">
                     <div className="pageTitle">
-                        <h2><FontAwesomeIcon icon={faLocationDot} />{activeLDong}</h2>
+                        <h2><FontAwesomeIcon icon={faLocationDot} />{activeLDong}
+                        <button type="button" > <PushNotification /> </button>
+                        </h2>
                         <ul className="cotentType">
                             {
                                 categories.map((category) => {
