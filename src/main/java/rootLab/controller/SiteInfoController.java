@@ -48,9 +48,11 @@ public class SiteInfoController {
         if (siIsPublic != null) siteInfoCriteria.setSiIsPublic(siIsPublic);
         if (siDomain != null) siteInfoCriteria.setSiDomain(siDomain);
         if (siName != null) siteInfoCriteria.setSiName(siName);
-        // siteInfoCriteria.setPage(page);
-        // siteInfoCriteria.setPageSize(pageSize);
-        // siteInfoCriteria.setStartRow((page - 1) * pageSize);
+//         siteInfoCriteria.setPage(page);
+//         siteInfoCriteria.setPageSize(pageSize);
+//         siteInfoCriteria.setStartRow((page - 1) * pageSize);
+        System.out.println("SiteInfoController.searchSites");
+        System.out.println("siIsPublic = " + siIsPublic + ", siDomain = " + siDomain + ", siName = " + siName + ", page = " + page + ", pageSize = " + pageSize);
         return ResponseEntity.ok(siteInfoService.searchSites(siteInfoCriteria));
     } // func end
 
