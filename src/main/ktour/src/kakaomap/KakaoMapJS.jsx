@@ -257,19 +257,22 @@ export default function KakaoMap(props) {
         }); // circle end
         circle1.setMap(map);
 
-        // 지도에 현재 위치 표시 로직
-        let circle2 = new kakao.maps.Circle({
-            center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 50,                  // 반경 표시(m 단위)
-            strokeWeight: 3,             // 선의 두께
-            strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-            strokeStyle: 'solid',        // 선의 스타일
-            fillColor: '#ff0101ff',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.5             // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-        }); // circle2 end
-        circle2.setMap(map);
+        const userPosition = new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng);
 
+        // 커스텀 오버레이에 표시할 HTML (CSS 클래스 적용)
+        const content = '<div class="user-location-dot"></div>';
+
+        // 커스텀 오버레이 생성
+        const userLocationOverlay = new kakao.maps.CustomOverlay({
+            position: userPosition,
+            content: content,
+            xAnchor: 0.5, 
+            yAnchor: 0.5,
+            zIndex: 3 // 원(circle1)보다 위에 보이도록
+        });
+
+        // 커스텀 오버레이를 지도에 표시
+        userLocationOverlay.setMap(map);
 
         // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'tilesloaded', () => {
