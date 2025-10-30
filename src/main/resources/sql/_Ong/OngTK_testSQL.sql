@@ -58,28 +58,6 @@ select * from placeInfo order by pno desc;
 -- select * from placeInfo where ;
 
 select count(*) from placeinfo;
-SELECT pi.* FROM placeInfo pi ORDER BY pi.pNo DESC LIMIT 10 OFFSET 2;
-
-SELECT
-            pi.*,
-            c1.contentTypeName  AS contentTypeName,  
-            c2.lclsSystm3Nm     AS lclsSystm3Nm     
-        FROM placeInfo pi
-            LEFT JOIN contenttype c1
-            ON pi.ctNo = c1.contenttypeid
-            LEFT JOIN categoryCode c2
-            ON pi.ccNo = c2.ccNo
-        ORDER BY pi.pNo DESC
-        LIMIT  10
-        OFFSET 0;
-        
-SELECT pi.* FROM placeInfo pi LIMIT 10 OFFSET 2;
-
-            SELECT kpi.*, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
-            	FROM k_tour_headquarter.placeinfo kpi
-                JOIN k_tour_headquarter.categorycode kcc
-                USING (ccNo)
-                WHERE kpi.pno = 6881;
 
 -- ---------------------------------------------------------
 -- TourIntro

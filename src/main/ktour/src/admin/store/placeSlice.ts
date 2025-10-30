@@ -79,6 +79,7 @@ export const saveTourIntro = createAsyncThunk(
 export const saveFestivalIntro = createAsyncThunk(
   'place/saveFestivalIntro',
   async (dto: any, thunkAPI) => {
+    console.log(dto)
     await api.post('/placeinfo/festivalintro', dto);
     try {
       const pno = Number(dto?.pNo ?? dto?.pno ?? 0);

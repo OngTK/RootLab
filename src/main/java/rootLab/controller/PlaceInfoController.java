@@ -164,7 +164,7 @@ public class PlaceInfoController {
         );
         if (!ok) return ResponseEntity.status(460).body("저장 실패");
         return ResponseEntity.ok(true);
-    } // func end todo
+    } // func end
 
     /**
      * [PI-04] 플레이스 기본정보 수정
@@ -178,7 +178,7 @@ public class PlaceInfoController {
         }
         boolean result = placeInfoService.update(placeInfoDto);
 
-        return ResponseEntity.ok(0);
+        return ResponseEntity.ok(result);
     } // func end
 
     /**
@@ -188,9 +188,11 @@ public class PlaceInfoController {
      */
     @DeleteMapping("/basic")
     public ResponseEntity<?> deletePlaceBasicInfo(@RequestParam int pNo) {
-        return ResponseEntity.ok(0);
-    } // func end todo
-
+        System.out.println("PlaceInfoController.deletePlaceBasicInfo");
+        System.out.println("pNo = " + pNo);
+        boolean result = placeInfoService.delete(pNo);
+        return ResponseEntity.ok(result);
+    } // func end
 
     /**
      * [PI-06] 플레이스 정보 일괄 저장
@@ -199,6 +201,8 @@ public class PlaceInfoController {
      */
     @PutMapping("/all")
     public ResponseEntity<?> saveAllPlaceAndDetailInfo() {
+
+
         return ResponseEntity.ok(0);
     } // func end todo
 

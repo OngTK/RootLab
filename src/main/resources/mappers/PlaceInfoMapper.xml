@@ -47,9 +47,8 @@
                     AND pi.pNo = #{criteria.pNo}
                 </if>
 
-                <if test="criteria.showflag != null">
-                    AND pi.showflag = #{criteria.showflag}
-                </if>
+                <!-- 항상 공개 항목만 조회 -->
+                AND pi.showflag = 1
 
             </if>
         </where>
@@ -115,9 +114,8 @@
             <if test="criteria.pNo != null">
                 AND pi.pNo = #{criteria.pNo}
             </if>
-            <if test="criteria.showflag != null">
-                AND pi.showflag = #{criteria.showflag}
-            </if>
+            <!-- 항상 공개 항목만 조회 -->
+            AND pi.showflag = 1
         </where>
     </select>
 
@@ -154,9 +152,8 @@
             <if test="criteria.pNo != null">
                 AND pi.pNo = #{criteria.pNo}
             </if>
-            <if test="criteria.showflag != null">
-                AND pi.showflag = #{criteria.showflag}
-            </if>
+            <!-- 항상 공개 항목만 조회 -->
+            AND pi.showflag = 1
         </where>
         ORDER BY pi.pNo DESC
         LIMIT  #{pageRequest.limit}
@@ -178,6 +175,7 @@
             ON pi.ctNo = c1.ctNo
             LEFT JOIN categoryCode c2
             ON pi.ccNo = c2.ccNo
+            WHERE pi.showflag = 1
             ORDER BY pi.pNo DESC
         LIMIT  #{pageRequest.limit}
         OFFSET #{pageRequest.offset}
@@ -193,10 +191,13 @@
         USING (pNo)
         JOIN categorycode kcc
         USING (ccNo)
-        WHERE kpi.title LIKE CONCAT('%', #{keyword}, '%')
-        OR kpi.addr1 LIKE CONCAT('%', #{keyword}, '%')
-        OR kpi.addr2 LIKE CONCAT('%', #{keyword}, '%')
-        OR kpi.overview LIKE CONCAT('%', #{keyword}, '%')
+        WHERE kpi.showflag = 1
+          AND (
+            kpi.title   LIKE CONCAT('%', #{keyword}, '%')
+         OR kpi.addr1   LIKE CONCAT('%', #{keyword}, '%')
+         OR kpi.addr2   LIKE CONCAT('%', #{keyword}, '%')
+         OR kpi.overview LIKE CONCAT('%', #{keyword}, '%')
+          )
         ORDER BY distance
         LIMIT 10;
     </select>

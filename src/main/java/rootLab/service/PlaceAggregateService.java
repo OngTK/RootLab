@@ -102,7 +102,7 @@ public class PlaceAggregateService {
 
             return true;
         } else {
-            // pno가 0이 아니면 업데이트
+            // pno가 0이 아니면 업데이트 todo
             int searchPno = placeInfo.getPNo();
 
             // [1] 기존 placeInfo를 가져오고 이미지를 제외한 정보를 삽입 > update
