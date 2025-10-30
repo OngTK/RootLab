@@ -113,7 +113,7 @@ export default function LeftModalPlace(props) {
                                 (<img
                                     src={placeInfo.placeInfo.firstimage.indexOf('http') != -1 ?
                                         placeInfo.placeInfo.firstimage :
-                                        '..../public/uploads/1/firstImage/' + placeInfo.placeInfo.firstimage
+                                        '/public/uploads/1/firstImage/' + placeInfo.placeInfo.firstimage
                                     }
                                     alt="타이틀"
                                 />)
