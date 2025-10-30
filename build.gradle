@@ -60,7 +60,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto:6.4.4'
 
     //파이어베이스
-    implementation 'com.google.firebase:firebase-admin:9.7.0'   // 버전은 최신 확인 필요
+    implementation 'com.google.firebase:firebase-admin:9.7.0' // 버전은 최신 확인 필요
 
 }
 
