@@ -58,12 +58,14 @@ select * from placeInfo order by pno desc;
 -- select * from placeInfo where ;
 
 select count(*) from placeinfo;
+select * from placeinfo where pno = 65545;
 
+update placeinfo set showflag = 1 where pno=65540; 
 -- ---------------------------------------------------------
 -- TourIntro
 -- 관광지(contentTypeID 12 . ctNo1) 정보
 -- ---------------------------------------------------------
-select * from tourIntro where pno = 6881;
+select * from tourIntro where pno = 65545;
 delete from tourIntro where tiNo=128;
 
 
@@ -71,7 +73,7 @@ delete from tourIntro where tiNo=128;
 -- festivalintro 
 -- 행사/축제 (contentTypeID 15 . ctNo3) 정보
 -- ---------------------------------------------------------
-select * from festivalintro where pno=23405;
+select * from festivalintro where pno=65545;
 
 
 

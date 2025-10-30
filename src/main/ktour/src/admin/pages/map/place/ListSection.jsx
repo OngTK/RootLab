@@ -29,7 +29,7 @@ import "@assets/admin/css/resizableTable.css";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import RegionSelect from "../../../components/admin/place/RegionSelect";
 import Pagination from "../../../components/admin/place/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     fetchPlaceDetail,
@@ -127,6 +127,14 @@ export default function ListSection(props) {
 
     const activeEnter = (e) => { if (e.key === "Enter") onSearch(); };
 
+    // 테이블 표시용 행에 No 컬럼 주입(페이지 기준 시작 번호부터 연속 번호)
+    const rowsForTable = useMemo(() => {
+        const start = (Number(page) - 1) * Number(size) + 1;
+        return Array.isArray(rows)
+            ? rows.map((r, i) => ({ ...r, no: start + i }))
+            : [];
+    }, [rows, page, size]);
+
     return (
         <>
             {/* [좌측] 검색/리스트 */}
@@ -222,7 +230,7 @@ export default function ListSection(props) {
                 <div className="tableWrap">
                     <ResizableTable
                         columns={columns}
-                        data={rows}
+                        data={rowsForTable}
                         rememberKey="PlaceInfo.columns"
                         minColWidth={50}
                         stickyFirst={false}

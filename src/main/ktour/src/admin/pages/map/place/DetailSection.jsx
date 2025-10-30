@@ -14,7 +14,7 @@
  * 로컬 상태
  * - localDetail: 렌더링 편의를 위한 상세 데이터 스냅샷. props/detail 변경에 맞춰 동기화
  * - EMPTY_DETAIL: 초기 렌더/신규 작성 시 사용할 빈 구조
- * - pNo: 상세의 장소 식별자. Intro/Repeat 저장 시 참조
+ * - pNo: 플레이스 장소 식별자. Intro/Repeat 저장 시 참조
  *
  * 노출 규칙
  * - effectiveCt: 스토어(contentType) 우선, 없으면 상세 데이터(placeInfo.ctNo), 모두 없으면 기본값 1(관광지)
