@@ -122,7 +122,6 @@ export default function ListSection(props) {
         { id: "lclsSystm3Nm", title: "카테고리", width: 120 },
         { id: "addr1", title: "주소", width: 260 },
         { id: "tel", title: "전화번호", width: 140 },
-        { id: "showflag", title: "노출", width: 90 },
     ];
 
     const activeEnter = (e) => { if (e.key === "Enter") onSearch(); };

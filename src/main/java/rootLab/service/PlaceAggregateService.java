@@ -20,9 +20,10 @@ import java.util.*;
 
 /**
  * [ PlaceAggregate ]
+ * <p>
  * PlaceInfo 처리에 대하여
+ * <p>
  * 복합 DTO + 복합 파일 업로드에 따라서 이를 관리하기 위한 별도의 도메인
- *
  * @author OngTK
  */
 @Service
