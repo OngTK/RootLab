@@ -141,6 +141,63 @@ public class PlaceAggregateService {
             newPlaceDto.setOverview(placeInfo.getOverview());
             newPlaceDto.setCreatedAt(placeInfo.getCreatedAt());
 
+            // [1.3] 이미지 업데이트 정책 적용 (새 업로드가 있으면 교체, 없으면 유지)
+            boolean hasNewMarker = (markerImage != null && !markerImage.isEmpty());
+            boolean hasNewMain = (mainImage != null && !mainImage.isEmpty());
+            boolean hasNewDetails = (detailImages != null && !detailImages.isEmpty());
+
+            String tmpMarkerFile = uploadNullable(markerImage, "marker");
+            String tmpMainFile = uploadNullable(mainImage, "firstImage");
+            List<String> tmpDetailFiles = uploadAllNullable(detailImages, "originImgUrl");
+
+            // 대표 이미지 교체
+            if (hasNewMain) {
+                try {
+                    if (newPlaceDto.getFirstimage() != null) {
+                        fileUtil.deleteFile(newPlaceDto.getFirstimage(), "firstImage", String.valueOf(1));
+                    }
+                } catch (Exception ignore) {}
+                if (tmpMainFile != null) newPlaceDto.setFirstimage(tmpMainFile);
+            }
+
+            // 상세 이미지 전체 교체 + firstimage2 반영
+            if (hasNewDetails) {
+                try {
+                    List<PlaceImageDetailDto> olds = placeImageDetailService.readAllToPno(searchPno);
+                    for (PlaceImageDetailDto d : olds) {
+                        if (d.getOriginimgurl() != null) fileUtil.deleteFile(d.getOriginimgurl(), "originImgUrl", String.valueOf(1));
+                        if (d.getSmallimageurl() != null) fileUtil.deleteFile(d.getSmallimageurl(), "originImgUrl", String.valueOf(1));
+                    }
+                } catch (Exception ignore) {}
+                placeImageDetailService.deleteAllByPno(searchPno);
+                List<PlaceImageDetailDto> rows = buildImageRows(searchPno, imagesMeta, tmpDetailFiles);
+                if (!rows.isEmpty()) {
+                    newPlaceDto.setFirstimage2(tmpDetailFiles.get(0));
+                    placeImageDetailServiceBulkInsert(rows);
+                }
+            }
+
+            // 마커 이미지 교체 (좌표 업데이트는 아래 기본 흐름 유지)
+            if (hasNewMarker) {
+                try {
+                    Optional<MarkersGPSDto> origin = markersGPSService.read(searchPno);
+                    if (origin.isPresent() && origin.get().getMkURL() != null) {
+                        fileUtil.deleteFile(origin.get().getMkURL(), "marker", String.valueOf(1));
+                    }
+                } catch (Exception ignore) {}
+                if (tmpMarkerFile != null) {
+                    Optional<MarkersGPSDto> origin2 = markersGPSService.read(searchPno);
+                    MarkersGPSDto upd = origin2.orElse(new MarkersGPSDto());
+                    upd.setPNo(searchPno);
+                    upd.setMkURL(tmpMarkerFile);
+                    if (upd.getMkNo() == 0) {
+                        markersGPSService.create(upd);
+                    } else {
+                        markersGPSService.update(upd);
+                    }
+                }
+            }
+
             boolean result1 = placeInfoService.update(newPlaceDto);
 
             // [2] 기본 markerGPS 정보를 가져오고 이미지를 제외한 정보를 삽입 > update

@@ -37,4 +37,13 @@ public class PlaceImageDetailService extends AbstractService<PlaceImageDetailDto
         placeImageDetailMapper.bulkInsert(rows);
     }
 
+    public int deleteAllByPno(Integer pNo){
+        if (pNo == null || pNo == 0) return 0;
+        return placeImageDetailMapper.deleteAllByPno(pNo);
+    }
+
+    public List<PlaceImageDetailDto> readAllToPno(int pNo){
+        return placeImageDetailMapper.readAllToPno(pNo);
+    }
+
 } // func end
