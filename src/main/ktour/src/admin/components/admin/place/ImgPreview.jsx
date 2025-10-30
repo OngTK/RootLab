@@ -38,14 +38,23 @@ export default function ImgPreview({ title }) {
                                 <img
                                     src={mainImgTempUrl || "/user/img/no_img.jpg"}
                                     alt={title + " 미리보기"}
-                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                    style={{
+                                        maxWidth: '100%',
+                                        maxHeight: '100%',
+                                        objectFit: 'contain'
+                                    }}
                                 />
                                 :
                                 detailImgTempUrl.map((url) => {
                                     return <img
                                         src={url || "/user/img/no_img.jpg"}
                                         alt={title + " 미리보기"}
-                                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                        style={{
+                                            maxWidth: '100%',
+                                            maxHeight: '100%',
+                                            objectFit: 'contain',
+                                            paddingBottom: '20px'
+                                        }}
                                     />
                                 })
                         }
