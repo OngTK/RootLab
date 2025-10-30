@@ -29,6 +29,7 @@
     "react-redux": "^9.2.0",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^7.9.4",
+    "react-shadow": "^20.6.0",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
