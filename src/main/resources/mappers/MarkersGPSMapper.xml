@@ -9,7 +9,7 @@
         FROM (SELECT
         kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
         kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
-        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo,
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kpi.showflag,
         ROW_NUMBER() OVER (
         PARTITION BY kmg.mapx, kmg.mapy
         ORDER BY kpi.pNo ASC
@@ -39,6 +39,7 @@
             </if>
             <if test="1 == 1">
                 AND t.rn = 1 AND t.ctNO != 3
+                AND t.showflag = 1
             </if>
         </where>
     </select>
@@ -47,7 +48,7 @@
         FROM (SELECT
         kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
         kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
-        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kfi.eventstartdate, kfi.eventenddate,
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kfi.eventstartdate, kfi.eventenddate, kpi.showflag,
         ROW_NUMBER() OVER (
         PARTITION BY kmg.mapx, kmg.mapy
         ORDER BY kpi.pNo ASC
@@ -80,6 +81,7 @@
             <if test="1 == 1">
                 AND t.rn = 1
                 AND t.eventenddate > NOW()
+                AND t.showflag = 1
             </if>
         </where>
     </select>

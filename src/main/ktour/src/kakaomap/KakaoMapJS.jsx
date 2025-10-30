@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng, selectedRightMarker } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -266,7 +266,7 @@ export default function KakaoMap(props) {
         const userLocationOverlay = new kakao.maps.CustomOverlay({
             position: userPosition,
             content: content,
-            xAnchor: 0.5, 
+            xAnchor: 0.5,
             yAnchor: 0.5,
             zIndex: 3 // 원(circle1)보다 위에 보이도록
         });
