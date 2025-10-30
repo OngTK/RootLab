@@ -42,7 +42,8 @@ public class LDongCodeController {
      * @author AhnJH
      */
     @GetMapping("/getsigngu")
-    public ResponseEntity<?> getLDongSignguByRegnCd(@RequestParam int lDongRegnCd){
+    public ResponseEntity<?> getLDongSignguByRegnCd(@RequestParam Integer lDongRegnCd){
+        if (lDongRegnCd == null) return ResponseEntity.status(460).body("필수 데이터가 존재하지 않습니다.");
         return ResponseEntity.ok(lDongCodeService.getLDongSignguByRegnCd(lDongRegnCd));
     } // func end
 
@@ -56,7 +57,8 @@ public class LDongCodeController {
      * @author AhnJH
      */
     @GetMapping("/getbyldno")
-    public ResponseEntity<?> getLDongCodeByldNo(@RequestParam int ldNo){
+    public ResponseEntity<?> getLDongCodeByldNo(@RequestParam Integer ldNo){
+        if (ldNo == null) return ResponseEntity.status(460).body("필수 데이터가 존재하지 않습니다.");
         return ResponseEntity.ok(lDongCodeService.getLDongCodeByldNo(ldNo));
     } // func end
 
