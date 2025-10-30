@@ -27,9 +27,9 @@ import TourIntro2 from "@admin/pages/map/place/TourIntro2";
 import FestivalIntro2 from "@admin/pages/map/place/FestivalIntro2";
 import DetailRepeat3 from "@admin/pages/map/place/DetailRepeat3";
 import RestaurantIntro2 from "./RestaurantIntro2";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setContentType as setContentTypeAction, clearDetail } from '@admin/store/placeSlice';
+import { setContentType as setContentTypeAction, clearDetail, saveAllNew, saveAllUpdate } from '@admin/store/placeSlice';
 import api from '@admin/store/axios';
 
 export default function DetailSection({ detail, ...rest }) {
@@ -106,6 +106,54 @@ export default function DetailSection({ detail, ...rest }) {
   // 현재 상세의 장소 식별자(pNo/pno 혼재에 대비)
   const pNo = placeInfo?.pNo ?? placeInfo?.pno ?? null;
 
+  // 하위 컴포넌트 제어를 위한 ref
+  const commonRef = useRef(null);
+  const tourRef = useRef(null);
+  const festivalRef = useRef(null);
+  const restaurantRef = useRef(null);
+  const repeatRef = useRef(null);
+
+  const handleSaveAll = async () => {
+    try {
+      // 1) 기본정보 + 파일 FormData 생성
+      const baseBuilt = commonRef.current?.buildFormDataForAll?.();
+      if (!baseBuilt) { alert('기본정보를 먼저 입력해 주세요.'); return; }
+      const { fd, placeInfoDto } = baseBuilt;
+
+      // 2) 상세 Intro DTO 수집 (콘텐츠 유형에 따라 하나 선택)
+      const resolvedPno = Number(placeInfoDto?.pno ?? placeInfoDto?.pNo ?? pNo ?? 0);
+      const mode = resolvedPno > 0 ? 'update' : 'new';
+      let detailDto = null;
+      const ct = Number(effectiveCt);
+      if (ct === 1 && tourRef.current?.collectForAll) detailDto = tourRef.current.collectForAll(mode);
+      if (ct === 3 && festivalRef.current?.collectForAll) detailDto = festivalRef.current.collectForAll(mode);
+      if (ct === 8 && restaurantRef.current?.collectForAll) detailDto = restaurantRef.current.collectForAll(mode);
+      if (detailDto) {
+        // 서버 로그에서도 pNo가 0이 아니도록 명시 주입
+        detailDto = { ...detailDto, pNo: resolvedPno };
+        const partName = ct === 1 ? 'tourIntro' : (ct === 3 ? 'festivalIntro' : 'restaurantIntro');
+        fd.append(partName, new Blob([JSON.stringify(detailDto)], { type: 'application/json' }));
+      }
+
+      // 3) 반복 정보 수집
+      const repeatPayload = repeatRef.current?.collectPayloadForAll?.(mode) || [];
+      if (repeatPayload.length > 0) {
+        fd.append('placeInfoRepeat', new Blob([JSON.stringify(repeatPayload)], { type: 'application/json' }));
+      }
+
+      // 4) 서버 전송 (신규/수정 구분)
+      if (mode === 'new') {
+        await dispatch(saveAllNew(fd)).unwrap();
+      } else {
+        await dispatch(saveAllUpdate({ fd, pNo: resolvedPno })).unwrap();
+      }
+      alert('저장되었습니다.');
+    } catch (e) {
+      console.error(e);
+      alert('저장 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <section className="registWrap" {...rest}>
       {/* 상단 탭/버튼 라인: 탭은 현재 단일 탭 UI, 버튼은 저장/삭제/신규등록 */}
@@ -118,18 +166,19 @@ export default function DetailSection({ detail, ...rest }) {
         <span className="btnBox">
           <button type="button" className="btn line" onClick={handleNew}>신규등록</button>
           <button type="button" className="btn line" onClick={handleDelete}>삭제</button>
-          <button type="button" className="btn full">저장</button>
+          <button type="button" className="btn full" onClick={handleSaveAll}>저장</button>
         </span>
       </div>
 
       <div className="formWrap place">
           {/* 1) 기본 정보(공통) */}
         <DetailCommon1
+          ref={commonRef}
           key={`dc1-${pNo ?? 'new'}`}
           placeInfo={placeInfo}
           markers={markers}
           images={images}
-          contentType={contentType}
+          contentType={effectiveCt}
           onChangeContentType={(v) => dispatch(setContentTypeAction(v))}
         />
 
@@ -137,18 +186,18 @@ export default function DetailSection({ detail, ...rest }) {
 
         {/* 2) Intro 섹션: 콘텐츠유형별로 분기 렌더링 */}
         {Number(effectiveCt) === 1 && (
-          <TourIntro2 key={`tour-${pNo ?? 'new'}`} data={localDetail?.TourIntro ?? null} pNo={pNo} />
+          <TourIntro2 ref={tourRef} key={`tour-${pNo ?? 'new'}`} data={localDetail?.TourIntro ?? null} pNo={pNo} />
         )}
         {Number(effectiveCt) === 3 && (
-          <FestivalIntro2 key={`fest-${pNo ?? 'new'}`} data={localDetail?.FestivalIntro ?? null} pNo={pNo} />
+          <FestivalIntro2 ref={festivalRef} key={`fest-${pNo ?? 'new'}`} data={localDetail?.FestivalIntro ?? null} pNo={pNo} />
         )}
         {Number(effectiveCt) === 8 && (
-          <RestaurantIntro2 key={`rest-${pNo ?? 'new'}`} data={localDetail?.RestaurantIntro ?? null} pNo={pNo} />
+          <RestaurantIntro2 ref={restaurantRef} key={`rest-${pNo ?? 'new'}`} data={localDetail?.RestaurantIntro ?? null} pNo={pNo} />
         )}
 
         <hr />
         {/* 3) 반복 정보(자유 형식 제목/내용) */}
-        <DetailRepeat3 key={`rep-${pNo ?? 'new'}`} items={placeInfoDtoList} pNo={pNo} />
+        <DetailRepeat3 ref={repeatRef} key={`rep-${pNo ?? 'new'}`} items={placeInfoDtoList} pNo={pNo} />
       </div>
     </section>
   );

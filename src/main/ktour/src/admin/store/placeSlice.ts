@@ -121,6 +121,34 @@ export const saveRepeatInfo = createAsyncThunk(
   }
 );
 
+/**
+ * 일괄 저장(신규) - POST /placeinfo/all
+ * - FormData: placeInfo/marker/imagesMeta/(files)/tourIntro/festivalIntro/restaurantIntro/placeInfoRepeat
+ */
+export const saveAllNew = createAsyncThunk(
+  'place/saveAllNew',
+  async (fd: FormData, thunkAPI) => {
+    await api.post('/placeinfo/all', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    // 신규는 서버 응답에 pNo가 없어 상세 갱신 생략(필요시 목록 재조회 권장)
+    return true;
+  }
+);
+
+/**
+ * 일괄 저장(수정) - PUT /placeinfo/all
+ * - FormData 동일, placeInfo.pNo 필수
+ */
+export const saveAllUpdate = createAsyncThunk(
+  'place/saveAllUpdate',
+  async (payload: { fd: FormData, pNo: number }, thunkAPI) => {
+    await api.put('/placeinfo/all', payload.fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    try {
+      if (payload?.pNo) thunkAPI.dispatch(fetchPlaceDetail(Number(payload.pNo)));
+    } catch {}
+    return true;
+  }
+);
+
 // 슬라이스 상태 구조
 type PlaceState = {
   rows: any[];           // 목록 데이터 (표에 표시되는 행들)
@@ -196,6 +224,15 @@ const placeSlice = createSlice({
     b.addCase(saveRepeatInfo.pending, (s)=>{ s.loading=true; s.error=null; })
      .addCase(saveRepeatInfo.fulfilled,(s)=>{ s.loading=false; })
      .addCase(saveRepeatInfo.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save repeat error'); });
+
+    // 일괄 저장(신규/수정)
+    b.addCase(saveAllNew.pending, (s)=>{ s.loading=true; s.error=null; })
+     .addCase(saveAllNew.fulfilled,(s)=>{ s.loading=false; })
+     .addCase(saveAllNew.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save all (new) error'); });
+
+    b.addCase(saveAllUpdate.pending, (s)=>{ s.loading=true; s.error=null; })
+     .addCase(saveAllUpdate.fulfilled,(s)=>{ s.loading=false; })
+     .addCase(saveAllUpdate.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save all (update) error'); });
   }
 });
 

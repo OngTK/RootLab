@@ -9,6 +9,10 @@ import rootLab.model.dto.LDongCodeDto;
 import rootLab.model.dto.MarkersGPSDto;
 import rootLab.model.dto.PlaceImageDetailDto;
 import rootLab.model.dto.PlaceInfoDto;
+import rootLab.model.dto.TourIntroDto;
+import rootLab.model.dto.FestivalIntroDto;
+import rootLab.model.dto.RestaurantIntroDto;
+import rootLab.model.dto.PlaceInfoRepeatDto;
 import rootLab.util.file.FileUtil;
 
 import javax.swing.text.html.Option;
@@ -32,6 +36,10 @@ public class PlaceAggregateService {
     private final PlaceImageDetailService placeImageDetailService;
     private final FileUtil fileUtil;
     private final LDongCodeService lDongCodeService;
+    private final TourIntroService tourIntroService;
+    private final FestivalIntroService festivalIntroService;
+    private final RestaurantIntroService restaurantIntroService;
+    private final PlaceInfoRepeatService placeInfoRepeatService;
 
     /**
      * [PI-03] 플레이스 기본정보 등록
@@ -148,6 +156,68 @@ public class PlaceAggregateService {
             return false;
         }
     } // func end
+
+
+    /**
+     * [PI-06] 플레이스 + 상세 + 반복 일괄 등록(신규)
+     * <p>
+     * 1) 기본정보 + 파일 저장(savePlaceBasicInfo)
+     * <p>
+     * 2) 생성된 pNo를 상세/반복 DTO에 주입 후 각 서비스 저장
+     * <p>
+     * 3) null 입력은 저장 생략
+     * @author OngTK
+     */
+    public boolean saveAllPlaceAndDetailInfo(
+            PlaceInfoDto placeInfo,
+            MarkersGPSDto marker,
+            List<PlaceImageDetailDto> imagesMeta,
+            MultipartFile markerImage,
+            MultipartFile mainImage,
+            List<MultipartFile> detailImages,
+            TourIntroDto tourIntro,
+            FestivalIntroDto festivalIntro,
+            RestaurantIntroDto restaurantIntro,
+            List<PlaceInfoRepeatDto> placeInfoRepeat
+    ) {
+        // [1] 기본정보 + 파일 저장
+        boolean basicOk = savePlaceBasicInfo(placeInfo, marker, imagesMeta, markerImage, mainImage, detailImages);
+        if (!basicOk) return false;
+
+        // 생성된 pNo 확보(MyBatis useGeneratedKeys true)
+        int pNo = placeInfo.getPNo();
+        if (pNo == 0) return false;
+
+        // [2] 상세 정보 저장 - null 시 생략, pNo 주입
+        if (tourIntro != null) {
+            tourIntro.setPNo(pNo);
+            boolean ok = tourIntroService.saveTourIntro(tourIntro);
+            if (!ok) return false;
+        }
+        if (festivalIntro != null) {
+            festivalIntro.setPNo(pNo);
+            boolean ok = festivalIntroService.saveFestivalIntro(festivalIntro);
+            if (!ok) return false;
+        }
+        if (restaurantIntro != null) {
+            restaurantIntro.setPNo(pNo);
+            boolean ok = restaurantIntroService.saveRestaurantIntro(restaurantIntro);
+            if (!ok) return false;
+        }
+
+        // [3] 반복 정보 저장 - null 시 생략, 각 항목에 pNo 주입
+        if (placeInfoRepeat != null && !placeInfoRepeat.isEmpty()) {
+            for (PlaceInfoRepeatDto dto : placeInfoRepeat) {
+                dto.setPNo(pNo);
+            }
+            boolean ok = placeInfoRepeatService.savePlaceRepeatInfo(placeInfoRepeat);
+            if (!ok) return false;
+        }
+
+        return true;
+    }
+
+
 
     // ===== 내부 헬퍼 =====
 

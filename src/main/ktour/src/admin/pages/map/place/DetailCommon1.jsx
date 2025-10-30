@@ -15,19 +15,19 @@
  * - Daum Postcode: 우편번호/기본주소 선택 UI 로더
  * - Kakao Maps SDK(services 포함): 지도 표시, 지오코딩, 마커 드래그 이벤트 처리
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import { saveBasic } from "@admin/store/placeSlice";
 
-export default function DetailCommon1({
+const DetailCommon1 = forwardRef(function DetailCommon1({
     placeInfo: placeInfoProp,
     markers,
     images,
     contentType,
     onChangeContentType,
     ...rest
-}) {
+}, ref) {
     const dispatch = useDispatch();
 
     // 입력 폼 로컬 상태
@@ -42,8 +42,8 @@ export default function DetailCommon1({
     });
 
     // 콘텐츠 타입(상위 탭과 동기화)
-    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType ?? ""));
-    useEffect(() => { setContentTypeLocal(String(contentType ?? "")); }, [contentType]);
+    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType || "1"));
+    useEffect(() => { setContentTypeLocal(String(contentType || "1")); }, [contentType]);
 
     const placeInfo = placeInfoProp || {};
 
@@ -196,8 +196,8 @@ export default function DetailCommon1({
             if (!category?.ccNo) { alert("카테고리를 (최소 1단계) 선택해 주세요."); return; }
             if (!roadAddr) { alert("주소를 입력해 주세요."); return; }
 
-            const pNoFromDetail = placeInfo?.pno ?? placeInfo?.pNo ?? null;
-            const ctNoVal = Number(contentTypeLocal);
+            const pNoFromDetail = (placeInfo?.pno ?? placeInfo?.pNo ?? (placeNo ? Number(placeNo) : null));
+            const ctNoVal = Number(String(contentTypeLocal || "1"));
             const ccNoVal = category.ccNo;
             const showflag = showFlag ? 1 : 0;
             const titleVal = title.trim();
@@ -253,6 +253,68 @@ export default function DetailCommon1({
             alert("저장 중 오류가 발생했습니다.");
         }
     };
+
+    // 일괄 저장(부모)에서 사용할 FormData 생성 유틸
+    const buildFormDataForAll = () => {
+        try {
+            const pNoFromDetail = (placeInfo?.pno ?? placeInfo?.pNo ?? (placeNo ? Number(placeNo) : null));
+            const ctNoVal = Number(String(contentTypeLocal || "1"));
+            const ccNoVal = category.ccNo;
+            const showflag = showFlag ? 1 : 0;
+            const titleVal = title.trim();
+            const homepageVal = homepage.trim() || null;
+            const telVal = phone.trim() || null;
+            const telNameVal = phoneDesc.trim() || null;
+            const overviewVal = overview.trim() || null;
+
+            const placeInfoDto = {
+                pno: pNoFromDetail ?? 0,
+                ctNo: ctNoVal,
+                ldNo: region?.ldNo ?? null,
+                ccNo: ccNoVal,
+                editable: true,
+                contentid: null,
+                title: titleVal,
+                showflag,
+                firtimage: null,
+                firstimage2: null,
+                addr1: roadAddr || null,
+                addr2: detailAddr || null,
+                zipcode: zipCode || null,
+                homepage: homepageVal,
+                tel: telVal,
+                telname: telNameVal,
+                overview: overviewVal,
+            };
+
+            const markerDto = {
+                mkNo: Number(markers?.mkNo ?? markers?.mkno ?? 0),
+                pNo: pNoFromDetail ?? 0,
+                mkURL: null,
+                mapx: coord.x ? Number(coord.x) : null,
+                mapy: coord.y ? Number(coord.y) : null,
+            };
+
+            const imagesMeta = [];
+            const imgDesc1 = imageDescRef.current?.value?.trim();
+            if (imgDesc1) imagesMeta.push({ imgname: imgDesc1 });
+
+            const fd = new FormData();
+            fd.append("placeInfo", new Blob([JSON.stringify(placeInfoDto)], { type: "application/json" }));
+            fd.append("marker", new Blob([JSON.stringify(markerDto)], { type: "application/json" }));
+            if (imagesMeta.length) fd.append("imagesMeta", new Blob([JSON.stringify(imagesMeta)], { type: "application/json" }));
+            if (markerImgRef.current?.files?.[0]) fd.append("markerImage", markerImgRef.current.files[0]);
+            if (mainImgRef.current?.files?.[0]) fd.append("mainImage", mainImgRef.current.files[0]);
+            if (detailImgsRef.current?.files?.length) [...detailImgsRef.current.files].forEach((f) => fd.append("detailImages", f));
+
+            return { fd, placeInfoDto };
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    useImperativeHandle(ref, () => ({ buildFormDataForAll }));
 
     return (
         <div className="placeCommonWrap" {...rest}>
@@ -371,5 +433,7 @@ export default function DetailCommon1({
             </form>
         </div>
     );
-}
+});
+
+export default DetailCommon1;
 
