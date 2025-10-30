@@ -45,3 +45,5 @@ bin/
 application.properties
 
 src/main/resources/.editorconfig
+/src/main/resources/firebase-service-account.json
+/src/main/resources/k-tour-team-projedct-firebase-adminsdk-fbsvc-77ac7c6554.json

@@ -107,8 +107,7 @@ export default function DetailSection(props) {
             return;
             }
             setppNo(selected.ppNo ?? null);
-            setpNo(selected?.pNo != null ? String(selected.pNo) : "");   // [FIX]
-            console.log("[DEBUG] pNo:", pNo, "selected.pNo:", selected?.pNo);
+            setpNo(selected?.pNo != null ? String(selected.pNo) : ""); // 빈문자/문자열로
             setmgNo(selected.mgNo ?? "");
             setppTitle(selected.ppTitle ?? "");
             setppContent(selected.ppContent ?? "");
@@ -130,7 +129,6 @@ export default function DetailSection(props) {
 
       useEffect(() => {
         if (ppNo && selected) {       // 수정 모드일 때만 실행
-          setpNo(selected.pNo ?? ""); // 기존 등록된 place 번호 자동 표시
           setTitle(selected.placeTitle ?? selected.title ?? ""); // DTO에 따라 필드명 조정
         }
       }, [ppNo, selected]);
@@ -178,7 +176,7 @@ export default function DetailSection(props) {
         const fd = new FormData();
         fd.append("ppNo", ppNo);
         fd.append("mgNo", dto.mgNo);
-        fd.append("pNo", dto.pNo);
+        if (dto.pNo != null && dto.pNo !== "") fd.append("pNo", String(dto.pNo));
         fd.append("ppContent", dto.ppContent);
         fd.append("ppEnd", dto.ppEnd);
         fd.append("ppImg", dto.ppImg);
@@ -199,6 +197,7 @@ export default function DetailSection(props) {
         console.log("[수정 결과]", res.data);
         onSaved?.();
         alert("수정되었습니다.");
+        location.href = "/admin/site/push_popup";
       } else {
         // --- 등록(@RequestPart("dto"), file)
                 console.log( pNo );
@@ -211,6 +210,7 @@ export default function DetailSection(props) {
         //fd.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
         fd.append("mgNo", dto.mgNo);
         fd.append("pNo", dto.pNo);
+        if (dto.pNo != null && dto.pNo !== "") fd.append("pNo", String(dto.pNo));
         fd.append("ppContent", dto.ppContent);
         fd.append("ppEnd", dto.ppEnd);
         fd.append("ppImg", dto.ppImg);
@@ -235,6 +235,7 @@ export default function DetailSection(props) {
         onSaved?.();
         alert("등록되었습니다.");
       }
+
     } catch (e) {
       console.error("[저장 실패]", e);
       alert("저장 중 오류가 발생했습니다.");
@@ -345,8 +346,8 @@ export default function DetailSection(props) {
                                 </label>
                             </span> 
                             <br />
-                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch } disabled={!!ppNo} >검색</button><input className="nameInput" type="text"
-                                placeholder="플레이스No"  value={pNo} onChange={(e) => setpNo(e.target.value)} readOnly={!!ppNo} style={{
+                            <label for="nameInput"><b>플레이스번호</b><button type="button" onClick={ handleSearch } disabled={!!ppNo && selected?.pNo != null} >검색</button><input className="nameInput" type="text"
+                                placeholder="플레이스No"  value={pNo} onChange={(e) => setpNo(e.target.value)} readOnly={!!ppNo && selected?.pNo != null} style={{
                                 backgroundColor: isEdit ? "#f6f6f6" : "white", // 수정모드일 때 회색 처리
                                 
                               }}  />

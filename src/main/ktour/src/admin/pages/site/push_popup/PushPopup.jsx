@@ -29,13 +29,14 @@ const [detailLoading, setDetailLoding] = useState(false);
       setLoading(true);
       const res = await axios.get("http://localhost:8080/push/search", {
         withCredentials: true,
+        params: { _t: Date.now() },                       // ← 캐시 방지 쿼리
+        headers : { "Cache-Control": "no-cache, no-store" } // ← 캐시 방지 헤더
       });
-      const rows = Array.isArray(res.data)
-        ? res.data
-        : (Array.isArray(res.data?.rows) && res.data.rows) || [];
-        (Array.isArray(res.data?.content) && res.data.content) ||
-          (Array.isArray(res.data?.list) && res.data.list) ||
-          [];
+      const rows = 
+      Array.isArray(res.data) ? res.data :
+      Array.isArray(res.data?.rows) ? res.data.rows :
+      Array.isArray(res.data?.content) ? res.data.content :
+      Array.isArray(res.data?.list) ? res.data.list : [];
       setPushList(rows);
 
       // 선택 유지(선택 중이던 항목이 목록에 있으면 교체)
@@ -103,7 +104,12 @@ const [detailLoading, setDetailLoding] = useState(false);
                     selected={detail}
                 // ⬇️ sessionUser 미정의로 크래시 나므로 전달하지 않음 (옵션 prop)
                 // loginMgNo={sessionUser?.mgNo}
-                onSaved={() => searchList()}
+                onSaved={() => {
+                  // 즉시 목록 갱신(캐시 방지 포함)
+                searchList().then(() =>{
+                  if(detail?.ppNo) setSelectedId(detail.ppNo);
+                });
+              }}
                 onDeleted={() => {
                     // 삭제 후 목록 갱신 + 선택 해제
                     searchList();
