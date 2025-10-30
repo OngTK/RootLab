@@ -20,7 +20,7 @@ import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import { saveBasic } from "@admin/store/placeSlice";
 import ImgPreview from "../../../components/admin/place/ImgPreview";
-import { setMainTemp } from "../../../store/placeSlice";
+import { setMainTemp, setDetailTemp } from "../../../store/placeSlice";
 
 export default function DetailCommon1({
     placeInfo: placeInfoProp,
@@ -231,11 +231,13 @@ export default function DetailCommon1({
     } // func end
 
     const handleDetailImage = (e) => {
-        const files = e.target;
+        const files = e.target.files;
         if (files){
-            const tempUrl = files.map((file) => {
-                return URL.createObjectURL(file);
-            })
+            const tempUrl = [];
+            for (let i = 0; i < files.length; i++){
+                const temp = URL.createObjectURL(files[i]);
+                tempUrl.push(temp);
+            } // for end
             dispatch(setDetailTemp(tempUrl));
         }
     } // func end

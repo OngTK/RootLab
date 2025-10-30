@@ -137,7 +137,7 @@ type PlaceState = {
   selectedPno: number | null; // 현재 선택된 장소 번호
 
   mainImgTempUrl: string | null;    // 미리보기에 출력될 메인 이미지
-  detailImgTempUrl: string | null;  // 미리보기에 출력될 상세 이미지
+  detailImgTempUrl: any | [];  // 미리보기에 출력될 상세 이미지
 };
 
 // 상태 초기값
@@ -157,7 +157,7 @@ const initialState: PlaceState = {
   selectedPno: null,
 
   mainImgTempUrl: null,
-  detailImgTempUrl: null,
+  detailImgTempUrl: [],
 };
 
 const placeSlice = createSlice({
@@ -169,8 +169,8 @@ const placeSlice = createSlice({
     setListFilters: (s, a) => { s.filters = a.payload || null; }, // 목록 검색/필터 조건 설정
     setPage: (s, a) => { s.page = Number(a.payload) || 1; }, // 현재 페이지 설정
     setSize: (s, a) => { s.size = Number(a.payload) || 10; }, // 페이지 사이즈 설정
-    setMainTemp: (state, action) => { state.mainImgTempUrl = action.payload; console.log(state.mainImgTempUrl) },
-    setDetailTemp: (state, action) => { state.detailImgTempUrl = action.payload; console.log(state.detailImgTempUrl)},
+    setMainTemp: (state, action) => { state.mainImgTempUrl = action.payload; },
+    setDetailTemp: (state, action) => { state.detailImgTempUrl = action.payload; },
   },
   extraReducers: (b) => {
     // 목록 조회

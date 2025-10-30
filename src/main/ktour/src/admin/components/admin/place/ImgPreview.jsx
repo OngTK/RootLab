@@ -7,8 +7,7 @@ export default function ImgPreview({ title }) {
 
     const { layerContainerRef } = useOutletContext();               // 레이어 관련 상속
     const [activePreview, setActivePreview] = useState(false);      // 레이어 표시(노출)여부 상태
-    const { mainImgTempUrl, detailImgTempUrl } = useSelector((state) => state.relatedMap);
-    const imgUrl = title == '대표 이미지' ? mainImgTempUrl : detailImgTempUrl;
+    const { mainImgTempUrl, detailImgTempUrl } = useSelector((state) => state.place);
 
     return (
         <>
@@ -30,14 +29,26 @@ export default function ImgPreview({ title }) {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: '#f0f0f0'
+                            backgroundColor: '#f0f0f0',
+                            flexDirection: 'column'
                         }}
                     >
-                        <img
-                            src={imgUrl || "/user/img/no_img.jpg"}
-                            alt={title + " 미리보기"}
-                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                        />
+                        {
+                            title == '대표 이미지' ?
+                                <img
+                                    src={mainImgTempUrl || "/user/img/no_img.jpg"}
+                                    alt={title + " 미리보기"}
+                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                />
+                                :
+                                detailImgTempUrl.map((url) => {
+                                    return <img
+                                        src={url || "/user/img/no_img.jpg"}
+                                        alt={title + " 미리보기"}
+                                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                    />
+                                })
+                        }
                     </div>
                 </MapResizeLayer>
             )}
