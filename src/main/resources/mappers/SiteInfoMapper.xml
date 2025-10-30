@@ -18,6 +18,5 @@
                     AND siName LIKE CONCAT('%', #{siName}, '%')
                 </if>
             </where>
-            LIMIT #{startRow}, #{pageSize}
     </select>
 </mapper>

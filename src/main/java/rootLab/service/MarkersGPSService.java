@@ -7,6 +7,7 @@ import rootLab.model.dto.MarkersGPSDto;
 import rootLab.model.mapper.MarkersGPSMapper;
 import rootLab.model.repository.CommonRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,10 @@ public class MarkersGPSService extends AbstractService<MarkersGPSDto, Integer, P
      * @author AhnJH
      */
     public List<Map<String, Object>> getMarkersGpsByCurrentLatLng(MarkersGPSDto markersGPSDto){
-        return markersGPSMapper.getMarkersGpsByCurrentLatLng(markersGPSDto);
+        // 1. 축제를 제외한 List
+        List<Map<String, Object>> markersGps = markersGPSMapper.getMarkersGpsByCurrentLatLng(markersGPSDto);
+        // 2. 축제가 진행중인 List
+        markersGps.addAll(markersGPSMapper.getMarkersGpsOnFestival(markersGPSDto));
+        return markersGps;
     } // func end
 } // class end

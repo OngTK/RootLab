@@ -442,3 +442,11 @@ VALUES
 -- 화암사 주차장 공사 안내
 	('54311', 1, '화암사 주차장 공사 안내', '9월 20일(금)~10월 13일(일) 화암사 주차장 공사로 인해 사용이 불가합니다.',
 	 'hwaamsa.jpg', 3, 1, '2025-10-25 12:00:00', '2025-11-13 12:00:00', '12:00:00');
+-- ------------------------------------ 고성8경 임시 업데이트 -------------------------------------------
+UPDATE k_tour_headquarter.markersgps SET mkURL = '건봉사.png' WHERE pno = 10099;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '송지호관광타워.png' WHERE pno = 20545;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '울산바위.png' WHERE pno = 2324;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '천학정.png' WHERE pno = 42056;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '청간정.png' WHERE pno = 42155;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '통일전망타워.png' WHERE pno = 22391;
+UPDATE k_tour_headquarter.markersgps SET mkURL = '화진포.png' WHERE pno = 54502;

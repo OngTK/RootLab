@@ -37,6 +37,8 @@ public interface MarkersGPSMapper extends CommonRepository<MarkersGPSDto, Intege
      */
     List<Map<String, Object>> getMarkersGpsByCurrentLatLng(MarkersGPSDto markersGPSDto);
 
+    List<Map<String, Object>> getMarkersGpsOnFestival(MarkersGPSDto markersGPSDto);
+
     /**
      * 신규 마커정보 저장
      */

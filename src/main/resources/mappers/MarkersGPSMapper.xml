@@ -9,7 +9,7 @@
         FROM (SELECT
         kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
         kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
-        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo,
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kpi.showflag,
         ROW_NUMBER() OVER (
         PARTITION BY kmg.mapx, kmg.mapy
         ORDER BY kpi.pNo ASC
@@ -38,7 +38,50 @@
                 AND t.ctNo = #{ctNo}
             </if>
             <if test="1 == 1">
+                AND t.rn = 1 AND t.ctNO != 3
+                AND t.showflag = 1
+            </if>
+        </where>
+    </select>
+    <select id="getMarkersGpsOnFestival">
+        SELECT *
+        FROM (SELECT
+        kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
+        kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
+        kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kfi.eventstartdate, kfi.eventenddate, kpi.showflag,
+        ROW_NUMBER() OVER (
+        PARTITION BY kmg.mapx, kmg.mapy
+        ORDER BY kpi.pNo ASC
+        ) AS rn
+        FROM placeinfo kpi
+        JOIN contenttype kct
+        ON kpi.ctNo = kct.ctNo
+        JOIN markersgps kmg
+        ON kpi.pNo = kmg.pNo
+        JOIN categorycode kcc
+        ON kpi.ccNo = kcc.ccNo
+        LEFT OUTER JOIN festivalintro kfi
+        ON kpi.pNo = kfi.pNo) t
+        <where>
+            <if test="east != null">
+                AND t.mapx &lt; #{east}
+            </if>
+            <if test="west != null">
+                AND t.mapx &gt; #{west}
+            </if>
+            <if test="north != null">
+                AND t.mapy &lt; #{north}
+            </if>
+            <if test="south != null">
+                AND t.mapy &gt; #{south}
+            </if>
+            <if test="ctNo != null">
+                AND t.ctNo = #{ctNo}
+            </if>
+            <if test="1 == 1">
                 AND t.rn = 1
+                AND t.eventenddate > NOW()
+                AND t.showflag = 1
             </if>
         </where>
     </select>
