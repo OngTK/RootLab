@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rootLab.model.criteria.SiteInfoCriteria;
 import rootLab.service.SiteInfoService;
-import rootLab.service.SyncService;
-import rootLab.util.sql.SqlCreator;
-import rootLab.util.tenancy.TenantContext;
 
 /**
  * SiteInfo Table을 관리하는 Controller
@@ -22,8 +19,6 @@ import rootLab.util.tenancy.TenantContext;
 @RequiredArgsConstructor
 public class SiteInfoController {
     private final SiteInfoService siteInfoService;
-    private final SqlCreator sqlCreator;
-    private final SyncService syncService;
 
     /**
      * [SI-01] 사이트정보 검색
@@ -52,24 +47,5 @@ public class SiteInfoController {
         siteInfoCriteria.setPageSize(pageSize);
         siteInfoCriteria.setStartRow((page - 1) * pageSize);
         return ResponseEntity.ok(siteInfoService.searchSites(siteInfoCriteria));
-    } // func end
-
-    @GetMapping("/signup")
-    public ResponseEntity<?> signup(){
-        System.out.println("SiteInfoController.signup");
-        // 1. 테넌트ID 가져오기
-        String tenantID = TenantContext.getCurrentTenant();       // 예상 : goseong, incheon
-        // 2. 테넌트ID로 DB 생성하기
-        boolean result = sqlCreator.createDataBase(tenantID);
-        // 3. 정규화된 테이블 생성하기
-        syncService.syncAllTable();
-        // 4. API DB에서 데이터 복사하기
-        syncService.syncInsert();
-        // 5. 결과 반환
-        if (result){    // 성공했다면
-            return ResponseEntity.ok("서브도메인 가입 완료 : " + tenantID);
-        } else {        // 실패했다면
-            return ResponseEntity.ok("서브도메인 가입 실패 : " + tenantID);
-        } // if end
     } // func end
 } // class end
