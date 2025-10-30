@@ -14,7 +14,9 @@ public class TenantResolver {
     public String resolve(HttpServletRequest request){
         System.out.println("TenantResolver.resolve");
         // 1. request로부터 요청 URL 받아오기
-        String host = request.getServerName();          // 예상 : localhost, goseong.localhost, incheon.localhost
+        String origin = request.getHeader("Origin");          // 예상 : http://localhost:5173, http://goseong.localhost:5173
+        System.out.println("origin = " + origin);
+        String host = origin.split(":")[1].split("/")[2];
         System.out.println("host = " + host);
         // 2. 요청 URL이 없다면,
         if (host == null) return "k_tour_headquarter";  // 본사 DB명 반환

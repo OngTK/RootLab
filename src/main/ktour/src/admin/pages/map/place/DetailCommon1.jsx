@@ -178,7 +178,7 @@ export default function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            if (markers) {
+            if (markers && markers.mkURL) {
                 const src = markers.mkURL ?
                     '/public/uploads/1/marker/' + markers.mkURL
                     :
