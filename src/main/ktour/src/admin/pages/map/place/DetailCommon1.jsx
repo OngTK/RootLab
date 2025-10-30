@@ -19,6 +19,8 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import { saveBasic } from "@admin/store/placeSlice";
+import ImgPreview from "../../../components/admin/place/ImgPreview";
+import { setMainTemp } from "../../../store/placeSlice";
 
 export default function DetailCommon1({
     placeInfo: placeInfoProp,
@@ -176,18 +178,25 @@ export default function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            const src = markers.mkURL ?
-                '/public/uploads/1/marker/' + markers.mkURL
-                :
-                markers.defaultMarker || "/user/img/no_img.jpg";
-            const imageSize = new kakao.maps.Size(120, 90);
-            const markerImage = new kakao.maps.MarkerImage(src, imageSize);
-            markerRef.current = new window.kakao.maps.Marker({
-                position: latlng,
-                draggable: true,
-                image: markerImage,
-                zIndex: 50
-            });
+            if (markers) {
+                const src = markers.mkURL ?
+                    '/public/uploads/1/marker/' + markers.mkURL
+                    :
+                    markers.defaultMarker || "/user/img/no_img.jpg";
+                const imageSize = new kakao.maps.Size(120, 90);
+                const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true,
+                    image: markerImage,
+                    zIndex: 50
+                });
+            } else {
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true
+                });
+            } // if end
             markerRef.current.setMap(mapObj);
             mapObj.setCenter(latlng);
             setCoord({ x, y });
@@ -213,9 +222,23 @@ export default function DetailCommon1({
         } // if end
     } // func end
 
-    // const handleMarkerPreview = () => {
+    const handleMainImage = (e) => {
+        const file = e.target.files[0];
+        if (file){
+            const tempUrl = URL.createObjectURL(file);
+            dispatch(setMainTemp(tempUrl));
+        } // if end
+    } // func end
 
-    // } // func end
+    const handleDetailImage = (e) => {
+        const files = e.target;
+        if (files){
+            const tempUrl = files.map((file) => {
+                return URL.createObjectURL(file);
+            })
+            dispatch(setDetailTemp(tempUrl));
+        }
+    } // func end
 
     /**
      * 저장 핸들러
@@ -380,15 +403,16 @@ export default function DetailCommon1({
                     <div className="form-group">
                         <label htmlFor="marker-img">마커 이미지</label>
                         <input type="file" id="marker-img" name="markerImage" onChange={handleMarkerImage} ref={markerImgRef} />
-                        <button onClick={handleMarkerPreview}>미리보기</button>
                     </div>
                     <div className="form-group">
                         <label htmlFor="main-img">대표 이미지</label>
-                        <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
+                        <input type="file" id="main-img" name="mainImage" onChange={handleMainImage} ref={mainImgRef} />
+                        <ImgPreview title={'대표 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="detail-img-1">상세 이미지</label>
-                        <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
+                        <input type="file" id="detail-img-1" name="detailImages" multiple onChange={handleDetailImage} ref={detailImgsRef} />
+                        <ImgPreview title={'상세 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="img-desc-1">이미지 설명</label>
