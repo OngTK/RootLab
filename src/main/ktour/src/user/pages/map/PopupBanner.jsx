@@ -8,8 +8,6 @@
 import "@assets/user/css/popupBanner.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 
 export default function PopupBanner(props) {
