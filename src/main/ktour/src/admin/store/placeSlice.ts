@@ -164,6 +164,9 @@ type PlaceState = {
 
   contentType: string | null; // 현재 상세 콘텐츠 유형(예: TOUR/FESTIVAL/RESTAURANT 등)
   selectedPno: number | null; // 현재 선택된 장소 번호
+
+  mainImgTempUrl: string | null;    // 미리보기에 출력될 메인 이미지
+  detailImgTempUrl: any | [];  // 미리보기에 출력될 상세 이미지
 };
 
 // 상태 초기값
@@ -181,6 +184,9 @@ const initialState: PlaceState = {
 
   contentType: null,
   selectedPno: null,
+
+  mainImgTempUrl: null,
+  detailImgTempUrl: [],
 };
 
 const placeSlice = createSlice({
@@ -192,6 +198,8 @@ const placeSlice = createSlice({
     setListFilters: (s, a) => { s.filters = a.payload || null; }, // 목록 검색/필터 조건 설정
     setPage: (s, a) => { s.page = Number(a.payload) || 1; }, // 현재 페이지 설정
     setSize: (s, a) => { s.size = Number(a.payload) || 10; }, // 페이지 사이즈 설정
+    setMainTemp: (state, action) => { state.mainImgTempUrl = action.payload; },
+    setDetailTemp: (state, action) => { state.detailImgTempUrl = action.payload; },
   },
   extraReducers: (b) => {
     // 목록 조회
@@ -236,6 +244,6 @@ const placeSlice = createSlice({
   }
 });
 
-export const { setContentType, clearDetail, setListFilters, setPage, setSize } = placeSlice.actions;
+export const { setContentType, clearDetail, setListFilters, setPage, setSize, setMainTemp, setDetailTemp } = placeSlice.actions;
 export default placeSlice.reducer;
 

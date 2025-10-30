@@ -19,6 +19,8 @@ import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "re
 import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import { saveBasic } from "@admin/store/placeSlice";
+import ImgPreview from "../../../components/admin/place/ImgPreview";
+import { setMainTemp, setDetailTemp } from "../../../store/placeSlice";
 
 const DetailCommon1 = forwardRef(function DetailCommon1({
     placeInfo: placeInfoProp,
@@ -72,6 +74,7 @@ const DetailCommon1 = forwardRef(function DetailCommon1({
     const detailImgsRef = useRef(null);
     const imageDescRef = useRef(null);
     const detailAddrRef = useRef(null);
+    const markerTempUrlRef = useRef(null);
 
     // Kakao Map
     const mapRef = useRef(null);
@@ -143,7 +146,10 @@ const DetailCommon1 = forwardRef(function DetailCommon1({
             const center = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
             setMapObj(map);
-            const marker = new window.kakao.maps.Marker({ position: center, draggable: true });
+            const marker = new window.kakao.maps.Marker({
+                position: center,
+                draggable: true
+            });
             markerRef.current = marker;
             marker.setMap(map);
             geocoderRef.current = new window.kakao.maps.services.Geocoder();
@@ -172,16 +178,69 @@ const DetailCommon1 = forwardRef(function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            if (!markerRef.current) {
-                markerRef.current = new window.kakao.maps.Marker({ position: latlng });
+            if (markers) {
+                const src = markers.mkURL ?
+                    '/public/uploads/1/marker/' + markers.mkURL
+                    :
+                    markers.defaultMarker || "/user/img/no_img.jpg";
+                const imageSize = new kakao.maps.Size(120, 90);
+                const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true,
+                    image: markerImage,
+                    zIndex: 50
+                });
             } else {
-                markerRef.current.setPosition(latlng);
-            }
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true
+                });
+            } // if end
             markerRef.current.setMap(mapObj);
             mapObj.setCenter(latlng);
             setCoord({ x, y });
         });
+        // 주소가 바뀔 때, 임시 URL 해제
+        URL.revokeObjectURL(markerTempUrlRef.current);
     }, [roadAddr, mapObj]);
+
+    const handleMarkerImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // URL.createObjectURL()로 임시 파일경로 생성하기
+            const tempUrl = URL.createObjectURL(file);
+            // '미리보기'에서 사용하기 위해 저장
+            markerTempUrlRef.current = tempUrl;
+            // 마커이미지 만들기
+            const image = new kakao.maps.MarkerImage(
+                tempUrl,
+                new kakao.maps.Size(120, 90)
+            );
+            // 마커에 적용하기
+            markerRef.current.setImage(image);
+        } // if end
+    } // func end
+
+    const handleMainImage = (e) => {
+        const file = e.target.files[0];
+        if (file){
+            const tempUrl = URL.createObjectURL(file);
+            dispatch(setMainTemp(tempUrl));
+        } // if end
+    } // func end
+
+    const handleDetailImage = (e) => {
+        const files = e.target.files;
+        if (files){
+            const tempUrl = [];
+            for (let i = 0; i < files.length; i++){
+                const temp = URL.createObjectURL(files[i]);
+                tempUrl.push(temp);
+            } // for end
+            dispatch(setDetailTemp(tempUrl));
+        }
+    } // func end
 
     /**
      * 저장 핸들러
@@ -407,15 +466,17 @@ const DetailCommon1 = forwardRef(function DetailCommon1({
                     {/* 12. 이미지 */}
                     <div className="form-group">
                         <label htmlFor="marker-img">마커 이미지</label>
-                        <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
+                        <input type="file" id="marker-img" name="markerImage" onChange={handleMarkerImage} ref={markerImgRef} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="main-img">대표 이미지</label>
-                        <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
+                        <input type="file" id="main-img" name="mainImage" onChange={handleMainImage} ref={mainImgRef} />
+                        <ImgPreview title={'대표 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="detail-img-1">상세 이미지</label>
-                        <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
+                        <input type="file" id="detail-img-1" name="detailImages" multiple onChange={handleDetailImage} ref={detailImgsRef} />
+                        <ImgPreview title={'상세 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="img-desc-1">이미지 설명</label>
