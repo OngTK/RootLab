@@ -27,25 +27,18 @@ public class SiteInfoController {
      * @param siIsPublic 사이트 공개여부, null 여부 판단을 위해 Integer
      * @param siDomain 도메인 URL
      * @param siName 사이트명
-     * @param page 조회할 페이지
-     * @param pageSize 페이지당 개수
      * @return 검색결과
      * @author AhnJH
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchSites(@RequestParam(required = false) Integer siIsPublic,
                                          @RequestParam(required = false) String siDomain,
-                                         @RequestParam(required = false) String siName,
-                                         @RequestParam(defaultValue = "1") int page,
-                                         @RequestParam(defaultValue = "10") int pageSize){
+                                         @RequestParam(required = false) String siName){
         // 1. 입력받은 매개변수를 통해 검색기준 구성하기
         SiteInfoCriteria siteInfoCriteria = new SiteInfoCriteria();
         if (siIsPublic != null) siteInfoCriteria.setSiIsPublic(siIsPublic);
         if (siDomain != null) siteInfoCriteria.setSiDomain(siDomain);
         if (siName != null) siteInfoCriteria.setSiName(siName);
-        siteInfoCriteria.setPage(page);
-        siteInfoCriteria.setPageSize(pageSize);
-        siteInfoCriteria.setStartRow((page - 1) * pageSize);
         return ResponseEntity.ok(siteInfoService.searchSites(siteInfoCriteria));
     } // func end
 } // class end
