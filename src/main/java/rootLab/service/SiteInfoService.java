@@ -25,6 +25,11 @@ public class SiteInfoService {
      * @return 페이징처리된 검색 결과
      * @author AhnJH
      */
+    public List<SiteInfoDto> searchSites(SiteInfoCriteria siteInfoCriteria){
+        // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
+        return siteInfoMapper.searchSites(siteInfoCriteria);
+
+    /*
     public Page<SiteInfoDto> searchSites(SiteInfoCriteria siteInfoCriteria){
         // 1. 검색기준을 Mapper에게 전달하여 검색결과 받기
         List<SiteInfoDto> searchedSites = siteInfoMapper.searchSites(siteInfoCriteria);
@@ -35,5 +40,7 @@ public class SiteInfoService {
                 siteInfoCriteria.getPage(),
                 siteInfoCriteria.getPageSize()
         );
+
+     */
     } // func end
 } // class end

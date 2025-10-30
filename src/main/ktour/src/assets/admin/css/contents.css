@@ -116,7 +116,7 @@
     /* overflow-x: auto; */
 }
 
-.admin-scope .formWrap.member .form-group{ display: block; }
+
 .admin-scope .formWrap::-webkit-scrollbar{opacity:1;width:5px; height: 15px;}/*스크롤바*/
 .admin-scope .formWrap::-webkit-scrollbar-button {width:0; height: 0;}  /*스크롤바 버튼(아래 위 화살표)*/
 .admin-scope .formWrap::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.05);  background-clip: padding-box;  border: 0px solid transparent;  border-radius: 10px;}/*스크롤바 핸들*/
@@ -127,7 +127,14 @@
 .admin-scope .formWrap form fieldset{ border: 0; justify-content: space-between; flex:1 1 30%; }
 .admin-scope .form-group{ display: inline-block; }
 .admin-scope .form-group label { display: inline-block; margin: 3px 0; vertical-align: top; min-width: 75px; padding: 0 3px 0 5px; }
+
+.admin-scope .formWrap.member .form-group{ display: block; }
 .admin-scope .detailSearch.member .form-group label{ min-width: 50px; }
+.admin-scope .formWrap.site .form-group{ display: block; }
+.admin-scope .formWrap.site .form-group label b{ min-width: 90px; }
+.admin-scope .formWrap.site .form-group span.info_date{ display: inline-block;}
+.admin-scope .formWrap.place .form-group{ display: block; }
+
 .admin-scope .formWrap label b{ display: inline-block; min-width: 75px; vertical-align: top; padding: 0px 3px 1px; opacity: .6; }
 .admin-scope .formWrap p{ padding: 10px 0; }
 .admin-scope .form-group strong input{  color:rgb(5, 163, 87); font-size: 14px; font:700 12px "Noto-Sans"}

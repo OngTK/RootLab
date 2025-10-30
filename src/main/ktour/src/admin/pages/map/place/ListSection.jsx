@@ -38,6 +38,9 @@ import {
     setPage as setPageAction,
     setSize as setSizeAction,
 } from "@admin/store/placeSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function ListSection(props) {
     const dispatch = useDispatch();
@@ -112,11 +115,11 @@ export default function ListSection(props) {
     // 테이블 컬럼 정의: id는 데이터 키, title은 헤더 라벨, width는 최소 폭
     // 주의: 일부 백엔드 응답에서 키 대소문자(pno/pNo/PNO)가 혼재할 수 있습니다.
     const columns = [
-        { id: "no", title: "No", width: 70 },
-        { id: "pno", title: "장소번호", width: 110 },
-        { id: "title", title: "장소명", width: 220 },
-        { id: "contentTypeName", title: "콘텐츠유형", width: 120 },
-        { id: "lclsSystm3Nm", title: "카테고리", width: 140 },
+        { id: "no", title: "No", width: 30 },
+        { id: "pno", title: "플레이스번호", width: 90 },
+        { id: "title", title: "플레이스명", width: 150 },
+        { id: "contentTypeName", title: "콘텐츠타입", width: 100 },
+        { id: "lclsSystm3Nm", title: "카테고리", width: 120 },
         { id: "addr1", title: "주소", width: 260 },
         { id: "tel", title: "전화번호", width: 140 },
         { id: "showflag", title: "노출", width: 90 },
@@ -195,7 +198,7 @@ export default function ListSection(props) {
 
                 {/* 리스트 영역 */}
                 <ul className="titleBox">
-                    <li className="result">검색결과: {totalElements}건</li>
+                    <li className="result"><FontAwesomeIcon icon={faMagnifyingGlass} />검색결과 : {totalElements} 건</li>
                     <li className="btnBox">
                         <select
                             className="baseDateInput"
@@ -221,7 +224,7 @@ export default function ListSection(props) {
                         columns={columns}
                         data={rows}
                         rememberKey="PlaceInfo.columns"
-                        minColWidth={80}
+                        minColWidth={50}
                         stickyFirst={false}
                         sortable={true}
                         onRowClick={(row) => {

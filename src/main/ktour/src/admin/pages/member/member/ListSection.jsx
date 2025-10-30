@@ -6,7 +6,7 @@
  * @version 0.1.4
  */
 import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Pagination from "@admin/components/admin/place/Pagination";
 import ResizableTable from "@admin/components/common/ResizableTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +32,7 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
     const genderLabelMap = { "남": "남성", "여": "여성" };          // 성별(enum) = 문자열 데이터 변환
 
     //** [1] 스프링 서버로부터 데이터 요청 > 검색 실행 핸들러  */
-    const onSearch = async (e) => {
+    const onSearch = useCallback(async (e) => {
         try {
             e?.preventDefault?.(); // 이벤트 객체 e가 존재할 때만 preventDefault() 를 실행하는 안전 호출(safe call) 문법
             const params = {
@@ -87,7 +87,7 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
             setTotalElements(0);
             setSearched(true);
         }
-    };
+    }, [mName, mId, mPhone, page, size, setSelectedMid]);
 
     //** [2] 검색결과 테이블 선택된 행(setActiveMember) 데이터 호출 */
     const handleRowClick = async (mid) => {
@@ -135,7 +135,7 @@ export default function ListSection({ activeMember, setActiveMember, selectedMid
     const handleSizeChange = (s) => { setSize(s); setPage(1); };// 사이즈 바꾸면 1페이지로
 
     // useEffect로 페이지 전환 시 자동 재조회
-    useEffect(() => { onSearch(); }, [page, size]);
+    useEffect(() => { onSearch(); }, [page, size, onSearch]);
 
     // 전체 비우기(*주의 : 개발 중일 때만 사용할 것)
     //localStorage.clear();
