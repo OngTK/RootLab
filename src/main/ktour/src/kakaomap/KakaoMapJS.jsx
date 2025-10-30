@@ -252,8 +252,8 @@ export default function KakaoMap(props) {
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
-            fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            fillColor: 'rgba(9, 248, 236, .5)',    // 채우기 색깔 -> 추후 원하는 색으로 변경
+            fillOpacity: 0.4           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle end
         circle1.setMap(map);
 

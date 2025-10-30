@@ -13,7 +13,7 @@ import axios from "axios";
 export default function PopupBanner(props) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const carouselId = useMemo(() => `popupCarousel-${Math.random().toString(36).slice(2, 9)}`, []);
+  const carouselId = useMemo(() => `popupCarousel-${Math.random().toString(36).slice(2, 9)}`, []); 
 
   // 서버에 저장된 파일명(ppImg) → 이미지 URL 조립
   const imgUrl = (ppImg) =>
@@ -63,7 +63,7 @@ console.log("팝업");
 /** =========================== PopupBanner.jsx ===================================== */
     return <>
         {/* 배너 로테이션 1,2,3 시작 */}
-        return (
+       
   <>
     {/* 기존 래퍼 유지 */}
     <div className="popupBannerWrap">
@@ -147,7 +147,7 @@ console.log("팝업");
       </div>
     </div>
   </>
-);
+
         {/* 배너 로테이션 1,2,3 끝 */}
 
     </>
