@@ -50,7 +50,10 @@ public interface PlaceInfoRepeatMapper extends CommonRepository<PlaceInfoRepeatD
 
     // [3] 개별 수정
     @Update("""
-
+            UPDATE placeInfoRepeat
+               SET infoName = #{infoName},
+                   infoText = #{infoText}
+             WHERE pirNo = #{pirNo}
             """)
     @Override
     boolean update(PlaceInfoRepeatDto placeInfoRepeatDto);

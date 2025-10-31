@@ -11,11 +11,11 @@
  * - 변경 판단: isChanged()로 기존 값 대비 일부 키 비교
  * - 상태 값: tiStatus = 신규 1, 수정 2, 변경없음 0
  */
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useDispatch } from "react-redux";
 import { saveTourIntro } from "@admin/store/placeSlice";
 
-export default function TourIntro2({ data, pNo }) {
+const TourIntro2 = forwardRef(function TourIntro2({ data, pNo }, ref) {
   const dispatch = useDispatch();
   const baseRef = useRef(data ?? {});
   useEffect(() => { baseRef.current = (data ?? {}); }, [data]);
@@ -81,6 +81,19 @@ export default function TourIntro2({ data, pNo }) {
       alert("저장 중 오류가 발생했습니다.");
     }
   };
+
+  // 부모(DetailSection)에서 일괄 저장 시 DTO 산출용 API 노출
+  const collectForAll = (mode = 'new') => {
+    const curr = collect();
+    const prev = baseRef.current || {};
+    const tiNo = prev.tiNo ?? null;
+    const hasAny = Object.values(curr).some(v => String(v ?? '').trim() !== '');
+    if (!hasAny && !tiNo) return null; // 내용이 전혀 없으면 skip
+    const status = tiNo ? (mode === 'update' ? (isChanged(curr) ? 2 : 0) : 0) : 1;
+    return { tiNo: tiNo ?? 0, ...curr, tiStatus: status };
+  };
+
+  useImperativeHandle(ref, () => ({ collectForAll }));
 
   /** 초기화: 특정 필드는 스킵 */
   const handleReset = () => {
@@ -181,4 +194,6 @@ export default function TourIntro2({ data, pNo }) {
       </form>
     </div>
   );
-}
+});
+
+export default TourIntro2;

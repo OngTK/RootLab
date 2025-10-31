@@ -123,6 +123,10 @@ export default function PlaceGroups(props) {
                                             place.tel &&
                                             <li className="tel">Tel. {place.tel}</li>
                                         }
+                                        {
+                                            place.eventstartdate && place.eventenddate &&
+                                            <li className="eventstartdate">{place.eventstartdate} ~ {place.eventenddate}</li>
+                                        }
                                     </ul>
                                     <div className="btnWrap">
                                         <button>

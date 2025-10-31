@@ -1,6 +1,7 @@
 package rootLab.model.mapper;
 
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -49,4 +50,9 @@ public interface PlaceImageDetailMapper extends CommonRepository<PlaceImageDetai
             """
     )
     int bulkInsert(@Param("list") List<PlaceImageDetailDto> list);
+
+    @Delete("""
+            DELETE FROM placeImageDetail WHERE pNo = #{pNo}
+            """)
+    int deleteAllByPno(@Param("pNo") Integer pNo);
 } // interface end

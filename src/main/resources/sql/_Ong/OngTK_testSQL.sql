@@ -58,34 +58,14 @@ select * from placeInfo order by pno desc;
 -- select * from placeInfo where ;
 
 select count(*) from placeinfo;
-SELECT pi.* FROM placeInfo pi ORDER BY pi.pNo DESC LIMIT 10 OFFSET 2;
+select * from placeinfo where pno = 65545;
 
-SELECT
-            pi.*,
-            c1.contentTypeName  AS contentTypeName,  
-            c2.lclsSystm3Nm     AS lclsSystm3Nm     
-        FROM placeInfo pi
-            LEFT JOIN contenttype c1
-            ON pi.ctNo = c1.contenttypeid
-            LEFT JOIN categoryCode c2
-            ON pi.ccNo = c2.ccNo
-        ORDER BY pi.pNo DESC
-        LIMIT  10
-        OFFSET 0;
-        
-SELECT pi.* FROM placeInfo pi LIMIT 10 OFFSET 2;
-
-            SELECT kpi.*, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
-            	FROM k_tour_headquarter.placeinfo kpi
-                JOIN k_tour_headquarter.categorycode kcc
-                USING (ccNo)
-                WHERE kpi.pno = 6881;
-
+update placeinfo set showflag = 1 where pno=65540; 
 -- ---------------------------------------------------------
 -- TourIntro
 -- 관광지(contentTypeID 12 . ctNo1) 정보
 -- ---------------------------------------------------------
-select * from tourIntro where pno = 6881;
+select * from tourIntro where pno = 65545;
 delete from tourIntro where tiNo=128;
 
 
@@ -93,7 +73,7 @@ delete from tourIntro where tiNo=128;
 -- festivalintro 
 -- 행사/축제 (contentTypeID 15 . ctNo3) 정보
 -- ---------------------------------------------------------
-select * from festivalintro where pno=23405;
+select * from festivalintro where pno=65545;
 
 
 

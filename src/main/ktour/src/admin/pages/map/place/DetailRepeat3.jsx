@@ -15,7 +15,7 @@
  * - 신규: 1, 수정: 2, 변경없음: 0, 삭제: 3
  * - 서버 payload에는 키를 pno로 통일합니다(pNo/pno/PNO 혼재 보정).
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { useDispatch } from "react-redux";
 import { saveRepeatInfo } from "@admin/store/placeSlice";
 
@@ -55,7 +55,7 @@ function latestDisplay(rows) {
   return cr ? (rows.find(r => parseKst(r.createdAt)?.getTime() === cr.getTime())?.createdAt ?? '-') : '-';
 }
 
-export default function DetailRepeat3({ items = [], pNo, onChange }) {
+const DetailRepeat3 = forwardRef(function DetailRepeat3({ items = [], pNo, onChange }, ref) {
   const dispatch = useDispatch();
 
   // 편집 가능한 로컬 행 목록
@@ -169,6 +169,55 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
     }
   };
 
+  // 부모(DetailSection)에서 일괄 저장 시 payload 산출용 API 노출
+  const collectPayloadForAll = (mode = 'new') => {
+    const payload = [];
+    // 삭제 대상
+    deleted.forEach(r => {
+      if (!r?.pirNo) return;
+      payload.push({
+        pirNo: r.pirNo,
+        pno: Number(r.pNo ?? pNo),
+        fldgubun: r.fldgubun ?? 0,
+        infoName: r.infoName ?? '',
+        infoText: r.infoText ?? '',
+        serialNum: r.serialNum ?? 0,
+        pirStatus: 3
+      });
+    });
+    // 신규/기존
+    rows.forEach(r => {
+      if (r?.pirNo && deleted.some(d => d.pirNo === r.pirNo)) return;
+      if (!r?.pirNo) {
+        // 신규는 update 모드에서도 1로 처리
+        payload.push({
+          pirNo: null,
+          pno: Number(pNo ?? 0),
+          fldgubun: 0,
+          infoName: r.infoName ?? '',
+          infoText: r.infoText ?? '',
+          serialNum: 0,
+          pirStatus: 1
+        });
+      } else {
+        const orig = originalRef.current.find(o => o.pirNo === r.pirNo) ?? r;
+        const status = isModified(r) ? 2 : 0;
+        payload.push({
+          pirNo: r.pirNo,
+          pno: Number(orig.pNo ?? pNo),
+          fldgubun: orig.fldgubun ?? 0,
+          infoName: r.infoName ?? '',
+          infoText: r.infoText ?? '',
+          serialNum: orig.serialNum ?? 0,
+          pirStatus: status
+        });
+      }
+    });
+    return payload;
+  };
+
+  useImperativeHandle(ref, () => ({ collectPayloadForAll }));
+
   return (
     <div className="placeRepeatWrap">
       <form aria-label="반복 정보 입력">
@@ -214,4 +263,6 @@ export default function DetailRepeat3({ items = [], pNo, onChange }) {
       </form>
     </div>
   );
-}
+});
+
+export default DetailRepeat3;

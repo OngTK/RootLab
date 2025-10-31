@@ -27,7 +27,7 @@ const markerImages = {      // 마커 이미지를 미리 정의
 export default function KakaoMap(props) {
     const isScriptLoaded = UseKakaoLoader();        // 카카오지도 JS 로드가 완료되면, true 반환
     // =================== useSelector ===================
-    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng, selectedRightMarker } = useSelector((state) => state.relatedMap);
+    const { selectedLdNo, axiosOption, markers, searchLatLng, recommendLatLng } = useSelector((state) => state.relatedMap);
     // =================== useDispatch ===================
     const dispatch = useDispatch();
     // =================== useState 선언부 ===================
@@ -252,24 +252,27 @@ export default function KakaoMap(props) {
             strokeColor: '#75B8FA',  // 선의 색깔 -> 추후 원하는 색으로 변경
             strokeOpacity: 0.9,        // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
             strokeStyle: 'dashed',     // 선의 스타일
-            fillColor: '#CFE7FF',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.3           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
+            fillColor: 'rgba(9, 248, 236, .5)',    // 채우기 색깔 -> 추후 원하는 색으로 변경
+            fillOpacity: 0.4           // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
         }); // circle end
         circle1.setMap(map);
 
-        // 지도에 현재 위치 표시 로직
-        let circle2 = new kakao.maps.Circle({
-            center: new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng),
-            radius: 50,                  // 반경 표시(m 단위)
-            strokeWeight: 3,             // 선의 두께
-            strokeColor: '#ff0101ff',  // 선의 색깔 -> 추후 원하는 색으로 변경
-            strokeOpacity: 0.3,          // 선의 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-            strokeStyle: 'solid',        // 선의 스타일
-            fillColor: '#ff0101ff',    // 채우기 색깔 -> 추후 원하는 색으로 변경
-            fillOpacity: 0.5             // 채우기 불투명도 -> 0에 가까울수록 투명(범위 : 0 ~ 1)
-        }); // circle2 end
-        circle2.setMap(map);
+        const userPosition = new kakao.maps.LatLng(currentLocation.center.lat, currentLocation.center.lng);
 
+        // 커스텀 오버레이에 표시할 HTML (CSS 클래스 적용)
+        const content = '<div class="user-location-dot"></div>';
+
+        // 커스텀 오버레이 생성
+        const userLocationOverlay = new kakao.maps.CustomOverlay({
+            position: userPosition,
+            content: content,
+            xAnchor: 0.5,
+            yAnchor: 0.5,
+            zIndex: 3 // 원(circle1)보다 위에 보이도록
+        });
+
+        // 커스텀 오버레이를 지도에 표시
+        userLocationOverlay.setMap(map);
 
         // 'idle' 이벤트 리스너 등록
         kakao.maps.event.addListener(map, 'tilesloaded', () => {

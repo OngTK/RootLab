@@ -237,19 +237,31 @@ SELECT * FROM k_tour_headquarter.markersgps;
 SELECT * FROM k_tour_headquarter.placeinfo;
 SELECT * FROM k_tour_headquarter.contenttype;
 SELECT * FROM k_tour_headquarter.categorycode;
-SELECT kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title, kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.title, kpi.addr1, kpi.addr2, kpi.firstimage2, kct.contenttypename
-	FROM k_tour_headquarter.placeinfo kpi
-	JOIN k_tour_headquarter.contenttype kct
-	USING (ctNo)
-    JOIN k_tour_headquarter.markersgps kmg
-    USING (pNo)
-    JOIN k_tour_headquarter.categorycode kcc
-    USING (ccNo)
-    WHERE kmg.mapx > 128.3630474080145
-    AND kmg.mapx < 128.73106927424288
-    AND kmg.mapy > 37.95358854898442
-    AND kmg.mapy < 38.12170649772779
-    AND kct.ctNo = 1;
+SELECT * FROM k_tour_headquarter.festivalintro;
+SELECT *
+	FROM (SELECT
+	kpi.pNo, kpi.tel, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm, kpi.title,
+	kct.defaultMarker, kmg.mkURL, kmg.mapx, kmg.mapy, kpi.addr1,
+	kpi.addr2, kpi.firstimage2, kct.contenttypename, kct.ctNo, kfi.eventstartdate, kfi.eventenddate,
+	ROW_NUMBER() OVER (
+	PARTITION BY kmg.mapx, kmg.mapy
+	ORDER BY kpi.pNo ASC
+	) AS rn
+	FROM placeinfo kpi
+	JOIN contenttype kct
+	ON kpi.ctNo = kct.ctNo
+	JOIN markersgps kmg
+	ON kpi.pNo = kmg.pNo
+	JOIN categorycode kcc
+	ON kpi.ccNo = kcc.ccNo
+    LEFT OUTER JOIN festivalintro kfi
+    ON kpi.pNo = kfi.pNo) t
+    WHERE t.mapx > 0
+    AND t.mapx < 150
+    AND t.mapy > 0
+    AND t.mapy < 50
+    AND rn = 1
+	AND t.eventenddate > NOW();
 -- ----------------------------------------marker JOIN TEST------------------------------------------
 SELECT * FROM k_tour_headquarter.ldongcode;
 SELECT * FROM k_tour_headquarter.placeinfo;

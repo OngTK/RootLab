@@ -46,13 +46,12 @@ export const fetchPlaceList = createAsyncThunk(
 export const saveBasic = createAsyncThunk(
   'place/saveBasic',
   async (fd: FormData, thunkAPI) => {
-    await api.post('/placeinfo/basic', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    const { data } = await api.post('/placeinfo/basic', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     try {
-      // @ts-ignore
-      const pno = (thunkAPI.getState()?.place?.selectedPno) as number | null;
-      if (pno) thunkAPI.dispatch(fetchPlaceDetail(Number(pno)));
+      const pno = Number(data ?? 0);
+      if (pno) thunkAPI.dispatch(fetchPlaceDetail(pno));
     } catch {}
-    return true;
+    return data;
   }
 );
 
@@ -79,6 +78,7 @@ export const saveTourIntro = createAsyncThunk(
 export const saveFestivalIntro = createAsyncThunk(
   'place/saveFestivalIntro',
   async (dto: any, thunkAPI) => {
+    console.log(dto)
     await api.post('/placeinfo/festivalintro', dto);
     try {
       const pno = Number(dto?.pNo ?? dto?.pno ?? 0);
@@ -120,6 +120,38 @@ export const saveRepeatInfo = createAsyncThunk(
   }
 );
 
+/**
+ * 일괄 저장(신규) - POST /placeinfo/all
+ * - FormData: placeInfo/marker/imagesMeta/(files)/tourIntro/festivalIntro/restaurantIntro/placeInfoRepeat
+ */
+export const saveAllNew = createAsyncThunk(
+  'place/saveAllNew',
+  async (fd: FormData, thunkAPI) => {
+    const { data } = await api.post('/placeinfo/all', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    try {
+      const pno = Number(data ?? 0);
+      if (pno) thunkAPI.dispatch(fetchPlaceDetail(pno));
+    } catch {}
+    // 신규는 서버 응답에 pNo가 없어 상세 갱신 생략(필요시 목록 재조회 권장)
+    return true;
+  }
+);
+
+/**
+ * 일괄 저장(수정) - PUT /placeinfo/all
+ * - FormData 동일, placeInfo.pNo 필수
+ */
+export const saveAllUpdate = createAsyncThunk(
+  'place/saveAllUpdate',
+  async (payload: { fd: FormData, pNo: number }, thunkAPI) => {
+    await api.put('/placeinfo/all', payload.fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    try {
+      if (payload?.pNo) thunkAPI.dispatch(fetchPlaceDetail(Number(payload.pNo)));
+    } catch {}
+    return true;
+  }
+);
+
 // 슬라이스 상태 구조
 type PlaceState = {
   rows: any[];           // 목록 데이터 (표에 표시되는 행들)
@@ -135,6 +167,9 @@ type PlaceState = {
 
   contentType: string | null; // 현재 상세 콘텐츠 유형(예: TOUR/FESTIVAL/RESTAURANT 등)
   selectedPno: number | null; // 현재 선택된 장소 번호
+
+  mainImgTempUrl: string | null;    // 미리보기에 출력될 메인 이미지
+  detailImgTempUrl: any | [];  // 미리보기에 출력될 상세 이미지
 };
 
 // 상태 초기값
@@ -152,6 +187,9 @@ const initialState: PlaceState = {
 
   contentType: null,
   selectedPno: null,
+
+  mainImgTempUrl: null,
+  detailImgTempUrl: [],
 };
 
 const placeSlice = createSlice({
@@ -163,6 +201,8 @@ const placeSlice = createSlice({
     setListFilters: (s, a) => { s.filters = a.payload || null; }, // 목록 검색/필터 조건 설정
     setPage: (s, a) => { s.page = Number(a.payload) || 1; }, // 현재 페이지 설정
     setSize: (s, a) => { s.size = Number(a.payload) || 10; }, // 페이지 사이즈 설정
+    setMainTemp: (state, action) => { state.mainImgTempUrl = action.payload; },
+    setDetailTemp: (state, action) => { state.detailImgTempUrl = action.payload; },
   },
   extraReducers: (b) => {
     // 목록 조회
@@ -195,9 +235,18 @@ const placeSlice = createSlice({
     b.addCase(saveRepeatInfo.pending, (s)=>{ s.loading=true; s.error=null; })
      .addCase(saveRepeatInfo.fulfilled,(s)=>{ s.loading=false; })
      .addCase(saveRepeatInfo.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save repeat error'); });
+
+    // 일괄 저장(신규/수정)
+    b.addCase(saveAllNew.pending, (s)=>{ s.loading=true; s.error=null; })
+     .addCase(saveAllNew.fulfilled,(s)=>{ s.loading=false; })
+     .addCase(saveAllNew.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save all (new) error'); });
+
+    b.addCase(saveAllUpdate.pending, (s)=>{ s.loading=true; s.error=null; })
+     .addCase(saveAllUpdate.fulfilled,(s)=>{ s.loading=false; })
+     .addCase(saveAllUpdate.rejected, (s,a)=>{ s.loading=false; s.error=String(a.error.message||'save all (update) error'); });
   }
 });
 
-export const { setContentType, clearDetail, setListFilters, setPage, setSize } = placeSlice.actions;
+export const { setContentType, clearDetail, setListFilters, setPage, setSize, setMainTemp, setDetailTemp } = placeSlice.actions;
 export default placeSlice.reducer;
 

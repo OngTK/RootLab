@@ -15,19 +15,21 @@
  * - Daum Postcode: 우편번호/기본주소 선택 UI 로더
  * - Kakao Maps SDK(services 포함): 지도 표시, 지오코딩, 마커 드래그 이벤트 처리
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { useDispatch } from "react-redux";
 import CategorySelect from "../../../components/admin/place/CategorySelect";
 import { saveBasic } from "@admin/store/placeSlice";
+import ImgPreview from "../../../components/admin/place/ImgPreview";
+import { setMainTemp, setDetailTemp } from "../../../store/placeSlice";
 
-export default function DetailCommon1({
+const DetailCommon1 = forwardRef(function DetailCommon1({
     placeInfo: placeInfoProp,
     markers,
     images,
     contentType,
     onChangeContentType,
     ...rest
-}) {
+}, ref) {
     const dispatch = useDispatch();
 
     // 입력 폼 로컬 상태
@@ -42,8 +44,8 @@ export default function DetailCommon1({
     });
 
     // 콘텐츠 타입(상위 탭과 동기화)
-    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType ?? ""));
-    useEffect(() => { setContentTypeLocal(String(contentType ?? "")); }, [contentType]);
+    const [contentTypeLocal, setContentTypeLocal] = useState(String(contentType || "1"));
+    useEffect(() => { setContentTypeLocal(String(contentType || "1")); }, [contentType]);
 
     const placeInfo = placeInfoProp || {};
 
@@ -72,6 +74,7 @@ export default function DetailCommon1({
     const detailImgsRef = useRef(null);
     const imageDescRef = useRef(null);
     const detailAddrRef = useRef(null);
+    const markerTempUrlRef = useRef(null);
 
     // Kakao Map
     const mapRef = useRef(null);
@@ -143,7 +146,10 @@ export default function DetailCommon1({
             const center = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const map = new window.kakao.maps.Map(container, { center, level: 3 });
             setMapObj(map);
-            const marker = new window.kakao.maps.Marker({ position: center, draggable: true });
+            const marker = new window.kakao.maps.Marker({
+                position: center,
+                draggable: true
+            });
             markerRef.current = marker;
             marker.setMap(map);
             geocoderRef.current = new window.kakao.maps.services.Geocoder();
@@ -172,16 +178,69 @@ export default function DetailCommon1({
             if (status !== window.kakao.maps.services.Status.OK || !result?.length) return;
             const { x, y } = result[0];
             const latlng = new window.kakao.maps.LatLng(Number(y), Number(x));
-            if (!markerRef.current) {
-                markerRef.current = new window.kakao.maps.Marker({ position: latlng });
+            if (markers && markers.mkURL) {
+                const src = markers.mkURL ?
+                    '/public/uploads/1/marker/' + markers.mkURL
+                    :
+                    markers.defaultMarker || "/user/img/no_img.jpg";
+                const imageSize = new kakao.maps.Size(120, 90);
+                const markerImage = new kakao.maps.MarkerImage(src, imageSize);
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true,
+                    image: markerImage,
+                    zIndex: 50
+                });
             } else {
-                markerRef.current.setPosition(latlng);
-            }
+                markerRef.current = new window.kakao.maps.Marker({
+                    position: latlng,
+                    draggable: true
+                });
+            } // if end
             markerRef.current.setMap(mapObj);
             mapObj.setCenter(latlng);
             setCoord({ x, y });
         });
+        // 주소가 바뀔 때, 임시 URL 해제
+        URL.revokeObjectURL(markerTempUrlRef.current);
     }, [roadAddr, mapObj]);
+
+    const handleMarkerImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // URL.createObjectURL()로 임시 파일경로 생성하기
+            const tempUrl = URL.createObjectURL(file);
+            // '미리보기'에서 사용하기 위해 저장
+            markerTempUrlRef.current = tempUrl;
+            // 마커이미지 만들기
+            const image = new kakao.maps.MarkerImage(
+                tempUrl,
+                new kakao.maps.Size(120, 90)
+            );
+            // 마커에 적용하기
+            markerRef.current.setImage(image);
+        } // if end
+    } // func end
+
+    const handleMainImage = (e) => {
+        const file = e.target.files[0];
+        if (file){
+            const tempUrl = URL.createObjectURL(file);
+            dispatch(setMainTemp(tempUrl));
+        } // if end
+    } // func end
+
+    const handleDetailImage = (e) => {
+        const files = e.target.files;
+        if (files){
+            const tempUrl = [];
+            for (let i = 0; i < files.length; i++){
+                const temp = URL.createObjectURL(files[i]);
+                tempUrl.push(temp);
+            } // for end
+            dispatch(setDetailTemp(tempUrl));
+        }
+    } // func end
 
     /**
      * 저장 핸들러
@@ -195,9 +254,11 @@ export default function DetailCommon1({
             if (!contentTypeLocal) { alert("콘텐츠 유형을 선택해 주세요."); return; }
             if (!category?.ccNo) { alert("카테고리를 (최소 1단계) 선택해 주세요."); return; }
             if (!roadAddr) { alert("주소를 입력해 주세요."); return; }
+            if (!zipCode) {alert("우편번호를 입력해 주세요."); return;}
+            if (!title) {alert("제목을 입력해주세요."); return;}
 
-            const pNoFromDetail = placeInfo?.pno ?? placeInfo?.pNo ?? null;
-            const ctNoVal = Number(contentTypeLocal);
+            const pNoFromDetail = (placeInfo?.pno ?? placeInfo?.pNo ?? (placeNo ? Number(placeNo) : null));
+            const ctNoVal = Number(String(contentTypeLocal || "1"));
             const ccNoVal = category.ccNo;
             const showflag = showFlag ? 1 : 0;
             const titleVal = title.trim();
@@ -253,6 +314,68 @@ export default function DetailCommon1({
             alert("저장 중 오류가 발생했습니다.");
         }
     };
+
+    // 일괄 저장(부모)에서 사용할 FormData 생성 유틸
+    const buildFormDataForAll = () => {
+        try {
+            const pNoFromDetail = (placeInfo?.pno ?? placeInfo?.pNo ?? (placeNo ? Number(placeNo) : null));
+            const ctNoVal = Number(String(contentTypeLocal || "1"));
+            const ccNoVal = category.ccNo;
+            const showflag = showFlag ? 1 : 0;
+            const titleVal = title.trim();
+            const homepageVal = homepage.trim() || null;
+            const telVal = phone.trim() || null;
+            const telNameVal = phoneDesc.trim() || null;
+            const overviewVal = overview.trim() || null;
+
+            const placeInfoDto = {
+                pno: pNoFromDetail ?? 0,
+                ctNo: ctNoVal,
+                ldNo: region?.ldNo ?? null,
+                ccNo: ccNoVal,
+                editable: true,
+                contentid: null,
+                title: titleVal,
+                showflag,
+                firtimage: null,
+                firstimage2: null,
+                addr1: roadAddr || null,
+                addr2: detailAddr || null,
+                zipcode: zipCode || null,
+                homepage: homepageVal,
+                tel: telVal,
+                telname: telNameVal,
+                overview: overviewVal,
+            };
+
+            const markerDto = {
+                mkNo: Number(markers?.mkNo ?? markers?.mkno ?? 0),
+                pNo: pNoFromDetail ?? 0,
+                mkURL: null,
+                mapx: coord.x ? Number(coord.x) : null,
+                mapy: coord.y ? Number(coord.y) : null,
+            };
+
+            const imagesMeta = [];
+            const imgDesc1 = imageDescRef.current?.value?.trim();
+            if (imgDesc1) imagesMeta.push({ imgname: imgDesc1 });
+
+            const fd = new FormData();
+            fd.append("placeInfo", new Blob([JSON.stringify(placeInfoDto)], { type: "application/json" }));
+            fd.append("marker", new Blob([JSON.stringify(markerDto)], { type: "application/json" }));
+            if (imagesMeta.length) fd.append("imagesMeta", new Blob([JSON.stringify(imagesMeta)], { type: "application/json" }));
+            if (markerImgRef.current?.files?.[0]) fd.append("markerImage", markerImgRef.current.files[0]);
+            if (mainImgRef.current?.files?.[0]) fd.append("mainImage", mainImgRef.current.files[0]);
+            if (detailImgsRef.current?.files?.length) [...detailImgsRef.current.files].forEach((f) => fd.append("detailImages", f));
+
+            return { fd, placeInfoDto };
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    useImperativeHandle(ref, () => ({ buildFormDataForAll }));
 
     return (
         <div className="placeCommonWrap" {...rest}>
@@ -345,15 +468,17 @@ export default function DetailCommon1({
                     {/* 12. 이미지 */}
                     <div className="form-group">
                         <label htmlFor="marker-img">마커 이미지</label>
-                        <input type="file" id="marker-img" name="markerImage" ref={markerImgRef} />
+                        <input type="file" id="marker-img" name="markerImage" onChange={handleMarkerImage} ref={markerImgRef} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="main-img">대표 이미지</label>
-                        <input type="file" id="main-img" name="mainImage" ref={mainImgRef} />
+                        <input type="file" id="main-img" name="mainImage" onChange={handleMainImage} ref={mainImgRef} />
+                        <ImgPreview title={'대표 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="detail-img-1">상세 이미지</label>
-                        <input type="file" id="detail-img-1" name="detailImages" multiple ref={detailImgsRef} />
+                        <input type="file" id="detail-img-1" name="detailImages" multiple onChange={handleDetailImage} ref={detailImgsRef} />
+                        <ImgPreview title={'상세 이미지'}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="img-desc-1">이미지 설명</label>
@@ -371,5 +496,7 @@ export default function DetailCommon1({
             </form>
         </div>
     );
-}
+});
+
+export default DetailCommon1;
 

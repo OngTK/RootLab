@@ -59,7 +59,7 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
         result.put("placeInfo",placeInfoDto);
 
         // 기본정보에서 컨텐츠 타입 조회
-        int ctNo = placeInfoDto.get().getCtNo();
+        int ctNo = placeInfoDto.get().getPNo();
 
         // 컨턴츠타입에 맞는 디테일정보 조회
         if(ctNo == 1){
@@ -67,7 +67,7 @@ public class PlaceInfoService extends AbstractService<PlaceInfoDto, Integer, Pla
             Optional<TourIntroDto> tourIntroDto = tourIntroMapper.read(pno);
             result.put("TourIntro",tourIntroDto);
         } else if (ctNo == 3){
-            // 행사/공연/축제 ctNo 3 / contentTypeID 15 //testPno 23405
+            // 행사/공연/축제 ctNo 3 / contentTypeID 15 // testPno 23405
             Optional<FestivalIntroDto> festivalIntroDto = festivalIntroMapper.read(pno);
             result.put("FestivalIntro",festivalIntroDto);
         } else if (ctNo == 8 ){

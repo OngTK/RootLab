@@ -42,7 +42,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     @Select("""
-            select * from placeinfo;
+            select * from placeinfo where showflag = 1;
             """)
     List<PlaceInfoDto> readAll();
 
@@ -53,12 +53,19 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
     @Override
     @Select("""
             SELECT kpi.*, kcc.lclsSystm1Nm, kcc.lclsSystm2Nm, kcc.lclsSystm3Nm
-            	FROM placeinfo kpi
+                FROM placeinfo kpi
                 JOIN categorycode kcc
                 USING (ccNo)
-                WHERE kpi.pno = #{pno};
+               WHERE kpi.pno = #{pno}
+                 AND kpi.showflag = 1;
             """)
     Optional<PlaceInfoDto> read(Integer pno);
+
+    @Update("""
+            update placeinfo set showflag = 0 where pno= #{pno};
+            """)
+    @Override
+    boolean delete(Integer pno);
 
     /**
      * [4] 수정
@@ -81,7 +88,7 @@ public interface PlaceInfoMapper extends CommonRepository<PlaceInfoDto, Integer,
      */
     @Override
     @Select("""
-            select count(*) from placeinfo;
+            select count(*) from placeinfo where showflag = 1;
             """)
     int countAll();
 
