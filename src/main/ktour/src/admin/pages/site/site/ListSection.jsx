@@ -72,8 +72,8 @@ export default function ListSection({
                 siDomain: r.siDomain,
                 siTel: r.siTel,
                 siEmail: r.siEmail,
-                siCreatedAt: r.siCreatedAt,
-                siUpdatedAt: r.siUpdatedAt,
+                siCreatedAt: r.createdAt,
+                siUpdatedAt: r.updatedAt,
                 // 선택 및 상세조회용 식별자(행키)를 siDomain으로 통일
                 __key: r.siDomain,
             }));
