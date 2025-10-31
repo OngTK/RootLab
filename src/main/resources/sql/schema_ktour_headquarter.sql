@@ -347,3 +347,10 @@ CREATE TABLE k_tour_headquarter.pushPopup (
 		ON UPDATE CASCADE
 		ON DELETE SET NULL
 );
+-- -------------------------- 토큰 저장 ----------------------------------------
+CREATE TABLE push_token(
+	token      VARCHAR(255) NOT NULL PRIMARY KEY,   -- PK
+	createdAt  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updatedAt  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+				 ON UPDATE CURRENT_TIMESTAMP
+);
