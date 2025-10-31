@@ -112,10 +112,7 @@ console.log("팝업");
                     </span>
                   </dt>
                   {/* 캡션 */}
-                  <div className="carousel-caption d-none d-md-block">
-                    <dd className="h5 mb-1">{it.ppTitle ?? ""}</dd>
-                    <dd className="mb-0">{it.ppContent ?? ""}</dd>
-                  </div>
+
                 </dl>
               </div>
             ))}
