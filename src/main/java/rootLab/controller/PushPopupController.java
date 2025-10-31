@@ -44,16 +44,12 @@ public class PushPopupController {
      * @author juju9595
      */
     @PostMapping("/add")
-    public ResponseEntity<?> addPush(  PushPopupDto pushPopupDto , @CookieValue( value = "loginUser" , required = false ) String token ) {
-
+    public ResponseEntity<?> addPush(  PushPopupDto pushPopupDto ,
+                                       @CookieValue( value = "loginUser" , required = false ) String token ) {
         // 만약에 로그인 상태가 아니면 // **임시** 로 1번 회원으로 등록중
         if( token == null ){ pushPopupDto.setMgNo("1");  }
-
-
         System.out.println("pushPopupDto = " + pushPopupDto);
         int result = pushPopupService.addPush(pushPopupDto);
-
-
         return ResponseEntity.ok(result);
     }
 
@@ -74,7 +70,7 @@ public class PushPopupController {
      * @author juju9595
      */
     @PutMapping("/update")
-    public ResponseEntity<Boolean> updatePush(PushPopupDto dto){ // 처음에 json RequestBody 로 받음 첨부파일이 있어 json 받기 어려움
+    public ResponseEntity<Boolean> updatePush(PushPopupDto dto){// 처음에 json RequestBody 로 받음 첨부파일이 있어 json 받기 어려움
         System.out.println("dto = " + dto);
         boolean result = pushPopupService.updatePush(dto);
         return ResponseEntity.ok(result);
