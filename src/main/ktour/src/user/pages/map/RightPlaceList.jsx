@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from "react";
-import { selectRightMarker, setSearchLatLng } from "../../store/mapSlice";
+import { selectRightMarker, setSearchLatLng, selectCategory } from "../../store/mapSlice";
 
 // 미리 카테고리 정의해놓기
 const PLACE_GROUPS_TEMPLATE = [
@@ -65,6 +65,7 @@ export default function PlaceGroups(props) {
 
     const handleClickRightPlace = (marker) => {
         dispatch(selectRightMarker(marker.pNo));
+        dispatch(selectCategory(marker.ctNo));
         dispatch(setSearchLatLng({
             lat: marker.mapy,
             lng: marker.mapx

@@ -30,8 +30,8 @@ public class SiteInfoDto {
     private String siEmail;             // 대표이메일
     private String siKeywords;          // 사이트 검색키워드
     private int siIsPublic;             // 사이트 공개여부(0 : 비공개, 1 : 공개)
-    private String siCreatedAt;         // 생성일시
-    private String siUpdatedAt;         // 수정일시
+    private String createdAt;           // 생성일시
+    private String updatedAt;           // 수정일시
     private String siMemo;              // 메모
 
     // 부가적인 정보
