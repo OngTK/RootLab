@@ -53,8 +53,11 @@
 
 ### 🗂 멀티테넌시 구조
 본사 Root.Lab DB
+
 ├─ 표준화/정규화된 공공데이터 저장
+
 ├─ 구독자 요청 시 DB 자동 복사·생성
+
 └─ 테넌트별 CRUD 및 API 독립 운영
 
 
@@ -106,22 +109,39 @@
 ## 🔍 코드 구조 (주요 경로)
 
 RootLab/
+
 ├─ src/
+
 │ ├─ main/java/rootLab/
+
 │ │ ├─ controller/
+
 │ │ │ └─ PushPopupController.java
+
 │ │ ├─ model/
+
 │ │ │ ├─ repository/CommonRepository.java
+
 │ │ │ └─ dto, mapper 등
+
 │ │ └─ service/
+
 │ └─ main/ktour/src/
+
 │ ├─ admin/
+
 │ │ ├─ pages/site/push_popup/PushPopup.jsx
+
 │ │ └─ components/common/ (모달·테이블 공통 UI)
+
 │ └─ user/
+
 │ ├─ pages/
+
 │ └─ components/
+
 └─ resources/
+
 └─ sql/
 
 ---
