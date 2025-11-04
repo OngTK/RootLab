@@ -1,9 +1,10 @@
 package rootLab.controller;
 
 import lombok.RequiredArgsConstructor;
+import rootLab.service.SyncService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rootLab.service.SyncService;
 
 @RestController
 @RequestMapping("/api/sync")
